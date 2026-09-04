@@ -1,0 +1,250 @@
+@import "tailwindcss";
+
+@custom-variant dark (&:where(.dark, .dark *));
+
+@layer base {
+  body {
+    @apply bg-white dark:bg-slate-950 text-slate-900 dark:text-slate-100 transition-colors duration-200;
+  }
+}
+
+@keyframes fireFlame {
+  0% {
+    transform: translateY(0) scaleY(1) scaleX(1) rotate(0deg);
+    filter: drop-shadow(0 0 2px rgba(249, 115, 22, 0.6));
+  }
+  20% {
+    transform: translateY(-2.5px) scaleY(1.18) scaleX(0.9) rotate(-7deg);
+    filter: drop-shadow(0 0 5px rgba(239, 68, 68, 0.8));
+  }
+  40% {
+    transform: translateY(-1px) scaleY(0.94) scaleX(1.08) rotate(5deg);
+    filter: drop-shadow(0 0 7px rgba(245, 158, 11, 0.9));
+  }
+  60% {
+    transform: translateY(-3px) scaleY(1.22) scaleX(0.86) rotate(-5deg);
+    filter: drop-shadow(0 0 6px rgba(234, 88, 12, 0.85));
+  }
+  80% {
+    transform: translateY(-0.8px) scaleY(1.04) scaleX(1.02) rotate(3deg);
+    filter: drop-shadow(0 0 4px rgba(249, 115, 22, 0.7));
+  }
+  100% {
+    transform: translateY(0) scaleY(1) scaleX(1) rotate(0deg);
+    filter: drop-shadow(0 0 2px rgba(249, 115, 22, 0.6));
+  }
+}
+
+.animate-fire-flame {
+  animation: fireFlame 1s ease-in-out infinite;
+  display: inline-block;
+  transform-origin: bottom center;
+  will-change: transform, filter;
+}
+
+/* Pattern SEO & Helpful Content Semantic Typography */
+.pattern-seo-prose h2 {
+  font-size: 1.35rem;
+  line-height: 1.35;
+  font-weight: 800;
+  margin-top: 1.75rem;
+  margin-bottom: 0.75rem;
+  color: #0f172a;
+}
+.dark .pattern-seo-prose h2 {
+  color: #f8fafc;
+}
+@media (min-width: 640px) {
+  .pattern-seo-prose h2 {
+    font-size: 1.55rem;
+  }
+}
+
+.pattern-seo-prose h3 {
+  font-size: 1.15rem;
+  line-height: 1.4;
+  font-weight: 700;
+  margin-top: 1.35rem;
+  margin-bottom: 0.5rem;
+  color: #1e293b;
+}
+.dark .pattern-seo-prose h3 {
+  color: #f1f5f9;
+}
+
+.pattern-seo-prose h4 {
+  font-size: 1rem;
+  line-height: 1.4;
+  font-weight: 700;
+  margin-top: 1rem;
+  margin-bottom: 0.4rem;
+  color: #334155;
+}
+.dark .pattern-seo-prose h4 {
+  color: #e2e8f0;
+}
+
+.pattern-seo-prose p {
+  margin-top: 0.75rem;
+  margin-bottom: 0.75rem;
+  line-height: 1.75;
+  color: #334155;
+}
+.dark .pattern-seo-prose p {
+  color: #cbd5e1;
+}
+
+.pattern-seo-prose ul {
+  list-style-type: disc;
+  margin-top: 0.75rem;
+  margin-bottom: 0.75rem;
+  padding-left: 1.5rem;
+}
+
+.pattern-seo-prose ol {
+  list-style-type: decimal;
+  margin-top: 0.75rem;
+  margin-bottom: 0.75rem;
+  padding-left: 1.5rem;
+}
+
+.pattern-seo-prose li {
+  margin-top: 0.35rem;
+  margin-bottom: 0.35rem;
+  line-height: 1.65;
+  color: #334155;
+}
+.dark .pattern-seo-prose li {
+  color: #cbd5e1;
+}
+
+.pattern-seo-prose strong, .pattern-seo-prose b {
+  font-weight: 700;
+  color: #0f172a;
+}
+.dark .pattern-seo-prose strong, .dark .pattern-seo-prose b {
+  color: #f8fafc;
+}
+
+.pattern-seo-prose blockquote {
+  border-left: 4px solid #E96BA8;
+  padding: 0.75rem 1.25rem;
+  margin: 1.25rem 0;
+  background-color: rgba(233, 107, 168, 0.06);
+  border-radius: 0 0.75rem 0.75rem 0;
+  font-style: italic;
+  color: #475569;
+}
+.dark .pattern-seo-prose blockquote {
+  background-color: rgba(233, 107, 168, 0.12);
+  color: #cbd5e1;
+}
+
+.pattern-seo-prose a {
+  color: #E96BA8;
+  text-decoration: underline;
+  font-weight: 600;
+}
+.pattern-seo-prose a:hover {
+  opacity: 0.85;
+}
+
+.pattern-seo-prose img {
+  border-radius: 1rem;
+  margin: 1.25rem 0;
+  max-width: 100%;
+  height: auto;
+  border: 1px solid rgba(226, 232, 240, 0.8);
+}
+.dark .pattern-seo-prose img {
+  border-color: rgba(51, 65, 85, 0.8);
+}
+
+.pattern-seo-prose hr {
+  margin: 1.75rem 0;
+  border-color: rgba(226, 232, 240, 0.8);
+}
+.dark .pattern-seo-prose hr {
+  border-color: rgba(51, 65, 85, 0.8);
+}
+
+/* Site Pages (Privacy, Terms, Sitemap) Semantic Typography */
+.site-page-prose h1 {
+  font-size: 1.75rem;
+  line-height: 1.25;
+  font-weight: 800;
+  margin-top: 2rem;
+  margin-bottom: 1rem;
+  color: #0f172a;
+}
+.site-page-prose h2 {
+  font-size: 1.35rem;
+  line-height: 1.35;
+  font-weight: 700;
+  margin-top: 1.75rem;
+  margin-bottom: 0.75rem;
+  color: #1e293b;
+}
+.site-page-prose h3 {
+  font-size: 1.15rem;
+  line-height: 1.4;
+  font-weight: 600;
+  margin-top: 1.25rem;
+  margin-bottom: 0.5rem;
+  color: #334155;
+}
+.site-page-prose p {
+  margin-top: 0.75rem;
+  margin-bottom: 0.75rem;
+  line-height: 1.75;
+  color: #334155;
+}
+.site-page-prose ul {
+  list-style-type: disc;
+  margin-top: 0.75rem;
+  margin-bottom: 0.75rem;
+  padding-left: 1.5rem;
+}
+.site-page-prose ol {
+  list-style-type: decimal;
+  margin-top: 0.75rem;
+  margin-bottom: 0.75rem;
+  padding-left: 1.5rem;
+}
+.site-page-prose li {
+  margin-top: 0.4rem;
+  margin-bottom: 0.4rem;
+  line-height: 1.65;
+  color: #334155;
+}
+.site-page-prose blockquote {
+  border-left: 4px solid #E96BA8;
+  padding: 0.75rem 1.25rem;
+  margin: 1.25rem 0;
+  background-color: rgba(233, 107, 168, 0.06);
+  border-radius: 0 0.75rem 0.75rem 0;
+  font-style: italic;
+  color: #475569;
+}
+.site-page-prose a {
+  color: #E96BA8;
+  text-decoration: underline;
+  font-weight: 600;
+}
+.site-page-prose a:hover {
+  opacity: 0.85;
+}
+.site-page-prose hr {
+  margin: 1.75rem 0;
+  border-color: rgba(226, 232, 240, 0.8);
+}
+.site-page-prose code {
+  background-color: #f1f5f9;
+  color: #0f172a;
+  padding: 0.15rem 0.4rem;
+  border-radius: 0.25rem;
+  font-size: 0.875em;
+  font-family: monospace;
+}
+
+

@@ -1,0 +1,264 @@
+[
+  {
+    "id": "blankets",
+    "slug": "blankets",
+    "name": "Blankets",
+    "description": "Cozy throw blankets, baby afghans, lapghan wraps, and heirloom quilts.",
+    "image": "https://images.unsplash.com/photo-1584992236310-6edddc08acff?auto=format&fit=crop&w=800&q=80",
+    "count": 420,
+    "popularStitches": [
+      "Granny Square",
+      "Ripple Stitch",
+      "Moss Stitch",
+      "Waffle Stitch"
+    ],
+    "isFreeBadge": true,
+    "displayOrder": 10,
+    "isActive": true
+  },
+  {
+    "id": "flowers",
+    "slug": "flowers",
+    "name": "Flowers",
+    "description": "Everlasting crochet roses, sunflowers, daisies, tulips, and floral appliques.",
+    "image": "https://images.unsplash.com/photo-1563245372-f21724e3856d?auto=format&fit=crop&w=800&q=80",
+    "count": 280,
+    "popularStitches": [
+      "Picot Stitch",
+      "Popcorn Stitch",
+      "Puff Stitch",
+      "Magic Ring"
+    ],
+    "isFreeBadge": true,
+    "displayOrder": 20,
+    "isActive": true
+  },
+  {
+    "id": "amigurumi",
+    "slug": "amigurumi",
+    "name": "Amigurumi",
+    "description": "Cute plushies, stuffed animals, dolls, and miniature crocheted toys.",
+    "image": "https://images.unsplash.com/photo-1566454825481-4e28f37f2d63?auto=format&fit=crop&w=800&q=80",
+    "count": 650,
+    "popularStitches": [
+      "Single Crochet (Spiral)",
+      "Invisible Decrease",
+      "Magic Ring"
+    ],
+    "isFreeBadge": false,
+    "displayOrder": 30,
+    "isActive": true
+  },
+  {
+    "id": "bags",
+    "slug": "bags",
+    "name": "Bags",
+    "description": "Market totes, boho shoulder bags, clutch purses, and sturdy backpack bags.",
+    "image": "https://images.unsplash.com/photo-1590874103328-eac38a683ce7?auto=format&fit=crop&w=800&q=80",
+    "count": 310,
+    "popularStitches": [
+      "Thermal Stitch",
+      "Spike Stitch",
+      "Linen Stitch"
+    ],
+    "isFreeBadge": false,
+    "displayOrder": 40,
+    "isActive": true
+  },
+  {
+    "id": "baby",
+    "slug": "baby",
+    "name": "Baby",
+    "description": "Soft baby booties, hats, pacifier clips, cardigan sets, and nursery blankets.",
+    "image": "https://images.unsplash.com/photo-1519689680058-324335c77eba?auto=format&fit=crop&w=800&q=80",
+    "count": 390,
+    "popularStitches": [
+      "Shell Stitch",
+      "Cluster Stitch",
+      "Single Crochet Ribbing"
+    ],
+    "isFreeBadge": false,
+    "displayOrder": 50,
+    "isActive": true
+  },
+  {
+    "id": "tops",
+    "slug": "tops",
+    "name": "Tops",
+    "description": "Summer crop tops, lace halter tops, bralettes, and lightweight mesh tees.",
+    "image": "https://images.unsplash.com/photo-1503342217505-b0a15ec3261c?auto=format&fit=crop&w=800&q=80",
+    "count": 240,
+    "popularStitches": [
+      "Filet Crochet",
+      "V-Stitch",
+      "Double Crochet Mesh"
+    ],
+    "isFreeBadge": false,
+    "displayOrder": 60,
+    "isActive": true
+  },
+  {
+    "id": "sweaters",
+    "slug": "sweaters",
+    "name": "Sweaters",
+    "description": "Cozy oversized cardigans, raglan pullovers, winter turtlenecks, and vests.",
+    "image": "https://images.unsplash.com/photo-1434389677669-e08b4cac3105?auto=format&fit=crop&w=800&q=80",
+    "count": 195,
+    "popularStitches": [
+      "Front Post Double Crochet",
+      "Half Double Crochet Rib",
+      "Alpine Stitch"
+    ],
+    "isFreeBadge": false,
+    "displayOrder": 70,
+    "isActive": true
+  },
+  {
+    "id": "accessories",
+    "slug": "accessories",
+    "name": "Accessories",
+    "description": "Warm scarves, beanies, fingerless gloves, shawls, and hair scrunchies.",
+    "image": "https://images.unsplash.com/photo-1520903920243-00d872a2d1c9?auto=format&fit=crop&w=800&q=80",
+    "count": 510,
+    "popularStitches": [
+      "Broomstick Lace",
+      "Solomon's Knot",
+      "Puff Ribbing"
+    ],
+    "isFreeBadge": false,
+    "displayOrder": 80,
+    "isActive": true
+  },
+  {
+    "id": "home-decor",
+    "slug": "home-decor",
+    "name": "Home Decor",
+    "description": "Decorative pillows, coasters, plant hangers, dishcloths, and rug mats.",
+    "image": "https://images.unsplash.com/photo-1513519245088-0e12902e5a38?auto=format&fit=crop&w=800&q=80",
+    "count": 340,
+    "popularStitches": [
+      "Suzette Stitch",
+      "Basketweave",
+      "Bobble Stitch"
+    ],
+    "isFreeBadge": false,
+    "displayOrder": 90,
+    "isActive": true
+  },
+  {
+    "id": "christmas",
+    "slug": "christmas",
+    "name": "Christmas",
+    "description": "Festive tree ornaments, stockings, snow globes, garlands, and Santa hats.",
+    "image": "https://images.unsplash.com/photo-1512389142860-9c449e58a543?auto=format&fit=crop&w=800&q=80",
+    "count": 275,
+    "popularStitches": [
+      "Star Stitch",
+      "Loop Stitch",
+      "Picot Edging"
+    ],
+    "isFreeBadge": false,
+    "displayOrder": 100,
+    "isActive": true
+  },
+  {
+    "id": "halloween",
+    "slug": "halloween",
+    "name": "Halloween",
+    "description": "Cute pumpkins, ghost plushies, witch hats, black cat appliques, and spiderwebs.",
+    "image": "https://images.unsplash.com/photo-1508759073847-9ca702cec7d2?auto=format&fit=crop&w=800&q=80",
+    "count": 180,
+    "popularStitches": [
+      "Spike Stitch",
+      "Filet Mesh",
+      "Popcorn Pumpkin St"
+    ],
+    "isFreeBadge": false,
+    "displayOrder": 110,
+    "isActive": true
+  },
+  {
+    "id": "animals",
+    "slug": "animals",
+    "name": "Animals",
+    "description": "Adorable crocheted bears, bunny rabbits, kittens, puppies, and sea creatures.",
+    "image": "https://images.unsplash.com/photo-1535585209827-a15fcdbc4c2d?auto=format&fit=crop&w=800&q=80",
+    "count": 480,
+    "popularStitches": [
+      "Magic Circle",
+      "Single Crochet (Back Loop)",
+      "Invisible Join"
+    ],
+    "isFreeBadge": false,
+    "displayOrder": 120,
+    "isActive": true
+  },
+  {
+    "id": "granny-squares",
+    "slug": "granny-squares",
+    "name": "Granny Squares",
+    "description": "Classic 3-dc granny squares, sunburst floral motifs, hexagon blocks, and solid squares.",
+    "image": "https://images.unsplash.com/photo-1606760227091-3dd850d97f1d?auto=format&fit=crop&w=800&q=80",
+    "count": 520,
+    "popularStitches": [
+      "3-DC Cluster",
+      "Corner 2-CH Space",
+      "Join As You Go"
+    ],
+    "isFreeBadge": false,
+    "displayOrder": 130,
+    "isActive": true
+  },
+  {
+    "id": "test-cat-1786641166828",
+    "slug": "test-cat-1786641166828",
+    "name": "Test Image Category",
+    "description": "Testing image lifecycle flow",
+    "image": "/uploads/categories/cat_1786641166825_4sdw.png",
+    "count": 0,
+    "isFreeBadge": false,
+    "displayOrder": 999,
+    "isActive": true,
+    "createdAt": "2026-08-13T17:12:46.832Z",
+    "updatedAt": "2026-08-13T17:12:46.832Z"
+  },
+  {
+    "id": "test-cat-1786641196712",
+    "slug": "test-cat-1786641196712",
+    "name": "Test Image Category",
+    "description": "Testing image lifecycle flow",
+    "image": "/uploads/categories/cat_1786641196710_168f.png",
+    "count": 0,
+    "isFreeBadge": false,
+    "displayOrder": 999,
+    "isActive": true,
+    "createdAt": "2026-08-13T17:13:16.715Z",
+    "updatedAt": "2026-08-13T17:13:16.715Z"
+  },
+  {
+    "id": "test-cat-1786641211519",
+    "slug": "test-cat-1786641211519",
+    "name": "Test Image Category",
+    "description": "Testing image lifecycle flow",
+    "image": "/uploads/categories/cat_1786641211517_mg4m.png",
+    "count": 0,
+    "isFreeBadge": false,
+    "displayOrder": 999,
+    "isActive": true,
+    "createdAt": "2026-08-13T17:13:31.520Z",
+    "updatedAt": "2026-08-13T17:13:31.520Z"
+  },
+  {
+    "id": "test-cat-1786641254309",
+    "slug": "test-cat-1786641254309",
+    "name": "Test Image Category Updated",
+    "description": "Testing image lifecycle flow",
+    "image": "/uploads/categories/cat_1786641256871_d1ik.png",
+    "count": 0,
+    "isFreeBadge": false,
+    "displayOrder": 999,
+    "isActive": true,
+    "createdAt": "2026-08-13T17:14:14.311Z",
+    "updatedAt": "2026-08-13T17:14:16.877Z"
+  }
+]

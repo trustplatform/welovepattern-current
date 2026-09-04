@@ -1,0 +1,128 @@
+[
+  {
+    "id": "sub_msssa7wt_4cy7o",
+    "email": "test_regression_audit@example.com",
+    "createdAt": "2026-08-14T10:07:54.509Z",
+    "status": "new",
+    "source": "Homepage Newsletter"
+  },
+  {
+    "id": "sub_mssrwdut_0ehjy",
+    "email": "tester10@example.com",
+    "createdAt": "2026-08-14T09:57:09.029Z",
+    "status": "new",
+    "source": "Homepage Newsletter"
+  },
+  {
+    "id": "sub_mssrjwoq_7rd1k",
+    "email": "tester9@example.com",
+    "createdAt": "2026-08-14T09:47:26.907Z",
+    "status": "new",
+    "source": "Homepage Newsletter"
+  },
+  {
+    "id": "sub_mssrjwo0_w2ifl",
+    "email": "tester8@example.com",
+    "createdAt": "2026-08-14T09:47:26.880Z",
+    "status": "new",
+    "source": "Homepage Newsletter"
+  },
+  {
+    "id": "sub_mssrjwmz_usbsi",
+    "email": "tester7@example.com",
+    "createdAt": "2026-08-14T09:47:26.843Z",
+    "status": "new",
+    "source": "Homepage Newsletter"
+  },
+  {
+    "id": "sub_mssrjwm0_8icj1",
+    "email": "tester6@example.com",
+    "createdAt": "2026-08-14T09:47:26.808Z",
+    "status": "new",
+    "source": "Homepage Newsletter"
+  },
+  {
+    "id": "sub_mssrjwl7_tncgd",
+    "email": "tester5@example.com",
+    "createdAt": "2026-08-14T09:47:26.779Z",
+    "status": "new",
+    "source": "Homepage Newsletter"
+  },
+  {
+    "id": "sub_mssrjwkg_ng6fp",
+    "email": "tester4@example.com",
+    "createdAt": "2026-08-14T09:47:26.753Z",
+    "status": "new",
+    "source": "Homepage Newsletter"
+  },
+  {
+    "id": "sub_mssrjwjp_dj8xc",
+    "email": "tester3@example.com",
+    "createdAt": "2026-08-14T09:47:26.725Z",
+    "status": "new",
+    "source": "Homepage Newsletter"
+  },
+  {
+    "id": "sub_mssrjwiy_go215",
+    "email": "tester2@example.com",
+    "createdAt": "2026-08-14T09:47:26.698Z",
+    "status": "new",
+    "source": "Homepage Newsletter"
+  },
+  {
+    "id": "sub_mssrjwi8_pdl5t",
+    "email": "tester1@example.com",
+    "createdAt": "2026-08-14T09:47:26.672Z",
+    "status": "new",
+    "source": "Homepage Newsletter"
+  },
+  {
+    "id": "sub_mssrjuts_v68qb",
+    "email": "tester{1..12}@example.com",
+    "createdAt": "2026-08-14T09:47:24.496Z",
+    "status": "new",
+    "source": "Homepage Newsletter"
+  },
+  {
+    "id": "sub_msrf9kfs_7ew4m",
+    "email": "test-1786619742903@example.com",
+    "createdAt": "2026-08-13T11:15:42.904Z",
+    "status": "new",
+    "source": "Homepage Newsletter"
+  },
+  {
+    "id": "sub_msrf999b_fiw33",
+    "email": "test-1786619728413@example.com",
+    "createdAt": "2026-08-13T11:15:28.415Z",
+    "status": "new",
+    "source": "Homepage Newsletter"
+  },
+  {
+    "id": "sub_msqs8ogi_pyooq",
+    "email": "qa_test_1786581070287@example.com",
+    "createdAt": "2026-08-13T00:31:10.290Z",
+    "status": "new",
+    "source": "QA Test Runner"
+  },
+  {
+    "id": "sub_msqs6tdj_qtb18",
+    "email": "qa_test_1786580983349@example.com",
+    "createdAt": "2026-08-13T00:29:43.351Z",
+    "status": "new",
+    "source": "QA Test Runner"
+  },
+  {
+    "id": "sub_msqs5c0i_18orh",
+    "email": "qa_test_1786580914192@example.com",
+    "createdAt": "2026-08-13T00:28:34.194Z",
+    "status": "new",
+    "source": "QA Test Runner"
+  },
+  {
+    "id": "sub_msp9rfzf_w4zbx",
+    "email": "after.empty@example.com",
+    "createdAt": "2026-08-11T23:06:06.891Z",
+    "status": "new",
+    "source": "Homepage Newsletter"
+  }
+]
