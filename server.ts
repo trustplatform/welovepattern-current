@@ -468,10 +468,12 @@ app.use((req, res, next) => {
   next();
 });
 
-// 3. BODY PARSERS: Strict default limit of 256kb for standard endpoints
+// 3. BODY PARSERS: Strict default limit of 256kb for standard endpoints, 10MB for pattern uploads & saves
+const uploadJsonParser = express.json({ limit: "10mb" });
+
 app.use((req, res, next) => {
   if (req.path === "/api/admin/patterns" || req.path.startsWith("/api/admin/patterns/")) {
-    return next();
+    return uploadJsonParser(req, res, next);
   }
   express.json({ limit: "256kb" })(req, res, next);
 });
@@ -1272,8 +1274,7 @@ function saveSubscribers(subscribers: SubscriberRecord[]): boolean {
   }
 }
 
-// 4. UPLOAD & MULTIPART BODY PARSER (10MB) for image uploads and PDF parsing only
-const uploadJsonParser = express.json({ limit: "10mb" });
+// 4. UPLOAD & MULTIPART BODY PARSER (10MB) for image uploads and PDF parsing (defined above)
 
 // Strict Magic Bytes Image Validation (JPG, PNG, WebP only)
 function validateImageBuffer(buffer: Buffer): { valid: boolean; ext: string; mime: string; error?: string } {
@@ -1631,7 +1632,12 @@ function getEffectivePatterns(): Pattern[] {
 }
 
 function validateAndSanitizePattern(body: any, existingPattern?: Pattern): Pattern {
-  const title = typeof body.title === "string" && body.title.trim() ? body.title.trim() : (existingPattern?.title || "Untitled Pattern");
+  const rawTitle = typeof body.title === "string" && body.title.trim()
+    ? body.title.trim()
+    : (typeof body.patternTitle === "string" && body.patternTitle.trim()
+      ? body.patternTitle.trim()
+      : (existingPattern?.title || "Untitled Pattern"));
+  const title = rawTitle;
   
   // Generate clean slug from title if not explicitly provided or invalid
   let slug = typeof body.slug === "string" && body.slug.trim()
@@ -1658,8 +1664,36 @@ function validateAndSanitizePattern(body: any, existingPattern?: Pattern): Patte
   const materials = Array.isArray(body.materials) ? body.materials.filter((m: any) => typeof m === "string" && m.trim()).map((m: any) => m.trim()) : (existingPattern?.materials || []);
   const abbreviationsUsed = Array.isArray(body.abbreviationsUsed) ? body.abbreviationsUsed.filter((a: any) => typeof a === "string" && a.trim()).map((a: any) => a.trim()) : (existingPattern?.abbreviationsUsed || ['sc', 'hdc', 'dc', 'ch', 'sl st']);
   const tags = Array.isArray(body.tags) ? body.tags.filter((t: any) => typeof t === "string" && t.trim()).map((t: any) => t.trim()) : (existingPattern?.tags || [category, difficulty.toLowerCase(), 'free-pattern']);
-  const gallery = Array.isArray(body.gallery) ? body.gallery.filter((g: any) => typeof g === "string" && g.trim()).map((g: any) => g.trim()) : (existingPattern?.gallery || []);
-  const mainImage = typeof body.image === "string" && body.image.trim() ? body.image.trim() : (existingPattern?.image || "https://images.unsplash.com/photo-1584992236310-6edddc08acff?auto=format&fit=crop&w=800&q=80");
+
+  // Extract main cover photo supporting image, coverPhoto, coverImage, imageUrl, photoUrl
+  const candidateMainImage = 
+    (typeof body.image === "string" && body.image.trim() ? body.image.trim() : null) ||
+    (typeof body.coverPhoto === "string" && body.coverPhoto.trim() ? body.coverPhoto.trim() : null) ||
+    (typeof body.coverImage === "string" && body.coverImage.trim() ? body.coverImage.trim() : null) ||
+    (typeof body.imageUrl === "string" && body.imageUrl.trim() ? body.imageUrl.trim() : null) ||
+    (typeof body.photoUrl === "string" && body.photoUrl.trim() ? body.photoUrl.trim() : null);
+
+  const mainImage = candidateMainImage || existingPattern?.image || "https://images.unsplash.com/photo-1584992236310-6edddc08acff?auto=format&fit=crop&w=800&q=80";
+
+  // Extract gallery photos supporting gallery, galleryPhotos, images
+  const rawGalleryCandidate = Array.isArray(body.gallery) && body.gallery.length > 0
+    ? body.gallery
+    : (Array.isArray(body.galleryPhotos) && body.galleryPhotos.length > 0
+      ? body.galleryPhotos
+      : (Array.isArray(body.images) && body.images.length > 0 ? body.images : null));
+
+  let gallery: string[] = [];
+  if (rawGalleryCandidate) {
+    gallery = rawGalleryCandidate
+      .filter((g: any) => typeof g === "string" && g.trim())
+      .map((g: any) => g.trim());
+  } else if (existingPattern?.gallery && existingPattern.gallery.length > 0) {
+    gallery = existingPattern.gallery;
+  }
+
+  if (gallery.length === 0 && mainImage) {
+    gallery = [mainImage];
+  }
 
   const pattern: Pattern = {
     id,
@@ -1696,11 +1730,16 @@ function validateAndSanitizePattern(body: any, existingPattern?: Pattern): Patte
       metaTitle: typeof body.seoMeta.metaTitle === "string" ? body.seoMeta.metaTitle.trim() : undefined,
       metaDescription: typeof body.seoMeta.metaDescription === "string" ? body.seoMeta.metaDescription.trim() : undefined,
       metaKeywords: typeof body.seoMeta.metaKeywords === "string" ? body.seoMeta.metaKeywords.trim() : undefined,
-      ogImage: typeof body.seoMeta.ogImage === "string" ? body.seoMeta.ogImage.trim() : undefined,
+      ogImage: typeof body.seoMeta.ogImage === "string" && body.seoMeta.ogImage.trim() ? body.seoMeta.ogImage.trim() : mainImage,
       ogType: typeof body.seoMeta.ogType === "string" ? body.seoMeta.ogType.trim() : 'article',
       canonicalUrl: typeof body.seoMeta.canonicalUrl === "string" ? body.seoMeta.canonicalUrl.trim() : undefined,
       structuredDataJson: typeof body.seoMeta.structuredDataJson === "string" ? body.seoMeta.structuredDataJson : undefined
-    } : existingPattern?.seoMeta
+    } : (existingPattern?.seoMeta || {
+      metaTitle: `${title} - Free Crochet Pattern`,
+      metaDescription: typeof body.description === "string" ? body.description.trim() : (existingPattern?.description || "Detailed pattern with step-by-step written instructions."),
+      ogImage: mainImage,
+      ogType: 'article'
+    })
   };
 
   return pattern;
@@ -1761,10 +1800,14 @@ app.get("/api/admin/patterns/:id", requireAdminAuth, (req, res) => {
 });
 
 // Admin POST (Create) Pattern Endpoint
-app.post("/api/admin/patterns", requireAdminAuth, (req, res) => {
+app.post("/api/admin/patterns", requireAdminAuth, uploadJsonParser, (req, res) => {
   try {
     const body = req.body || {};
-    if (!body.title || typeof body.title !== "string" || !body.title.trim()) {
+    const titleVal = typeof body.title === "string" && body.title.trim()
+      ? body.title.trim()
+      : (typeof body.patternTitle === "string" && body.patternTitle.trim() ? body.patternTitle.trim() : "");
+
+    if (!titleVal) {
       return res.status(400).json({ error: "Pattern title is required" });
     }
 
@@ -1817,6 +1860,14 @@ app.put("/api/admin/patterns/:id", requireAdminAuth, uploadJsonParser, (req, res
 
     if (!existing) {
       return res.status(404).json({ error: "Pattern not found" });
+    }
+
+    const titleVal = typeof body.title === "string" && body.title.trim()
+      ? body.title.trim()
+      : (typeof body.patternTitle === "string" && body.patternTitle.trim() ? body.patternTitle.trim() : (existing.title || ""));
+
+    if (!titleVal) {
+      return res.status(400).json({ error: "Pattern title is required" });
     }
 
     const updatedPattern = validateAndSanitizePattern(body, existing);

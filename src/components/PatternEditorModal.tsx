@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import { Pattern, CategoryId, Difficulty, SeoMeta, PatternStep } from '../types';
 import { updateHeadMetaTags } from '../utils/seoUtils';
 import { notifyIndexNowClient } from '../utils/indexnow';
@@ -95,91 +95,108 @@ export const PatternEditorModal: React.FC<PatternEditorModalProps> = ({
   const [pdfAutoFillSuccess, setPdfAutoFillSuccess] = useState<string | null>(null);
   const [pdfFileName, setPdfFileName] = useState<string | null>(null);
 
-  // Synchronize form fields whenever initialPattern or modal open state changes
+  const prevIsOpenRef = useRef(false);
+  const prevPatternIdRef = useRef<string | undefined>(undefined);
+
+  // Synchronize form fields only when modal opens or pattern ID changes
   useEffect(() => {
-    if (!isOpen) return;
-
-    if (initialPattern) {
-      setTitle(initialPattern.title || '');
-      setSubtitle(initialPattern.subtitle || '');
-      setCategory((initialPattern.category as CategoryId) || 'blankets');
-      setDifficulty((initialPattern.difficulty as Difficulty) || 'Easy');
-      setDescription(initialPattern.description || '');
-      setHookSize(initialPattern.hookSize || '5.0 mm (H-8)');
-      setYarnWeight(initialPattern.yarnWeight || 'Medium / Worsted (#4)');
-      setGauge(initialPattern.gauge || '14 sts and 10 rows = 4 inches (10 cm)');
-      setMaterials(
-        Array.isArray(initialPattern.materials) && initialPattern.materials.length > 0
-          ? initialPattern.materials.join(', ')
-          : (typeof initialPattern.materials === 'string' ? initialPattern.materials : 'Worsted Yarn, 5mm Crochet Hook, Tapestry Needle, Scissors')
-      );
-      setPdfUrl(initialPattern.pdfUrl || '');
-
-      setSteps(
-        Array.isArray(initialPattern.steps) && initialPattern.steps.length > 0
-          ? initialPattern.steps
-          : [
-              { rowNumber: 'Row 1', instruction: 'Chain foundation stitches and double crochet across row.' },
-              { rowNumber: 'Row 2', instruction: 'Turn work, chain 2, double crochet in each stitch across.' }
-            ]
-      );
-
-      const defaultImg = initialPattern.image || 'https://images.unsplash.com/photo-1584992236310-6edddc08acff?auto=format&fit=crop&w=800&q=80';
-      setMainImage(defaultImg);
-      setGallery(
-        Array.isArray(initialPattern.gallery) && initialPattern.gallery.length > 0
-          ? initialPattern.gallery
-          : [defaultImg]
-      );
-
-      setMetaTitle(
-        initialPattern.seoMeta?.metaTitle || (initialPattern.title ? `${initialPattern.title} - Free Crochet Pattern` : '')
-      );
-      setMetaDescription(
-        initialPattern.seoMeta?.metaDescription || initialPattern.description || ''
-      );
-      setMetaKeywords(
-        initialPattern.seoMeta?.metaKeywords || 'crochet pattern, free crochet pattern, handmade, yarn pattern'
-      );
-      setOgImage(
-        initialPattern.seoMeta?.ogImage || initialPattern.image || defaultImg
-      );
-      setCanonicalUrl(
-        initialPattern.seoMeta?.canonicalUrl || (initialPattern.slug ? `https://welovepattern.com/pattern/${initialPattern.slug}` : '')
-      );
-    } else {
-      // Reset to clean new-pattern defaults
-      setTitle('');
-      setSubtitle('');
-      setCategory('blankets');
-      setDifficulty('Easy');
-      setDescription('');
-      setHookSize('5.0 mm (H-8)');
-      setYarnWeight('Medium / Worsted (#4)');
-      setGauge('14 sts and 10 rows = 4 inches (10 cm)');
-      setMaterials('Worsted Yarn, 5mm Crochet Hook, Tapestry Needle, Scissors');
-      setPdfUrl('');
-      setSteps([
-        { rowNumber: 'Row 1', instruction: 'Chain foundation stitches and double crochet across row.' },
-        { rowNumber: 'Row 2', instruction: 'Turn work, chain 2, double crochet in each stitch across.' }
-      ]);
-      const defaultImg = 'https://images.unsplash.com/photo-1584992236310-6edddc08acff?auto=format&fit=crop&w=800&q=80';
-      setMainImage(defaultImg);
-      setGallery([defaultImg]);
-      setMetaTitle('');
-      setMetaDescription('');
-      setMetaKeywords('crochet pattern, free crochet pattern, handmade, yarn pattern');
-      setOgImage(defaultImg);
-      setCanonicalUrl('');
+    if (!isOpen) {
+      prevIsOpenRef.current = false;
+      prevPatternIdRef.current = undefined;
+      return;
     }
 
-    setSavedSuccess(false);
-    setIsSaving(false);
-    setSaveError(null);
-    setIsParsingPdf(false);
-    setPdfAutoFillSuccess(null);
-    setPdfFileName(null);
-    setActiveTab('write');
+    const currentPatternId = initialPattern?.id;
+    const justOpened = !prevIsOpenRef.current;
+    const patternChanged = currentPatternId !== prevPatternIdRef.current;
+
+    // Only reset/initialize state when opening the modal or switching to another pattern
+    if (justOpened || patternChanged) {
+      prevIsOpenRef.current = true;
+      prevPatternIdRef.current = currentPatternId;
+
+      if (initialPattern) {
+        setTitle(initialPattern.title || '');
+        setSubtitle(initialPattern.subtitle || '');
+        setCategory((initialPattern.category as CategoryId) || 'blankets');
+        setDifficulty((initialPattern.difficulty as Difficulty) || 'Easy');
+        setDescription(initialPattern.description || '');
+        setHookSize(initialPattern.hookSize || '5.0 mm (H-8)');
+        setYarnWeight(initialPattern.yarnWeight || 'Medium / Worsted (#4)');
+        setGauge(initialPattern.gauge || '14 sts and 10 rows = 4 inches (10 cm)');
+        setMaterials(
+          Array.isArray(initialPattern.materials) && initialPattern.materials.length > 0
+            ? initialPattern.materials.join(', ')
+            : (typeof initialPattern.materials === 'string' ? initialPattern.materials : 'Worsted Yarn, 5mm Crochet Hook, Tapestry Needle, Scissors')
+        );
+        setPdfUrl(initialPattern.pdfUrl || '');
+
+        setSteps(
+          Array.isArray(initialPattern.steps) && initialPattern.steps.length > 0
+            ? initialPattern.steps
+            : [
+                { rowNumber: 'Row 1', instruction: 'Chain foundation stitches and double crochet across row.' },
+                { rowNumber: 'Row 2', instruction: 'Turn work, chain 2, double crochet in each stitch across.' }
+              ]
+        );
+
+        const defaultImg = initialPattern.image || 'https://images.unsplash.com/photo-1584992236310-6edddc08acff?auto=format&fit=crop&w=800&q=80';
+        setMainImage(defaultImg);
+        setGallery(
+          Array.isArray(initialPattern.gallery) && initialPattern.gallery.length > 0
+            ? initialPattern.gallery
+            : [defaultImg]
+        );
+
+        setMetaTitle(
+          initialPattern.seoMeta?.metaTitle || (initialPattern.title ? `${initialPattern.title} - Free Crochet Pattern` : '')
+        );
+        setMetaDescription(
+          initialPattern.seoMeta?.metaDescription || initialPattern.description || ''
+        );
+        setMetaKeywords(
+          initialPattern.seoMeta?.metaKeywords || 'crochet pattern, free crochet pattern, handmade, yarn pattern'
+        );
+        setOgImage(
+          initialPattern.seoMeta?.ogImage || initialPattern.image || defaultImg
+        );
+        setCanonicalUrl(
+          initialPattern.seoMeta?.canonicalUrl || (initialPattern.slug ? `https://welovepattern.com/pattern/${initialPattern.slug}` : '')
+        );
+      } else {
+        // Reset to clean new-pattern defaults
+        setTitle('');
+        setSubtitle('');
+        setCategory('blankets');
+        setDifficulty('Easy');
+        setDescription('');
+        setHookSize('5.0 mm (H-8)');
+        setYarnWeight('Medium / Worsted (#4)');
+        setGauge('14 sts and 10 rows = 4 inches (10 cm)');
+        setMaterials('Worsted Yarn, 5mm Crochet Hook, Tapestry Needle, Scissors');
+        setPdfUrl('');
+        setSteps([
+          { rowNumber: 'Row 1', instruction: 'Chain foundation stitches and double crochet across row.' },
+          { rowNumber: 'Row 2', instruction: 'Turn work, chain 2, double crochet in each stitch across.' }
+        ]);
+        const defaultImg = 'https://images.unsplash.com/photo-1584992236310-6edddc08acff?auto=format&fit=crop&w=800&q=80';
+        setMainImage(defaultImg);
+        setGallery([defaultImg]);
+        setMetaTitle('');
+        setMetaDescription('');
+        setMetaKeywords('crochet pattern, free crochet pattern, handmade, yarn pattern');
+        setOgImage(defaultImg);
+        setCanonicalUrl('');
+      }
+
+      setSavedSuccess(false);
+      setIsSaving(false);
+      setSaveError(null);
+      setIsParsingPdf(false);
+      setPdfAutoFillSuccess(null);
+      setPdfFileName(null);
+      setActiveTab('write');
+    }
   }, [initialPattern, isOpen]);
 
   if (!isOpen) return null;
@@ -310,11 +327,14 @@ const handleFileUpload = async (
         if (target === 'main') {
           setMainImage(imageUrl);
 
-          if (!ogImage || ogImage === mainImage) {
+          if (!ogImage || ogImage === mainImage || ogImage.includes('unsplash.com')) {
             setOgImage(imageUrl);
           }
         } else {
-          setGallery(prev => [...prev, imageUrl]);
+          setGallery(prev => {
+            const filtered = prev.filter(g => !g.includes('photo-1584992236310-6edddc08acff'));
+            return [...filtered, imageUrl];
+          });
         }
       } catch (err) {
         console.error('Pattern image upload failed:', err);
@@ -349,47 +369,62 @@ const handleFileUpload = async (
 
   // Auto Generate SEO Meta Tags
   const handleAutoGenerateSEO = () => {
-    if (title) {
-      const autoTitle = `${title} | Free ${difficulty} Crochet Pattern`;
+    if (title.trim()) {
+      const trimmedTitle = title.trim();
+      const autoTitle = `${trimmedTitle} | Free ${difficulty} Crochet Pattern`;
       setMetaTitle(autoTitle);
 
-      const autoDesc = description 
-        ? `${description.slice(0, 150)}... Download free PDF crochet pattern with step-by-step instructions!`
-        : `Free ${difficulty} level crochet pattern for ${title}. Includes materials, gauge, stitch guides and downloadable PDF.`;
+      const autoDesc = description.trim() 
+        ? `${description.trim().slice(0, 150)}... Download free PDF crochet pattern with step-by-step instructions!`
+        : `Free ${difficulty} level crochet pattern for ${trimmedTitle}. Includes materials, gauge, stitch guides and downloadable PDF.`;
       setMetaDescription(autoDesc);
 
-      const computedKeywords = `${title.toLowerCase()}, free crochet pattern, ${category} crochet, ${difficulty.toLowerCase()} pattern, ${yarnWeight.toLowerCase()}`;
+      const computedKeywords = `${trimmedTitle.toLowerCase()}, free crochet pattern, ${category} crochet, ${difficulty.toLowerCase()} pattern, ${yarnWeight.toLowerCase()}`;
       setMetaKeywords(computedKeywords);
 
-      const slug = title.toLowerCase().trim().replace(/[^a-z0-9]+/g, '-');
+      const slug = trimmedTitle.toLowerCase().replace(/[^a-z0-9]+/g, '-').replace(/^-|-$/g, '') || `pattern-${Date.now()}`;
       setCanonicalUrl(`https://welovepattern.com/pattern/${slug}`);
-      setOgImage(mainImage);
+      if (!ogImage || ogImage.includes('unsplash.com')) {
+        setOgImage(mainImage);
+      }
     }
   };
 
   // Submit & Save
   const handleSave = async (e: React.FormEvent) => {
     e.preventDefault();
-    if (!title.trim() || isSaving) return;
+    if (isSaving) return;
+
+    const trimmedTitle = title.trim();
+    if (!trimmedTitle) {
+      setSaveError('Pattern title is required');
+      setActiveTab('write');
+      return;
+    }
 
     setSaveError(null);
     setIsSaving(true);
 
-    const slug = title.toLowerCase().trim().replace(/[^a-z0-9]+/g, '-');
+    const slug = trimmedTitle.toLowerCase().replace(/[^a-z0-9]+/g, '-').replace(/^-|-$/g, '') || `pattern-${Date.now()}`;
+
+    const effectiveMainImage = mainImage.trim() || (gallery.length > 0 ? gallery[0] : 'https://images.unsplash.com/photo-1584992236310-6edddc08acff?auto=format&fit=crop&w=800&q=80');
+    const effectiveGallery = gallery.filter(g => typeof g === 'string' && g.trim()).length > 0
+      ? gallery.filter(g => typeof g === 'string' && g.trim())
+      : (effectiveMainImage ? [effectiveMainImage] : []);
 
     const seoMetaObj: SeoMeta = {
-      metaTitle: metaTitle || `${title} - Free Crochet Pattern`,
-      metaDescription: metaDescription || description,
-      metaKeywords: metaKeywords,
-      ogImage: ogImage || mainImage,
-      canonicalUrl: canonicalUrl || `https://welovepattern.com/pattern/${slug}`,
+      metaTitle: metaTitle.trim() || `${trimmedTitle} - Free Crochet Pattern`,
+      metaDescription: metaDescription.trim() || description.trim() || 'Detailed pattern with step-by-step written instructions.',
+      metaKeywords: metaKeywords.trim() || 'crochet pattern, free crochet pattern, handmade, yarn pattern',
+      ogImage: ogImage.trim() || effectiveMainImage,
+      canonicalUrl: canonicalUrl.trim() || `https://welovepattern.com/pattern/${slug}`,
       ogType: 'article',
       structuredDataJson: JSON.stringify({
         '@context': 'https://schema.org',
         '@type': 'HowTo',
-        'name': title,
-        'description': description,
-        'image': mainImage,
+        'name': trimmedTitle,
+        'description': description.trim() || 'Detailed pattern with step-by-step written instructions.',
+        'image': effectiveMainImage,
         'totalTime': 'PT4H',
         'estimatedCost': {
           '@type': 'MonetaryAmount',
@@ -397,20 +432,27 @@ const handleFileUpload = async (
           'value': '10'
         },
         'tool': [{ '@type': 'HowToTool', 'name': hookSize }],
-        'supply': materials.split(',').map(m => ({ '@type': 'HowToSupply', 'name': m.trim() }))
+        'supply': materials.split(',').map(m => ({ '@type': 'HowToSupply', 'name': m.trim() })).filter(s => s.name)
       })
     };
 
-    const patternPayload: Pattern = {
+    const patternPayload: any = {
       id: initialPattern?.id || `p-${Date.now()}`,
       slug: slug,
-      title: title,
-      subtitle: subtitle || `Handcrafted ${difficulty} ${category} crochet project`,
-      description: description || 'Detailed pattern with step-by-step written instructions.',
+      title: trimmedTitle,
+      patternTitle: trimmedTitle,
+      subtitle: subtitle.trim() || `Handcrafted ${difficulty} ${category} crochet project`,
+      description: description.trim() || 'Detailed pattern with step-by-step written instructions.',
       difficulty: difficulty,
       category: category,
-      image: mainImage,
-      gallery: gallery.length > 0 ? gallery : [mainImage],
+      image: effectiveMainImage,
+      coverPhoto: effectiveMainImage,
+      coverImage: effectiveMainImage,
+      imageUrl: effectiveMainImage,
+      photoUrl: effectiveMainImage,
+      gallery: effectiveGallery,
+      galleryPhotos: effectiveGallery,
+      images: effectiveGallery,
       rating: initialPattern?.rating || 5.0,
       reviewCount: initialPattern?.reviewCount || 1,
       downloadsCount: initialPattern?.downloadsCount || 0,
@@ -547,7 +589,7 @@ const handleFileUpload = async (
         </div>
 
         {/* Form Body */}
-        <form onSubmit={handleSave} className="p-6 overflow-y-auto space-y-6 flex-1">
+        <form onSubmit={handleSave} noValidate className="p-6 overflow-y-auto space-y-6 flex-1">
           
           {/* TAB 1: WRITE PATTERN */}
           {activeTab === 'write' && (
@@ -610,7 +652,10 @@ const handleFileUpload = async (
                     type="text"
                     required
                     value={title}
-                    onChange={(e) => setTitle(e.target.value)}
+                    onChange={(e) => {
+                      setTitle(e.target.value);
+                      if (saveError) setSaveError(null);
+                    }}
                     placeholder="e.g. Sunny Daisy Granny Square Blanket"
                     className="w-full px-4 py-2.5 rounded-xl border border-slate-200 dark:border-slate-700 bg-slate-50 dark:bg-slate-800 focus:outline-none focus:ring-2 focus:ring-[#E96BA8] text-sm"
                   />
@@ -825,10 +870,16 @@ const handleFileUpload = async (
                     <div className="space-y-1">
                       <label className="text-xs font-bold text-slate-600 dark:text-slate-400">Or enter Photo Image URL</label>
                       <input
-                        type="url"
+                        type="text"
                         value={mainImage}
-                        onChange={(e) => setMainImage(e.target.value)}
-                        placeholder="https://images.unsplash.com/..."
+                        onChange={(e) => {
+                          const val = e.target.value;
+                          setMainImage(val);
+                          if (!ogImage || ogImage === mainImage || ogImage.includes('unsplash.com')) {
+                            setOgImage(val);
+                          }
+                        }}
+                        placeholder="https://images.unsplash.com/... or /uploads/patterns/..."
                         className="w-full px-3.5 py-2 rounded-xl border border-slate-200 dark:border-slate-700 bg-slate-50 dark:bg-slate-800 text-xs focus:ring-2 focus:ring-[#E96BA8]"
                       />
                     </div>
@@ -943,7 +994,7 @@ const handleFileUpload = async (
                 <div className="space-y-1.5">
                   <label className="text-xs font-bold text-slate-700 dark:text-slate-300">Canonical URL (&lt;link rel="canonical"&gt;)</label>
                   <input
-                    type="url"
+                    type="text"
                     value={canonicalUrl}
                     onChange={(e) => setCanonicalUrl(e.target.value)}
                     placeholder="https://welovepattern.com/pattern/my-pattern-slug"
@@ -954,10 +1005,10 @@ const handleFileUpload = async (
                 <div className="space-y-1.5 md:col-span-2">
                   <label className="text-xs font-bold text-slate-700 dark:text-slate-300">Social OpenGraph Image URL (og:image &amp; twitter:image)</label>
                   <input
-                    type="url"
+                    type="text"
                     value={ogImage}
                     onChange={(e) => setOgImage(e.target.value)}
-                    placeholder="https://images.unsplash.com/..."
+                    placeholder="https://images.unsplash.com/... or /uploads/patterns/..."
                     className="w-full px-4 py-2.5 rounded-xl border border-slate-200 dark:border-slate-700 bg-slate-50 dark:bg-slate-800 text-xs focus:ring-2 focus:ring-[#E96BA8]"
                   />
                 </div>

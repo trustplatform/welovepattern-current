@@ -1,5 +1,66 @@
 [
   {
+    "id": "pat_daisy-bloom-hexagon-cardigan-1788607017372_mtoafr8e",
+    "slug": "daisy-bloom-hexagon-cardigan-1788607017372",
+    "title": "Daisy Bloom Hexagon Cardigan 1788607017372",
+    "subtitle": "A modern hexagon granny stitch cardigan",
+    "description": "Detailed step-by-step cardigan pattern with hexagon construction.",
+    "difficulty": "Intermediate",
+    "category": "sweaters",
+    "image": "/uploads/patterns/pattern_1788607017365_842c72cb.png",
+    "gallery": [
+      "/uploads/patterns/pattern_1788607017365_842c72cb.png",
+      "/uploads/patterns/pattern_1788607017370_6e314f8a.png"
+    ],
+    "rating": 5,
+    "reviewCount": 1,
+    "downloadsCount": 0,
+    "hookSize": "5.5 mm (I-9)",
+    "yarnWeight": "Medium / Worsted (#4)",
+    "yarnMetersNeeded": 450,
+    "finishedSize": "Standard Size",
+    "estimatedTimeHours": 4,
+    "createdAt": "2026-09-05",
+    "materials": [
+      "Worsted yarn 1200m",
+      "5.5mm hook",
+      "stitch markers"
+    ],
+    "gauge": "12 dc x 7 rows = 4 inches",
+    "abbreviationsUsed": [
+      "sc",
+      "hdc",
+      "dc",
+      "ch",
+      "sl st"
+    ],
+    "steps": [
+      {
+        "rowNumber": "Round 1",
+        "instruction": "Work 6 clusters into magic ring"
+      },
+      {
+        "rowNumber": "Round 2",
+        "instruction": "Work 2 clusters into each chain space to form hexagon"
+      }
+    ],
+    "pdfSize": "1.2 MB",
+    "pdfPages": 3,
+    "tags": [
+      "sweaters",
+      "intermediate",
+      "free-pattern"
+    ],
+    "seoMeta": {
+      "metaTitle": "Daisy Bloom Hexagon Cardigan 1788607017372 - Free Crochet Pattern",
+      "metaDescription": "Download free hexagon cardigan crochet pattern with full tutorial.",
+      "metaKeywords": "hexagon cardigan, crochet sweater, free pattern",
+      "ogImage": "/uploads/patterns/pattern_1788607017365_842c72cb.png",
+      "ogType": "article",
+      "canonicalUrl": "https://welovepattern.com/pattern/daisy-bloom-hexagon-cardigan"
+    }
+  },
+  {
     "id": "p-1786962399642",
     "slug": "sporty-lounge-set-sewing-pattern-off-shoulder-sweatshirt",
     "title": "Sporty Lounge Set Sewing Pattern  Off Shoulder Sweatshirt",
