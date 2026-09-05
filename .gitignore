@@ -9,3 +9,7 @@ coverage/
 
 *.zip
 *.save
+
+# OAuth tokens & secrets
+data/pinterest-auth.json
+*pinterest-auth.json

@@ -204,3 +204,24 @@ export interface Abbreviation {
   symbol?: string;
   difficulty: 'Basic' | 'Intermediate' | 'Advanced';
 }
+
+export interface SafePinterestAccount {
+  username?: string;
+  businessName?: string;
+  profileImage?: string;
+  accountType?: string;
+}
+
+export interface SafePinterestStatus {
+  connected: boolean;
+  configured: boolean;
+  appIdConfigured: boolean;
+  appSecretConfigured: boolean;
+  redirectUri: string;
+  account: SafePinterestAccount | null;
+  scope: string | null;
+  connectedAt: string | null;
+  expiresAt: number | null;
+  isExpired: boolean;
+  error?: string | null;
+}

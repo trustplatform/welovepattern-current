@@ -10,6 +10,8 @@ import { BlogAdmin } from '../components/admin/BlogAdmin';
 import { SiteVerificationAdmin } from '../components/admin/SiteVerificationAdmin';
 import { PatternSeoAdmin } from '../components/admin/PatternSeoAdmin';
 import { PagesAdmin } from '../components/admin/PagesAdmin';
+import { PinterestPinModal } from '../components/admin/PinterestPinModal';
+import { PinterestAdmin } from '../components/admin/PinterestAdmin';
 import { 
   ShieldCheck, 
   Grid, 
@@ -39,7 +41,8 @@ import {
   Layers,
   Mail,
   Menu,
-  ChevronRight
+  ChevronRight,
+  Share2
 } from 'lucide-react';
 
 interface AdminViewProps {
@@ -65,9 +68,23 @@ export const AdminView: React.FC<AdminViewProps> = ({
   onDeleteReview,
   onCategoriesUpdated
 }) => {
-  const [activeTab, setActiveTab] = useState<'dashboard' | 'pattern-seo' | 'blog' | 'pages' | 'categories' | 'patterns' | 'reviews' | 'maillist' | 'analytics' | 'tools' | 'verification'>('dashboard');
+  const [activeTab, setActiveTab] = useState<'dashboard' | 'pattern-seo' | 'blog' | 'pages' | 'categories' | 'patterns' | 'reviews' | 'maillist' | 'analytics' | 'tools' | 'verification' | 'pinterest'>('dashboard');
   const [patternForReviewsModal, setPatternForReviewsModal] = useState<string | null>(null);
+  const [patternForPinterestModal, setPatternForPinterestModal] = useState<Pattern | null>(null);
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState<boolean>(false);
+
+  // Check URL query parameters for initial tab (e.g. ?view=admin&tab=pinterest)
+  useEffect(() => {
+    try {
+      const searchParams = new URLSearchParams(window.location.search);
+      const tabParam = searchParams.get('tab');
+      if (tabParam === 'pinterest') {
+        setActiveTab('pinterest');
+      }
+    } catch {
+      // ignore
+    }
+  }, []);
 
   // --- AUTHENTICATION STATE ---
   const [isAuthenticated, setIsAuthenticated] = useState<boolean>(false);
@@ -253,7 +270,7 @@ export const AdminView: React.FC<AdminViewProps> = ({
     );
   }
 
-  type AdminTabType = 'dashboard' | 'patterns' | 'pattern-seo' | 'blog' | 'pages' | 'categories' | 'reviews' | 'maillist' | 'analytics' | 'tools' | 'verification';
+  type AdminTabType = 'dashboard' | 'patterns' | 'pattern-seo' | 'blog' | 'pages' | 'categories' | 'reviews' | 'maillist' | 'analytics' | 'tools' | 'verification' | 'pinterest';
 
   interface AdminNavItem {
     id: AdminTabType;
@@ -289,6 +306,7 @@ export const AdminView: React.FC<AdminViewProps> = ({
     {
       title: 'Analytics & Tools',
       items: [
+        { id: 'pinterest', label: 'Pinterest Integration', icon: Share2 },
         { id: 'analytics', label: 'Download Analytics', icon: BarChart3 },
         { id: 'tools', label: 'Craft Tools Metrics', icon: Wrench },
         { id: 'verification', label: 'Site Verification', icon: ShieldCheck },
@@ -593,7 +611,17 @@ export const AdminView: React.FC<AdminViewProps> = ({
                           </td>
 
                           <td className="py-3.5 px-5 font-mono">{p.downloadsCount.toLocaleString('en-US')}</td>
-                          <td className="py-3.5 px-5 text-right flex items-center justify-end gap-1">
+                          <td className="py-3.5 px-5 text-right flex items-center justify-end gap-1.5">
+                            <button
+                              id={`generate-pin-btn-${p.id}`}
+                              onClick={() => setPatternForPinterestModal(p)}
+                              className="px-2.5 py-1.5 text-xs font-bold bg-rose-50 text-rose-600 hover:bg-rose-100 dark:bg-rose-950/50 dark:text-rose-300 dark:hover:bg-rose-900/60 rounded-xl cursor-pointer flex items-center gap-1 transition-colors"
+                              title="Generate Pinterest Pin (Template A)"
+                            >
+                              <Share2 className="w-3.5 h-3.5" />
+                              <span>Pinterest</span>
+                            </button>
+
                             <button
                               onClick={() => onOpenPatternEditor ? onOpenPatternEditor(p) : null}
                               className="px-3 py-1.5 text-xs font-bold bg-pink-50 text-[#E96BA8] hover:bg-pink-100 rounded-xl cursor-pointer flex items-center gap-1 transition-colors"
@@ -647,6 +675,11 @@ export const AdminView: React.FC<AdminViewProps> = ({
           {activeTab === 'tools' && (
             <CraftToolsSeoAdmin />
           )}
+
+          {/* TAB CONTENT: PINTEREST INTEGRATION & OAUTH */}
+          {activeTab === 'pinterest' && (
+            <PinterestAdmin />
+          )}
         </main>
       </div>
 
@@ -665,6 +698,15 @@ export const AdminView: React.FC<AdminViewProps> = ({
             />
           </div>
         </div>
+      )}
+
+      {/* PINTEREST PIN GENERATOR MODAL (TEMPLATE A) */}
+      {patternForPinterestModal && (
+        <PinterestPinModal
+          isOpen={!!patternForPinterestModal}
+          onClose={() => setPatternForPinterestModal(null)}
+          pattern={patternForPinterestModal}
+        />
       )}
 
     </div>

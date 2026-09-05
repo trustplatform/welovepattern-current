@@ -2,6 +2,15 @@ export const TEMPLATE_A = {
   width: 1000,
   height: 1500,
 
+  headerCraft: {
+    x: 55,
+    y: 118,
+    width: 370,
+    height: 104,
+    color: "#0B5C5C",
+    bgColor: "#FEF7EF",
+  },
+
   mainImage: {
     x: 473,
     y: 43,

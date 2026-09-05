@@ -12,11 +12,25 @@ import { PATTERNS_DATA } from "./src/data/patternsData";
 import { DEFAULT_SITE_PAGES } from "./src/data/defaultSitePages";
 import { sanitizeBlogHtml, sanitizePatternSeoHtml, sanitizePageHtml } from "./src/utils/sanitizeHtml";
 import { Pattern } from "./src/types";
+import { renderPinterestTemplateA } from "./src/pinterest/renderer/renderTemplateA";
+import {
+  buildPinterestAuthUrl,
+  createOAuthState,
+  validateAndConsumeOAuthState,
+  exchangePinterestCode,
+  fetchPinterestUserAccount,
+  savePinterestAuthRecord,
+  clearPinterestAuthRecord,
+  getSafePinterestStatus,
+  getPinterestRedirectUri,
+  renderOAuthCallbackHtml,
+  PinterestAuthRecord
+} from "./src/pinterest/pinterestOAuth";
 
 dotenv.config();
 
 const app = express();
-const PORT = process.env.PORT ? parseInt(process.env.PORT, 10) : 3000;
+const PORT = 3000;
 const SITE_URL = "https://welovepattern.com";
 
 // Security Hardening: Disable X-Powered-By and enable Trust Proxy
@@ -372,8 +386,8 @@ app.use((req, res, next) => {
     return res.status(400).end();
   }
 
-  // Allow static /uploads/* for legitimate uploaded media assets
-  if (reqPath.startsWith("/uploads/")) {
+  // Allow static /uploads/* and /generated/* for legitimate media assets
+  if (reqPath.startsWith("/uploads/") || reqPath.startsWith("/generated/")) {
     return next();
   }
 
@@ -463,8 +477,9 @@ app.use((req, res, next) => {
 });
 app.use(express.urlencoded({ limit: "256kb", extended: true }));
 
-// Serve public uploads
+// Serve public uploads & generated Pinterest assets
 app.use("/uploads", express.static(path.join(process.cwd(), "data", "uploads")));
+app.use("/generated", express.static(path.join(process.cwd(), "public", "generated")));
 
 // Initialize Gemini client lazily/safely if key present
 const getGeminiClient = () => {
@@ -540,6 +555,18 @@ function isAdminAuthenticated(req: express.Request): boolean {
   }
 
   return true;
+}
+
+function getAdminSessionToken(req: express.Request): string | null {
+  const cookies = parseCookies(req);
+  const cookieToken = cookies["admin_session"];
+  const authHeader = req.headers.authorization;
+  const headerToken = authHeader && authHeader.startsWith("Bearer ") ? authHeader.substring(7) : null;
+  const token = cookieToken || headerToken;
+  if (!token) return null;
+  const session = activeAdminSessions.get(token);
+  if (!session || Date.now() > session.expiresAt) return null;
+  return token;
 }
 
 // CSRF / Origin Validation for state-changing admin endpoints
@@ -1858,6 +1885,303 @@ app.delete("/api/admin/patterns/:id", requireAdminAuth, (req, res) => {
   } catch (err: any) {
     console.error("Error deleting pattern:", err);
     return res.status(500).json({ error: err.message || "Failed to delete pattern" });
+  }
+});
+
+// Admin POST: Generate Pinterest Pin for a Pattern using Template A
+app.post("/api/admin/patterns/:id/generate-pin", requireAdminAuth, async (req, res) => {
+  try {
+    const { id } = req.params;
+    const patterns = getEffectivePatterns();
+    const pattern = patterns.find(p => p.id === id || p.slug === id);
+
+    if (!pattern) {
+      return res.status(404).json({ error: "Pattern not found" });
+    }
+
+    if (!pattern.image) {
+      return res.status(400).json({
+        error: "Pattern does not have a primary image required for Pinterest pin rendering"
+      });
+    }
+
+    const result = await renderPinterestTemplateA({
+      id: pattern.id,
+      slug: pattern.slug,
+      title: pattern.title,
+      subtitle: pattern.subtitle,
+      description: pattern.description,
+      difficulty: pattern.difficulty,
+      image: pattern.image,
+      gallery: pattern.gallery,
+      category: pattern.category,
+      tags: pattern.tags,
+      hookSize: pattern.hookSize,
+      materials: pattern.materials,
+      pdfUrl: pattern.pdfUrl,
+      isFree: (pattern as any).isFree,
+      price: (pattern as any).price,
+    });
+
+    return res.json({
+      success: true,
+      message: "Pinterest pin generated successfully with Template A (1000x1500)",
+      pinUrl: result.publicUrl,
+      filename: result.filename,
+      width: result.width,
+      height: result.height,
+      pattern: {
+        id: pattern.id,
+        slug: pattern.slug,
+        title: pattern.title,
+      }
+    });
+  } catch (err: any) {
+    console.error("Error generating Pinterest pin for pattern:", err);
+    return res.status(500).json({
+      error: err?.message || "Failed to generate Pinterest pin using Template A"
+    });
+  }
+});
+
+// Admin GET: Check existing Pinterest Pin status for a Pattern
+app.get("/api/admin/patterns/:id/pin-status", requireAdminAuth, (req, res) => {
+  try {
+    const { id } = req.params;
+    const patterns = getEffectivePatterns();
+    const pattern = patterns.find(p => p.id === id || p.slug === id);
+
+    if (!pattern) {
+      return res.status(404).json({ error: "Pattern not found" });
+    }
+
+    const filename = `pin-${pattern.slug || pattern.id}.png`;
+    const pinFile = path.join(process.cwd(), "public", "generated", "pinterest", filename);
+    const exists = fs.existsSync(pinFile);
+
+    return res.json({
+      exists,
+      pinUrl: exists ? `/generated/pinterest/${filename}` : null,
+      filename: exists ? filename : null,
+    });
+  } catch (err: any) {
+    return res.status(500).json({ error: "Failed to check pin status" });
+  }
+});
+
+// ============================================================================
+// PINTEREST OAUTH 2.0 AUTHORIZATION CODE FLOW ENDPOINTS
+// ============================================================================
+
+// 1. Safe Status Endpoint (Authenticated Admin only)
+// NEVER exposes access_token, refresh_token, or client secrets to frontend
+app.get("/api/admin/pinterest/status", requireAdminAuth, async (req, res) => {
+  try {
+    const status = await getSafePinterestStatus();
+    return res.json(status);
+  } catch (err: any) {
+    console.error("Error checking Pinterest status:", err);
+    return res.status(500).json({ error: "Failed to fetch Pinterest status", message: err?.message });
+  }
+});
+
+// 2. OAuth Start Endpoint - Generates auth URL for popup window (Authenticated Admin only)
+app.get("/api/admin/pinterest/auth-url", requireAdminAuth, (req, res) => {
+  try {
+    const sessionToken = getAdminSessionToken(req);
+    if (!sessionToken) {
+      return res.status(401).json({ error: "Unauthorized. Valid Admin session required to connect Pinterest." });
+    }
+
+    const state = createOAuthState(sessionToken);
+    const redirectUri = getPinterestRedirectUri();
+    const { url, error } = buildPinterestAuthUrl(state, redirectUri);
+
+    if (error || !url) {
+      return res.status(400).json({ error: error || "Failed to generate Pinterest authorization URL" });
+    }
+
+    return res.json({
+      success: true,
+      url,
+      redirectUri
+    });
+  } catch (err: any) {
+    console.error("Error generating Pinterest auth URL:", err);
+    return res.status(500).json({ error: err?.message || "Failed to start Pinterest OAuth flow" });
+  }
+});
+
+// 3. OAuth Direct Start Endpoint - For direct browser redirection (Authenticated Admin only)
+app.get("/api/admin/pinterest/connect", requireAdminAuth, (req, res) => {
+  try {
+    const sessionToken = getAdminSessionToken(req);
+    if (!sessionToken) {
+      return res.status(401).send(renderOAuthCallbackHtml({
+        success: false,
+        title: "Unauthorized",
+        message: "You must be signed in as Admin to connect Pinterest.",
+        nonce: res.locals.nonce
+      }));
+    }
+
+    const state = createOAuthState(sessionToken);
+    const redirectUri = getPinterestRedirectUri();
+    const { url, error } = buildPinterestAuthUrl(state, redirectUri);
+
+    if (error || !url) {
+      return res.status(400).send(renderOAuthCallbackHtml({
+        success: false,
+        title: "Configuration Error",
+        message: error || "Pinterest App credentials are not configured.",
+        nonce: res.locals.nonce
+      }));
+    }
+
+    return res.redirect(url);
+  } catch (err: any) {
+    console.error("Error redirecting to Pinterest OAuth:", err);
+    return res.status(500).send(renderOAuthCallbackHtml({
+      success: false,
+      title: "Connection Error",
+      message: err?.message || "Failed to connect to Pinterest.",
+      nonce: res.locals.nonce
+    }));
+  }
+});
+
+// 4. OAuth Callback Endpoint - Handles redirection back from Pinterest
+// Handles both /api/admin/pinterest/callback and /api/admin/pinterest/callback/
+app.get(["/api/admin/pinterest/callback", "/api/admin/pinterest/callback/"], async (req, res) => {
+  const nonce = res.locals.nonce;
+
+  try {
+    // Check if Pinterest reported an authorization error or user denied
+    if (req.query.error) {
+      const errCode = String(req.query.error || "");
+      const errDesc = String(req.query.error_description || "Authorization was cancelled or denied on Pinterest.");
+      return res.status(400).send(renderOAuthCallbackHtml({
+        success: false,
+        title: "Authorization Cancelled",
+        message: errDesc,
+        error: `Pinterest error: ${errCode}`,
+        nonce
+      }));
+    }
+
+    // Validate state parameter to protect against CSRF attacks
+    const state = typeof req.query.state === "string" ? req.query.state : "";
+    const cookies = parseCookies(req);
+    const cookieToken = cookies["admin_session"] || null;
+
+    const stateValidation = validateAndConsumeOAuthState(
+      state,
+      (token: string) => {
+        const session = activeAdminSessions.get(token);
+        return !!session && Date.now() <= session.expiresAt;
+      },
+      cookieToken
+    );
+
+    if (!stateValidation.valid) {
+      return res.status(400).send(renderOAuthCallbackHtml({
+        success: false,
+        title: "Security Verification Failed",
+        message: stateValidation.error || "Invalid or expired OAuth state parameter.",
+        error: "The authorization request was rejected to prevent cross-site request forgery (CSRF). Please initiate the connection again from the Admin dashboard.",
+        nonce
+      }));
+    }
+
+    // Validate code parameter
+    const code = typeof req.query.code === "string" ? req.query.code.trim() : "";
+    if (!code) {
+      return res.status(400).send(renderOAuthCallbackHtml({
+        success: false,
+        title: "Authorization Failed",
+        message: "No authorization code was received from Pinterest.",
+        nonce
+      }));
+    }
+
+    // Exchange authorization code for tokens
+    const redirectUri = getPinterestRedirectUri();
+    const exchangeResult = await exchangePinterestCode(code, redirectUri);
+
+    if (!exchangeResult.success || !exchangeResult.data) {
+      return res.status(400).send(renderOAuthCallbackHtml({
+        success: false,
+        title: "Token Exchange Failed",
+        message: exchangeResult.error || "Pinterest rejected the authorization code or credentials.",
+        error: "Please check that your PINTEREST_APP_ID and PINTEREST_APP_SECRET are correctly configured and that the Redirect URI matches.",
+        nonce
+      }));
+    }
+
+    const tokenData = exchangeResult.data;
+
+    // Fetch user account details
+    const userAccountResult = await fetchPinterestUserAccount(tokenData.access_token);
+    const account = userAccountResult.success && userAccountResult.account ? userAccountResult.account : undefined;
+
+    // Save tokens securely server-side
+    const now = Date.now();
+    const authRecord: PinterestAuthRecord = {
+      accessToken: tokenData.access_token,
+      refreshToken: tokenData.refresh_token,
+      tokenType: tokenData.token_type || "bearer",
+      scope: tokenData.scope || "boards:read,pins:read,pins:write,user_accounts:read",
+      expiresIn: tokenData.expires_in,
+      expiresAt: tokenData.expires_in ? now + tokenData.expires_in * 1000 : undefined,
+      refreshTokenExpiresIn: tokenData.refresh_token_expires_in,
+      refreshTokenExpiresAt: tokenData.refresh_token_expires_in ? now + tokenData.refresh_token_expires_in * 1000 : undefined,
+      account,
+      connectedAt: new Date().toISOString(),
+      updatedAt: new Date().toISOString()
+    };
+
+    const saved = savePinterestAuthRecord(authRecord);
+    if (!saved) {
+      return res.status(500).send(renderOAuthCallbackHtml({
+        success: false,
+        title: "Storage Error",
+        message: "Failed to persist Pinterest credentials securely on the server.",
+        nonce
+      }));
+    }
+
+    // Return friendly success page with postMessage notification for the opener window
+    return res.send(renderOAuthCallbackHtml({
+      success: true,
+      title: "Pinterest Connected Successfully!",
+      message: "Your WeLovePattern Pinterest account has been connected and verified.",
+      account,
+      nonce
+    }));
+  } catch (err: any) {
+    console.error("Exception in Pinterest OAuth callback:", err);
+    return res.status(500).send(renderOAuthCallbackHtml({
+      success: false,
+      title: "OAuth Callback Error",
+      message: err?.message || "An unexpected error occurred during Pinterest authorization.",
+      nonce
+    }));
+  }
+});
+
+// 5. OAuth Disconnect Endpoint (Authenticated Admin only with origin validation)
+app.post("/api/admin/pinterest/disconnect", requireAdminAuth, (req, res) => {
+  try {
+    clearPinterestAuthRecord();
+    return res.json({
+      success: true,
+      message: "Pinterest account disconnected successfully"
+    });
+  } catch (err: any) {
+    console.error("Error disconnecting Pinterest:", err);
+    return res.status(500).json({
+      error: "Failed to disconnect Pinterest account"
+    });
   }
 });
 
@@ -3213,14 +3537,19 @@ Ensure all steps, rows, rounds, and materials are extracted thoroughly.`;
     else if (rawContent.includes("sweater") || rawContent.includes("cardigan")) inferredCategory = "sweaters";
     else if (rawContent.includes("granny") || rawContent.includes("square")) inferredCategory = "granny-squares";
 
+    // Auto-detect craft
+    const isSewing = /\b(sewing|sew|dressmaking|pattern pieces)\b/i.test(rawContent);
+    const isKnitting = /\b(knitting|knit|purl)\b/i.test(rawContent);
+    const craftLabel = isSewing ? "sewing" : isKnitting ? "knitting" : "crochet";
+
     // Auto-detect title
-    let inferredTitle = fileName ? fileName.replace(/\.[^/.]+$/, "").replace(/[-_]/g, " ") : "Handmade Crochet Pattern";
+    let inferredTitle = fileName ? fileName.replace(/\.[^/.]+$/, "").replace(/[-_]/g, " ") : `Handmade ${craftLabel.charAt(0).toUpperCase() + craftLabel.slice(1)} Pattern`;
     inferredTitle = inferredTitle.charAt(0).toUpperCase() + inferredTitle.slice(1);
 
     const fallbackPattern = {
       title: inferredTitle,
-      subtitle: `Handcrafted ${inferredCategory} crochet pattern extracted from PDF document`,
-      description: `Complete step-by-step crochet pattern extracted from PDF document (${fileName || 'Pattern PDF'}). Features structured instructions, recommended hook sizes, and material list.`,
+      subtitle: `Handcrafted ${inferredCategory} ${craftLabel} pattern extracted from PDF document`,
+      description: `Complete step-by-step ${craftLabel} pattern extracted from PDF document (${fileName || 'Pattern PDF'}). Features structured instructions, recommended ${isSewing ? 'fabric and sizing' : isKnitting ? 'needles and yarn' : 'hook sizes and yarn'}, and material list.`,
       category: inferredCategory,
       difficulty: rawContent.includes("beginner") ? "Beginner" : rawContent.includes("advanced") ? "Advanced" : "Easy",
       hookSize: "5.0 mm (H-8)",

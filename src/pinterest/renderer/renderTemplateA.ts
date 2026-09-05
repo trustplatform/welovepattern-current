@@ -1,31 +1,51 @@
-import sharp from "sharp";
+import sharp, { OverlayOptions } from "sharp";
+import path from "path";
+import fs from "fs";
 import { TEMPLATE_A } from "../templates/templateA";
 
 const ROOT = process.cwd();
+const TEMPLATE = path.resolve(ROOT, "assets/pinterest/templates/template-a.png");
+const DEFAULT_OUTPUT_DIR = path.resolve(ROOT, "public/generated/pinterest");
 
-const TEMPLATE = `${ROOT}/assets/pinterest/templates/template-a.png`;
-const OUTPUT = `${ROOT}/public/generated/pinterest/test-pin-p2.png`;
+export interface PinterestPatternInput {
+  id?: string;
+  slug?: string;
+  title: string;
+  subtitle?: string;
+  difficulty?: string;
+  image: string;
+  gallery?: string[];
+  description?: string;
+  category?: string;
+  tags?: string[];
+  hookSize?: string;
+  materials?: string[];
+  pdfUrl?: string;
+  isFree?: boolean;
+  price?: number;
+}
 
-const pattern = {
+export interface RenderPinterestResult {
+  outputPath: string;
+  publicUrl: string;
+  filename: string;
+  width: number;
+  height: number;
+}
+
+const defaultTestPattern: PinterestPatternInput = {
   title: "Cozy Sunburst Granny Square Blanket",
-
   subtitle:
-  "Classic vintage heirloom throw blanket\nwith a modern pastel twist",
-
+    "Classic vintage heirloom throw blanket\nwith a modern pastel twist",
   difficulty: "Easy",
-
   image:
     "https://images.unsplash.com/photo-1584992236310-6edddc08acff?auto=format&fit=crop&w=1000&q=80",
-
   gallery: [
     "https://images.unsplash.com/photo-1584992236310-6edddc08acff?auto=format&fit=crop&w=1000&q=80",
-
     "https://images.unsplash.com/photo-1584992236310-6edddc08acff?auto=format&fit=crop&w=1000&q=80",
-
     "https://images.unsplash.com/photo-1584992236310-6edddc08acff?auto=format&fit=crop&w=1000&q=80",
   ],
 };
-
 
 /* =========================================
    DOWNLOAD + CROP IMAGE
@@ -36,18 +56,51 @@ async function fetchImage(
   width: number,
   height: number
 ): Promise<Buffer> {
+  let buffer: Buffer;
 
-  const response = await fetch(url);
-
-  if (!response.ok) {
-    throw new Error(
-      `Failed to download image: ${response.status} ${url}`
-    );
+  if (!url || typeof url !== "string") {
+    throw new Error("Invalid or empty image URL provided for Pinterest pin");
   }
 
-  const buffer = Buffer.from(
-    await response.arrayBuffer()
-  );
+  const trimmedUrl = url.trim();
+
+  if (trimmedUrl.startsWith("data:") && trimmedUrl.includes(";base64,")) {
+    const base64Data = trimmedUrl.split(";base64,")[1];
+    buffer = Buffer.from(base64Data, "base64");
+  } else if (!trimmedUrl.startsWith("http://") && !trimmedUrl.startsWith("https://")) {
+    // Relative local path like /uploads/patterns/... or data/uploads/...
+    const cleanPath = trimmedUrl.startsWith("/") ? trimmedUrl.slice(1) : trimmedUrl;
+    let localFile = path.resolve(ROOT, cleanPath);
+    if (!fs.existsSync(localFile) && cleanPath.startsWith("uploads/")) {
+      localFile = path.resolve(ROOT, "data", cleanPath);
+    }
+    if (fs.existsSync(localFile)) {
+      buffer = await fs.promises.readFile(localFile);
+    } else {
+      throw new Error(`Local image file not found on disk: ${trimmedUrl}`);
+    }
+  } else if (trimmedUrl.includes("/uploads/")) {
+    // URL with domain like https://welovepattern.com/uploads/patterns/...
+    const uploadsIndex = trimmedUrl.indexOf("/uploads/");
+    const subPath = trimmedUrl.slice(uploadsIndex + 1); // "uploads/..."
+    const localFile = path.resolve(ROOT, "data", subPath);
+    if (fs.existsSync(localFile)) {
+      buffer = await fs.promises.readFile(localFile);
+    } else {
+      const response = await fetch(trimmedUrl);
+      if (!response.ok) {
+        throw new Error(`Failed to download image: ${response.status} ${trimmedUrl}`);
+      }
+      buffer = Buffer.from(await response.arrayBuffer());
+    }
+  } else {
+    // Remote HTTP/HTTPS URL
+    const response = await fetch(trimmedUrl);
+    if (!response.ok) {
+      throw new Error(`Failed to download image: ${response.status} ${trimmedUrl}`);
+    }
+    buffer = Buffer.from(await response.arrayBuffer());
+  }
 
   return sharp(buffer)
     .resize(width, height, {
@@ -259,6 +312,172 @@ function createFittedTextSvg(
 
 
 /* =========================================
+   CRAFT TYPE & DYNAMIC CONTENT LOGIC
+========================================= */
+
+export type CraftType =
+  | "CROCHET"
+  | "SEWING"
+  | "KNITTING"
+  | "MACRAME"
+  | "QUILTING"
+  | "EMBROIDERY"
+  | "HANDCRAFTED";
+
+/**
+ * Derives the craft type from available Pattern metadata (title, category, tags, description, hook/yarn).
+ * This dynamically adapts content without hardcoding crochet for non-crochet patterns.
+ */
+export function detectCraftType(pattern: PinterestPatternInput): CraftType {
+  const title = (pattern.title || "").trim();
+  const tagsStr = (pattern.tags || []).join(" ").toLowerCase();
+  const desc = (pattern.description || "").toLowerCase();
+  const subtitle = (pattern.subtitle || "").toLowerCase();
+  const fullText = `${title} ${pattern.category || ""} ${tagsStr} ${desc} ${subtitle}`.toLowerCase();
+
+  // 1. Direct title-level indicators (strongest source of truth)
+  if (/\b(sewing|sew|dressmaking|pattern pieces|garment)\b/i.test(title)) {
+    return "SEWING";
+  }
+  if (/\b(knitting|knit|purl|cast on)\b/i.test(title)) {
+    return "KNITTING";
+  }
+  if (/\b(macrame|knotting)\b/i.test(title)) {
+    return "MACRAME";
+  }
+  if (/\b(quilting|quilt|patchwork)\b/i.test(title)) {
+    return "QUILTING";
+  }
+  if (/\b(crochet|amigurumi|granny square)\b/i.test(title)) {
+    return "CROCHET";
+  }
+
+  // 2. Tags & metadata indicators
+  if (/\b(sewing|sew)\b/i.test(tagsStr)) {
+    return "SEWING";
+  }
+  if (/\b(knitting|knit)\b/i.test(tagsStr)) {
+    return "KNITTING";
+  }
+  if (/\b(macrame)\b/i.test(tagsStr)) {
+    return "MACRAME";
+  }
+  if (/\b(crochet|amigurumi|granny square)\b/i.test(tagsStr)) {
+    return "CROCHET";
+  }
+
+  // 3. Body text indicators
+  if (/\bsewing\s+pattern\b/i.test(fullText)) {
+    return "SEWING";
+  }
+  if (/\bknitting\s+pattern\b/i.test(fullText)) {
+    return "KNITTING";
+  }
+
+  // 4. Hook/yarn attributes
+  if (pattern.hookSize && pattern.hookSize.trim().length > 0 && !/\b(n\/?a|none)\b/i.test(pattern.hookSize)) {
+    return "CROCHET";
+  }
+
+  // 5. Default category fallback for WeLovePattern
+  if (/\b(crochet|amigurumi)\b/i.test(fullText)) {
+    return "CROCHET";
+  }
+
+  return "CROCHET";
+}
+
+/**
+ * Checks if the pattern is free based on explicit tags, properties, or project context.
+ */
+export function detectIsFree(pattern: PinterestPatternInput): boolean {
+  if (pattern.isFree === false) return false;
+  if (typeof pattern.price === "number" && pattern.price > 0) return false;
+
+  const tags = (pattern.tags || []).map((t) => t.toLowerCase());
+  if (tags.includes("paid") || tags.includes("premium")) return false;
+
+  return true;
+}
+
+/**
+ * Generates an SVG patch for the top-left craft header (e.g. "SEWING", "KNITTING").
+ * If craft is CROCHET, returns null to preserve the original template raster graphic untouched.
+ * If craft is non-crochet, returns a crisp vector patch that replaces the first word while preserving
+ * dimensions, typography, tracking, and teal theme color #0B5C5C.
+ */
+export function createCraftHeaderSvg(craft: CraftType): Buffer | null {
+  if (craft === "CROCHET") {
+    // Preserve existing raster template asset for crochet patterns
+    return null;
+  }
+
+  const { width, height, color, bgColor } = TEMPLATE_A.headerCraft;
+  const word = craft;
+  const fontSize = word.length <= 6 ? 82 : word.length <= 8 ? 68 : 56;
+  const letterSpacing = word.length <= 6 ? 3 : 2;
+  const centerX = Math.round(width / 2);
+  const baselineY = 82;
+
+  const svg = `
+    <svg width="${width}" height="${height}" xmlns="http://www.w3.org/2000/svg">
+      <rect x="0" y="0" width="${width}" height="${height}" fill="${bgColor}" />
+      <text
+        x="${centerX}"
+        y="${baselineY}"
+        text-anchor="middle"
+        font-family="Liberation Sans, 'DejaVu Sans', Arial, sans-serif"
+        font-size="${fontSize}"
+        font-weight="900"
+        letter-spacing="${letterSpacing}"
+        fill="${color}"
+      >${word}</text>
+    </svg>
+  `.trim();
+
+  return Buffer.from(svg);
+}
+
+/**
+ * Formats a dynamic, craft-appropriate subtitle.
+ * Ensures that non-crochet patterns (like sewing patterns) never display incorrect crochet claims.
+ */
+export function formatDynamicSubtitle(
+  patternData: PinterestPatternInput,
+  craft: CraftType,
+  isFree: boolean
+): string {
+  let sub = patternData.subtitle?.trim() || "";
+
+  // If subtitle is empty, use description excerpt
+  if (!sub && patternData.description && patternData.description.trim().length > 0) {
+    sub = patternData.description.trim().slice(0, 90);
+  }
+
+  // Sanitize any mismatched craft claims
+  if (craft === "SEWING") {
+    sub = sub
+      .replace(/\bcrochet\s+pattern\b/gi, "sewing pattern")
+      .replace(/\bcrochet\b/gi, "sewing")
+      .replace(/\bhook\s+sizes?\b/gi, "sizing details")
+      .replace(/\byarn\b/gi, "fabric");
+  } else if (craft === "KNITTING") {
+    sub = sub
+      .replace(/\bcrochet\s+pattern\b/gi, "knitting pattern")
+      .replace(/\bcrochet\b/gi, "knitting");
+  }
+
+  // If still empty or generic
+  if (!sub) {
+    const craftName = craft === "SEWING" ? "Sewing" : craft === "KNITTING" ? "Knitting" : "Handcrafted";
+    const freeClaim = isFree ? "Free " : "";
+    sub = `Handcrafted ${freeClaim}${craftName} Pattern\nStep-by-step instructions`;
+  }
+
+  return sub;
+}
+
+/* =========================================
    ROUNDED IMAGE
 ========================================= */
 
@@ -300,104 +519,106 @@ async function createRoundedImage(
 
 
 /* =========================================
-   MAIN
+   EXPORTED RENDER FUNCTION FOR TEMPLATE A
 ========================================= */
 
-async function createPin(): Promise<void> {
+export async function renderPinterestTemplateA(
+  patternData: PinterestPatternInput,
+  customFilename?: string
+): Promise<RenderPinterestResult> {
+  // Ensure output directory exists
+  if (!fs.existsSync(DEFAULT_OUTPUT_DIR)) {
+    fs.mkdirSync(DEFAULT_OUTPUT_DIR, { recursive: true });
+  }
 
-  console.log(
-    "===== STARTING TEMPLATE A TEST #2 ====="
-  );
+  // Ensure template exists
+  if (!fs.existsSync(TEMPLATE)) {
+    throw new Error(`Pinterest Template A base image not found at: ${TEMPLATE}`);
+  }
 
+  const filename =
+    customFilename ||
+    `pin-${patternData.slug || patternData.id || "pattern"}.png`;
+  const outputPath = path.join(DEFAULT_OUTPUT_DIR, filename);
 
   /* MAIN IMAGE */
-
-  console.log("Downloading main image...");
-
-  const mainWidth =
-    TEMPLATE_A.mainImage.width - 24;
-
-  const mainHeight =
-    TEMPLATE_A.mainImage.height - 24;
+  const mainWidth = TEMPLATE_A.mainImage.width - 24;
+  const mainHeight = TEMPLATE_A.mainImage.height - 24;
 
   const mainRaw = await fetchImage(
-    pattern.image,
+    patternData.image,
     mainWidth,
     mainHeight
   );
 
-  const mainImage =
-    await createRoundedImage(
-      mainRaw,
-      mainWidth,
-      mainHeight,
-      Math.max(
-        10,
-        TEMPLATE_A.mainImage.radius - 10
-      )
-    );
-
-
-  /* GALLERY */
-
-  console.log(
-    "Downloading gallery images..."
+  const mainImage = await createRoundedImage(
+    mainRaw,
+    mainWidth,
+    mainHeight,
+    Math.max(10, TEMPLATE_A.mainImage.radius - 10)
   );
 
-  const galleryImages =
-    await Promise.all(
+  /* GALLERY (3 slots) */
+  const galleryUrls = [
+    patternData.gallery?.[0] || patternData.image,
+    patternData.gallery?.[1] || patternData.gallery?.[0] || patternData.image,
+    patternData.gallery?.[2] || patternData.gallery?.[1] || patternData.gallery?.[0] || patternData.image,
+  ];
 
-      TEMPLATE_A.gallery.map(
-        async (slot, index) => {
+  const galleryImages = await Promise.all(
+    TEMPLATE_A.gallery.map(async (slot, index) => {
+      const width = slot.width - 16;
+      const height = slot.height - 16;
 
-          const width =
-            slot.width - 16;
-
-          const height =
-            slot.height - 16;
-
-          const raw =
-            await fetchImage(
-              pattern.gallery[index],
-              width,
-              height
-            );
-
-          return createRoundedImage(
-            raw,
-            width,
-            height,
-            Math.max(8, slot.radius - 8)
-          );
-        }
-      )
-    );
-
-
-  /* TEXT */
-
-  console.log(
-    "Creating dynamic text..."
-  );
-
-  const title =
-    createFittedTextSvg(
-      pattern.title,
-      TEMPLATE_A.title.width,
-      TEMPLATE_A.title.height - 10,
-      {
-        maxFontSize: 34,
-        minFontSize: 22,
-        color: "#0B5C5C",
-        fontWeight: 800,
-        maxLines: 2,
+      let raw: Buffer;
+      try {
+        raw = await fetchImage(
+          galleryUrls[index],
+          width,
+          height
+        );
+      } catch (galleryErr) {
+        // Fall back gracefully to main pattern image if a secondary gallery thumbnail is missing or unavailable
+        raw = await sharp(mainRaw)
+          .resize(width, height, {
+            fit: "cover",
+            position: "centre",
+          })
+          .png()
+          .toBuffer();
       }
-    );
 
+      return createRoundedImage(
+        raw,
+        width,
+        height,
+        Math.max(8, slot.radius - 8)
+      );
+    })
+  );
 
-  const subtitle =
-  createFittedTextSvg(
-    pattern.subtitle,
+  /* DYNAMIC CONTENT DERIVATION */
+  const craft = detectCraftType(patternData);
+  const isFree = detectIsFree(patternData);
+
+  /* DYNAMIC TEXT */
+  const title = createFittedTextSvg(
+    patternData.title,
+    TEMPLATE_A.title.width,
+    TEMPLATE_A.title.height - 10,
+    {
+      maxFontSize: 34,
+      minFontSize: 22,
+      color: "#0B5C5C",
+      fontWeight: 800,
+      maxLines: 2,
+    }
+  );
+
+  const effectiveSubtitle = formatDynamicSubtitle(patternData, craft, isFree);
+
+  const subtitle = createFittedTextSvg(
+    effectiveSubtitle,
     TEMPLATE_A.subtitle.width - 20,
     TEMPLATE_A.subtitle.height - 6,
     {
@@ -409,134 +630,119 @@ async function createPin(): Promise<void> {
     }
   );
 
+  const effectiveDifficulty = patternData.difficulty || "Easy";
 
-  const difficulty =
-    createFittedTextSvg(
-      pattern.difficulty,
-      TEMPLATE_A.difficulty.width,
-      TEMPLATE_A.difficulty.height,
-      {
-        maxFontSize: 32,
-        minFontSize: 20,
-        color: "#0B5C5C",
-        fontWeight: 800,
-        maxLines: 1,
-      }
-    );
+  const difficulty = createFittedTextSvg(
+    effectiveDifficulty,
+    TEMPLATE_A.difficulty.width,
+    TEMPLATE_A.difficulty.height,
+    {
+      maxFontSize: 32,
+      minFontSize: 20,
+      color: "#0B5C5C",
+      fontWeight: 800,
+      maxLines: 1,
+    }
+  );
 
+  const craftHeaderOverlay = createCraftHeaderSvg(craft);
+
+  /* COMPOSITE LAYERS */
+  const compositeLayers: OverlayOptions[] = [
+    /* MAIN IMAGE */
+    {
+      input: mainImage,
+      left: TEMPLATE_A.mainImage.x + 12,
+      top: TEMPLATE_A.mainImage.y + 12,
+    },
+
+    /* GALLERY 1 */
+    {
+      input: galleryImages[0],
+      left: TEMPLATE_A.gallery[0].x + 8,
+      top: TEMPLATE_A.gallery[0].y + 8,
+    },
+
+    /* GALLERY 2 */
+    {
+      input: galleryImages[1],
+      left: TEMPLATE_A.gallery[1].x + 8,
+      top: TEMPLATE_A.gallery[1].y + 8,
+    },
+
+    /* GALLERY 3 */
+    {
+      input: galleryImages[2],
+      left: TEMPLATE_A.gallery[2].x + 8,
+      top: TEMPLATE_A.gallery[2].y + 8,
+    },
+
+    /* TITLE */
+    {
+      input: title,
+      left: TEMPLATE_A.title.x,
+      top: TEMPLATE_A.title.y + 5,
+    },
+
+    /* SUBTITLE */
+    {
+      input: subtitle,
+      left: TEMPLATE_A.subtitle.x + 10,
+      top: TEMPLATE_A.subtitle.y + 3,
+    },
+
+    /* DIFFICULTY */
+    {
+      input: difficulty,
+      left: TEMPLATE_A.difficulty.x,
+      top: TEMPLATE_A.difficulty.y,
+    },
+  ];
+
+  // Dynamic craft header overlay (e.g. SEWING, KNITTING for non-crochet patterns)
+  if (craftHeaderOverlay) {
+    compositeLayers.push({
+      input: craftHeaderOverlay,
+      left: TEMPLATE_A.headerCraft.x,
+      top: TEMPLATE_A.headerCraft.y,
+    });
+  }
 
   /* COMPOSITE */
-
-  console.log(
-    "Compositing final pin..."
-  );
-
   await sharp(TEMPLATE)
-
-    .composite([
-
-      /* MAIN IMAGE */
-
-      {
-        input: mainImage,
-        left:
-          TEMPLATE_A.mainImage.x + 12,
-        top:
-          TEMPLATE_A.mainImage.y + 12,
-      },
-
-
-      /* GALLERY 1 */
-
-      {
-        input: galleryImages[0],
-        left:
-          TEMPLATE_A.gallery[0].x + 8,
-        top:
-          TEMPLATE_A.gallery[0].y + 8,
-      },
-
-
-      /* GALLERY 2 */
-
-      {
-        input: galleryImages[1],
-        left:
-          TEMPLATE_A.gallery[1].x + 8,
-        top:
-          TEMPLATE_A.gallery[1].y + 8,
-      },
-
-
-      /* GALLERY 3 */
-
-      {
-        input: galleryImages[2],
-        left:
-          TEMPLATE_A.gallery[2].x + 8,
-        top:
-          TEMPLATE_A.gallery[2].y + 8,
-      },
-
-
-      /* TITLE */
-
-      {
-  input: title,
-  left: TEMPLATE_A.title.x,
-  top: TEMPLATE_A.title.y + 5,
-},
-
-
-      /* SUBTITLE */
-
-      {
-        input: subtitle,
-        left:
-          TEMPLATE_A.subtitle.x + 10,
-        top:
-          TEMPLATE_A.subtitle.y + 3,
-      },
-
-
-      /* DIFFICULTY */
-
-      {
-        input: difficulty,
-        left:
-          TEMPLATE_A.difficulty.x,
-        top:
-          TEMPLATE_A.difficulty.y,
-      },
-
-    ])
-
+    .composite(compositeLayers)
     .png()
+    .toFile(outputPath);
 
-    .toFile(OUTPUT);
-
-
-  console.log("");
-
-  console.log(
-    "===== PIN GENERATED SUCCESSFULLY ====="
-  );
-
-  console.log(OUTPUT);
+  return {
+    outputPath,
+    publicUrl: `/generated/pinterest/${filename}`,
+    filename,
+    width: TEMPLATE_A.width,
+    height: TEMPLATE_A.height,
+  };
 }
 
+/* =========================================
+   CLI TEST RUNNER
+========================================= */
 
-createPin().catch(
-  (error) => {
+export async function createPin(): Promise<void> {
+  console.log("===== STARTING TEMPLATE A TEST =====");
+  const result = await renderPinterestTemplateA(defaultTestPattern, "test-pin-p2.png");
+  console.log("===== PIN GENERATED SUCCESSFULLY =====");
+  console.log(result.outputPath);
+}
 
-    console.error("");
+const isDirectCliRun =
+  Boolean(process.argv[1]) &&
+  (process.argv[1].endsWith("renderTemplateA.ts") ||
+    process.argv[1].endsWith("renderTemplateA.js"));
 
-    console.error(
-      "===== PIN GENERATION FAILED ====="
-    );
-
+if (isDirectCliRun) {
+  createPin().catch((error) => {
+    console.error("===== PIN GENERATION FAILED =====");
     console.error(error);
-
     process.exit(1);
-  }
-);
+  });
+}
