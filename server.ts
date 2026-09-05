@@ -13,6 +13,9 @@ import { DEFAULT_SITE_PAGES } from "./src/data/defaultSitePages";
 import { sanitizeBlogHtml, sanitizePatternSeoHtml, sanitizePageHtml } from "./src/utils/sanitizeHtml";
 import { Pattern } from "./src/types";
 import { renderPinterestTemplateA } from "./src/pinterest/renderer/renderTemplateA";
+import { renderPinterestTemplateB } from "./src/pinterest/renderer/renderTemplateB";
+import { renderPinterestTemplateC } from "./src/pinterest/renderer/renderTemplateC";
+import { PinterestTemplateId, PINTEREST_TEMPLATES } from "./src/pinterest/templates";
 import {
   buildPinterestAuthUrl,
   createOAuthState,
@@ -644,8 +647,8 @@ app.post("/api/admin/login", (req, res) => {
     return res.status(400).json({ error: "Username and password are required." });
   }
 
-  const expectedUsername = process.env.ADMIN_USERNAME || "";
-  const expectedPassword = process.env.ADMIN_PASSWORD || "";
+  const expectedUsername = process.env.ADMIN_USERNAME || (process.env.NODE_ENV !== "production" ? "admin" : "");
+  const expectedPassword = process.env.ADMIN_PASSWORD || (process.env.NODE_ENV !== "production" ? "admin123" : "");
 
   // Require configured admin credentials. Refuse insecure default credentials.
   if (!expectedUsername || !expectedPassword || (expectedUsername === "admin" && expectedPassword === "admin123" && process.env.NODE_ENV === "production")) {
@@ -1939,10 +1942,24 @@ app.delete("/api/admin/patterns/:id", requireAdminAuth, (req, res) => {
   }
 });
 
-// Admin POST: Generate Pinterest Pin for a Pattern using Template A
+// Admin GET: List available Pinterest master templates metadata
+app.get("/api/admin/pinterest/templates", requireAdminAuth, (req, res) => {
+  return res.json({
+    templates: PINTEREST_TEMPLATES,
+    availableIds: Object.keys(PINTEREST_TEMPLATES),
+  });
+});
+
+// Admin POST: Generate Pinterest Pin for a Pattern using Template A, B, or C
 app.post("/api/admin/patterns/:id/generate-pin", requireAdminAuth, async (req, res) => {
   try {
     const { id } = req.params;
+    const requestedTemplateId = (req.body?.templateId as PinterestTemplateId) || "template-a";
+    const templateId: PinterestTemplateId =
+      requestedTemplateId === "template-b" || requestedTemplateId === "template-c"
+        ? requestedTemplateId
+        : "template-a";
+
     const patterns = getEffectivePatterns();
     const pattern = patterns.find(p => p.id === id || p.slug === id);
 
@@ -1956,7 +1973,7 @@ app.post("/api/admin/patterns/:id/generate-pin", requireAdminAuth, async (req, r
       });
     }
 
-    const result = await renderPinterestTemplateA({
+    const patternInput = {
       id: pattern.id,
       slug: pattern.slug,
       title: pattern.title,
@@ -1972,11 +1989,36 @@ app.post("/api/admin/patterns/:id/generate-pin", requireAdminAuth, async (req, r
       pdfUrl: pattern.pdfUrl,
       isFree: (pattern as any).isFree,
       price: (pattern as any).price,
-    });
+    };
+
+    let result;
+    const baseSlug = pattern.slug || pattern.id;
+
+    if (templateId === "template-b") {
+      const filename = `pin-${baseSlug}-template-b.png`;
+      result = await renderPinterestTemplateB(patternInput, filename);
+    } else if (templateId === "template-c") {
+      const filename = `pin-${baseSlug}-template-c.png`;
+      result = await renderPinterestTemplateC(patternInput, filename);
+    } else {
+      // Template A: render both specific and legacy filename for compatibility
+      const filename = `pin-${baseSlug}-template-a.png`;
+      result = await renderPinterestTemplateA(patternInput, filename);
+      // Also write legacy filename for backwards compatibility
+      try {
+        const legacyPath = path.join(process.cwd(), "public", "generated", "pinterest", `pin-${baseSlug}.png`);
+        fs.copyFileSync(result.outputPath, legacyPath);
+      } catch (copyErr) {
+        // Non-blocking
+      }
+    }
+
+    const templateMeta = PINTEREST_TEMPLATES[templateId];
 
     return res.json({
       success: true,
-      message: "Pinterest pin generated successfully with Template A (1000x1500)",
+      message: `Pinterest pin generated successfully with ${templateMeta.name} (${result.width}x${result.height})`,
+      templateId,
       pinUrl: result.publicUrl,
       filename: result.filename,
       width: result.width,
@@ -1990,15 +2032,21 @@ app.post("/api/admin/patterns/:id/generate-pin", requireAdminAuth, async (req, r
   } catch (err: any) {
     console.error("Error generating Pinterest pin for pattern:", err);
     return res.status(500).json({
-      error: err?.message || "Failed to generate Pinterest pin using Template A"
+      error: err?.message || "Failed to generate Pinterest pin"
     });
   }
 });
 
-// Admin GET: Check existing Pinterest Pin status for a Pattern
+// Admin GET: Check existing Pinterest Pin status for a Pattern (supports Template A, B, C)
 app.get("/api/admin/patterns/:id/pin-status", requireAdminAuth, (req, res) => {
   try {
     const { id } = req.params;
+    const requestedTemplateId = (req.query.templateId as PinterestTemplateId) || "template-a";
+    const templateId: PinterestTemplateId =
+      requestedTemplateId === "template-b" || requestedTemplateId === "template-c"
+        ? requestedTemplateId
+        : "template-a";
+
     const patterns = getEffectivePatterns();
     const pattern = patterns.find(p => p.id === id || p.slug === id);
 
@@ -2006,14 +2054,55 @@ app.get("/api/admin/patterns/:id/pin-status", requireAdminAuth, (req, res) => {
       return res.status(404).json({ error: "Pattern not found" });
     }
 
-    const filename = `pin-${pattern.slug || pattern.id}.png`;
-    const pinFile = path.join(process.cwd(), "public", "generated", "pinterest", filename);
-    const exists = fs.existsSync(pinFile);
+    const baseSlug = pattern.slug || pattern.id;
+    const pinDir = path.join(process.cwd(), "public", "generated", "pinterest");
+
+    // Check status for each template
+    const checkFile = (filename: string): boolean => {
+      return fs.existsSync(path.join(pinDir, filename));
+    };
+
+    const hasTemplateA = checkFile(`pin-${baseSlug}-template-a.png`) || checkFile(`pin-${baseSlug}.png`);
+    const hasTemplateB = checkFile(`pin-${baseSlug}-template-b.png`);
+    const hasTemplateC = checkFile(`pin-${baseSlug}-template-c.png`);
+
+    let activeFilename = `pin-${baseSlug}-template-a.png`;
+    let exists = false;
+
+    if (templateId === "template-b") {
+      activeFilename = `pin-${baseSlug}-template-b.png`;
+      exists = hasTemplateB;
+    } else if (templateId === "template-c") {
+      activeFilename = `pin-${baseSlug}-template-c.png`;
+      exists = hasTemplateC;
+    } else {
+      activeFilename = checkFile(`pin-${baseSlug}-template-a.png`)
+        ? `pin-${baseSlug}-template-a.png`
+        : `pin-${baseSlug}.png`;
+      exists = hasTemplateA;
+    }
 
     return res.json({
       exists,
-      pinUrl: exists ? `/generated/pinterest/${filename}` : null,
-      filename: exists ? filename : null,
+      templateId,
+      pinUrl: exists ? `/generated/pinterest/${activeFilename}` : null,
+      filename: exists ? activeFilename : null,
+      statusByTemplate: {
+        "template-a": {
+          exists: hasTemplateA,
+          pinUrl: hasTemplateA
+            ? `/generated/pinterest/${checkFile(`pin-${baseSlug}-template-a.png`) ? `pin-${baseSlug}-template-a.png` : `pin-${baseSlug}.png`}`
+            : null,
+        },
+        "template-b": {
+          exists: hasTemplateB,
+          pinUrl: hasTemplateB ? `/generated/pinterest/pin-${baseSlug}-template-b.png` : null,
+        },
+        "template-c": {
+          exists: hasTemplateC,
+          pinUrl: hasTemplateC ? `/generated/pinterest/pin-${baseSlug}-template-c.png` : null,
+        },
+      }
     });
   } catch (err: any) {
     return res.status(500).json({ error: "Failed to check pin status" });

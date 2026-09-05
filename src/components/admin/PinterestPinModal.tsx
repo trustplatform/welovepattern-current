@@ -11,9 +11,15 @@ import {
   Loader2,
   Image as ImageIcon,
   Layers,
-  ShieldCheck
+  Check,
+  Palette
 } from 'lucide-react';
 import { SafePinterestStatus } from '../../types';
+import {
+  PinterestTemplateId,
+  PINTEREST_TEMPLATES,
+  TemplateMetadata,
+} from '../../pinterest/templates';
 
 interface PinterestPinModalProps {
   isOpen: boolean;
@@ -26,9 +32,14 @@ export const PinterestPinModal: React.FC<PinterestPinModalProps> = ({
   onClose,
   pattern,
 }) => {
+  const [selectedTemplateId, setSelectedTemplateId] = useState<PinterestTemplateId>('template-a');
   const [isGenerating, setIsGenerating] = useState(false);
   const [isCheckingStatus, setIsCheckingStatus] = useState(false);
-  const [pinUrl, setPinUrl] = useState<string | null>(null);
+  const [pinUrls, setPinUrls] = useState<Record<PinterestTemplateId, string | null>>({
+    'template-a': null,
+    'template-b': null,
+    'template-c': null,
+  });
   const [error, setError] = useState<string | null>(null);
   const [successMessage, setSuccessMessage] = useState<string | null>(null);
   const [pinterestStatus, setPinterestStatus] = useState<SafePinterestStatus | null>(null);
@@ -47,10 +58,10 @@ export const PinterestPinModal: React.FC<PinterestPinModalProps> = ({
     }
   };
 
-  // Check if a pin was already rendered for this pattern
+  // Check pin status for all templates when modal opens or pattern changes
   useEffect(() => {
     if (!isOpen || !pattern) {
-      setPinUrl(null);
+      setPinUrls({ 'template-a': null, 'template-b': null, 'template-c': null });
       setError(null);
       setSuccessMessage(null);
       return;
@@ -59,14 +70,26 @@ export const PinterestPinModal: React.FC<PinterestPinModalProps> = ({
     let isMounted = true;
     fetchPinterestStatus();
 
-    const checkExistingPin = async () => {
+    const checkExistingPins = async () => {
       setIsCheckingStatus(true);
       try {
         const res = await fetch(`/api/admin/patterns/${pattern.id}/pin-status`);
         if (res.ok) {
           const data = await res.json();
-          if (isMounted && data.exists && data.pinUrl) {
-            setPinUrl(`${data.pinUrl}?t=${Date.now()}`);
+          if (isMounted) {
+            const timestamp = Date.now();
+            const newUrls: Record<PinterestTemplateId, string | null> = {
+              'template-a': data.statusByTemplate?.['template-a']?.pinUrl
+                ? `${data.statusByTemplate['template-a'].pinUrl}?t=${timestamp}`
+                : null,
+              'template-b': data.statusByTemplate?.['template-b']?.pinUrl
+                ? `${data.statusByTemplate['template-b'].pinUrl}?t=${timestamp}`
+                : null,
+              'template-c': data.statusByTemplate?.['template-c']?.pinUrl
+                ? `${data.statusByTemplate['template-c'].pinUrl}?t=${timestamp}`
+                : null,
+            };
+            setPinUrls(newUrls);
           }
         }
       } catch (err) {
@@ -76,7 +99,7 @@ export const PinterestPinModal: React.FC<PinterestPinModalProps> = ({
       }
     };
 
-    checkExistingPin();
+    checkExistingPins();
 
     const handleMessage = (event: MessageEvent) => {
       if (event.data?.type === 'PINTEREST_AUTH_SUCCESS') {
@@ -113,6 +136,9 @@ export const PinterestPinModal: React.FC<PinterestPinModalProps> = ({
 
   if (!isOpen || !pattern) return null;
 
+  const currentPinUrl = pinUrls[selectedTemplateId];
+  const activeTemplateMeta: TemplateMetadata = PINTEREST_TEMPLATES[selectedTemplateId];
+
   const handleGeneratePin = async () => {
     setIsGenerating(true);
     setError(null);
@@ -124,6 +150,9 @@ export const PinterestPinModal: React.FC<PinterestPinModalProps> = ({
         headers: {
           'Content-Type': 'application/json',
         },
+        body: JSON.stringify({
+          templateId: selectedTemplateId,
+        }),
       });
 
       const data = await response.json();
@@ -132,8 +161,13 @@ export const PinterestPinModal: React.FC<PinterestPinModalProps> = ({
         throw new Error(data.error || 'Failed to generate Pinterest pin');
       }
 
-      setPinUrl(`${data.pinUrl}?t=${Date.now()}`);
-      setSuccessMessage(data.message || 'Template A Pin generated successfully!');
+      const generatedUrl = `${data.pinUrl}?t=${Date.now()}`;
+      setPinUrls(prev => ({
+        ...prev,
+        [selectedTemplateId]: generatedUrl,
+      }));
+
+      setSuccessMessage(data.message || `${activeTemplateMeta.name} Pin generated successfully!`);
     } catch (err: any) {
       console.error('Error generating Pinterest pin:', err);
       setError(err?.message || 'An unexpected error occurred while generating the pin.');
@@ -143,10 +177,10 @@ export const PinterestPinModal: React.FC<PinterestPinModalProps> = ({
   };
 
   const handleDownload = () => {
-    if (!pinUrl) return;
+    if (!currentPinUrl) return;
     const a = document.createElement('a');
-    a.href = pinUrl;
-    a.download = `pinterest-pin-${pattern.slug || pattern.id}.png`;
+    a.href = currentPinUrl;
+    a.download = `pinterest-pin-${pattern.slug || pattern.id}-${selectedTemplateId}.png`;
     document.body.appendChild(a);
     a.click();
     document.body.removeChild(a);
@@ -155,19 +189,19 @@ export const PinterestPinModal: React.FC<PinterestPinModalProps> = ({
   return (
     <div
       id="pinterest-pin-modal-backdrop"
-      className="fixed inset-0 z-50 bg-slate-900/70 backdrop-blur-xs flex items-center justify-center p-3 sm:p-6 overflow-y-auto"
+      className="fixed inset-0 z-50 bg-slate-900/75 backdrop-blur-xs flex items-center justify-center p-3 sm:p-6 overflow-y-auto"
       onClick={(e) => {
         if (e.target === e.currentTarget && !isGenerating) onClose();
       }}
     >
       <div
         id="pinterest-pin-modal-dialog"
-        className="bg-slate-50 dark:bg-slate-900 rounded-3xl max-w-4xl w-full border border-slate-200 dark:border-slate-700 shadow-2xl overflow-hidden my-auto max-h-[92vh] flex flex-col"
+        className="bg-slate-50 dark:bg-slate-900 rounded-3xl max-w-5xl w-full border border-slate-200 dark:border-slate-700 shadow-2xl overflow-hidden my-auto max-h-[94vh] flex flex-col"
       >
         {/* Modal Header */}
         <div className="bg-white dark:bg-slate-800 px-6 py-4 border-b border-slate-200 dark:border-slate-700 flex items-center justify-between shrink-0">
           <div className="flex items-center gap-3">
-            <div className="w-10 h-10 rounded-2xl bg-rose-100 dark:bg-rose-950/60 flex items-center justify-center text-rose-600 dark:text-rose-400 font-black text-sm">
+            <div className="w-10 h-10 rounded-2xl bg-rose-100 dark:bg-rose-950/60 flex items-center justify-center text-rose-600 dark:text-rose-400 font-black text-sm shadow-xs">
               P
             </div>
             <div>
@@ -176,7 +210,7 @@ export const PinterestPinModal: React.FC<PinterestPinModalProps> = ({
                   Pinterest Pin Generator
                 </h3>
                 <span className="text-[10px] font-black uppercase px-2.5 py-0.5 rounded-full border bg-rose-50 text-rose-700 border-rose-200 dark:bg-rose-950/60 dark:text-rose-300 dark:border-rose-800">
-                  Template A (1000 × 1500)
+                  {activeTemplateMeta.name} (1000 × 1500)
                 </span>
               </div>
               <p className="text-xs text-slate-500 dark:text-slate-400">
@@ -224,8 +258,106 @@ export const PinterestPinModal: React.FC<PinterestPinModalProps> = ({
             </div>
           )}
 
+          {/* Master Template Selection Section */}
+          <div className="space-y-3">
+            <div className="flex items-center justify-between">
+              <label className="text-xs font-black uppercase tracking-wider text-slate-500 dark:text-slate-400 flex items-center gap-1.5">
+                <Palette className="w-3.5 h-3.5 text-rose-500" />
+                Select Pinterest Master Template (1000 × 1500)
+              </label>
+              <span className="text-[11px] text-slate-400">
+                3 Master Templates Available
+              </span>
+            </div>
+
+            <div className="grid grid-cols-1 sm:grid-cols-3 gap-3.5">
+              {(Object.values(PINTEREST_TEMPLATES) as TemplateMetadata[]).map((tmpl) => {
+                const isSelected = selectedTemplateId === tmpl.id;
+                const hasPin = Boolean(pinUrls[tmpl.id]);
+
+                // Preview thumbnail image
+                const previewImgSrc = `/assets/pinterest/previews/${tmpl.id}-preview.png`;
+
+                return (
+                  <div
+                    key={tmpl.id}
+                    id={`template-card-${tmpl.id}`}
+                    onClick={() => {
+                      if (!isGenerating) {
+                        setSelectedTemplateId(tmpl.id);
+                        setError(null);
+                        setSuccessMessage(null);
+                      }
+                    }}
+                    className={`relative rounded-2xl p-3.5 border-2 transition-all cursor-pointer flex flex-col justify-between ${
+                      isSelected
+                        ? 'bg-rose-50/70 dark:bg-rose-950/30 border-rose-500 shadow-md ring-2 ring-rose-500/20'
+                        : 'bg-white dark:bg-slate-800 border-slate-200 dark:border-slate-700 hover:border-slate-300 dark:hover:border-slate-600'
+                    }`}
+                  >
+                    {/* Top Row: Thumbnail & Badges */}
+                    <div className="flex items-start gap-3">
+                      {/* Visual Template Thumbnail */}
+                      <div className="w-14 h-21 rounded-xl bg-slate-100 dark:bg-slate-900 border border-slate-200 dark:border-slate-700 overflow-hidden shrink-0 relative shadow-xs">
+                        <img
+                          src={previewImgSrc}
+                          alt={tmpl.name}
+                          className="w-full h-full object-cover"
+                          onError={(e) => {
+                            // Fallback to placeholder styling if image fails
+                            (e.target as HTMLElement).style.display = 'none';
+                          }}
+                        />
+                        <div className="absolute inset-0 bg-gradient-to-t from-black/20 to-transparent pointer-events-none" />
+                      </div>
+
+                      {/* Info & Badges */}
+                      <div className="flex-1 min-w-0">
+                        <div className="flex items-center justify-between gap-1 mb-1">
+                          <span className="text-xs font-bold text-slate-900 dark:text-white truncate">
+                            {tmpl.name}
+                          </span>
+                          {isSelected && (
+                            <span className="w-5 h-5 rounded-full bg-rose-600 text-white flex items-center justify-center shrink-0">
+                              <Check className="w-3 h-3 stroke-[3]" />
+                            </span>
+                          )}
+                        </div>
+
+                        <p className="text-[11px] font-medium text-rose-600 dark:text-rose-400">
+                          {tmpl.tagline}
+                        </p>
+
+                        <div className="flex flex-wrap items-center gap-1.5 mt-2">
+                          <span className="text-[10px] px-1.5 py-0.5 rounded bg-slate-100 dark:bg-slate-700 text-slate-600 dark:text-slate-300 font-medium">
+                            2:3 Ratio
+                          </span>
+                          {hasPin ? (
+                            <span className="text-[10px] px-1.5 py-0.5 rounded-full bg-emerald-100 text-emerald-700 dark:bg-emerald-950/60 dark:text-emerald-400 font-bold flex items-center gap-0.5">
+                              <span className="w-1.5 h-1.5 rounded-full bg-emerald-500" />
+                              Ready
+                            </span>
+                          ) : (
+                            <span className="text-[10px] px-1.5 py-0.5 rounded bg-slate-100 dark:bg-slate-700/60 text-slate-400 font-medium">
+                              Not Rendered
+                            </span>
+                          )}
+                        </div>
+                      </div>
+                    </div>
+
+                    {/* Bottom Features List */}
+                    <div className="mt-3 pt-2.5 border-t border-slate-100 dark:border-slate-700/60 text-[11px] text-slate-500 dark:text-slate-400 leading-snug">
+                      <p className="line-clamp-2">{tmpl.description}</p>
+                    </div>
+                  </div>
+                );
+              })}
+            </div>
+          </div>
+
           {/* Pinterest OAuth Connection Status Strip */}
-          <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 p-3.5 rounded-2xl bg-slate-50 dark:bg-slate-800/80 border border-slate-200 dark:border-slate-700 text-xs">
+          <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 p-3.5 rounded-2xl bg-white dark:bg-slate-800 border border-slate-200 dark:border-slate-700 text-xs">
             <div className="flex items-center gap-2.5">
               <div className="w-7 h-7 rounded-lg bg-red-600 text-white flex items-center justify-center shrink-0">
                 <svg className="w-3.5 h-3.5 fill-current" viewBox="0 0 24 24">
@@ -310,7 +442,7 @@ export const PinterestPinModal: React.FC<PinterestPinModalProps> = ({
                 {/* Gallery check */}
                 <div className="pt-2 border-t border-slate-100 dark:border-slate-700/60">
                   <p className="text-[11px] text-slate-500 dark:text-slate-400 mb-2">
-                    Template A Gallery Images ({pattern.gallery && pattern.gallery.length > 0 ? pattern.gallery.length : 1} available):
+                    Gallery Showcase Images ({pattern.gallery && pattern.gallery.length > 0 ? pattern.gallery.length : 1} available):
                   </p>
                   <div className="flex items-center gap-2">
                     <div className="w-12 h-12 rounded-lg border border-slate-200 dark:border-slate-700 overflow-hidden bg-slate-100">
@@ -338,18 +470,33 @@ export const PinterestPinModal: React.FC<PinterestPinModalProps> = ({
                 </div>
               </div>
 
-              {/* Template A Spec Card */}
-              <div className="bg-white dark:bg-slate-800 rounded-2xl p-4 border border-slate-200 dark:border-slate-700 space-y-2">
-                <h4 className="text-xs font-black uppercase tracking-wider text-slate-400 flex items-center gap-1.5">
-                  <Sparkles className="w-3.5 h-3.5 text-rose-500" />
-                  Template A Specifications
-                </h4>
-                <ul className="text-xs text-slate-600 dark:text-slate-300 space-y-1.5 list-disc list-inside">
-                  <li>Standard 2:3 Pinterest aspect ratio (<strong>1000 × 1500 px</strong>)</li>
-                  <li>Official base frame (<code className="text-[11px] bg-slate-100 dark:bg-slate-700 px-1 py-0.5 rounded">template-a.png</code>)</li>
-                  <li>Hero main photo with rounded corner masking</li>
-                  <li>3 secondary showcase gallery thumbnails</li>
-                  <li>High-contrast auto-fitted typography &amp; difficulty badge</li>
+              {/* Selected Template Specifications Card */}
+              <div className="bg-white dark:bg-slate-800 rounded-2xl p-4 border border-slate-200 dark:border-slate-700 space-y-2.5">
+                <div className="flex items-center justify-between">
+                  <h4 className="text-xs font-black uppercase tracking-wider text-slate-400 flex items-center gap-1.5">
+                    <Sparkles className="w-3.5 h-3.5 text-rose-500" />
+                    {activeTemplateMeta.name} Specifications
+                  </h4>
+                  <span className="text-[10px] font-mono text-slate-400 bg-slate-100 dark:bg-slate-700 px-1.5 py-0.5 rounded">
+                    {activeTemplateMeta.filename}
+                  </span>
+                </div>
+
+                <ul className="text-xs text-slate-600 dark:text-slate-300 space-y-1.5">
+                  <li className="flex items-center gap-2">
+                    <span className="w-1.5 h-1.5 rounded-full bg-rose-500 shrink-0" />
+                    <span>Exact Pinterest master dimensions (<strong>1000 × 1500 px</strong>, 2:3)</span>
+                  </li>
+                  {activeTemplateMeta.features.map((feature, idx) => (
+                    <li key={idx} className="flex items-center gap-2">
+                      <span className="w-1.5 h-1.5 rounded-full bg-rose-400 shrink-0" />
+                      <span>{feature}</span>
+                    </li>
+                  ))}
+                  <li className="flex items-center gap-2">
+                    <span className="w-1.5 h-1.5 rounded-full bg-rose-500 shrink-0" />
+                    <span>Official WeLovePattern CTA &amp; website footer preserved</span>
+                  </li>
                 </ul>
               </div>
 
@@ -365,17 +512,17 @@ export const PinterestPinModal: React.FC<PinterestPinModalProps> = ({
                   {isGenerating ? (
                     <>
                       <Loader2 className="w-4 h-4 animate-spin" />
-                      <span>Rendering Pin with Template A...</span>
+                      <span>Rendering Pin with {activeTemplateMeta.name}...</span>
                     </>
-                  ) : pinUrl ? (
+                  ) : currentPinUrl ? (
                     <>
                       <RefreshCw className="w-4 h-4" />
-                      <span>Regenerate Pin (Template A)</span>
+                      <span>Regenerate Pin ({activeTemplateMeta.name})</span>
                     </>
                   ) : (
                     <>
                       <Sparkles className="w-4 h-4" />
-                      <span>Generate Pinterest Pin (Template A)</span>
+                      <span>Generate Pinterest Pin ({activeTemplateMeta.name})</span>
                     </>
                   )}
                 </button>
@@ -388,9 +535,9 @@ export const PinterestPinModal: React.FC<PinterestPinModalProps> = ({
                 <div className="w-full flex items-center justify-between pb-3 border-b border-slate-100 dark:border-slate-700 mb-3">
                   <div className="flex items-center gap-1.5 text-xs font-bold text-slate-700 dark:text-slate-300">
                     <ImageIcon className="w-4 h-4 text-slate-400" />
-                    <span>Pin Output Preview</span>
+                    <span>Preview: {activeTemplateMeta.name}</span>
                   </div>
-                  {pinUrl && (
+                  {currentPinUrl && (
                     <span className="text-[10px] font-bold text-emerald-600 dark:text-emerald-400 bg-emerald-50 dark:bg-emerald-950/60 px-2 py-0.5 rounded-full">
                       1000 × 1500 px
                     </span>
@@ -405,21 +552,21 @@ export const PinterestPinModal: React.FC<PinterestPinModalProps> = ({
                         <Loader2 className="w-6 h-6 animate-spin" />
                       </div>
                       <p className="text-xs font-bold text-slate-700 dark:text-slate-200">
-                        Rendering Pin...
+                        Rendering {activeTemplateMeta.name}...
                       </p>
                       <p className="text-[11px] text-slate-400 leading-relaxed">
-                        Compositing main image, 3 gallery slots, and typography with Sharp.
+                        Compositing hero photo, gallery showcase slots, and design layers with Sharp.
                       </p>
                     </div>
                   ) : isCheckingStatus ? (
                     <div className="flex flex-col items-center gap-2 p-6 text-center text-slate-400">
                       <Loader2 className="w-5 h-5 animate-spin" />
-                      <p className="text-xs">Checking existing pin...</p>
+                      <p className="text-xs">Checking existing pins...</p>
                     </div>
-                  ) : pinUrl ? (
+                  ) : currentPinUrl ? (
                     <img
-                      src={pinUrl}
-                      alt={`Pinterest Pin for ${pattern.title}`}
+                      src={currentPinUrl}
+                      alt={`Pinterest Pin for ${pattern.title} (${activeTemplateMeta.name})`}
                       className="w-full h-full object-cover transition-transform duration-300 hover:scale-102"
                     />
                   ) : (
@@ -428,17 +575,17 @@ export const PinterestPinModal: React.FC<PinterestPinModalProps> = ({
                         <ImageIcon className="w-6 h-6" />
                       </div>
                       <p className="text-xs font-medium text-slate-600 dark:text-slate-400">
-                        No Pin Generated Yet
+                        No Pin Generated for {activeTemplateMeta.name}
                       </p>
                       <p className="text-[11px] text-slate-400">
-                        Click "Generate Pinterest Pin" to render Template A.
+                        Click "Generate Pinterest Pin" to render this master template.
                       </p>
                     </div>
                   )}
                 </div>
 
                 {/* Preview Actions */}
-                {pinUrl && !isGenerating && (
+                {currentPinUrl && !isGenerating && (
                   <div className="w-full max-w-[280px] grid grid-cols-2 gap-2 mt-3">
                     <button
                       id="download-pin-btn"
@@ -452,7 +599,7 @@ export const PinterestPinModal: React.FC<PinterestPinModalProps> = ({
 
                     <a
                       id="open-full-pin-link"
-                      href={pinUrl}
+                      href={currentPinUrl}
                       target="_blank"
                       rel="noopener noreferrer"
                       className="py-2 px-3 rounded-xl bg-slate-100 dark:bg-slate-700 text-slate-700 dark:text-slate-200 font-bold text-xs flex items-center justify-center gap-1.5 hover:bg-slate-200 dark:hover:bg-slate-600 transition-colors cursor-pointer"
