@@ -1,52 +1,68 @@
 export const TEMPLATE_C = {
   id: "template-c",
-  name: "Template C (Botanical Elegance)",
-  width: 1000,
-  height: 1500,
+  name: "Template C",
+  width: 1024,
+  height: 1536,
 
-  // Large Central Hero Image
+  // =========================================
+  // DYNAMIC TITLE
+  // Kept inside the top title frame
+  // =========================================
+  title: {
+    x: 270,
+    y: 43,
+    width: 485,
+    height: 112,
+  },
+
+  // =========================================
+  // DYNAMIC SUBTITLE
+  // Kept inside the subtitle frame
+  // =========================================
+  subtitle: {
+    x: 285,
+    y: 181,
+    width: 454,
+    height: 58,
+  },
+
+  // =========================================
+  // DYNAMIC MAIN IMAGE
+  // Safe area between side features
+  // =========================================
   mainImage: {
-    x: 80,
-    y: 130,
-    width: 840,
-    height: 560,
+    x: 269,
+    y: 268,
+    width: 489,
+    height: 650,
     radius: 26,
   },
 
-  // 4 Feature Icons section (Untouched / Part of master template)
-  featureIcons: {
-    y: 720,
-    height: 120,
-    items: [
-      { text: "Detailed PDF Pattern", x: 125 },
-      { text: "Step-by-Step Photo Guide", x: 365 },
-      { text: "Beginner Friendly", x: 605 },
-      { text: "Great Gift Idea", x: 845 },
-    ],
-  },
-
-  // 3 Bottom Gallery Slots (Gallery Images 2, 3, 4)
+  // =========================================
+  // DYNAMIC GALLERY
+  // Must stay above the fixed gallery labels
+  // =========================================
   gallery: [
-    {
-      x: 48,
-      y: 875,
-      width: 276,
-      height: 220,
-      radius: 20,
-    },
-    {
-      x: 362,
-      y: 875,
-      width: 276,
-      height: 220,
-      radius: 20,
-    },
-    {
-      x: 676,
-      y: 875,
-      width: 276,
-      height: 220,
-      radius: 20,
-    },
-  ],
+  {
+    x: 27,
+    y: 934,
+    width: 317,
+    height: 215,
+    radius: 20,
+  },
+  {
+    x: 354,
+    y: 934,
+    width: 317,
+    height: 215,
+    radius: 20,
+  },
+  {
+    x: 680,
+    y: 934,
+    width: 317,
+    height: 215,
+    radius: 20,
+  },
+],
 } as const;
