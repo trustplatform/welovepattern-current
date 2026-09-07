@@ -29,6 +29,7 @@ import {
   renderOAuthCallbackHtml,
   PinterestAuthRecord
 } from "./src/pinterest/pinterestOAuth";
+import { fetchPinterestBoards } from "./src/pinterest/pinterestApi";
 
 dotenv.config();
 
@@ -2321,6 +2322,33 @@ app.post("/api/admin/pinterest/disconnect", requireAdminAuth, (req, res) => {
     console.error("Error disconnecting Pinterest:", err);
     return res.status(500).json({
       error: "Failed to disconnect Pinterest account"
+    });
+  }
+});
+
+// 6. Pinterest Boards Endpoint (Authenticated Admin only)
+// Fetches the normalized list of boards belonging to the connected Pinterest account
+app.get("/api/admin/pinterest/boards", requireAdminAuth, async (req, res) => {
+  try {
+    const result = await fetchPinterestBoards();
+    if (!result.success) {
+      return res.json({
+        success: false,
+        boards: [],
+        error: result.error || "Pinterest account is not connected"
+      });
+    }
+
+    return res.json({
+      success: true,
+      boards: result.boards
+    });
+  } catch (err: any) {
+    console.error("Error fetching Pinterest boards:", err);
+    return res.status(500).json({
+      success: false,
+      boards: [],
+      error: err?.message || "Failed to load Pinterest boards"
     });
   }
 });

@@ -225,3 +225,9 @@ export interface SafePinterestStatus {
   isExpired: boolean;
   error?: string | null;
 }
+
+export interface PinterestBoard {
+  id: string;
+  name: string;
+  imageThumbnailUrl?: string;
+}

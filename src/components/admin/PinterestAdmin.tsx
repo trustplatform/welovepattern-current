@@ -10,9 +10,10 @@ import {
   Check,
   Copy,
   Info,
-  Loader2
+  Loader2,
+  Folder
 } from 'lucide-react';
-import { SafePinterestStatus } from '../../types';
+import { SafePinterestStatus, PinterestBoard } from '../../types';
 
 export const PinterestAdmin: React.FC = () => {
   const [status, setStatus] = useState<SafePinterestStatus | null>(null);
@@ -23,7 +24,36 @@ export const PinterestAdmin: React.FC = () => {
   const [successMessage, setSuccessMessage] = useState<string | null>(null);
   const [copiedRedirectUri, setCopiedRedirectUri] = useState<boolean>(false);
 
+  // Pinterest Boards state
+  const [boards, setBoards] = useState<PinterestBoard[]>([]);
+  const [isLoadingBoards, setIsLoadingBoards] = useState<boolean>(false);
+  const [boardsError, setBoardsError] = useState<string | null>(null);
+  const [copiedBoardId, setCopiedBoardId] = useState<string | null>(null);
+
   const pollIntervalRef = useRef<NodeJS.Timeout | null>(null);
+
+  // Fetch boards from API
+  const fetchBoards = useCallback(async () => {
+    setIsLoadingBoards(true);
+    setBoardsError(null);
+    try {
+      const res = await fetch('/api/admin/pinterest/boards', {
+        headers: { 'Accept': 'application/json' },
+        cache: 'no-store'
+      });
+      const data = await res.json();
+      if (data.success && Array.isArray(data.boards)) {
+        setBoards(data.boards);
+      } else {
+        setBoardsError(data.error || 'Failed to load boards from Pinterest');
+      }
+    } catch (err: any) {
+      console.error('Failed to load Pinterest boards:', err);
+      setBoardsError(err?.message || 'Failed to communicate with server');
+    } finally {
+      setIsLoadingBoards(false);
+    }
+  }, []);
 
   // Fetch safe status from server
   const fetchStatus = useCallback(async () => {
@@ -51,6 +81,15 @@ export const PinterestAdmin: React.FC = () => {
   useEffect(() => {
     fetchStatus();
   }, [fetchStatus]);
+
+  // Automatically fetch boards when account is connected and not expired
+  useEffect(() => {
+    if (status?.connected && !status?.isExpired) {
+      fetchBoards();
+    } else {
+      setBoards([]);
+    }
+  }, [status?.connected, status?.isExpired, fetchBoards]);
 
   // Clean up polling timer on unmount
   useEffect(() => {
@@ -177,6 +216,7 @@ export const PinterestAdmin: React.FC = () => {
       }
 
       setSuccessMessage('Pinterest account disconnected successfully.');
+      setBoards([]);
       await fetchStatus();
     } catch (err: any) {
       console.error('Error disconnecting Pinterest:', err);
@@ -217,7 +257,11 @@ export const PinterestAdmin: React.FC = () => {
         <div className="flex items-center gap-2">
           <button
             id="pinterest-refresh-status-btn"
-            onClick={() => { setIsLoading(true); fetchStatus(); }}
+            onClick={() => {
+              setIsLoading(true);
+              fetchStatus();
+              if (isConnected) fetchBoards();
+            }}
             disabled={isLoading || isConnecting}
             className="px-3 py-2 text-sm font-medium text-stone-700 bg-white border border-stone-300 rounded-lg hover:bg-stone-50 transition-colors flex items-center gap-2 shadow-xs disabled:opacity-50"
             title="Refresh status from server"
@@ -406,6 +450,124 @@ export const PinterestAdmin: React.FC = () => {
                 <span className="text-emerald-700 font-medium">4 scopes active</span>
               </div>
             </div>
+          </div>
+        )}
+      </div>
+
+      {/* Pinterest Boards Management Area (Phase 1) */}
+      <div id="pinterest-boards-card" className="bg-white border border-stone-200 rounded-2xl p-6 shadow-xs space-y-4">
+        <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 pb-4 border-b border-stone-100">
+          <div className="flex items-center gap-3">
+            <div className="w-10 h-10 rounded-xl bg-red-50 text-red-600 border border-red-200 flex items-center justify-center font-bold shrink-0">
+              <Folder className="w-5 h-5" />
+            </div>
+            <div>
+              <div className="flex items-center gap-2.5">
+                <h2 className="text-lg font-bold text-stone-900">Pinterest Boards</h2>
+                {isConnected && boards.length > 0 && (
+                  <span className="px-2.5 py-0.5 rounded-full text-xs font-semibold bg-emerald-100 text-emerald-800">
+                    {boards.length} Boards
+                  </span>
+                )}
+              </div>
+              <p className="text-xs text-stone-500 mt-0.5">
+                Boards retrieved from your connected Pinterest account for pin publishing and category mapping.
+              </p>
+            </div>
+          </div>
+
+          {isConnected && (
+            <button
+              id="pinterest-refresh-boards-btn"
+              onClick={fetchBoards}
+              disabled={isLoadingBoards}
+              className="px-3.5 py-2 text-xs font-semibold text-stone-700 bg-white border border-stone-300 rounded-xl hover:bg-stone-50 transition-colors flex items-center gap-2 shadow-xs disabled:opacity-50 shrink-0 self-start sm:self-auto"
+              title="Refresh Pinterest boards from API"
+            >
+              <RefreshCw className={`w-3.5 h-3.5 ${isLoadingBoards ? 'animate-spin text-stone-400' : 'text-stone-600'}`} />
+              <span>Refresh Boards</span>
+            </button>
+          )}
+        </div>
+
+        {/* Display states */}
+        {!isConnected ? (
+          <div className="p-6 rounded-xl bg-stone-50 border border-dashed border-stone-200 text-center">
+            <p className="text-sm font-medium text-stone-600">Connect your Pinterest account above to load and view your boards.</p>
+          </div>
+        ) : isLoadingBoards && boards.length === 0 ? (
+          <div className="p-8 text-center flex flex-col items-center justify-center gap-2">
+            <Loader2 className="w-6 h-6 animate-spin text-red-600" />
+            <p className="text-xs font-medium text-stone-500">Fetching boards from Pinterest API v5...</p>
+          </div>
+        ) : boardsError ? (
+          <div className="p-4 rounded-xl bg-red-50 border border-red-200 text-red-700 flex items-start justify-between text-xs gap-3">
+            <div>
+              <p className="font-semibold text-red-800">Error loading Pinterest boards</p>
+              <p className="mt-0.5">{boardsError}</p>
+            </div>
+            <button
+              onClick={fetchBoards}
+              className="px-2.5 py-1 bg-red-100 hover:bg-red-200 text-red-800 font-semibold rounded-lg text-xs transition-colors shrink-0"
+            >
+              Retry
+            </button>
+          </div>
+        ) : boards.length === 0 ? (
+          <div className="p-6 rounded-xl bg-stone-50 border border-stone-200 text-center">
+            <p className="text-sm font-medium text-stone-700">No boards found in this Pinterest account.</p>
+            <p className="text-xs text-stone-500 mt-1">Create boards on Pinterest to organize your pattern pins.</p>
+          </div>
+        ) : (
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-3">
+            {boards.map((board) => (
+              <div
+                key={board.id}
+                id={`pinterest-board-${board.id}`}
+                className="p-3.5 rounded-xl border border-stone-200 bg-stone-50/50 hover:bg-white hover:border-stone-300 transition-all flex items-start gap-3 group"
+              >
+                {board.imageThumbnailUrl ? (
+                  <img
+                    src={board.imageThumbnailUrl}
+                    alt={board.name}
+                    className="w-10 h-10 rounded-lg object-cover border border-stone-200 shrink-0"
+                    referrerPolicy="no-referrer"
+                  />
+                ) : (
+                  <div className="w-10 h-10 rounded-lg bg-red-50 text-red-600 border border-red-100 flex items-center justify-center shrink-0">
+                    <Folder className="w-5 h-5" />
+                  </div>
+                )}
+                <div className="flex-1 min-w-0">
+                  <div className="flex items-center gap-1.5">
+                    <Check className="w-3.5 h-3.5 text-emerald-600 shrink-0" />
+                    <p className="text-sm font-bold text-stone-900 truncate" title={board.name}>
+                      {board.name}
+                    </p>
+                  </div>
+                  <div className="flex items-center gap-1.5 mt-1">
+                    <span className="text-[11px] font-mono text-stone-500 truncate select-all">
+                      ID: {board.id}
+                    </span>
+                    <button
+                      onClick={() => {
+                        navigator.clipboard.writeText(board.id);
+                        setCopiedBoardId(board.id);
+                        setTimeout(() => setCopiedBoardId(null), 2000);
+                      }}
+                      className="opacity-0 group-hover:opacity-100 transition-opacity p-0.5 text-stone-400 hover:text-stone-700 shrink-0"
+                      title="Copy Board ID"
+                    >
+                      {copiedBoardId === board.id ? (
+                        <Check className="w-3 h-3 text-emerald-600" />
+                      ) : (
+                        <Copy className="w-3 h-3" />
+                      )}
+                    </button>
+                  </div>
+                </div>
+              </div>
+            ))}
           </div>
         )}
       </div>
