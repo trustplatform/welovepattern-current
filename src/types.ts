@@ -82,6 +82,10 @@ export interface Pattern {
   pinterestBoardId?: string;
   pinterestBoardName?: string;
   pinterestTemplateId?: string;
+  pinterestStatus?: 'pending' | 'published' | 'failed';
+  pinterestPinId?: string;
+  pinterestPublishedAt?: string;
+  pinterestError?: string;
 }
 
 export interface Review {
@@ -226,6 +230,7 @@ export interface SafePinterestStatus {
   connectedAt: string | null;
   expiresAt: number | null;
   isExpired: boolean;
+  hasBoardsWriteScope?: boolean;
   error?: string | null;
 }
 

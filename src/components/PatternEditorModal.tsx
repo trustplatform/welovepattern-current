@@ -104,6 +104,21 @@ export const PatternEditorModal: React.FC<PatternEditorModalProps> = ({
   const [boardsError, setBoardsError] = useState<string | null>(null);
   const [isPinterestConnected, setIsPinterestConnected] = useState<boolean | null>(null);
 
+  // Pinterest Publishing State (Phase 3)
+  const [isPublishingPin, setIsPublishingPin] = useState(false);
+  const [publishSuccess, setPublishSuccess] = useState<{
+    patternPublished: boolean;
+    pinterestPublished: boolean;
+    pinId?: string;
+    pinUrl?: string;
+  } | null>(null);
+  const [publishError, setPublishError] = useState<{
+    patternError?: string;
+    pinterestError?: string;
+    missingScope?: boolean;
+  } | null>(null);
+  const [lastSavedPattern, setLastSavedPattern] = useState<Pattern | null>(null);
+
   const [savedSuccess, setSavedSuccess] = useState(false);
   const [isSaving, setIsSaving] = useState(false);
   const [saveError, setSaveError] = useState<string | null>(null);
@@ -212,8 +227,34 @@ export const PatternEditorModal: React.FC<PatternEditorModalProps> = ({
         setPinterestBoardId(initialPattern.pinterestBoardId || '');
         setPinterestBoardName(initialPattern.pinterestBoardName || '');
         setPinterestTemplateId((initialPattern.pinterestTemplateId as PinterestTemplateId) || 'template-a');
+        if (initialPattern.pinterestStatus === 'published' && initialPattern.pinterestPinId) {
+          setPublishSuccess({
+            patternPublished: true,
+            pinterestPublished: true,
+            pinId: initialPattern.pinterestPinId,
+            pinUrl: `https://www.pinterest.com/pin/${initialPattern.pinterestPinId}/`
+          });
+          setPublishError(null);
+        } else if (initialPattern.pinterestStatus === 'failed') {
+          setPublishSuccess({
+            patternPublished: true,
+            pinterestPublished: false
+          });
+          setPublishError({
+            pinterestError: initialPattern.pinterestError || 'Pinterest publishing failed',
+            missingScope: Boolean(initialPattern.pinterestError && /boards:write/i.test(initialPattern.pinterestError))
+          });
+        } else {
+          setPublishSuccess(null);
+          setPublishError(null);
+        }
+      } else {
+        setPublishSuccess(null);
+        setPublishError(null);
       }
 
+      setLastSavedPattern(initialPattern || null);
+      setIsPublishingPin(false);
       setPinterestPreviewUrl(null);
       setPinGenerationError(null);
 
@@ -226,6 +267,34 @@ export const PatternEditorModal: React.FC<PatternEditorModalProps> = ({
       setActiveTab('write');
     }
   }, [initialPattern, isOpen]);
+
+  // Listen for OAuth success popup messages (auto-updates boards and clears scope errors)
+  useEffect(() => {
+    const handleOAuthMessage = (event: MessageEvent) => {
+      if (event.data?.type === 'PINTEREST_OAUTH_SUCCESS') {
+        fetchPinterestBoards();
+        if (publishError?.missingScope) {
+          setPublishError(null);
+        }
+      }
+    };
+    window.addEventListener('message', handleOAuthMessage);
+    return () => window.removeEventListener('message', handleOAuthMessage);
+  }, [publishError]);
+
+  const handleReconnectPinterest = async () => {
+    try {
+      const res = await fetch('/api/admin/pinterest/auth-url');
+      const data = await res.json();
+      if (res.ok && data.url) {
+        window.open(data.url, 'pinterest_oauth', 'width=600,height=750,status=no,resizable=yes');
+      } else {
+        setBoardsError(data.error || 'Failed to open Pinterest authorization');
+      }
+    } catch (err: any) {
+      setBoardsError(err?.message || 'Error connecting to Pinterest');
+    }
+  };
 
   // Fetch Pinterest Boards for the Pinterest Tab (Phase 2)
   const fetchPinterestBoards = async () => {
@@ -653,6 +722,7 @@ const handleFileUpload = async (
       });
 
       onSavePattern(finalPattern);
+      setLastSavedPattern(finalPattern);
       notifyIndexNowClient({ type: 'pattern', slug: finalPattern.slug });
       setSavedSuccess(true);
       setTimeout(() => {
@@ -664,6 +734,264 @@ const handleFileUpload = async (
       setSaveError(err.message || 'Failed to persist pattern data.');
     } finally {
       setIsSaving(false);
+    }
+  };
+
+  // Phase 3: Publish Pattern & Pin Workflow
+  const handlePublishPatternAndPin = async (e?: React.FormEvent) => {
+    if (e) e.preventDefault();
+    if (isSaving || isPublishingPin) return;
+
+    const trimmedTitle = title.trim();
+    if (!trimmedTitle) {
+      setSaveError('Pattern title is required');
+      setActiveTab('write');
+      return;
+    }
+
+    if (!pinterestBoardId) {
+      setPublishError({
+        pinterestError: 'Please select a Pinterest Board before publishing.'
+      });
+      setActiveTab('pinterest');
+      return;
+    }
+
+    setSaveError(null);
+    setPublishError(null);
+    setPublishSuccess(null);
+    setIsSaving(true);
+    setIsPublishingPin(true);
+
+    const slug = trimmedTitle.toLowerCase().replace(/[^a-z0-9]+/g, '-').replace(/^-|-$/g, '') || `pattern-${Date.now()}`;
+    const effectiveMainImage = mainImage.trim() || (gallery.length > 0 ? gallery[0] : 'https://images.unsplash.com/photo-1584992236310-6edddc08acff?auto=format&fit=crop&w=800&q=80');
+    const effectiveGallery = gallery.filter(g => typeof g === 'string' && g.trim()).length > 0
+      ? gallery.filter(g => typeof g === 'string' && g.trim())
+      : (effectiveMainImage ? [effectiveMainImage] : []);
+
+    const seoMetaObj: SeoMeta = {
+      metaTitle: metaTitle.trim() || `${trimmedTitle} - Free Crochet Pattern`,
+      metaDescription: metaDescription.trim() || description.trim() || 'Detailed pattern with step-by-step written instructions.',
+      metaKeywords: metaKeywords.trim() || 'crochet pattern, free crochet pattern, handmade, yarn pattern',
+      ogImage: ogImage.trim() || effectiveMainImage,
+      canonicalUrl: canonicalUrl.trim() || `https://welovepattern.com/pattern/${slug}`,
+      ogType: 'article'
+    };
+
+    const targetPatternId = lastSavedPattern?.id || initialPattern?.id;
+    const isEditing = Boolean(targetPatternId);
+
+    const patternPayload: any = {
+      id: targetPatternId || `p-${Date.now()}`,
+      slug: slug,
+      title: trimmedTitle,
+      patternTitle: trimmedTitle,
+      subtitle: subtitle.trim() || `Handcrafted ${difficulty} ${category} crochet project`,
+      description: description.trim() || 'Detailed pattern with step-by-step written instructions.',
+      difficulty: difficulty,
+      category: category,
+      image: effectiveMainImage,
+      coverPhoto: effectiveMainImage,
+      coverImage: effectiveMainImage,
+      imageUrl: effectiveMainImage,
+      photoUrl: effectiveMainImage,
+      gallery: effectiveGallery,
+      galleryPhotos: effectiveGallery,
+      images: effectiveGallery,
+      rating: lastSavedPattern?.rating || initialPattern?.rating || 5.0,
+      reviewCount: lastSavedPattern?.reviewCount || initialPattern?.reviewCount || 1,
+      downloadsCount: lastSavedPattern?.downloadsCount || initialPattern?.downloadsCount || 0,
+      hookSize: hookSize,
+      yarnWeight: yarnWeight,
+      yarnMetersNeeded: lastSavedPattern?.yarnMetersNeeded || initialPattern?.yarnMetersNeeded || 450,
+      finishedSize: lastSavedPattern?.finishedSize || initialPattern?.finishedSize || 'Standard Size',
+      estimatedTimeHours: lastSavedPattern?.estimatedTimeHours || initialPattern?.estimatedTimeHours || 4,
+      createdAt: lastSavedPattern?.createdAt || initialPattern?.createdAt || new Date().toISOString().split('T')[0],
+      materials: materials.split(',').map(m => m.trim()).filter(Boolean),
+      gauge: gauge,
+      abbreviationsUsed: ['sc', 'hdc', 'dc', 'ch', 'sl st'],
+      steps: steps,
+      pdfSize: '1.2 MB',
+      pdfPages: 3,
+      pdfUrl: pdfUrl.trim() || undefined,
+      tags: [category, difficulty.toLowerCase(), 'free-pattern'],
+      seoMeta: seoMetaObj,
+      pinterestBoardId: pinterestBoardId.trim() || undefined,
+      pinterestBoardName: pinterestBoardName.trim() || undefined,
+      pinterestTemplateId: pinterestTemplateId || 'template-a'
+    };
+
+    let savedPatternResult: Pattern | null = null;
+
+    // Step 1: Save Pattern to WeLovePattern
+    try {
+      const endpoint = isEditing ? `/api/admin/patterns/${encodeURIComponent(targetPatternId!)}` : '/api/admin/patterns';
+      const method = isEditing ? 'PUT' : 'POST';
+
+      const res = await fetch(endpoint, {
+        method,
+        headers: { 'Content-Type': 'application/json' },
+        credentials: 'include',
+        body: JSON.stringify(patternPayload)
+      });
+
+      if (!res.ok) {
+        const errData = await res.json().catch(() => ({}));
+        throw new Error(errData.error || 'Failed to save pattern to WeLovePattern');
+      }
+
+      const resData = await res.json();
+      savedPatternResult = resData.pattern || patternPayload;
+      setLastSavedPattern(savedPatternResult);
+
+      // Dynamically apply meta tags immediately to DOM head
+      updateHeadMetaTags({
+        title: seoMetaObj.metaTitle,
+        description: seoMetaObj.metaDescription,
+        keywords: seoMetaObj.metaKeywords,
+        image: seoMetaObj.ogImage,
+        url: seoMetaObj.canonicalUrl
+      });
+
+      onSavePattern(savedPatternResult!);
+      notifyIndexNowClient({ type: 'pattern', slug: savedPatternResult!.slug });
+    } catch (saveErr: any) {
+      console.error('Pattern save failed:', saveErr);
+      setSaveError(saveErr.message || 'Failed to save pattern');
+      setPublishError({
+        patternError: saveErr.message || 'Failed to save pattern to WeLovePattern'
+      });
+      setIsSaving(false);
+      setIsPublishingPin(false);
+      return;
+    }
+
+    // Pattern was successfully saved and published on WeLovePattern!
+    setIsSaving(false);
+
+    // Step 2: Publish Pin to Pinterest
+    try {
+      const pinEndpoint = `/api/admin/patterns/${encodeURIComponent(savedPatternResult.id)}/publish-pinterest`;
+      const pinRes = await fetch(pinEndpoint, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        credentials: 'include',
+        body: JSON.stringify({
+          boardId: pinterestBoardId,
+          boardName: pinterestBoardName,
+          templateId: pinterestTemplateId
+        })
+      });
+
+      const pinData = await pinRes.json().catch(() => ({}));
+
+      if (!pinRes.ok || !pinData.success) {
+        // Pinterest publishing failed, but Pattern remains PUBLISHED on WeLovePattern!
+        setPublishSuccess({
+          patternPublished: true,
+          pinterestPublished: false
+        });
+        setPublishError({
+          pinterestError: pinData.error || 'Pinterest publishing failed',
+          missingScope: Boolean(pinData.missingScope)
+        });
+        if (pinData.pattern) {
+          setLastSavedPattern(pinData.pattern);
+          onSavePattern(pinData.pattern);
+        }
+        return;
+      }
+
+      // Both WeLovePattern and Pinterest publishing succeeded!
+      setPublishSuccess({
+        patternPublished: true,
+        pinterestPublished: true,
+        pinId: pinData.pinId,
+        pinUrl: pinData.pinUrl
+      });
+      setPublishError(null);
+      if (pinData.pattern) {
+        setLastSavedPattern(pinData.pattern);
+        onSavePattern(pinData.pattern);
+      }
+    } catch (pinErr: any) {
+      console.error('Pinterest publishing request failed:', pinErr);
+      setPublishSuccess({
+        patternPublished: true,
+        pinterestPublished: false
+      });
+      setPublishError({
+        pinterestError: pinErr?.message || 'Failed to communicate with Pinterest server'
+      });
+    } finally {
+      setIsPublishingPin(false);
+    }
+  };
+
+  // Phase 3: Retry Pinterest Publishing for an already-saved Pattern (DO NOT duplicate pattern)
+  const handleRetryPinterest = async () => {
+    const targetId = lastSavedPattern?.id || initialPattern?.id;
+    if (!targetId) {
+      setPublishError({ pinterestError: 'No saved pattern available to retry Pinterest.' });
+      return;
+    }
+
+    if (!pinterestBoardId) {
+      setPublishError({ pinterestError: 'Please select a Pinterest Board before retrying.' });
+      return;
+    }
+
+    setIsPublishingPin(true);
+    setPublishError(null);
+
+    try {
+      const pinRes = await fetch(`/api/admin/patterns/${encodeURIComponent(targetId)}/publish-pinterest`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        credentials: 'include',
+        body: JSON.stringify({
+          boardId: pinterestBoardId,
+          boardName: pinterestBoardName,
+          templateId: pinterestTemplateId
+        })
+      });
+
+      const pinData = await pinRes.json().catch(() => ({}));
+
+      if (!pinRes.ok || !pinData.success) {
+        setPublishSuccess({
+          patternPublished: true,
+          pinterestPublished: false
+        });
+        setPublishError({
+          pinterestError: pinData.error || 'Failed to publish Pin to Pinterest',
+          missingScope: Boolean(pinData.missingScope)
+        });
+        if (pinData.pattern) {
+          setLastSavedPattern(pinData.pattern);
+          onSavePattern(pinData.pattern);
+        }
+        return;
+      }
+
+      // Succeeded!
+      setPublishSuccess({
+        patternPublished: true,
+        pinterestPublished: true,
+        pinId: pinData.pinId,
+        pinUrl: pinData.pinUrl
+      });
+      setPublishError(null);
+      if (pinData.pattern) {
+        setLastSavedPattern(pinData.pattern);
+        onSavePattern(pinData.pattern);
+      }
+    } catch (err: any) {
+      setPublishError({
+        pinterestError: err?.message || 'Failed to retry Pinterest publication'
+      });
+    } finally {
+      setIsPublishingPin(false);
     }
   };
 
@@ -750,7 +1078,7 @@ const handleFileUpload = async (
         </div>
 
         {/* Form Body */}
-        <form onSubmit={handleSave} noValidate className="p-6 overflow-y-auto space-y-6 flex-1">
+        <form onSubmit={activeTab === 'pinterest' ? handlePublishPatternAndPin : handleSave} noValidate className="p-6 overflow-y-auto space-y-6 flex-1">
           
           {/* TAB 1: WRITE PATTERN */}
           {activeTab === 'write' && (
@@ -1514,6 +1842,134 @@ const handleFileUpload = async (
                 )}
               </div>
 
+              {/* 6. Phase 3: Pinterest Publishing & Status Block */}
+              <div className="p-4 sm:p-5 rounded-2xl border border-slate-200 dark:border-slate-700 bg-slate-50/50 dark:bg-slate-800/60 space-y-4">
+                <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3">
+                  <div>
+                    <h4 className="text-sm font-extrabold text-slate-900 dark:text-white flex items-center gap-2">
+                      <Share2 className="w-4 h-4 text-red-600" />
+                      <span>Publishing Action</span>
+                    </h4>
+                    <p className="text-xs text-slate-500 dark:text-slate-400 mt-0.5">
+                      Saves your pattern to WeLovePattern and creates the Pinterest Pin on your selected board.
+                    </p>
+                  </div>
+
+                  <div className="flex items-center gap-2">
+                    {publishSuccess?.patternPublished && !publishSuccess?.pinterestPublished ? (
+                      <button
+                        type="button"
+                        onClick={handleRetryPinterest}
+                        disabled={isPublishingPin}
+                        className="px-5 py-2.5 rounded-xl bg-amber-600 hover:bg-amber-700 text-white text-xs font-bold shadow-md hover:shadow-lg transition-all flex items-center gap-2 cursor-pointer disabled:opacity-50"
+                      >
+                        {isPublishingPin ? (
+                          <>
+                            <Loader2 className="w-4 h-4 animate-spin" />
+                            <span>Publishing...</span>
+                          </>
+                        ) : (
+                          <>
+                            <RefreshCw className="w-4 h-4" />
+                            <span>Retry Pinterest</span>
+                          </>
+                        )}
+                      </button>
+                    ) : (
+                      <button
+                        type="button"
+                        onClick={handlePublishPatternAndPin}
+                        disabled={isPublishingPin || isSaving}
+                        className="px-6 py-2.5 rounded-xl bg-red-600 hover:bg-red-700 text-white text-xs font-bold shadow-md hover:shadow-lg transition-all flex items-center gap-2 cursor-pointer disabled:opacity-50"
+                      >
+                        {isPublishingPin || isSaving ? (
+                          <>
+                            <Loader2 className="w-4 h-4 animate-spin" />
+                            <span>Publishing...</span>
+                          </>
+                        ) : (
+                          <>
+                            <Share2 className="w-4 h-4" />
+                            <span>Publish Pattern &amp; Pin</span>
+                          </>
+                        )}
+                      </button>
+                    )}
+                  </div>
+                </div>
+
+                {/* Status displays matching Phase 3 requirements */}
+                {publishSuccess?.patternPublished && publishSuccess?.pinterestPublished ? (
+                  <div className="p-3.5 rounded-xl bg-emerald-50 dark:bg-emerald-950/40 border border-emerald-200 dark:border-emerald-900 space-y-1.5">
+                    <div className="flex items-center gap-2 text-xs font-bold text-emerald-700 dark:text-emerald-300">
+                      <Check className="w-4 h-4 text-emerald-600 shrink-0" />
+                      <span>✓ Pattern published</span>
+                    </div>
+                    <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-2">
+                      <div className="flex items-center gap-2 text-xs font-bold text-emerald-700 dark:text-emerald-300">
+                        <Check className="w-4 h-4 text-emerald-600 shrink-0" />
+                        <span>✓ Pinterest Pin published</span>
+                      </div>
+                      {publishSuccess.pinId && (
+                        <div className="flex items-center gap-2 text-[11px]">
+                          <span className="font-mono text-emerald-800 dark:text-emerald-200 bg-emerald-100 dark:bg-emerald-900/60 px-2 py-0.5 rounded-md">
+                            Pinterest Pin ID: {publishSuccess.pinId}
+                          </span>
+                          {publishSuccess.pinUrl && (
+                            <a
+                              href={publishSuccess.pinUrl}
+                              target="_blank"
+                              rel="noopener noreferrer"
+                              className="font-bold text-red-600 hover:text-red-700 dark:text-red-400 flex items-center gap-1 underline"
+                            >
+                              <span>View Pin</span>
+                              <ExternalLink className="w-3 h-3" />
+                            </a>
+                          )}
+                        </div>
+                      )}
+                    </div>
+                  </div>
+                ) : publishSuccess?.patternPublished && !publishSuccess?.pinterestPublished ? (
+                  <div className="p-3.5 rounded-xl bg-amber-50 dark:bg-amber-950/40 border border-amber-200 dark:border-amber-900 space-y-2">
+                    <div className="flex items-center gap-2 text-xs font-bold text-emerald-700 dark:text-emerald-300">
+                      <Check className="w-4 h-4 text-emerald-600 shrink-0" />
+                      <span>✓ Pattern published</span>
+                    </div>
+                    <div className="flex items-center gap-2 text-xs font-bold text-rose-700 dark:text-rose-300">
+                      <AlertCircle className="w-4 h-4 text-rose-600 shrink-0" />
+                      <span>⚠ Pinterest publishing failed: {publishError?.pinterestError || 'Failed to publish to Pinterest'}</span>
+                    </div>
+                    {publishError?.missingScope ? (
+                      <div className="pt-2 flex flex-col sm:flex-row sm:items-center justify-between gap-2 border-t border-amber-200/60 dark:border-amber-800/60">
+                        <p className="text-[11px] text-amber-800 dark:text-amber-200">
+                          Pinterest authorization is missing <code className="px-1 py-0.5 bg-amber-100 dark:bg-amber-900 rounded font-mono text-[10px]">boards:write</code>. Please reconnect your Pinterest account.
+                        </p>
+                        <button
+                          type="button"
+                          onClick={handleReconnectPinterest}
+                          className="px-3.5 py-1.5 rounded-lg bg-red-600 hover:bg-red-700 text-white text-xs font-bold shadow-xs flex items-center gap-1.5 shrink-0 cursor-pointer"
+                        >
+                          <Share2 className="w-3.5 h-3.5" />
+                          <span>Reconnect Pinterest</span>
+                        </button>
+                      </div>
+                    ) : (
+                      <p className="text-[11px] text-amber-700 dark:text-amber-300">
+                        The pattern is published on WeLovePattern. Click &ldquo;Retry Pinterest&rdquo; to retry publishing the Pin to Pinterest without creating another pattern.
+                      </p>
+                    )}
+                  </div>
+                ) : null}
+
+                {publishError?.patternError && (
+                  <div className="p-3 rounded-xl bg-rose-50 dark:bg-rose-950/40 border border-rose-200 dark:border-rose-900 text-xs font-semibold text-rose-700 dark:text-rose-300 flex items-center gap-2">
+                    <AlertCircle className="w-4 h-4 text-rose-600 shrink-0" />
+                    <span>{publishError.patternError}</span>
+                  </div>
+                )}
+              </div>
+
             </div>
           )}
 
@@ -1541,7 +1997,7 @@ const handleFileUpload = async (
               <button
                 type="button"
                 onClick={onClose}
-                disabled={isSaving}
+                disabled={isSaving || isPublishingPin}
                 className="px-4 py-2 rounded-xl border border-slate-200 dark:border-slate-700 text-xs font-bold hover:bg-slate-100 dark:hover:bg-slate-800 transition-colors disabled:opacity-50"
               >
                 Cancel
@@ -1549,13 +2005,20 @@ const handleFileUpload = async (
 
               <button
                 type="submit"
-                disabled={isSaving}
-                className="px-6 py-2.5 rounded-xl bg-[#E96BA8] hover:bg-pink-600 text-white text-xs font-bold shadow-md hover:shadow-lg transition-all flex items-center gap-1.5 cursor-pointer disabled:opacity-50 disabled:cursor-not-allowed"
+                disabled={isSaving || isPublishingPin}
+                className={`px-6 py-2.5 rounded-xl text-white text-xs font-bold shadow-md hover:shadow-lg transition-all flex items-center gap-1.5 cursor-pointer disabled:opacity-50 disabled:cursor-not-allowed ${
+                  activeTab === 'pinterest' ? 'bg-red-600 hover:bg-red-700' : 'bg-[#E96BA8] hover:bg-pink-600'
+                }`}
               >
-                {isSaving ? (
+                {isPublishingPin || isSaving ? (
                   <>
                     <Loader2 className="w-4 h-4 animate-spin" />
-                    <span>Saving...</span>
+                    <span>Publishing...</span>
+                  </>
+                ) : activeTab === 'pinterest' ? (
+                  <>
+                    <Share2 className="w-4 h-4" />
+                    <span>Publish Pattern &amp; Pin</span>
                   </>
                 ) : (
                   <>

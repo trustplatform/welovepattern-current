@@ -29,7 +29,12 @@ import {
   renderOAuthCallbackHtml,
   PinterestAuthRecord
 } from "./src/pinterest/pinterestOAuth";
-import { fetchPinterestBoards } from "./src/pinterest/pinterestApi";
+import {
+  fetchPinterestBoards,
+  createPinterestPin,
+  generatePinterestTitle,
+  generatePinterestDescription
+} from "./src/pinterest/pinterestApi";
 
 dotenv.config();
 
@@ -1746,7 +1751,13 @@ function validateAndSanitizePattern(body: any, existingPattern?: Pattern): Patte
     }),
     pinterestBoardId: typeof body.pinterestBoardId === "string" && body.pinterestBoardId.trim() ? body.pinterestBoardId.trim() : existingPattern?.pinterestBoardId,
     pinterestBoardName: typeof body.pinterestBoardName === "string" && body.pinterestBoardName.trim() ? body.pinterestBoardName.trim() : existingPattern?.pinterestBoardName,
-    pinterestTemplateId: typeof body.pinterestTemplateId === "string" && body.pinterestTemplateId.trim() ? body.pinterestTemplateId.trim() : (existingPattern?.pinterestTemplateId || 'template-a')
+    pinterestTemplateId: typeof body.pinterestTemplateId === "string" && body.pinterestTemplateId.trim() ? body.pinterestTemplateId.trim() : (existingPattern?.pinterestTemplateId || 'template-a'),
+    pinterestStatus: (body.pinterestStatus === "pending" || body.pinterestStatus === "published" || body.pinterestStatus === "failed")
+      ? body.pinterestStatus
+      : existingPattern?.pinterestStatus,
+    pinterestPinId: typeof body.pinterestPinId === "string" && body.pinterestPinId.trim() ? body.pinterestPinId.trim() : existingPattern?.pinterestPinId,
+    pinterestPublishedAt: typeof body.pinterestPublishedAt === "string" && body.pinterestPublishedAt.trim() ? body.pinterestPublishedAt.trim() : existingPattern?.pinterestPublishedAt,
+    pinterestError: typeof body.pinterestError === "string" ? body.pinterestError : existingPattern?.pinterestError
   };
 
   return pattern;
@@ -2045,6 +2056,159 @@ app.post("/api/admin/patterns/:id/generate-pin", requireAdminAuth, async (req, r
     console.error("Error generating Pinterest pin for pattern:", err);
     return res.status(500).json({
       error: err?.message || "Failed to generate Pinterest pin"
+    });
+  }
+});
+
+// Admin POST: Publish or Retry Pinterest Pin for an existing Pattern
+app.post("/api/admin/patterns/:id/publish-pinterest", requireAdminAuth, uploadJsonParser, async (req, res) => {
+  try {
+    const { id } = req.params;
+    const body = req.body || {};
+    const effective = getEffectivePatterns();
+    const pattern = effective.find(p => p.id === id || p.slug === id);
+
+    if (!pattern) {
+      return res.status(404).json({ error: "Pattern not found" });
+    }
+
+    // Determine target board ID
+    const boardId = (typeof body.boardId === "string" && body.boardId.trim())
+      ? body.boardId.trim()
+      : (pattern.pinterestBoardId || "");
+
+    if (!boardId) {
+      return res.status(400).json({
+        error: "No Pinterest board selected. Please select a board before publishing to Pinterest."
+      });
+    }
+
+    // Determine target template ID
+    const requestedTemplateId = (typeof body.templateId === "string" && body.templateId.trim())
+      ? body.templateId.trim() as PinterestTemplateId
+      : (pattern.pinterestTemplateId || "template-a");
+    const templateId: PinterestTemplateId =
+      requestedTemplateId === "template-b" || requestedTemplateId === "template-c"
+        ? requestedTemplateId
+        : "template-a";
+
+    const boardName = (typeof body.boardName === "string" && body.boardName.trim())
+      ? body.boardName.trim()
+      : pattern.pinterestBoardName;
+
+    if (!pattern.image) {
+      return res.status(400).json({
+        error: "Pattern does not have a primary image required for Pinterest pin rendering"
+      });
+    }
+
+    // 1. Render the Pin image on server disk
+    const patternInput = {
+      id: pattern.id,
+      slug: pattern.slug,
+      title: pattern.title,
+      subtitle: pattern.subtitle,
+      description: pattern.description,
+      difficulty: pattern.difficulty,
+      image: pattern.image,
+      gallery: pattern.gallery,
+      category: pattern.category,
+      tags: pattern.tags,
+      hookSize: pattern.hookSize,
+      materials: pattern.materials,
+      pdfUrl: pattern.pdfUrl,
+      isFree: (pattern as any).isFree,
+      price: (pattern as any).price,
+    };
+
+    const baseSlug = pattern.slug || pattern.id;
+    let renderResult;
+    if (templateId === "template-b") {
+      const filename = `pin-${baseSlug}-template-b.png`;
+      renderResult = await renderPinterestTemplateB(patternInput, filename);
+    } else if (templateId === "template-c") {
+      const filename = `pin-${baseSlug}-template-c.png`;
+      renderResult = await renderPinterestTemplateC(patternInput, filename);
+    } else {
+      const filename = `pin-${baseSlug}-template-a.png`;
+      renderResult = await renderPinterestTemplateA(patternInput, filename);
+      try {
+        const legacyPath = path.join(process.cwd(), "public", "generated", "pinterest", `pin-${baseSlug}.png`);
+        fs.copyFileSync(renderResult.outputPath, legacyPath);
+      } catch {
+        // Non-blocking
+      }
+    }
+
+    // 2. Build public image and pattern URLs
+    const publicPinImageUrl = `https://welovepattern.com${renderResult.publicUrl}`;
+    const patternPublicUrl = `https://welovepattern.com/pattern/${encodeURIComponent(pattern.slug || pattern.id)}`;
+
+    // 3. Generate deterministic SEO title and description (No AI)
+    const pinTitle = generatePinterestTitle(pattern.title);
+    const pinDescription = generatePinterestDescription(pattern);
+
+    // 4. Call Pinterest API v5 to create Pin
+    const pinResult = await createPinterestPin({
+      boardId,
+      title: pinTitle,
+      description: pinDescription,
+      link: patternPublicUrl,
+      imageUrl: publicPinImageUrl
+    });
+
+    // 5. Update pattern Pinterest status in persistent datastore
+    const persisted = getPersistedPatternsData();
+    const targetIdx = persisted.findIndex(p => p.id === pattern.id);
+
+    if (pinResult.success && pinResult.pinId) {
+      pattern.pinterestStatus = "published";
+      pattern.pinterestPinId = pinResult.pinId;
+      pattern.pinterestPublishedAt = new Date().toISOString();
+      pattern.pinterestError = undefined;
+      pattern.pinterestBoardId = boardId;
+      pattern.pinterestBoardName = boardName;
+      pattern.pinterestTemplateId = templateId;
+
+      if (targetIdx >= 0) {
+        persisted[targetIdx] = { ...persisted[targetIdx], ...pattern };
+        savePersistedPatternsData(persisted);
+      }
+
+      return res.json({
+        success: true,
+        message: "Pinterest Pin published successfully!",
+        pinId: pinResult.pinId,
+        pinUrl: pinResult.url || `https://www.pinterest.com/pin/${pinResult.pinId}/`,
+        imagePublicUrl: publicPinImageUrl,
+        patternPublicUrl,
+        pattern
+      });
+    } else {
+      // Failed to publish on Pinterest - do not undo the pattern
+      pattern.pinterestStatus = "failed";
+      pattern.pinterestError = pinResult.error || "Failed to publish Pinterest Pin";
+      pattern.pinterestBoardId = boardId;
+      pattern.pinterestBoardName = boardName;
+      pattern.pinterestTemplateId = templateId;
+
+      if (targetIdx >= 0) {
+        persisted[targetIdx] = { ...persisted[targetIdx], ...pattern };
+        savePersistedPatternsData(persisted);
+      }
+
+      return res.status(pinResult.missingScope ? 403 : 500).json({
+        success: false,
+        missingScope: Boolean(pinResult.missingScope),
+        error: pattern.pinterestError,
+        pattern
+      });
+    }
+  } catch (err: any) {
+    console.error("Error publishing Pinterest pin:", err);
+    return res.status(500).json({
+      success: false,
+      error: err?.message || "Failed to publish Pinterest pin"
     });
   }
 });
