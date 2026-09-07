@@ -79,6 +79,9 @@ export interface Pattern {
   faq?: { question: string; answer: string }[];
   tags: string[];
   seoMeta?: SeoMeta;
+  pinterestBoardId?: string;
+  pinterestBoardName?: string;
+  pinterestTemplateId?: string;
 }
 
 export interface Review {

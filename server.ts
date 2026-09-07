@@ -1743,7 +1743,10 @@ function validateAndSanitizePattern(body: any, existingPattern?: Pattern): Patte
       metaDescription: typeof body.description === "string" ? body.description.trim() : (existingPattern?.description || "Detailed pattern with step-by-step written instructions."),
       ogImage: mainImage,
       ogType: 'article'
-    })
+    }),
+    pinterestBoardId: typeof body.pinterestBoardId === "string" && body.pinterestBoardId.trim() ? body.pinterestBoardId.trim() : existingPattern?.pinterestBoardId,
+    pinterestBoardName: typeof body.pinterestBoardName === "string" && body.pinterestBoardName.trim() ? body.pinterestBoardName.trim() : existingPattern?.pinterestBoardName,
+    pinterestTemplateId: typeof body.pinterestTemplateId === "string" && body.pinterestTemplateId.trim() ? body.pinterestTemplateId.trim() : (existingPattern?.pinterestTemplateId || 'template-a')
   };
 
   return pattern;
@@ -1962,7 +1965,11 @@ app.post("/api/admin/patterns/:id/generate-pin", requireAdminAuth, async (req, r
         : "template-a";
 
     const patterns = getEffectivePatterns();
-    const pattern = patterns.find(p => p.id === id || p.slug === id);
+    let pattern = patterns.find(p => p.id === id || p.slug === id);
+
+    if (!pattern && req.body?.pattern) {
+      pattern = req.body.pattern;
+    }
 
     if (!pattern) {
       return res.status(404).json({ error: "Pattern not found" });
@@ -1993,7 +2000,11 @@ app.post("/api/admin/patterns/:id/generate-pin", requireAdminAuth, async (req, r
     };
 
     let result;
-    const baseSlug = pattern.slug || pattern.id;
+    const isDraftPattern = id === "draft" || !patterns.some(p => p.id === id || p.slug === id);
+    let baseSlug = pattern.slug || pattern.id;
+    if (isDraftPattern && (!baseSlug || baseSlug === "pattern-preview" || baseSlug === "draft")) {
+      baseSlug = `draft-${Date.now().toString(36)}-${Math.random().toString(36).substring(2, 6)}`;
+    }
 
     if (templateId === "template-b") {
       const filename = `pin-${baseSlug}-template-b.png`;
@@ -3842,6 +3853,18 @@ app.use((err: any, _req: express.Request, res: express.Response, _next: express.
 });
 
 async function startServer() {
+  // Explicit runtime static serving for Pinterest generated pins
+  const generatedPinterestPath = path.join(process.cwd(), "public", "generated", "pinterest");
+  if (!fs.existsSync(generatedPinterestPath)) {
+    fs.mkdirSync(generatedPinterestPath, { recursive: true });
+  }
+  app.use("/generated/pinterest", express.static(generatedPinterestPath, {
+    maxAge: "1m",
+    setHeaders: (res) => {
+      res.setHeader("Cache-Control", "public, max-age=60");
+    }
+  }));
+
   if (process.env.NODE_ENV !== "production") {
     const vite = await createViteServer({
       server: { middlewareMode: true },
