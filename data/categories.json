@@ -2,7 +2,7 @@
   {
     "id": "blankets",
     "slug": "blankets",
-    "name": "Blankets",
+    "name": "Blankets Crochet",
     "description": "Cozy throw blankets, baby afghans, lapghan wraps, and heirloom quilts.",
     "image": "https://images.unsplash.com/photo-1584992236310-6edddc08acff?auto=format&fit=crop&w=800&q=80",
     "count": 420,
@@ -14,12 +14,13 @@
     ],
     "isFreeBadge": true,
     "displayOrder": 10,
-    "isActive": true
+    "isActive": true,
+    "updatedAt": "2026-09-18T22:46:22.036Z"
   },
   {
     "id": "flowers",
     "slug": "flowers",
-    "name": "Flowers",
+    "name": "Flowers Crochet",
     "description": "Everlasting crochet roses, sunflowers, daisies, tulips, and floral appliques.",
     "image": "https://images.unsplash.com/photo-1563245372-f21724e3856d?auto=format&fit=crop&w=800&q=80",
     "count": 280,
@@ -31,12 +32,13 @@
     ],
     "isFreeBadge": true,
     "displayOrder": 20,
-    "isActive": true
+    "isActive": true,
+    "updatedAt": "2026-09-18T22:46:34.916Z"
   },
   {
     "id": "amigurumi",
     "slug": "amigurumi",
-    "name": "Amigurumi",
+    "name": "Amigurumi Crochet",
     "description": "Cute plushies, stuffed animals, dolls, and miniature crocheted toys.",
     "image": "/uploads/categories/cat_1786737908143_91f97845.jpg",
     "count": 650,
@@ -48,12 +50,12 @@
     "isFreeBadge": false,
     "displayOrder": 30,
     "isActive": true,
-    "updatedAt": "2026-08-14T20:05:09.656Z"
+    "updatedAt": "2026-09-18T22:46:40.877Z"
   },
   {
     "id": "bags",
     "slug": "bags",
-    "name": "Bags",
+    "name": "Bags Crochet",
     "description": "Market totes, boho shoulder bags, clutch purses, and sturdy backpack bags.",
     "image": "https://images.unsplash.com/photo-1590874103328-eac38a683ce7?auto=format&fit=crop&w=800&q=80",
     "count": 310,
@@ -64,12 +66,13 @@
     ],
     "isFreeBadge": false,
     "displayOrder": 40,
-    "isActive": true
+    "isActive": true,
+    "updatedAt": "2026-09-18T22:47:22.310Z"
   },
   {
     "id": "baby",
     "slug": "baby",
-    "name": "Baby",
+    "name": "Baby Crochet",
     "description": "Soft baby booties, hats, pacifier clips, cardigan sets, and nursery blankets.",
     "image": "https://images.unsplash.com/photo-1519689680058-324335c77eba?auto=format&fit=crop&w=800&q=80",
     "count": 390,
@@ -80,12 +83,13 @@
     ],
     "isFreeBadge": false,
     "displayOrder": 50,
-    "isActive": true
+    "isActive": true,
+    "updatedAt": "2026-09-18T22:47:10.832Z"
   },
   {
     "id": "tops",
     "slug": "tops",
-    "name": "Tops",
+    "name": "Tops Crochet",
     "description": "Summer crop tops, lace halter tops, bralettes, and lightweight mesh tees.",
     "image": "https://images.unsplash.com/photo-1503342217505-b0a15ec3261c?auto=format&fit=crop&w=800&q=80",
     "count": 240,
@@ -96,12 +100,13 @@
     ],
     "isFreeBadge": false,
     "displayOrder": 60,
-    "isActive": true
+    "isActive": true,
+    "updatedAt": "2026-09-18T22:47:36.146Z"
   },
   {
     "id": "sweaters",
     "slug": "sweaters",
-    "name": "Sweaters",
+    "name": "Sweaters Crochet",
     "description": "Cozy oversized cardigans, raglan pullovers, winter turtlenecks, and vests.",
     "image": "https://images.unsplash.com/photo-1434389677669-e08b4cac3105?auto=format&fit=crop&w=800&q=80",
     "count": 195,
@@ -112,12 +117,13 @@
     ],
     "isFreeBadge": false,
     "displayOrder": 70,
-    "isActive": true
+    "isActive": true,
+    "updatedAt": "2026-09-18T22:47:49.761Z"
   },
   {
     "id": "accessories",
     "slug": "accessories",
-    "name": "Accessories",
+    "name": "Accessories Crochet",
     "description": "Warm scarves, beanies, fingerless gloves, shawls, and hair scrunchies.",
     "image": "https://images.unsplash.com/photo-1520903920243-00d872a2d1c9?auto=format&fit=crop&w=800&q=80",
     "count": 510,
@@ -128,12 +134,13 @@
     ],
     "isFreeBadge": false,
     "displayOrder": 80,
-    "isActive": true
+    "isActive": true,
+    "updatedAt": "2026-09-18T22:48:13.131Z"
   },
   {
     "id": "home-decor",
     "slug": "home-decor",
-    "name": "Home Decor",
+    "name": "Home Decor Crochet",
     "description": "Decorative pillows, coasters, plant hangers, dishcloths, and rug mats.",
     "image": "https://images.unsplash.com/photo-1513519245088-0e12902e5a38?auto=format&fit=crop&w=800&q=80",
     "count": 340,
@@ -144,12 +151,13 @@
     ],
     "isFreeBadge": false,
     "displayOrder": 90,
-    "isActive": true
+    "isActive": true,
+    "updatedAt": "2026-09-18T22:48:24.193Z"
   },
   {
     "id": "christmas",
     "slug": "christmas",
-    "name": "Christmas",
+    "name": "Christmas Crochet",
     "description": "Festive tree ornaments, stockings, snow globes, garlands, and Santa hats.",
     "image": "https://images.unsplash.com/photo-1512389142860-9c449e58a543?auto=format&fit=crop&w=800&q=80",
     "count": 275,
@@ -160,12 +168,13 @@
     ],
     "isFreeBadge": false,
     "displayOrder": 100,
-    "isActive": true
+    "isActive": true,
+    "updatedAt": "2026-09-18T22:48:52.395Z"
   },
   {
     "id": "halloween",
     "slug": "halloween",
-    "name": "Halloween",
+    "name": "Halloween Crochet",
     "description": "Cute pumpkins, ghost plushies, witch hats, black cat appliques, and spiderwebs.",
     "image": "https://images.unsplash.com/photo-1508759073847-9ca702cec7d2?auto=format&fit=crop&w=800&q=80",
     "count": 180,
@@ -176,12 +185,13 @@
     ],
     "isFreeBadge": false,
     "displayOrder": 110,
-    "isActive": true
+    "isActive": true,
+    "updatedAt": "2026-09-18T22:48:45.966Z"
   },
   {
     "id": "animals",
     "slug": "animals",
-    "name": "Animals",
+    "name": "Animals Crochet",
     "description": "Adorable crocheted bears, bunny rabbits, kittens, puppies, and sea creatures.",
     "image": "https://images.unsplash.com/photo-1535585209827-a15fcdbc4c2d?auto=format&fit=crop&w=800&q=80",
     "count": 480,
@@ -192,12 +202,13 @@
     ],
     "isFreeBadge": false,
     "displayOrder": 120,
-    "isActive": true
+    "isActive": true,
+    "updatedAt": "2026-09-18T22:46:58.459Z"
   },
   {
     "id": "granny-squares",
     "slug": "granny-squares",
-    "name": "Granny Squares",
+    "name": "Granny Squares Crochet",
     "description": "Classic 3-dc granny squares, sunburst floral motifs, hexagon blocks, and solid squares.",
     "image": "/uploads/categories/cat_1786737956867_37399dcb.jpg",
     "count": 520,
@@ -209,6 +220,19 @@
     "isFreeBadge": false,
     "displayOrder": 130,
     "isActive": true,
-    "updatedAt": "2026-08-14T20:05:57.974Z"
+    "updatedAt": "2026-09-18T22:48:36.487Z"
+  },
+  {
+    "id": "fall-crochet",
+    "slug": "fall-crochet",
+    "name": "Fall crochet",
+    "description": "fall crochet from welovepattern with all love",
+    "image": "/uploads/categories/cat_1789773525064_8d4829a5.jpg",
+    "count": 0,
+    "isFreeBadge": false,
+    "displayOrder": 140,
+    "isActive": true,
+    "createdAt": "2026-09-18T23:19:25.800Z",
+    "updatedAt": "2026-09-18T23:19:25.800Z"
   }
 ]

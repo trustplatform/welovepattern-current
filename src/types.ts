@@ -79,6 +79,13 @@ export interface Pattern {
   faq?: { question: string; answer: string }[];
   tags: string[];
   seoMeta?: SeoMeta;
+  pinterestBoardId?: string;
+  pinterestBoardName?: string;
+  pinterestTemplateId?: string;
+  pinterestStatus?: 'pending' | 'published' | 'failed';
+  pinterestPinId?: string;
+  pinterestPublishedAt?: string;
+  pinterestError?: string;
 }
 
 export interface Review {
@@ -223,6 +230,7 @@ export interface SafePinterestStatus {
   connectedAt: string | null;
   expiresAt: number | null;
   isExpired: boolean;
+  hasBoardsWriteScope?: boolean;
   error?: string | null;
 }
 

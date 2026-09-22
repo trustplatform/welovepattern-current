@@ -10,6 +10,7 @@ const PINTEREST_AUTH_FILE = path.join(DATA_DIR, "pinterest-auth.json");
 // Strictly requested scopes for WeLovePattern Pinterest Integration
 export const PINTEREST_SCOPES = [
   "boards:read",
+  "boards:write",
   "pins:read",
   "pins:write",
   "user_accounts:read"
@@ -438,6 +439,9 @@ export async function getSafePinterestStatus(): Promise<SafePinterestStatus> {
     isExpired = true;
   }
 
+  const grantedScopes = (recordToReturn.scope || "").split(/[\s,]+/).map(s => s.trim().toLowerCase());
+  const hasBoardsWriteScope = grantedScopes.includes("boards:write");
+
   return {
     connected: !isExpired,
     configured,
@@ -449,6 +453,7 @@ export async function getSafePinterestStatus(): Promise<SafePinterestStatus> {
     connectedAt: recordToReturn.connectedAt || null,
     expiresAt: recordToReturn.expiresAt || null,
     isExpired,
+    hasBoardsWriteScope,
     error: isExpired ? "Access token has expired. Please reconnect Pinterest." : undefined
   };
 }

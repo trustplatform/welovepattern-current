@@ -6,6 +6,11 @@ import {
 } from "./pinterestOAuth";
 import { PinterestBoard } from "../types";
 
+const PINTEREST_USE_SANDBOX = process.env.PINTEREST_USE_SANDBOX === "true";
+const PINTEREST_API_BASE = PINTEREST_USE_SANDBOX
+  ? "https://api-sandbox.pinterest.com/v5"
+  : "https://api.pinterest.com/v5";
+
 export interface NormalizedPinterestBoard {
   id: string;
   name: string;
@@ -94,13 +99,33 @@ export async function getValidPinterestAccessToken(): Promise<{
  * Never exposes or logs access tokens or secrets.
  */
 export async function fetchPinterestBoards(): Promise<FetchBoardsResult> {
-  const tokenResult = await getValidPinterestAccessToken();
-  if (!tokenResult.success || !tokenResult.accessToken) {
-    return {
-      success: false,
-      boards: [],
-      error: tokenResult.error || "Pinterest account is not connected"
-    };
+  const useSandbox = process.env.PINTEREST_USE_SANDBOX === "true";
+
+  let accessToken: string | undefined;
+
+  if (useSandbox) {
+    // Sandbox has its own token and its own boards.
+    accessToken = process.env.PINTEREST_SANDBOX_ACCESS_TOKEN?.trim();
+
+    if (!accessToken) {
+      return {
+        success: false,
+        boards: [],
+        error: "Pinterest Sandbox token is not configured on the server."
+      };
+    }
+  } else {
+    const tokenResult = await getValidPinterestAccessToken();
+
+    if (!tokenResult.success || !tokenResult.accessToken) {
+      return {
+        success: false,
+        boards: [],
+        error: tokenResult.error || "Pinterest account is not connected"
+      };
+    }
+
+    accessToken = tokenResult.accessToken;
   }
 
   const allBoards: NormalizedPinterestBoard[] = [];
@@ -111,7 +136,7 @@ export async function fetchPinterestBoards(): Promise<FetchBoardsResult> {
   try {
     do {
       pageCount++;
-      const url = new URL("https://api.pinterest.com/v5/boards");
+      const url = new URL(`${PINTEREST_API_BASE}/boards`);
       url.searchParams.set("page_size", "100");
       if (bookmark) {
         url.searchParams.set("bookmark", bookmark);
@@ -120,14 +145,14 @@ export async function fetchPinterestBoards(): Promise<FetchBoardsResult> {
       let response = await fetch(url.toString(), {
         method: "GET",
         headers: {
-          "Authorization": `Bearer ${tokenResult.accessToken}`,
+          "Authorization": `Bearer ${accessToken}`,
           "Accept": "application/json"
         }
       });
 
       // If Pinterest returns 401 Unauthorized, token might have been invalidated;
       // attempt refresh once if refresh token exists
-      if (response.status === 401) {
+      if (response.status === 401 && !useSandbox) {
         const record = getPinterestAuthRecord();
         if (record?.refreshToken) {
           const refreshResult = await refreshPinterestToken(record.refreshToken);
@@ -204,3 +229,247 @@ export async function fetchPinterestBoards(): Promise<FetchBoardsResult> {
     };
   }
 }
+
+export interface CreatePinParams {
+  boardId: string;
+  title: string;
+  description: string;
+  link: string;
+  imageUrl: string;
+}
+
+export interface CreatePinResult {
+  success: boolean;
+  pinId?: string;
+  url?: string;
+  error?: string;
+  missingScope?: boolean;
+  data?: any;
+}
+
+/**
+ * Deterministically generates a clean, SEO-oriented Pinterest title from the pattern title.
+ * Does NOT use AI or external AI APIs.
+ */
+export function generatePinterestTitle(patternTitle: string): string {
+  const clean = (patternTitle || "Crochet Pattern").trim();
+  if (/crochet\s+pattern$/i.test(clean)) {
+    return clean;
+  }
+  if (/pattern$/i.test(clean)) {
+    return `${clean.replace(/pattern$/i, "").trim()} Crochet Pattern`;
+  }
+  return `${clean} Crochet Pattern`;
+}
+
+/**
+ * Deterministically generates an SEO-oriented Pinterest description from pattern data.
+ * Does NOT use AI or external AI APIs.
+ */
+export function generatePinterestDescription(pattern: {
+  title: string;
+  difficulty?: string;
+  category?: string;
+  description?: string;
+}): string {
+  const cleanTitle = (pattern.title || "Crochet Pattern").trim();
+  const diff = (pattern.difficulty || "all skill levels").toLowerCase();
+  const cat = (pattern.category || "crochet").toLowerCase().replace(/s$/, "");
+
+  return `Create this ${cleanTitle} with this crochet pattern. Perfect for ${diff} crocheters looking for a cozy handmade ${cat} project. Get the full pattern and instructions on WeLovePattern.`;
+}
+
+/**
+ * Creates a Pin on Pinterest via official Pinterest API v5 (POST https://api.pinterest.com/v5/pins).
+ *
+ * Responsibilities:
+ * - Obtains a valid access token using existing token-refresh mechanism
+ * - Verifies the token is usable and has the required 'boards:write' scope
+ * - Detects missing required scope and returns a clear actionable error
+ * - Never logs or exposes access tokens
+ * - Returns a safe normalized result
+ */
+export async function createPinterestPin(params: CreatePinParams): Promise<CreatePinResult> {
+  const useSandbox = process.env.PINTEREST_USE_SANDBOX === "true";
+
+  let accessToken: string | undefined;
+
+  if (useSandbox) {
+    // Sandbox uses a dedicated token generated in Pinterest Developers.
+    // It is intentionally NOT stored in pinterest-auth.json.
+    accessToken = process.env.PINTEREST_SANDBOX_ACCESS_TOKEN?.trim();
+
+    if (!accessToken) {
+      return {
+        success: false,
+        error: "Pinterest Sandbox token is not configured on the server."
+      };
+    }
+  } else {
+    const authRecord = getPinterestAuthRecord();
+
+    if (!authRecord || !authRecord.accessToken) {
+      return {
+        success: false,
+        error: "Pinterest account is not connected. Please connect Pinterest in Admin Settings."
+      };
+    }
+
+    const grantedScopes = (authRecord.scope || "")
+      .split(/[\s,]+/)
+      .map(s => s.trim().toLowerCase());
+
+    if (!grantedScopes.includes("boards:write")) {
+      return {
+        success: false,
+        missingScope: true,
+        error: "Pinterest authorization is missing required 'boards:write' permission. Please reconnect your Pinterest account in Admin Settings."
+      };
+    }
+
+    const tokenResult = await getValidPinterestAccessToken();
+
+    if (!tokenResult.success || !tokenResult.accessToken) {
+      return {
+        success: false,
+        error: tokenResult.error || "Failed to obtain valid Pinterest access token"
+      };
+    }
+
+    accessToken = tokenResult.accessToken;
+  }
+
+  if (!params.boardId) {
+    return {
+      success: false,
+      error: "A valid Pinterest board ID is required to create a Pin."
+    };
+  }
+
+  if (!params.imageUrl) {
+    return {
+      success: false,
+      error: "A valid public Pin image URL is required to create a Pin."
+    };
+  }
+
+  const pinPayload = {
+    board_id: params.boardId,
+    title: params.title,
+    description: params.description,
+    link: params.link,
+    media_source: {
+      source_type: "image_url",
+      url: params.imageUrl,
+      is_standard: true
+    }
+  };
+
+  try {
+    let response = await fetch(`${PINTEREST_API_BASE}/pins`, {
+      method: "POST",
+      headers: {
+        "Authorization": `Bearer ${accessToken}`,
+        "Content-Type": "application/json",
+        "Accept": "application/json"
+      },
+      body: JSON.stringify(pinPayload)
+    });
+
+    // Production OAuth tokens can be refreshed. Sandbox uses its own token.
+    if (response.status === 401 && !useSandbox) {
+      const record = getPinterestAuthRecord();
+
+      if (record?.refreshToken) {
+        const refreshResult = await refreshPinterestToken(record.refreshToken);
+
+        if (refreshResult.success && refreshResult.data?.access_token) {
+          const refreshedData = refreshResult.data;
+
+          const updatedRecord: PinterestAuthRecord = {
+            ...record,
+            accessToken: refreshedData.access_token,
+            refreshToken: refreshedData.refresh_token || record.refreshToken,
+            expiresIn: refreshedData.expires_in,
+            expiresAt: refreshedData.expires_in
+              ? Date.now() + refreshedData.expires_in * 1000
+              : record.expiresAt,
+            updatedAt: new Date().toISOString()
+          };
+
+          savePinterestAuthRecord(updatedRecord);
+          accessToken = updatedRecord.accessToken;
+
+          response = await fetch(`${PINTEREST_API_BASE}/pins`, {
+            method: "POST",
+            headers: {
+              "Authorization": `Bearer ${accessToken}`,
+              "Content-Type": "application/json",
+              "Accept": "application/json"
+            },
+            body: JSON.stringify(pinPayload)
+          });
+        }
+      }
+    }
+
+    if (!response.ok) {
+      const rawText = await response.text();
+      let errorMsg = `HTTP ${response.status}`;
+      let isScopeIssue = false;
+
+      try {
+        const json = JSON.parse(rawText);
+        errorMsg = json.message || json.error_description || json.error || errorMsg;
+
+        if (
+          response.status === 403 ||
+          (typeof errorMsg === "string" && /scope|boards:write|forbidden/i.test(errorMsg))
+        ) {
+          isScopeIssue = true;
+        }
+      } catch {
+        if (rawText) errorMsg = rawText.slice(0, 150);
+      }
+
+      if (isScopeIssue || response.status === 403) {
+        return {
+          success: false,
+          missingScope: true,
+          error: useSandbox
+            ? `Pinterest Sandbox authorization error (${errorMsg}). Check that the Sandbox token has the required permissions and that the selected board belongs to the Sandbox account.`
+            : `Pinterest authorization error (${errorMsg}). Missing required 'boards:write' permission. Please reconnect your Pinterest account in Admin Settings.`
+        };
+      }
+
+      return {
+        success: false,
+        error: `Pinterest API error: ${errorMsg}`
+      };
+    }
+
+    const data = await response.json();
+    const pinId = data?.id ? String(data.id) : undefined;
+
+    return {
+      success: true,
+      pinId,
+      // Sandbox pins are not normal public Pinterest pins.
+      url: pinId
+        ? `${useSandbox ? "https://api-sandbox.pinterest.com" : "https://www.pinterest.com"}/pin/${pinId}/`
+        : undefined,
+      data
+    };
+  } catch (err: any) {
+    console.error(
+      "Error creating Pinterest pin via Pinterest API v5:",
+      err?.message || err
+    );
+
+    return {
+      success: false,
+      error: err?.message || "Failed to communicate with Pinterest API"
+    };
+  }
+}
+

@@ -413,10 +413,11 @@ export const PinterestAdmin: React.FC = () => {
             <div className="p-4 rounded-xl bg-stone-50 border border-stone-200 flex items-center gap-4">
               {status.account.profileImage ? (
                 <img
-                  src={status.account.profileImage}
+                  src="/api/admin/pinterest/profile-image"
                   alt={status.account.username || 'Pinterest Profile'}
                   className="w-12 h-12 rounded-full border border-stone-300 object-cover"
                   referrerPolicy="no-referrer"
+                  onError={(e) => { e.currentTarget.onerror = null; e.currentTarget.src = "data:image/svg+xml,%3Csvg xmlns=%22http://www.w3.org/2000/svg%22 width=%2250%22 height=%2250%22%3E%3Crect width=%22100%25%22 height=%22100%25%22 rx=%2225%22 fill=%22%23e60023%22/%3E%3Ctext x=%2250%25%22 y=%2258%25%22 text-anchor=%22middle%22 font-size=%2228%22 font-family=%22Arial%22 font-weight=%22bold%22 fill=%22white%22%3EP%3C/text%3E%3C/svg%3E"; }}
                 />
               ) : (
                 <div className="w-12 h-12 rounded-full bg-red-100 text-red-600 flex items-center justify-center font-bold text-lg">
