@@ -315,16 +315,35 @@ export async function generateHiggsfieldImage(
       });
       clearTimeout(timeout);
 
+      // Extract provider request ID from headers if available
+      const headerRequestId = response.headers.get('x-request-id') || response.headers.get('request-id');
+      if (headerRequestId && !currentTaskId) {
+        currentTaskId = headerRequestId;
+      }
+
       if (!response.ok) {
         const errorText = await response.text().catch(() => '');
+        console.error(`[HiggsfieldClient] API Error HTTP ${response.status}:`, errorText || '(empty response body)');
+        
+        // Attempt to parse json to extract taskId if present in error payload
+        let parsedId: string | undefined;
+        try {
+          const errJson = JSON.parse(errorText);
+          parsedId = errJson?.id || errJson?.request_id || errJson?.requestId;
+        } catch {
+          // not json
+        }
+
+        const effectiveTaskId = currentTaskId || parsedId;
         return {
           success: false,
-          error: `Higgsfield API responded with HTTP ${response.status}: ${errorText.slice(0, 200)}`,
+          providerRequestId: effectiveTaskId,
+          error: `Higgsfield API responded with HTTP ${response.status}: ${errorText.slice(0, 1000) || response.statusText}`,
         };
       }
 
       const data: any = await response.json();
-      currentTaskId = data?.id || data?.request_id || data?.requestId;
+      currentTaskId = data?.id || data?.request_id || data?.requestId || currentTaskId;
 
       // Immediately notify caller of remote task ID so it can be saved before polling
       if (currentTaskId && typeof onTaskIdReceived === 'function') {
@@ -410,6 +429,11 @@ export async function generateHiggsfieldImage(
     };
   } catch (err: any) {
     const safeMsg = err?.message?.replace(/Bearer\s+[^\s]+/gi, 'Bearer [REDACTED_AUTH]') || 'Network failure';
+    const safeStack = err?.stack?.replace(/Bearer\s+[^\s]+/gi, 'Bearer [REDACTED_AUTH]');
+    console.error(`[HiggsfieldClient] Exception during generation: ${safeMsg}`);
+    if (safeStack) {
+      console.error(safeStack);
+    }
     return {
       success: false,
       providerRequestId: currentTaskId,

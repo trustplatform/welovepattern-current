@@ -145,6 +145,7 @@ export interface ArticleHeroImage {
   stableAssetPath?: string;
   stablePublicUrl?: string;
   status: 'pending' | 'ready' | 'failed';
+  errorMessage?: string;
 }
 
 export type SeoEngineJobStage = TopicStatus;

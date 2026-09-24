@@ -16,11 +16,15 @@
  * - Comprehensive end-of-run summary report.
  */
 
+import dotenv from 'dotenv';
+dotenv.config();
+
 import fs from 'fs';
 import path from 'path';
 import { readEngineState } from '../queue/engineStorage';
 import { queueJobForTopic, executeJobLifecycle } from '../queue/jobQueueManager';
 import { DiscoveredTopic, SeoEngineArticleJob } from '../types';
+import { getHiggsfieldApiKey, isHiggsfieldConfigured } from '../generation/higgsfieldClient';
 
 interface GenerationLogEntry {
   article: string;
@@ -31,6 +35,7 @@ interface GenerationLogEntry {
   providerRequestId?: string;
   localPath?: string;
   error?: string;
+  stageAtCompletion?: string;
 }
 
 const TEST_TOPICS: { keyword: string; slug: string; targetTool: string; notes: string }[] = [
@@ -48,13 +53,31 @@ const TEST_TOPICS: { keyword: string; slug: string; targetTool: string; notes: s
   },
 ];
 
+function maskSecret(val: string | undefined): string {
+  if (!val) return 'MISSING (NOT CONFIGURED)';
+  if (val.length <= 8) return '********';
+  return `${val.slice(0, 4)}...${val.slice(-4)} (length: ${val.length})`;
+}
+
 export async function runTwoArticleTest(): Promise<void> {
   console.log('===============================================================');
   console.log('STARTING CONTROLLED 2-ARTICLE PRODUCTION-LIKE TEST RUN');
   console.log('===============================================================');
   console.log(`Time: ${new Date().toISOString()}`);
   console.log(`Topics (${TEST_TOPICS.length}): ${TEST_TOPICS.map(t => `"${t.keyword}"`).join(', ')}`);
+  
+  // Pre-flight environment diagnostics (Secrets masked)
+  const hfKey = getHiggsfieldApiKey();
+  const openAiKey = process.env.OPENAI_API_KEY;
+  console.log(`[Pre-flight] HF_KEY / HIGGSFIELD_API_KEY: ${maskSecret(hfKey)}`);
+  console.log(`[Pre-flight] OPENAI_API_KEY:             ${maskSecret(openAiKey)}`);
+  console.log(`[Pre-flight] Higgsfield Configured:      ${isHiggsfieldConfigured() ? 'YES' : 'NO'}`);
   console.log('===============================================================\n');
+
+  if (!hfKey) {
+    console.warn('⚠️ WARNING: Neither HF_KEY nor HIGGSFIELD_API_KEY is present in the environment or .env file!');
+    console.warn('   Stage 3 will halt with a configuration error before contacting Higgsfield API.');
+  }
 
   const generationLogs: GenerationLogEntry[] = [];
   const processedJobs: SeoEngineArticleJob[] = [];
@@ -99,8 +122,17 @@ export async function runTwoArticleTest(): Promise<void> {
     console.log(`[JobQueue] Created job ${queuedJob.id} in state "${queuedJob.stage}"`);
 
     // Execute lifecycle through all 5 stages
-    const completedJob = await executeJobLifecycle(queuedJob.id);
+    let completedJob: SeoEngineArticleJob;
+    try {
+      completedJob = await executeJobLifecycle(queuedJob.id);
+    } catch (cycleErr: any) {
+      console.error(`[JobRunner] Fatal unhandled exception in executeJobLifecycle for job ${queuedJob.id}:`, cycleErr);
+      throw cycleErr;
+    }
     processedJobs.push(completedJob);
+
+    // Extract all error logs from job
+    const jobErrorLogs = completedJob.logs.filter(l => l.level === 'error').map(l => l.message);
 
     // Audit Asset 1: Hero Image (16:9, 1k)
     const heroImage = completedJob.articleContent?.heroImage;
@@ -111,6 +143,13 @@ export async function runTwoArticleTest(): Promise<void> {
     );
 
     const isHeroNew = completedJob.logs.some(l => l.message.includes('Hero image generated and saved'));
+    let heroError: string | undefined;
+    if (!heroExists) {
+      heroError = heroImage?.errorMessage ||
+        jobErrorLogs.find(msg => msg.includes('Hero') || msg.includes('Higgsfield') || msg.includes('Budget')) ||
+        (jobErrorLogs.length > 0 ? jobErrorLogs[jobErrorLogs.length - 1] : `Job halted at stage "${completedJob.stage}" before Hero generation`);
+    }
+
     const heroEntry: GenerationLogEntry = {
       article: `Article ${articleIndex} ("${item.keyword}")`,
       asset: 'Hero Image',
@@ -119,7 +158,8 @@ export async function runTwoArticleTest(): Promise<void> {
       status: heroExists ? (isHeroNew ? 'generated' : 'cached') : 'failed',
       providerRequestId: heroImage?.higgsfieldRequestId || 'N/A',
       localPath: heroImage?.stableAssetPath,
-      error: heroExists ? undefined : 'Hero image missing or generation failed',
+      error: heroError,
+      stageAtCompletion: completedJob.stage,
     };
     generationLogs.push(heroEntry);
 
@@ -136,11 +176,14 @@ export async function runTwoArticleTest(): Promise<void> {
     console.log(
       `[GENERATION] ${heroEntry.article} | ${heroEntry.asset} | ${heroEntry.aspectRatio} | ${heroEntry.resolution} | RequestID: ${heroEntry.providerRequestId} | Status: ${heroEntry.status.toUpperCase()}`
     );
+    if (heroEntry.status === 'failed') {
+      console.error(`  ↳ Failure Cause: ${heroEntry.error}`);
+    }
 
     // Audit Asset 2 & 3: Pins 1 & 2 (2:3, 1k)
     for (let p = 0; p < 2; p++) {
       const pinIndex = p + 1;
-      const pin = completedJob.pinterestPins[p];
+      const pin = completedJob.pinterestPins ? completedJob.pinterestPins[p] : undefined;
       const pinExists = Boolean(
         pin?.stableAssetPath &&
         fs.existsSync(pin.stableAssetPath) &&
@@ -148,6 +191,13 @@ export async function runTwoArticleTest(): Promise<void> {
       );
 
       const isPinNew = completedJob.logs.some(l => l.message.includes(`Pin ${pinIndex} generated and saved`));
+      let pinError: string | undefined;
+      if (!pinExists) {
+        pinError = pin?.errorMessage ||
+          jobErrorLogs.find(msg => msg.includes(`Pin ${pinIndex}`) || msg.includes('Higgsfield') || msg.includes('Board') || msg.includes('Budget')) ||
+          (jobErrorLogs.length > 0 ? jobErrorLogs[jobErrorLogs.length - 1] : `Job halted at stage "${completedJob.stage}" before Pin ${pinIndex} generation`);
+      }
+
       const pinEntry: GenerationLogEntry = {
         article: `Article ${articleIndex} ("${item.keyword}")`,
         asset: `Pin ${pinIndex}`,
@@ -156,7 +206,8 @@ export async function runTwoArticleTest(): Promise<void> {
         status: pinExists ? (isPinNew ? 'generated' : 'cached') : 'failed',
         providerRequestId: pin?.higgsfieldRequestId || 'N/A',
         localPath: pin?.stableAssetPath,
-        error: pin?.errorMessage || (pinExists ? undefined : `Pin ${pinIndex} image missing`),
+        error: pinError,
+        stageAtCompletion: completedJob.stage,
       };
       generationLogs.push(pinEntry);
 
@@ -173,6 +224,16 @@ export async function runTwoArticleTest(): Promise<void> {
       console.log(
         `[GENERATION] ${pinEntry.article} | ${pinEntry.asset} | ${pinEntry.aspectRatio} | ${pinEntry.resolution} | RequestID: ${pinEntry.providerRequestId} | Status: ${pinEntry.status.toUpperCase()}`
       );
+      if (pinEntry.status === 'failed') {
+        console.error(`  ↳ Failure Cause: ${pinEntry.error}`);
+      }
+    }
+
+    // Print all error logs if any occurred on this job
+    if (jobErrorLogs.length > 0) {
+      console.log(`\n  [JOB LOG ERRORS - Article ${articleIndex}]:`);
+      jobErrorLogs.forEach(err => console.log(`   * ${err}`));
+      console.log('');
     }
 
     console.log(`[ARTICLE ${articleIndex}/2] Lifecycle concluded at stage: "${completedJob.stage}"\n`);
@@ -193,12 +254,12 @@ export async function runTwoArticleTest(): Promise<void> {
     console.log(`  ${idx + 1}. [${log.status.toUpperCase()}] ${log.article} → ${log.asset}`);
     console.log(`     Specs: ${log.aspectRatio} | ${log.resolution} | Request ID: ${log.providerRequestId}`);
     if (log.localPath) console.log(`     Path:  ${log.localPath}`);
-    if (log.error) console.log(`     Error: ${log.error}`);
+    if (log.error)     console.log(`     Error: ${log.error} (Stage: ${log.stageAtCompletion})`);
   });
   console.log('---------------------------------------------------------------');
   console.log('FINAL JOB STATES:');
   processedJobs.forEach(job => {
-    console.log(`  - Job: ${job.id} | Stage: ${job.stage} | Approval Required: ${job.requiresApproval} | Pins: ${job.pinterestPins.length}`);
+    console.log(`  - Job: ${job.id} | Stage: ${job.stage} | Approval Required: ${job.requiresApproval} | Pins: ${job.pinterestPins ? job.pinterestPins.length : 0}`);
   });
   console.log('===============================================================');
 }

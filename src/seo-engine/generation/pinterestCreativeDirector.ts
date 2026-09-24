@@ -105,23 +105,34 @@ export async function resolveRealPinterestBoard(
     try {
       const apiResult = await fetchPinterestBoards();
       if (!apiResult.success || !apiResult.boards || apiResult.boards.length === 0) {
+        if (DEFAULT_KNOWN_CRAFT_BOARDS && DEFAULT_KNOWN_CRAFT_BOARDS.length > 0) {
+          console.warn(`[PinterestCreativeDirector] Live Pinterest API returned no boards (${apiResult.error || 'Empty boards list'}). Falling back to known craft boards catalog.`);
+          boards = DEFAULT_KNOWN_CRAFT_BOARDS;
+        } else {
+          return {
+            success: false,
+            confidenceScore: 0,
+            matchType: 'none',
+            requiresOperatorDecision: true,
+            reason: `Pinterest API failed or returned zero boards: ${apiResult.error || 'Empty boards list'}. Operator decision required.`,
+          };
+        }
+      } else {
+        boards = apiResult.boards;
+      }
+    } catch (err: any) {
+      if (DEFAULT_KNOWN_CRAFT_BOARDS && DEFAULT_KNOWN_CRAFT_BOARDS.length > 0) {
+        console.warn(`[PinterestCreativeDirector] Live Pinterest API network error (${err?.message}). Falling back to known craft boards catalog.`);
+        boards = DEFAULT_KNOWN_CRAFT_BOARDS;
+      } else {
         return {
           success: false,
           confidenceScore: 0,
           matchType: 'none',
           requiresOperatorDecision: true,
-          reason: `Pinterest API failed or returned zero boards: ${apiResult.error || 'Empty boards list'}. Operator decision required.`,
+          reason: `Pinterest API network failure: ${err?.message || 'Unknown network error'}. Operator decision required.`,
         };
       }
-      boards = apiResult.boards;
-    } catch (err: any) {
-      return {
-        success: false,
-        confidenceScore: 0,
-        matchType: 'none',
-        requiresOperatorDecision: true,
-        reason: `Pinterest API network failure: ${err?.message || 'Unknown network error'}. Operator decision required.`,
-      };
     }
   }
 

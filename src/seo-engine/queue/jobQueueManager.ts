@@ -254,6 +254,14 @@ export async function executeJobLifecycle(jobId: string): Promise<SeoEngineArtic
   if (!isHiggsfieldConfigured()) {
     updateJobInState(jobId, j => {
       j.stage = 'failed';
+      if (j.articleContent) {
+        j.articleContent.heroImage = {
+          prompt: job.articleContent?.heroImage?.prompt || `Hero image for ${article.title}`,
+          compactPrompt: (job.articleContent?.heroImage?.prompt || `Hero image for ${article.title}`).slice(0, 480),
+          status: 'failed',
+          errorMessage: 'Higgsfield is not configured on the server (HF_KEY missing). Job paused and requires operator action.',
+        };
+      }
       j.logs.push({
         timestamp: new Date().toISOString(),
         level: 'error',
@@ -365,6 +373,7 @@ export async function executeJobLifecycle(jobId: string): Promise<SeoEngineArtic
         j.stage = 'failed';
         if (j.articleContent?.heroImage) {
           j.articleContent.heroImage.status = 'failed';
+          j.articleContent.heroImage.errorMessage = heroRes.error;
           if (heroRes.providerRequestId) {
             j.articleContent.heroImage.higgsfieldRequestId = heroRes.providerRequestId;
           }
