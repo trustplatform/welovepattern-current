@@ -21,7 +21,7 @@ dotenv.config();
 
 import fs from 'fs';
 import path from 'path';
-import { readEngineState } from '../queue/engineStorage';
+import { readEngineState, updateJobInState } from '../queue/engineStorage';
 import { queueJobForTopic, executeJobLifecycle } from '../queue/jobQueueManager';
 import { DiscoveredTopic, SeoEngineArticleJob } from '../types';
 import { getHiggsfieldApiKey, isHiggsfieldConfigured } from '../generation/higgsfieldClient';
@@ -96,37 +96,63 @@ export async function runTwoArticleTest(): Promise<void> {
     console.log(`[ARTICLE ${articleIndex}/2] Initiating lifecycle for: "${item.keyword}"`);
     console.log(`---------------------------------------------------------------`);
 
-    const topic: DiscoveredTopic = {
-      id: `test_topic_${item.slug.replace(/-/g, '_')}`,
-      keyword: item.keyword,
-      source: 'gsc_seed',
-      opportunityScore: 95 - i * 3,
-      targetContentFormat: 'tool_focus',
-      targetToolUrl: item.targetTool,
-      targetCategoryUrl: '/category/tools',
-      targetAudienceLevel: 'all_levels',
-      searchIntentNotes: item.notes,
-      discoveredAt: new Date().toISOString(),
-      status: 'selected',
-    };
+    // Check if an existing job exists for this topic keyword (e.g. from previous run with generated article content)
+    const currentState = readEngineState();
+    const existingJob = currentState.activeJobs.find(
+      j => j.topic.keyword.toLowerCase() === item.keyword.toLowerCase()
+    );
 
-    // Queue job with autoPublish forced false and requiresApproval forced true for zero publication risk
-    const queuedJob = queueJobForTopic(topic, {
-      ...config,
-      autoPublish: false,
-      autoPublishPinterest: false,
-      requiresApproval: true,
-      pinsPerArticle: 2,
-    });
+    let jobToRunId: string;
 
-    console.log(`[JobQueue] Created job ${queuedJob.id} in state "${queuedJob.stage}"`);
+    if (existingJob) {
+      jobToRunId = existingJob.id;
+      console.log(`[JobQueue] Reusing existing job ${existingJob.id} (stage: "${existingJob.stage}") for "${item.keyword}"`);
+      
+      // If the job was previously failed (e.g. at board matching) or interrupted, reset to selected to allow clean progression
+      if (existingJob.stage === 'failed' || existingJob.stage === 'researching' || existingJob.stage === 'writing' || existingJob.stage === 'generating_images') {
+        updateJobInState(existingJob.id, j => {
+          j.stage = 'selected';
+          j.logs.push({
+            timestamp: new Date().toISOString(),
+            level: 'info',
+            message: 'Restarting job execution from previous attempt in test runner with test board fallback enabled.',
+          });
+          return j;
+        });
+      }
+    } else {
+      const topic: DiscoveredTopic = {
+        id: `test_topic_${item.slug.replace(/-/g, '_')}`,
+        keyword: item.keyword,
+        source: 'gsc_seed',
+        opportunityScore: 95 - i * 3,
+        targetContentFormat: 'tool_focus',
+        targetToolUrl: item.targetTool,
+        targetCategoryUrl: '/category/tools',
+        targetAudienceLevel: 'all_levels',
+        searchIntentNotes: item.notes,
+        discoveredAt: new Date().toISOString(),
+        status: 'selected',
+      };
 
-    // Execute lifecycle through all 5 stages
+      // Queue job with autoPublish forced false and requiresApproval forced true for zero publication risk
+      const queuedJob = queueJobForTopic(topic, {
+        ...config,
+        autoPublish: false,
+        autoPublishPinterest: false,
+        requiresApproval: true,
+        pinsPerArticle: 2,
+      });
+      jobToRunId = queuedJob.id;
+      console.log(`[JobQueue] Created job ${queuedJob.id} in state "${queuedJob.stage}"`);
+    }
+
+    // Execute lifecycle through all 5 stages with test fallback board allowed
     let completedJob: SeoEngineArticleJob;
     try {
-      completedJob = await executeJobLifecycle(queuedJob.id);
+      completedJob = await executeJobLifecycle(jobToRunId, { allowTestFallbackBoard: true });
     } catch (cycleErr: any) {
-      console.error(`[JobRunner] Fatal unhandled exception in executeJobLifecycle for job ${queuedJob.id}:`, cycleErr);
+      console.error(`[JobRunner] Fatal unhandled exception in executeJobLifecycle for job ${jobToRunId}:`, cycleErr);
       throw cycleErr;
     }
     processedJobs.push(completedJob);

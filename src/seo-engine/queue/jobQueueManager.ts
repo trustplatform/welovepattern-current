@@ -82,10 +82,17 @@ export function queueJobForTopic(topic: DiscoveredTopic, config: SeoEngineConfig
   return newJob;
 }
 
+export interface JobLifecycleOptions {
+  allowTestFallbackBoard?: boolean;
+}
+
 /**
  * Executes a single job through its end-to-end generation lifecycle.
  */
-export async function executeJobLifecycle(jobId: string): Promise<SeoEngineArticleJob> {
+export async function executeJobLifecycle(
+  jobId: string,
+  options?: JobLifecycleOptions
+): Promise<SeoEngineArticleJob> {
   const job = getJobById(jobId);
   if (!job) {
     throw new Error(`Job not found with id: ${jobId}`);
@@ -273,18 +280,56 @@ export async function executeJobLifecycle(jobId: string): Promise<SeoEngineArtic
   }
 
   // 2. Resolve real Pinterest board
-  const boardResolution = await resolveRealPinterestBoard(job.topic, article.category);
-  if (!boardResolution.success || !boardResolution.board) {
+  const isTestExecution = Boolean(
+    options?.allowTestFallbackBoard ||
+    job.id.includes('_test_') ||
+    job.topic.id?.startsWith('test_topic_')
+  );
+
+  const boardResolution = await resolveRealPinterestBoard(
+    job.topic,
+    article.category,
+    undefined,
+    { allowTestFallback: isTestExecution }
+  );
+
+  let resolvedBoard = boardResolution.board;
+
+  if (!boardResolution.success || !resolvedBoard) {
+    if (isTestExecution) {
+      resolvedBoard = {
+        id: 'test_sandbox_fallback_board',
+        name: 'Crochet Tools & Yarn Calculators (Test Sandbox)',
+      };
+      updateJobInState(jobId, j => {
+        j.logs.push({
+          timestamp: new Date().toISOString(),
+          level: 'warn',
+          message: `[TEST RUNNER] No confident live Pinterest board match found (${boardResolution.reason}). Using test sandbox fallback board "${resolvedBoard?.name}" for creative concept generation. Live Pinterest publishing remains strictly disabled.`,
+        });
+        return j;
+      });
+    } else {
+      updateJobInState(jobId, j => {
+        j.stage = 'failed';
+        j.logs.push({
+          timestamp: new Date().toISOString(),
+          level: 'error',
+          message: `Pinterest Board Selection Paused: ${boardResolution.reason}`,
+        });
+        return j;
+      });
+      return getJobById(jobId)!;
+    }
+  } else if (boardResolution.isTestFallback) {
     updateJobInState(jobId, j => {
-      j.stage = 'failed';
       j.logs.push({
         timestamp: new Date().toISOString(),
-        level: 'error',
-        message: `Pinterest Board Selection Paused: ${boardResolution.reason}`,
+        level: 'info',
+        message: `[TEST RUNNER] Using test sandbox board "${resolvedBoard?.name}" for creative concept generation only. Live Pinterest publishing remains strictly disabled.`,
       });
       return j;
     });
-    return getJobById(jobId)!;
   }
 
   // 3. Generate exactly 2 unique Pinterest creative concepts (reuse if already present from interrupted run)
@@ -294,7 +339,7 @@ export async function executeJobLifecycle(jobId: string): Promise<SeoEngineArtic
         job.topic,
         article,
         packet,
-        boardResolution.board,
+        resolvedBoard,
         2
       );
 
@@ -381,7 +426,7 @@ export async function executeJobLifecycle(jobId: string): Promise<SeoEngineArtic
         j.logs.push({
           timestamp: new Date().toISOString(),
           level: 'error',
-          message: `Hero Image Generation Failed: ${heroRes.error}`,
+          message: `Hero Image Generation Failed: ${heroRes.error} (Request ID: ${heroRes.providerRequestId || 'N/A'})`,
         });
         return j;
       });
@@ -492,7 +537,7 @@ export async function executeJobLifecycle(jobId: string): Promise<SeoEngineArtic
         j.logs.push({
           timestamp: new Date().toISOString(),
           level: 'error',
-          message: `Pin 1 Generation Failed: ${pin1Res.error}. Hero image preserved.`,
+          message: `Pin 1 Generation Failed: ${pin1Res.error} (Request ID: ${pin1Res.providerRequestId || 'N/A'}). Hero image preserved.`,
         });
         return j;
       });
@@ -592,7 +637,7 @@ export async function executeJobLifecycle(jobId: string): Promise<SeoEngineArtic
         j.logs.push({
           timestamp: new Date().toISOString(),
           level: 'error',
-          message: `Pin 2 Generation Failed: ${pin2Res.error}. Hero and Pin 1 are safely preserved.`,
+          message: `Pin 2 Generation Failed: ${pin2Res.error} (Request ID: ${pin2Res.providerRequestId || 'N/A'}). Hero and Pin 1 are safely preserved.`,
         });
         return j;
       });

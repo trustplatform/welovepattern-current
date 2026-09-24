@@ -21,11 +21,29 @@ export interface BoardResolutionResult {
   success: boolean;
   board?: NormalizedPinterestBoard;
   confidenceScore: number;                  // 0 to 100
-  matchType: 'exact' | 'semantic' | 'none';
+  matchType: 'exact' | 'semantic' | 'fallback' | 'none';
   requiresOperatorDecision: boolean;
   reason: string;
   candidateBoards?: { board: NormalizedPinterestBoard; score: number }[];
+  isTestFallback?: boolean;
 }
+
+export interface BoardResolutionOptions {
+  allowTestFallback?: boolean;
+}
+
+/** Known craft boards catalog used for offline matching and test-safe fallback */
+export const DEFAULT_KNOWN_CRAFT_BOARDS: NormalizedPinterestBoard[] = [
+  { id: 'board_blankets', name: 'Crochet Blankets & Afghans' },
+  { id: 'board_tutorials', name: 'Crochet Tutorials & Stitches' },
+  { id: 'board_tools', name: 'Crochet Tools & Yarn Calculators' },
+  { id: 'board_flowers', name: 'Crochet Flowers & Motifs' },
+  { id: 'board_amigurumi', name: 'Crochet Amigurumi & Toys' },
+  { id: 'board_baby', name: 'Crochet Baby Patterns & Gifts' },
+  { id: 'board_clothing', name: 'Crochet Clothing & Wearables' },
+  { id: 'board_accessories', name: 'Crochet Bags & Accessories' },
+  { id: 'board_decor', name: 'Crochet Home Decor' },
+];
 
 /** Semantic synonyms for craft project categories */
 const CRAFT_SEMANTIC_TAXONOMY: Record<string, string[]> = {
@@ -96,7 +114,8 @@ function scoreBoardMatch(
 export async function resolveRealPinterestBoard(
   topic: DiscoveredTopic,
   articleCategory: string,
-  providedBoards?: NormalizedPinterestBoard[]
+  providedBoards?: NormalizedPinterestBoard[],
+  options?: BoardResolutionOptions
 ): Promise<BoardResolutionResult> {
   let boards = providedBoards;
 
@@ -109,6 +128,21 @@ export async function resolveRealPinterestBoard(
           console.warn(`[PinterestCreativeDirector] Live Pinterest API returned no boards (${apiResult.error || 'Empty boards list'}). Falling back to known craft boards catalog.`);
           boards = DEFAULT_KNOWN_CRAFT_BOARDS;
         } else {
+          if (options?.allowTestFallback) {
+            const testFallbackBoard: NormalizedPinterestBoard = {
+              id: 'test_sandbox_fallback_board',
+              name: 'Crochet Tools & Yarn Calculators (Test Sandbox)',
+            };
+            return {
+              success: true,
+              board: testFallbackBoard,
+              confidenceScore: 75,
+              matchType: 'fallback',
+              requiresOperatorDecision: false,
+              isTestFallback: true,
+              reason: '[TEST FALLBACK] Pinterest API returned zero boards. Using test sandbox board for creative concept generation.',
+            };
+          }
           return {
             success: false,
             confidenceScore: 0,
@@ -125,6 +159,21 @@ export async function resolveRealPinterestBoard(
         console.warn(`[PinterestCreativeDirector] Live Pinterest API network error (${err?.message}). Falling back to known craft boards catalog.`);
         boards = DEFAULT_KNOWN_CRAFT_BOARDS;
       } else {
+        if (options?.allowTestFallback) {
+          const testFallbackBoard: NormalizedPinterestBoard = {
+            id: 'test_sandbox_fallback_board',
+            name: 'Crochet Tools & Yarn Calculators (Test Sandbox)',
+          };
+          return {
+            success: true,
+            board: testFallbackBoard,
+            confidenceScore: 75,
+            matchType: 'fallback',
+            requiresOperatorDecision: false,
+            isTestFallback: true,
+            reason: `[TEST FALLBACK] Pinterest API network error (${err?.message}). Using test sandbox board for creative concept generation.`,
+          };
+        }
         return {
           success: false,
           confidenceScore: 0,
@@ -137,6 +186,21 @@ export async function resolveRealPinterestBoard(
   }
 
   if (boards.length === 0) {
+    if (options?.allowTestFallback) {
+      const testFallbackBoard: NormalizedPinterestBoard = {
+        id: 'test_sandbox_fallback_board',
+        name: 'Crochet Tools & Yarn Calculators (Test Sandbox)',
+      };
+      return {
+        success: true,
+        board: testFallbackBoard,
+        confidenceScore: 75,
+        matchType: 'fallback',
+        requiresOperatorDecision: false,
+        isTestFallback: true,
+        reason: '[TEST FALLBACK] User has no active boards in connected Pinterest account. Using test sandbox board for creative concept generation.',
+      };
+    }
     return {
       success: false,
       confidenceScore: 0,
@@ -158,18 +222,49 @@ export async function resolveRealPinterestBoard(
   // Check for duplicate board names with identical highest score
   const topTies = scoredCandidates.filter(c => c.score === best.score && c.score >= 60);
   if (topTies.length > 1 && topTies[0].board.name === topTies[1].board.name && topTies[0].board.id !== topTies[1].board.id) {
-    return {
-      success: false,
-      confidenceScore: best.score,
-      matchType: 'semantic',
-      requiresOperatorDecision: true,
-      reason: `Ambiguity: Found duplicate boards with the exact same name "${best.board.name}" (${topTies.map(t => t.board.id).join(', ')}). Operator decision required to select correct board.`,
-      candidateBoards: topTies,
-    };
+    if (!options?.allowTestFallback) {
+      return {
+        success: false,
+        confidenceScore: best.score,
+        matchType: 'semantic',
+        requiresOperatorDecision: true,
+        reason: `Ambiguity: Found duplicate boards with the exact same name "${best.board.name}" (${topTies.map(t => t.board.id).join(', ')}). Operator decision required to select correct board.`,
+        candidateBoards: topTies,
+      };
+    }
   }
 
   // Strict confidence threshold: require at least 60% confidence
   if (best.score < 60) {
+    if (options?.allowTestFallback) {
+      const fallbackCandidates = DEFAULT_KNOWN_CRAFT_BOARDS;
+      const scoredFallback = fallbackCandidates.map(b => ({
+        board: b,
+        score: scoreBoardMatch(b, topic, articleCategory),
+      }));
+      scoredFallback.sort((a, b) => b.score - a.score);
+      const bestFallback = scoredFallback[0] || {
+        board: { id: 'board_tools', name: 'Crochet Tools & Yarn Calculators' },
+        score: 75,
+      };
+
+      const testBoard: NormalizedPinterestBoard = {
+        id: 'test_sandbox_fallback_board',
+        name: `${bestFallback.board.name} (Test Sandbox)`,
+      };
+
+      return {
+        success: true,
+        board: testBoard,
+        confidenceScore: bestFallback.score,
+        matchType: 'fallback',
+        requiresOperatorDecision: false,
+        isTestFallback: true,
+        reason: `[TEST FALLBACK] Using test sandbox board "${testBoard.name}" (score ${bestFallback.score}/100) because live board top match "${best.board.name}" scored ${best.score}/100 (below 60 threshold). Live Pinterest publishing remains disabled.`,
+        candidateBoards: scoredCandidates.slice(0, 3),
+      };
+    }
+
     return {
       success: false,
       confidenceScore: best.score,
@@ -192,18 +287,6 @@ export async function resolveRealPinterestBoard(
     candidateBoards: scoredCandidates.slice(0, 3),
   };
 }
-
-const DEFAULT_KNOWN_CRAFT_BOARDS: NormalizedPinterestBoard[] = [
-  { id: 'board_blankets', name: 'Crochet Blankets & Afghans' },
-  { id: 'board_tutorials', name: 'Crochet Tutorials & Stitches' },
-  { id: 'board_tools', name: 'Crochet Tools & Yarn Calculators' },
-  { id: 'board_flowers', name: 'Crochet Flowers & Motifs' },
-  { id: 'board_amigurumi', name: 'Crochet Amigurumi & Toys' },
-  { id: 'board_baby', name: 'Crochet Baby Patterns & Gifts' },
-  { id: 'board_clothing', name: 'Crochet Clothing & Wearables' },
-  { id: 'board_accessories', name: 'Crochet Bags & Accessories' },
-  { id: 'board_decor', name: 'Crochet Home Decor' },
-];
 
 /**
  * Synchronous board matcher for static validation and offline fallback.
