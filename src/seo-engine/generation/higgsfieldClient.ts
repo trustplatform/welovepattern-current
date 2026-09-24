@@ -65,6 +65,17 @@ export function isHiggsfieldConfigured(): boolean {
 }
 
 /**
+ * Formats the Higgsfield Authorization header according to the key scheme.
+ * Higgsfield Console API credentials (id:secret) use the "Key" scheme.
+ */
+export function formatHiggsfieldAuthHeader(apiKey: string): string {
+  if (apiKey.includes(':')) {
+    return `Key ${apiKey}`;
+  }
+  return apiKey.startsWith('Key ') || apiKey.startsWith('Bearer ') ? apiKey : `Bearer ${apiKey}`;
+}
+
+/**
  * Tests Higgsfield API connectivity and authentication without exposing the key.
  */
 export async function testHiggsfieldAuthentication(): Promise<{
@@ -86,13 +97,14 @@ export async function testHiggsfieldAuthentication(): Promise<{
     const controller = new AbortController();
     const timeout = setTimeout(() => controller.abort(), 10000);
 
-    // Call user / models info endpoint to verify authentication
-    const response = await fetch('https://api.higgsfield.ai/v1/models', {
-      method: 'GET',
+    const response = await fetch('https://api.higgsfield.ai/marketing-studio/image', {
+      method: 'POST',
       headers: {
-        'Authorization': `Bearer ${apiKey}`,
+        'Authorization': formatHiggsfieldAuthHeader(apiKey),
+        'Content-Type': 'application/json',
         'Accept': 'application/json',
       },
+      body: JSON.stringify({}),
       signal: controller.signal,
     });
     clearTimeout(timeout);
@@ -106,11 +118,13 @@ export async function testHiggsfieldAuthentication(): Promise<{
       };
     }
 
+    const authenticated = response.ok || response.status === 400;
+
     return {
       configured: true,
-      authenticated: response.ok,
+      authenticated,
       statusCode: response.status,
-      message: response.ok
+      message: authenticated
         ? 'Higgsfield authenticated successfully.'
         : `Higgsfield endpoint returned HTTP ${response.status}`
     };
@@ -162,7 +176,7 @@ async function pollHiggsfieldTask(
       try {
         const resp = await fetch(url, {
           headers: {
-            'Authorization': `Bearer ${apiKey}`,
+            'Authorization': formatHiggsfieldAuthHeader(apiKey),
             'Accept': 'application/json',
           },
         });
@@ -301,7 +315,7 @@ export async function generateHiggsfieldImage(
       const response = await fetch('https://api.higgsfield.ai/marketing-studio/image', {
         method: 'POST',
         headers: {
-          'Authorization': `Bearer ${apiKey}`,
+          'Authorization': formatHiggsfieldAuthHeader(apiKey),
           'Content-Type': 'application/json',
           'Accept': 'application/json',
         },

@@ -24,7 +24,7 @@ import path from 'path';
 import { readEngineState, updateJobInState } from '../queue/engineStorage';
 import { queueJobForTopic, executeJobLifecycle } from '../queue/jobQueueManager';
 import { DiscoveredTopic, SeoEngineArticleJob } from '../types';
-import { getHiggsfieldApiKey, isHiggsfieldConfigured } from '../generation/higgsfieldClient';
+import { getHiggsfieldApiKey, isHiggsfieldConfigured, testHiggsfieldAuthentication } from '../generation/higgsfieldClient';
 
 interface GenerationLogEntry {
   article: string;
@@ -72,11 +72,34 @@ export async function runTwoArticleTest(): Promise<void> {
   console.log(`[Pre-flight] HF_KEY / HIGGSFIELD_API_KEY: ${maskSecret(hfKey)}`);
   console.log(`[Pre-flight] OPENAI_API_KEY:             ${maskSecret(openAiKey)}`);
   console.log(`[Pre-flight] Higgsfield Configured:      ${isHiggsfieldConfigured() ? 'YES' : 'NO'}`);
+
+  // Live API connectivity and authentication check
+  console.log('[Pre-flight] Verifying live API connectivity...');
+  const hfAuth = await testHiggsfieldAuthentication();
+  console.log(`[Pre-flight] Higgsfield Auth Check:       ${hfAuth.authenticated ? 'SUCCESS' : 'FAILED'} (${hfAuth.message})`);
+
+  let oaiOk = false;
+  try {
+    const oaiRes = await fetch('https://api.openai.com/v1/models', {
+      headers: { 'Authorization': `Bearer ${openAiKey}` }
+    });
+    oaiOk = oaiRes.ok;
+    console.log(`[Pre-flight] OpenAI Auth Check:           ${oaiOk ? 'SUCCESS (HTTP 200)' : `FAILED (HTTP ${oaiRes.status})`}`);
+  } catch (err: any) {
+    console.log(`[Pre-flight] OpenAI Auth Check:           FAILED (${err?.message})`);
+  }
   console.log('===============================================================\n');
 
-  if (!hfKey) {
-    console.warn('⚠️ WARNING: Neither HF_KEY nor HIGGSFIELD_API_KEY is present in the environment or .env file!');
-    console.warn('   Stage 3 will halt with a configuration error before contacting Higgsfield API.');
+  if (!hfAuth.authenticated) {
+    console.error(`❌ CRITICAL: Higgsfield authentication failed (${hfAuth.message}).`);
+    console.error('Stopping immediately. No paid image generation requests will be made.');
+    return;
+  }
+
+  if (!oaiOk) {
+    console.error('❌ CRITICAL: OpenAI authentication failed.');
+    console.error('Stopping immediately. No paid generation requests will be made.');
+    return;
   }
 
   const generationLogs: GenerationLogEntry[] = [];
