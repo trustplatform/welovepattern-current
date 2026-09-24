@@ -1,0 +1,60 @@
+{
+  "version": 1,
+  "config": {
+    "articlesPerDay": 4,
+    "pinsPerDay": 8,
+    "pinsPerArticle": 2,
+    "trendTasksPerDay": 20,
+    "autoPublish": false,
+    "autoPublishPinterest": false,
+    "requiresApproval": true,
+    "engineActive": true,
+    "timezone": "America/New_York",
+    "activeDays": [
+      1,
+      2,
+      3,
+      4,
+      5,
+      6,
+      7
+    ],
+    "articlePublishTimes": [
+      "08:00",
+      "12:00",
+      "16:00",
+      "20:00"
+    ],
+    "pinterestPublishTimes": [
+      "09:00",
+      "13:00",
+      "17:00",
+      "21:00"
+    ],
+    "maxConcurrentJobs": 1,
+    "fallbackBoardId": "",
+    "fallbackBoardName": "",
+    "minWordCount": 800,
+    "maxWordCount": 2000,
+    "maxInternalLinks": 8,
+    "dataForSeoEnabled": true,
+    "discoveryCountry": "US",
+    "discoveryLanguage": "en",
+    "minOpportunityScore": 65,
+    "seasonalDiscoveryEnabled": true,
+    "gscSeedCatalogEnabled": true,
+    "factualValidationStrict": true,
+    "maxRegenerationAttempts": 2,
+    "openAiModel": "gpt-4o",
+    "openAiTemperature": 0.7,
+    "dailyCostLimitUsd": 5,
+    "perJobCostLimitUsd": 1.5,
+    "higgsfieldEnabled": true,
+    "estimatedImageCostUsd": 0.03
+  },
+  "lastRunDate": "2026-09-22",
+  "todayDiscoveredTopics": [],
+  "activeJobs": [],
+  "completedJobsHistory": [],
+  "updatedAt": "2026-09-23T12:46:41.738Z"
+}

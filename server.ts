@@ -35,6 +35,7 @@ import {
   generatePinterestTitle,
   generatePinterestDescription
 } from "./src/pinterest/pinterestApi";
+import { createSeoEngineRouter } from "./src/seo-engine/api/seoEngineRouter";
 
 dotenv.config();
 
@@ -3934,6 +3935,9 @@ Ensure all steps, rows, rounds, and materials are extracted thoroughly.`;
     res.status(500).json({ error: "Failed to parse pattern PDF" });
   }
 });
+
+// Mount Autonomous SEO Content Engine Operator API Router
+app.use("/api/admin/seo-engine", createSeoEngineRouter(requireAdminAuth));
 
 // SSR Request Handler
 async function handleSsrRequest(req: express.Request, res: express.Response, viteDevServer?: any) {

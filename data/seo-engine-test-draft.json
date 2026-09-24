@@ -1,0 +1,368 @@
+{
+  "dataForSeo": {
+    "taskId": "09231224-2571-0170-0000-0c312b7cbdbc",
+    "keywordsSubmitted": [
+      "crochet blanket sizes",
+      "how much yarn for blanket",
+      "crochet granny square blanket",
+      "crochet cardigan pattern",
+      "crochet tote bag"
+    ],
+    "taskStatus": "20000 Ok.",
+    "resultsCount": 5,
+    "rawTrendResults": [
+      {
+        "keyword": "crochet blanket sizes",
+        "trendScore": 0,
+        "trendDirection": "rising",
+        "recentPeaks": [
+          {
+            "date": "2026-09-19",
+            "value": 5
+          },
+          {
+            "date": "2026-09-22",
+            "value": 4
+          },
+          {
+            "date": "2026-09-12",
+            "value": 3
+          }
+        ]
+      },
+      {
+        "keyword": "how much yarn for blanket",
+        "trendScore": 1,
+        "trendDirection": "rising",
+        "recentPeaks": [
+          {
+            "date": "2026-09-19",
+            "value": 13
+          },
+          {
+            "date": "2026-09-12",
+            "value": 10
+          },
+          {
+            "date": "2026-09-14",
+            "value": 10
+          }
+        ]
+      },
+      {
+        "keyword": "crochet granny square blanket",
+        "trendScore": 4,
+        "trendDirection": "rising",
+        "recentPeaks": [
+          {
+            "date": "2026-07-26",
+            "value": 34
+          },
+          {
+            "date": "2026-08-01",
+            "value": 30
+          },
+          {
+            "date": "2026-08-12",
+            "value": 30
+          }
+        ]
+      },
+      {
+        "keyword": "crochet cardigan pattern",
+        "trendScore": 16,
+        "trendDirection": "rising",
+        "recentPeaks": [
+          {
+            "date": "2026-08-02",
+            "value": 67
+          },
+          {
+            "date": "2026-08-07",
+            "value": 46
+          },
+          {
+            "date": "2026-08-25",
+            "value": 45
+          }
+        ]
+      },
+      {
+        "keyword": "crochet tote bag",
+        "trendScore": 8,
+        "trendDirection": "stable",
+        "recentPeaks": [
+          {
+            "date": "2026-06-25",
+            "value": 100
+          },
+          {
+            "date": "2026-06-23",
+            "value": 59
+          },
+          {
+            "date": "2026-06-24",
+            "value": 42
+          }
+        ]
+      }
+    ],
+    "scoredKeywords": [
+      {
+        "keyword": "crochet blanket sizes",
+        "trendScore": 0,
+        "trendDirection": "rising",
+        "opportunityScore": 60,
+        "breakdown": {
+          "relevanceScore": 25,
+          "siteFitScore": 10,
+          "momentumScore": 0,
+          "actionabilityScore": 15,
+          "seasonalityScore": 10,
+          "totalOpportunityScore": 60,
+          "isFilteredOut": false,
+          "targetFormat": "guide"
+        },
+        "passesThreshold": false,
+        "isDuplicate": false
+      },
+      {
+        "keyword": "how much yarn for blanket",
+        "trendScore": 1,
+        "trendDirection": "rising",
+        "opportunityScore": 75,
+        "breakdown": {
+          "relevanceScore": 25,
+          "siteFitScore": 25,
+          "momentumScore": 0,
+          "actionabilityScore": 15,
+          "seasonalityScore": 10,
+          "totalOpportunityScore": 75,
+          "isFilteredOut": false,
+          "targetFormat": "tool_focus",
+          "targetToolUrl": "/tools/yarn-calculator"
+        },
+        "passesThreshold": true,
+        "isDuplicate": false
+      },
+      {
+        "keyword": "crochet granny square blanket",
+        "trendScore": 4,
+        "trendDirection": "rising",
+        "opportunityScore": 59,
+        "breakdown": {
+          "relevanceScore": 30,
+          "siteFitScore": 10,
+          "momentumScore": 1,
+          "actionabilityScore": 8,
+          "seasonalityScore": 10,
+          "totalOpportunityScore": 59,
+          "isFilteredOut": false,
+          "targetFormat": "guide"
+        },
+        "passesThreshold": false,
+        "isDuplicate": false
+      },
+      {
+        "keyword": "crochet cardigan pattern",
+        "trendScore": 16,
+        "trendDirection": "rising",
+        "opportunityScore": 65,
+        "breakdown": {
+          "relevanceScore": 20,
+          "siteFitScore": 20,
+          "momentumScore": 3,
+          "actionabilityScore": 12,
+          "seasonalityScore": 10,
+          "totalOpportunityScore": 65,
+          "isFilteredOut": false,
+          "targetFormat": "guide",
+          "targetCategoryUrl": "/category/sweaters",
+          "targetPatternUrls": [
+            "/pattern/classic-granny-square-cardigan",
+            "/pattern/pastel-baby-cardigan-set"
+          ]
+        },
+        "passesThreshold": true,
+        "isDuplicate": false
+      },
+      {
+        "keyword": "crochet tote bag",
+        "trendScore": 8,
+        "trendDirection": "stable",
+        "opportunityScore": 47,
+        "breakdown": {
+          "relevanceScore": 20,
+          "siteFitScore": 10,
+          "momentumScore": 2,
+          "actionabilityScore": 8,
+          "seasonalityScore": 7,
+          "totalOpportunityScore": 47,
+          "isFilteredOut": false,
+          "targetFormat": "guide"
+        },
+        "passesThreshold": false,
+        "isDuplicate": false
+      }
+    ]
+  },
+  "selection": {
+    "selectedKeyword": "how much yarn for blanket",
+    "reason": "Ranked #1 with highest total opportunity score (75/100) combining craft relevance (25/30), ecosystem fit (25/25), and search momentum (0/20).",
+    "selectedTopic": {
+      "id": "topic-1790166305731",
+      "keyword": "how much yarn for blanket",
+      "source": "dataforseo_trends",
+      "dataForSeoTaskId": "09231224-2571-0170-0000-0c312b7cbdbc",
+      "searchTrendSignal": 1,
+      "relevanceScore": 25,
+      "siteFitScore": 25,
+      "opportunityScore": 75,
+      "targetContentFormat": "tool_focus",
+      "targetToolUrl": "/tools/yarn-calculator",
+      "discoveredAt": "2026-09-23T12:25:05.731Z",
+      "status": "selected"
+    }
+  },
+  "research": {
+    "factualPacket": {
+      "topic": "how much yarn for blanket",
+      "searchIntent": "The user wants to know the amount of yarn required to crochet a blanket, including different sizes and yarn weights.",
+      "craftType": "crochet",
+      "verifiedTerminology": [
+        "Single crochet (UK: double crochet)",
+        "Double crochet (UK: treble crochet)",
+        "Half double crochet (UK: half treble crochet)"
+      ],
+      "verifiedMaterials": {
+        "yarnWeights": [
+          "CYC #4 Worsted",
+          "CYC #3 DK",
+          "CYC #5 Bulky"
+        ],
+        "hookSizes": [
+          "5.0 mm (H-8)",
+          "4.0 mm (G-6)",
+          "6.5 mm (K-10.5)"
+        ],
+        "standardYardages": "Baby blanket: 700 - 1,000 meters, Lapghan: 1,000 - 1,500 meters, Throw Blanket: 1,200 - 2,000 meters, Twin Blanket: 1,800 - 2,500 meters",
+        "verifiedDimensions": {
+          "Baby Blanket": "30 x 36 inches (76 x 91 cm)",
+          "Lapghan": "36 x 48 inches (91 x 122 cm)",
+          "Throw Blanket": "50 x 60 inches (127 x 152 cm)",
+          "Twin Blanket": "66 x 90 inches (168 x 229 cm)"
+        }
+      },
+      "verifiedFormulas": [
+        {
+          "name": "Area Ratio Swatch Scaling Method",
+          "description": "Calculates total project yardage by scaling swatch yardage to blanket surface area",
+          "formulaText": "Total Yardage = (Blanket Area / Swatch Area) * Swatch Yardage * 1.10",
+          "steps": [
+            "Step 1: Crochet a swatch with known dimensions and record yardage used.",
+            "Step 2: Calculate the area of the swatch.",
+            "Step 3: Calculate the area of the desired blanket.",
+            "Step 4: Use the formula to scale up the swatch yardage to the blanket size, adding a 10% buffer."
+          ]
+        }
+      ],
+      "supportedClaims": [
+        "Textured stitches like bobbles and puff stitches consume more yarn than flat stitches like single crochet and double crochet.",
+        "A 10% to 15% safety buffer is standard practice.",
+        "Yarn is sold by weight and yardage, not by stitch count."
+      ],
+      "techniqueKeyPoints": [
+        "Gauge swatch is crucial for accurate yardage estimation.",
+        "Yarn weight and stitch type significantly affect yardage.",
+        "Always buy extra yarn to account for dyelot variations."
+      ],
+      "makerPainPoints": [
+        "Running out of yarn mid-project.",
+        "Inconsistent dye lots leading to color mismatches.",
+        "Difficulty in estimating yarn for non-standard blanket sizes."
+      ],
+      "faqItems": [
+        {
+          "question": "How do I know how much yarn to buy for a blanket?",
+          "factualAnswer": "Calculate based on the blanket size, stitch type, and yarn weight. Use a gauge swatch to estimate yardage needed."
+        },
+        {
+          "question": "Why do textured stitches use more yarn?",
+          "factualAnswer": "Textured stitches like bobbles and puff stitches require more yarn due to their three-dimensional structure."
+        },
+        {
+          "question": "Is it necessary to buy yarn from the same dye lot?",
+          "factualAnswer": "Yes, buying yarn from the same dye lot ensures color consistency throughout the blanket."
+        }
+      ],
+      "verifiedInternalLinks": [
+        {
+          "anchorText": "how much yarn",
+          "url": "/tools/yarn-calculator",
+          "entityType": "tool"
+        }
+      ]
+    },
+    "packetValidation": {
+      "isValid": true,
+      "errors": [],
+      "warnings": []
+    }
+  },
+  "generation": {
+    "modelUsed": "gpt-4o",
+    "promptTokens": 3418,
+    "completionTokens": 2815,
+    "totalTokens": 6233,
+    "regenerationAttempts": 0,
+    "seoTitle": "How Much Yarn Do You Need for a Crochet Blanket?",
+    "metaDescription": "Learn how to calculate yarn needed for crochet blankets by size and weight.",
+    "h1Title": "How Much Yarn Do You Need for a Crochet Blanket?",
+    "wordCount": 1095,
+    "articleBodyHtml": "<h2>Understanding Yarn Requirements for Crochet Blankets</h2><p>One of the most common questions among crochet enthusiasts is, \"<a href=\"/tools/yarn-calculator\" class=\"text-amber-800 underline decoration-amber-500 font-semibold hover:text-amber-900 transition-colors\">How much yarn</a> do I need to crochet a blanket?\" Knowing the precise amount of yarn required is crucial to avoid running out midway or dealing with color inconsistencies due to different dye lots. In this guide, we will walk you through the key factors influencing yarn requirements and a reliable method to calculate the needed yardage for various blanket sizes and styles.</p>\n<h2>Factors Influencing Yarn Requirements</h2>\n<h3>Yarn Weight and Hook Size</h3><p>The weight of the yarn and the size of the crochet hook you use significantly affect the amount of yarn required. For crochet blankets, using approved yarn weights such as CYC #4 Worsted, CYC #3 DK, or CYC #5 Bulky is recommended. Correspondingly, using the appropriate hook sizes—5.0 mm (H-8), 4.0 mm (G-6), or 6.5 mm (K-10.5)—ensures consistent results. These combinations influence the density and drape of your blanket, affecting both the texture and the amount of yarn needed.</p>\n<h3>Stitch Type</h3><p>The type of stitch also plays a significant role in yarn consumption. Textured stitches, like bobbles and puff stitches, consume more yarn due to their voluminous structure as compared to flat stitches like single crochet and double crochet. This is an important consideration when planning your blanket design. The more intricate the stitch, the more yarn you will need, as these stitches create a thicker, more plush fabric.</p>\n<h3>Fiber Choices</h3><p>The type of fiber you choose for your yarn can also impact your project. Wool, for example, provides warmth and elasticity, making it a good choice for winter blankets, but it may require special care such as hand washing and flat drying. Acrylic yarn is popular for its affordability, ease of care, and wide color range, making it suitable for everyday use. Cotton is breathable and ideal for summer blankets but tends to be less elastic, which can affect the tension and drape of your project. Choosing the right fiber impacts not only the feel and function of your blanket but also your overall yardage needs, as different fibers can have different weights per meter.</p>\n<h2>Calculating Yarn Needed: The Swatch Scaling Method</h2><p>The most reliable way to estimate yarn requirements is by using the Area Ratio Swatch Scaling Method. This method involves creating a gauge swatch and scaling up its yarn usage to the blanket's size. Here's a step-by-step breakdown:</p>\n<ol>\n  <li><strong>Crochet a Swatch:</strong> Make a small swatch using your chosen yarn and stitch pattern. Measure its dimensions and record the yardage used. This will serve as your baseline for calculating the total yarn needed.</li>\n  <li><strong>Calculate Swatch Area:</strong> Multiply the swatch's length by its width to get the area. This gives you the total surface area covered by the swatch, which is crucial for determining how much yarn is used per square inch or centimeter.</li>\n  <li><strong>Determine Blanket Area:</strong> Based on the desired blanket size (e.g., Baby Blanket: 30 x 36 inches), calculate the total area. Knowing the overall area you want to cover with your blanket allows you to scale the swatch's yarn use accordingly.</li>\n  <li><strong>Apply the Formula:</strong> Use the formula: <em>Total Yardage = (Blanket Area / Swatch Area) * Swatch Yardage * 1.10</em>. This accounts for the 10% extra buffer to ensure you have enough yarn. The buffer helps accommodate any unexpected increases in yarn usage due to changes in tension or pattern complexity.</li>\n</ol>\n<h2>Standard Yardage Estimates for Common Blanket Sizes</h2><p>For those who prefer ballpark estimates, here are some standard yardage ranges for various blanket sizes using approved yarn weights:</p>\n<ul>\n  <li><strong>Baby Blanket (30 x 36 inches):</strong> 700 - 1,000 meters</li>\n  <li><strong>Lapghan (36 x 48 inches):</strong> 1,000 - 1,500 meters</li>\n  <li><strong>Throw Blanket (50 x 60 inches):</strong> 1,200 - 2,000 meters</li>\n  <li><strong>Twin Blanket (66 x 90 inches):</strong> 1,800 - 2,500 meters</li>\n</ul>\n<h2>Pro Tips for Yarn Shopping</h2>\n<h3>Buy Extra Yarn</h3><p>Always purchase a bit more yarn than your calculations suggest. This extra ensures you can complete your project without scrambling for more yarn in the same dye lot, which can lead to noticeable color changes in your blanket. Having a small surplus can also be useful for future repairs or adjustments.</p>\n<h3>Check Dye Lots</h3><p>When buying yarn, ensure all skeins come from the same dye lot. This guarantees consistent color throughout your project, avoiding unwanted color patches. Dye lots can have subtle variations that might not be noticeable until you work them into your project.</p>\n<h2>Blocking Your Blanket</h2><p>Blocking is a crucial finishing step that can enhance the overall appearance of your blanket. There are two main methods: wet blocking and steam blocking. Wet blocking involves soaking the finished blanket in water, gently squeezing out excess moisture, and laying it flat to dry, pinning it to the desired dimensions. Steam blocking, on the other hand, uses steam from an iron held above the fabric to relax the stitches and shape the project. Both methods can help smooth out stitches and even out tension, but be sure to consider your yarn's fiber content when choosing a method, as some fibers are more sensitive to heat and water.</p>\n<h2>Troubleshooting Common Issues</h2><p>Ensuring even tension throughout your project is critical for a professional finish. Inconsistent tension can lead to uneven edges or a wavy blanket. If you notice your blanket starting to curl at the edges, it may be due to your starting chain being too tight. Switching to a larger hook for your starting chain or incorporating a border can help mitigate this issue. Additionally, using a consistent gauge swatch as a reference throughout the project can help maintain uniformity.</p>\n<h2>Frequently Asked Questions</h2>\n<h3>How do I know how much yarn to buy for a blanket?</h3><p>Calculate the amount based on your blanket size, stitch type, and yarn weight. Use a gauge swatch to make accurate yardage estimations.</p>\n<h3>Why do textured stitches use more yarn?</h3><p>Textured stitches like bobbles and puff stitches require more yarn due to their three-dimensional structure, which adds volume and consumes more material.</p>\n<h3>Is it necessary to buy yarn from the same dye lot?</h3><p>Yes, purchasing yarn from the same dye lot ensures color consistency throughout your blanket, avoiding visible differences in hue or shade.</p>\n<h2>Conclusion</h2><p>By understanding the factors affecting yarn requirements and using the swatch scaling method, you can accurately estimate the yarn needed for your crochet blanket projects. Remember to account for stitch types, yarn weight, and hook size, and never hesitate to buy extra yarn to ensure your project goes smoothly from start to finish. With careful planning and attention to detail, your crochet blanket will be both beautiful and functional.</p>",
+    "internalLinks": [
+      {
+        "anchorText": "How much yarn",
+        "url": "/tools/yarn-calculator",
+        "entityType": "tool"
+      }
+    ],
+    "factualValidation": {
+      "passed": true,
+      "validatedClaims": [
+        "Dimension \"30 x 36 inches\" verified against packet size: Baby Blanket (30x36 in).",
+        "Dimension \"30 x 36 inches\" verified against packet size: Baby Blanket (30x36 in).",
+        "Dimension \"36 x 48 inches\" verified against packet size: Lapghan (36x48 in).",
+        "Dimension \"50 x 60 inches\" verified against packet size: Throw Blanket (50x60 in).",
+        "Dimension \"66 x 90 inches\" verified against packet size: Twin Blanket (66x90 in).",
+        "Hook size \"5.0 mm (H-8)\" conforms to verified metric crochet hook standards.",
+        "Hook size \"4.0 mm (G-6)\" conforms to verified metric crochet hook standards.",
+        "Hook size \"6.5 mm (K-10.5)\" conforms to verified metric crochet hook standards.",
+        "Calculation formula \"Area Ratio Swatch Scaling Method\" matches verified mathematical methodology.",
+        "Verified internal link destination \"/tools/yarn-calculator\" is unique and confirmed active."
+      ],
+      "unsupportedClaims": [],
+      "errors": [],
+      "warnings": []
+    },
+    "htmlValidation": {
+      "passed": true,
+      "notes": [
+        "Valid semantic heading structure (<h2> and <h3> tags present).",
+        "Clean sanitized markup: zero prohibited tags (<script>, <iframe>, <style>).",
+        "Balanced HTML paragraph tags."
+      ]
+    },
+    "qualityValidation": {
+      "passed": true,
+      "notes": [
+        "Word count (1095 words) exceeds minimum 800-word editorial threshold.",
+        "Successfully injected 1 verified internal link(s) without heading pollution.",
+        "SEO Title and Meta Description meet length constraints."
+      ]
+    }
+  },
+  "draftLocation": "data/seo-engine-test-draft.json",
+  "published": false,
+  "geminiFallbackUsed": false
+}
