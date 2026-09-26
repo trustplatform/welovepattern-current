@@ -37,11 +37,11 @@ export function createSeoEngineRouter(requireAdminAuth: express.RequestHandler):
         engineActive: state.config.engineActive,
         autoPublish: state.config.autoPublish,
         requiresApproval: state.config.requiresApproval,
-        queueDepth: state.activeJobs.filter(j => j.stage === 'selected').length,
-        activeJobsCount: state.activeJobs.length,
-        activeJobs: state.activeJobs,
-        recentHistory: state.historicalJobs.slice(-20).reverse(),
-        discoveredTopicsCount: state.discoveredTopics.length,
+        queueDepth: (state.activeJobs || []).filter(j => j.stage === 'selected').length,
+        activeJobsCount: (state.activeJobs || []).length,
+        activeJobs: state.activeJobs || [],
+        recentHistory: (state.completedJobsHistory || state.historicalJobs || []).slice(-20).reverse(),
+        discoveredTopicsCount: (state.todayDiscoveredTopics || state.discoveredTopics || []).length,
         dailySpendUsd,
         dailyLimitUsd: state.config.dailyCostLimitUsd,
         integrations: {
@@ -228,7 +228,7 @@ export function createSeoEngineRouter(requireAdminAuth: express.RequestHandler):
       const state = readEngineState();
       return res.json({
         success: true,
-        topics: state.discoveredTopics,
+        topics: state.todayDiscoveredTopics || state.discoveredTopics || [],
       });
     } catch (err: any) {
       return res.status(500).json({ error: 'Failed to get discovered topics' });

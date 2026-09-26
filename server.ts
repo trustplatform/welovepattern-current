@@ -3998,7 +3998,15 @@ Ensure all steps, rows, rounds, and materials are extracted thoroughly.`;
 });
 
 // Mount Autonomous SEO Content Engine Operator API Router
-app.use("/api/admin/seo-engine", createSeoEngineRouter(requireAdminAuth));
+// Mounted at /api/seo-engine (primary) and /api/admin/seo-engine (legacy alias)
+const seoEngineRouter = createSeoEngineRouter(requireAdminAuth);
+app.use("/api/seo-engine", seoEngineRouter);
+app.use("/api/admin/seo-engine", seoEngineRouter);
+
+// Explicit 404 handler for unknown /api/* routes to always return JSON rather than SPA index.html
+app.use("/api/*", (_req, res) => {
+  res.status(404).json({ error: "API route not found", code: "NOT_FOUND" });
+});
 
 // SSR Request Handler
 async function handleSsrRequest(req: express.Request, res: express.Response, viteDevServer?: any) {
