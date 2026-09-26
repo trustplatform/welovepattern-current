@@ -2,7 +2,7 @@
  * Unit Test Suite for Dashboard Overview metrics calculation & Period filtering
  */
 
-import { calculatePeriodDates, calculateAggregatedSummary, EnrichedPinAnalyticsRecord } from '../../pinterest/pinterestAnalytics';
+import { calculatePeriodDates, calculateAggregatedSummary, EnrichedPinAnalyticsRecord } from '../../pinterest/pinterestAnalyticsTypes';
 
 async function runDashboardOverviewTests() {
   console.log('=== STARTING DASHBOARD OVERVIEW TESTS ===');

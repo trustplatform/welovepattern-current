@@ -26,7 +26,7 @@ import {
   Activity,
   DollarSign
 } from 'lucide-react';
-import { PinterestAnalyticsPeriod, GetAdminPinAnalyticsResponse, calculatePeriodDates } from '../../pinterest/pinterestAnalytics';
+import { PinterestAnalyticsPeriod, GetAdminPinAnalyticsResponse, calculatePeriodDates } from '../../pinterest/pinterestAnalyticsTypes';
 import { Pattern, Review } from '../../types';
 
 interface DashboardOverviewProps {

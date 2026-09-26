@@ -21,10 +21,10 @@ async function runConfigValidationTest() {
     }
   }
 
-  // 1. Default config preserves all safety invariants
-  assert(DEFAULT_SEO_ENGINE_CONFIG.requiresApproval === true, '1. Default requiresApproval is true');
-  assert(DEFAULT_SEO_ENGINE_CONFIG.autoPublish === false, '2. Default autoPublish is false');
-  assert(DEFAULT_SEO_ENGINE_CONFIG.autoPublishPinterest === false, '3. Default autoPublishPinterest is false');
+  // 1. Default config preserves all safety invariants and active production toggles
+  assert(DEFAULT_SEO_ENGINE_CONFIG.requiresApproval === false, '1. Default requiresApproval is false');
+  assert(DEFAULT_SEO_ENGINE_CONFIG.autoPublish === true, '2. Default autoPublish is true');
+  assert(DEFAULT_SEO_ENGINE_CONFIG.autoPublishPinterest === true, '3. Default autoPublishPinterest is true');
   assert(DEFAULT_SEO_ENGINE_CONFIG.articlesPerDay === 2, '4. Default articlesPerDay is 2');
   assert(DEFAULT_SEO_ENGINE_CONFIG.minWordCount === 800, '5. Default minWordCount is 800');
   assert(DEFAULT_SEO_ENGINE_CONFIG.maxWordCount === 2000, '6. Default maxWordCount is 2000');

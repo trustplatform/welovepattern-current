@@ -27,7 +27,7 @@ import {
   GetAdminPinAnalyticsResponse,
   EnrichedPinAnalyticsRecord,
   PinAnalyticsAggregatedSummary
-} from '../../pinterest/pinterestAnalytics';
+} from '../../pinterest/pinterestAnalyticsTypes';
 
 type SortField = 'outboundClicks' | 'saves' | 'impressions' | 'engagementRate' | 'clickThroughRate';
 
