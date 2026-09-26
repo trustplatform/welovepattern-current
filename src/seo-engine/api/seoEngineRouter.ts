@@ -15,7 +15,7 @@ import { isDataForSeoConfigured } from '../discovery/dataForSeoClient';
 import { isOpenAiConfigured } from '../generation/openAiClient';
 import { isHiggsfieldConfigured } from '../generation/higgsfieldClient';
 import { runTopicDiscoveryPipeline } from '../discovery/topicDiscovery';
-import { queueJobForTopic, executeJobLifecycle, recoverInterruptedJobs } from '../queue/jobQueueManager';
+import { queueJobForTopic, executeJobLifecycle, recoverInterruptedJobs, createDailyProductionBatch } from '../queue/jobQueueManager';
 import { runCompleteQualityGateTestMatrix } from '../test/runQualityGateTestMatrix';
 import { getDailySpendUsd, getJobCostBreakdown, CostStorageData } from '../cost/costTracker';
 import { SEO_ENGINE_STORAGE_PATHS } from '../config';
@@ -74,24 +74,143 @@ export function createSeoEngineRouter(requireAdminAuth: express.RequestHandler):
       const state = readEngineState();
       const updates = req.body || {};
 
-      // Validate numeric limits
+      // 1. Engine & Production
+      if (typeof updates.engineActive === 'boolean') {
+        state.config.engineActive = updates.engineActive;
+      }
+      if (typeof updates.articlesPerDay === 'number' && updates.articlesPerDay >= 1 && updates.articlesPerDay <= 20) {
+        state.config.articlesPerDay = Math.round(updates.articlesPerDay);
+      }
+      if (typeof updates.pinsPerDay === 'number' && updates.pinsPerDay >= 1 && updates.pinsPerDay <= 50) {
+        state.config.pinsPerDay = Math.round(updates.pinsPerDay);
+      }
+      if (typeof updates.pinsPerArticle === 'number' && updates.pinsPerArticle >= 1 && updates.pinsPerArticle <= 10) {
+        state.config.pinsPerArticle = Math.round(updates.pinsPerArticle);
+      }
+      if (typeof updates.trendTasksPerDay === 'number' && updates.trendTasksPerDay >= 1 && updates.trendTasksPerDay <= 100) {
+        state.config.trendTasksPerDay = Math.round(updates.trendTasksPerDay);
+      }
+      if (typeof updates.maxConcurrentJobs === 'number' && updates.maxConcurrentJobs >= 1 && updates.maxConcurrentJobs <= 5) {
+        state.config.maxConcurrentJobs = Math.round(updates.maxConcurrentJobs);
+      }
+      if (Array.isArray(updates.activeDays) && updates.activeDays.every((d: any) => typeof d === 'number' && d >= 1 && d <= 7)) {
+        state.config.activeDays = updates.activeDays;
+      }
+
+      // 2. Publishing
+      if (typeof updates.autoPublish === 'boolean') {
+        state.config.autoPublish = updates.autoPublish;
+      }
+      if (typeof updates.autoPublishPinterest === 'boolean') {
+        state.config.autoPublishPinterest = updates.autoPublishPinterest;
+      }
+      if (typeof updates.requiresApproval === 'boolean') {
+        state.config.requiresApproval = updates.requiresApproval;
+      }
+
+      // 3. Timezone & Schedule
+      if (typeof updates.timezone === 'string' && updates.timezone.trim()) {
+        state.config.timezone = updates.timezone.trim();
+      }
+      if (Array.isArray(updates.articlePublishTimes) && updates.articlePublishTimes.every((t: any) => typeof t === 'string' && /^\d{2}:\d{2}$/.test(t))) {
+        state.config.articlePublishTimes = updates.articlePublishTimes;
+      }
+      if (Array.isArray(updates.pinterestPublishTimes) && updates.pinterestPublishTimes.every((t: any) => typeof t === 'string' && /^\d{2}:\d{2}$/.test(t))) {
+        state.config.pinterestPublishTimes = updates.pinterestPublishTimes;
+      }
+
+      // 4. Article Quality
+      if (typeof updates.minWordCount === 'number' && updates.minWordCount >= 300) {
+        state.config.minWordCount = Math.round(updates.minWordCount);
+      }
+      if (typeof updates.maxWordCount === 'number' && updates.maxWordCount >= (state.config.minWordCount || 800)) {
+        state.config.maxWordCount = Math.round(updates.maxWordCount);
+      }
+      if (typeof updates.maxInternalLinks === 'number' && updates.maxInternalLinks >= 1 && updates.maxInternalLinks <= 20) {
+        state.config.maxInternalLinks = Math.round(updates.maxInternalLinks);
+      }
+      if (typeof updates.factualValidationStrict === 'boolean') {
+        state.config.factualValidationStrict = updates.factualValidationStrict;
+      }
+      if (typeof updates.maxRegenerationAttempts === 'number' && updates.maxRegenerationAttempts >= 1 && updates.maxRegenerationAttempts <= 5) {
+        state.config.maxRegenerationAttempts = Math.round(updates.maxRegenerationAttempts);
+      }
+      if (typeof updates.openAiModel === 'string' && updates.openAiModel.trim()) {
+        state.config.openAiModel = updates.openAiModel.trim();
+      }
+
+      // 5. Safety & Cost
       if (typeof updates.dailyCostLimitUsd === 'number' && updates.dailyCostLimitUsd > 0) {
         state.config.dailyCostLimitUsd = updates.dailyCostLimitUsd;
       }
       if (typeof updates.perJobCostLimitUsd === 'number' && updates.perJobCostLimitUsd > 0) {
         state.config.perJobCostLimitUsd = updates.perJobCostLimitUsd;
       }
-      if (typeof updates.articlesPerDay === 'number' && updates.articlesPerDay >= 1 && updates.articlesPerDay <= 10) {
-        state.config.articlesPerDay = updates.articlesPerDay;
+      if (typeof updates.estimatedImageCostUsd === 'number' && updates.estimatedImageCostUsd >= 0) {
+        state.config.estimatedImageCostUsd = updates.estimatedImageCostUsd;
       }
-      if (typeof updates.openAiModel === 'string' && updates.openAiModel.trim()) {
-        state.config.openAiModel = updates.openAiModel.trim();
+
+      // 6. Trend Discovery Intelligence
+      if (typeof updates.dataForSeoEnabled === 'boolean') {
+        state.config.dataForSeoEnabled = updates.dataForSeoEnabled;
       }
-      if (typeof updates.engineActive === 'boolean') {
-        state.config.engineActive = updates.engineActive;
+      if (typeof updates.discoveryCountry === 'string' && updates.discoveryCountry.trim()) {
+        state.config.discoveryCountry = updates.discoveryCountry.trim();
       }
-      if (typeof updates.requiresApproval === 'boolean') {
-        state.config.requiresApproval = updates.requiresApproval;
+      if (typeof updates.discoveryLanguage === 'string' && updates.discoveryLanguage.trim()) {
+        state.config.discoveryLanguage = updates.discoveryLanguage.trim();
+      }
+      if (typeof updates.minOpportunityScore === 'number' && updates.minOpportunityScore >= 0 && updates.minOpportunityScore <= 100) {
+        state.config.minOpportunityScore = Math.round(updates.minOpportunityScore);
+      }
+      if (typeof updates.seasonalDiscoveryEnabled === 'boolean') {
+        state.config.seasonalDiscoveryEnabled = updates.seasonalDiscoveryEnabled;
+      }
+      if (typeof updates.gscSeedCatalogEnabled === 'boolean') {
+        state.config.gscSeedCatalogEnabled = updates.gscSeedCatalogEnabled;
+      }
+      if (typeof updates.problemTrendsEnabled === 'boolean') {
+        state.config.problemTrendsEnabled = updates.problemTrendsEnabled;
+      }
+      if (typeof updates.dynamicRelatedQueriesEnabled === 'boolean') {
+        state.config.dynamicRelatedQueriesEnabled = updates.dynamicRelatedQueriesEnabled;
+      }
+      if (typeof updates.curatedSeedsEnabled === 'boolean') {
+        state.config.curatedSeedsEnabled = updates.curatedSeedsEnabled;
+      }
+
+      // Target markets validation (US, GB, CA, AU, NZ) with deduplication
+      if (Array.isArray(updates.targetMarkets)) {
+        const allowed = ['US', 'GB', 'CA', 'AU', 'NZ'];
+        const filtered = Array.from(new Set(updates.targetMarkets.filter((m: any) => typeof m === 'string' && allowed.includes(m.toUpperCase())))) as ('US' | 'GB' | 'CA' | 'AU' | 'NZ')[];
+        if (filtered.length > 0) {
+          state.config.targetMarkets = filtered;
+        }
+      }
+
+      // Trend Windows
+      if (typeof updates.freshTrendWindow === 'number' && updates.freshTrendWindow > 0) {
+        state.config.freshTrendWindow = Math.round(updates.freshTrendWindow);
+      }
+      if (typeof updates.recentTrendWindow === 'number' && updates.recentTrendWindow > 0) {
+        state.config.recentTrendWindow = Math.round(updates.recentTrendWindow);
+      }
+      if (typeof updates.historicalTrendWindow === 'number' && updates.historicalTrendWindow > 0) {
+        state.config.historicalTrendWindow = Math.round(updates.historicalTrendWindow);
+      }
+
+      // Trend Weights (Must sum to ~1.0)
+      if (
+        typeof updates.freshTrendWeight === 'number' &&
+        typeof updates.recentTrendWeight === 'number' &&
+        typeof updates.historicalTrendWeight === 'number'
+      ) {
+        const sum = updates.freshTrendWeight + updates.recentTrendWeight + updates.historicalTrendWeight;
+        if (Math.abs(sum - 1.0) < 0.01 && updates.freshTrendWeight >= 0 && updates.recentTrendWeight >= 0 && updates.historicalTrendWeight >= 0) {
+          state.config.freshTrendWeight = Math.round(updates.freshTrendWeight * 100) / 100;
+          state.config.recentTrendWeight = Math.round(updates.recentTrendWeight * 100) / 100;
+          state.config.historicalTrendWeight = Math.round(updates.historicalTrendWeight * 100) / 100;
+        }
       }
 
       writeEngineState(state);
@@ -140,6 +259,25 @@ export function createSeoEngineRouter(requireAdminAuth: express.RequestHandler):
   // -----------------------------------------------------------------
   // 4. JOB QUEUE & LIFECYCLE
   // -----------------------------------------------------------------
+  router.post('/batch/daily', requireAdminAuth, async (req, res) => {
+    try {
+      const [slot1Job, slot2Job] = await createDailyProductionBatch({
+        useRealDataForSeo: req.body?.useRealDataForSeo !== false
+      });
+      return res.json({
+        success: true,
+        message: 'Created daily 2-slot production batch (1 Trending Crochet + 1 Tool Guide)',
+        batch: {
+          slot1_trending_crochet: slot1Job,
+          slot2_tool_guide: slot2Job,
+        }
+      });
+    } catch (err: any) {
+      console.error('[SeoEngineRouter] Failed to create daily batch:', err);
+      return res.status(500).json({ error: err?.message || 'Failed to create daily batch' });
+    }
+  });
+
   router.post('/jobs/queue', requireAdminAuth, (req, res) => {
     try {
       const { topicId, keyword } = req.body || {};
@@ -147,14 +285,17 @@ export function createSeoEngineRouter(requireAdminAuth: express.RequestHandler):
 
       let targetTopic = state.discoveredTopics.find(t => t.id === topicId || t.keyword.toLowerCase() === (keyword || '').toLowerCase());
       if (!targetTopic && keyword) {
+        const isTool = /calculator|converter|chart|gauge|yardage|counter|pricing/i.test(keyword);
         targetTopic = {
           id: `topic_${Date.now()}`,
           keyword: keyword.trim(),
+          contentType: isTool ? 'tool_guide' : 'trending_crochet',
+          category: isTool ? 'tools' : 'crochet',
           trendScore: 70,
           trendDirection: 'stable',
           opportunityScore: 75,
-          targetContentFormat: 'guide',
-          targetCategoryUrl: '/categories/crochet-tips',
+          targetContentFormat: isTool ? 'tool_focus' : 'guide',
+          targetCategoryUrl: isTool ? '/categories/tools' : '/categories/crochet',
           targetAudienceLevel: 'all_levels',
           searchIntentNotes: 'Manual queued topic',
           discoveredAt: new Date().toISOString(),

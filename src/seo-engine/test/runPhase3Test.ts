@@ -70,6 +70,9 @@ export async function runEndToEndArticleTest(): Promise<TestPipelineResult> {
   const discoveredTopic: DiscoveredTopic = {
     id: `test_${Date.now()}`,
     keyword,
+    contentType: scoreResult.contentType,
+    category: scoreResult.category,
+    toolSlug: scoreResult.toolSlug,
     source: 'gsc_seed',
     searchTrendSignal: 85,
     relevanceScore: scoreResult.relevanceScore,

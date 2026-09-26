@@ -33,6 +33,7 @@
 
 import { DiscoveredTopic, FactualResearchPacket, SeoEngineConfig } from '../types';
 import { DEFAULT_SEO_ENGINE_CONFIG } from '../config';
+import { GeneratedArticle } from '../generation/openAiArticleGenerator';
 import { scoreDiscoveredTopic } from '../discovery/opportunityScorer';
 import { validateFactualResearchPacket } from '../research/factualPacketValidator';
 import { validateArticleFactualGrounding } from '../validation/articleFactualValidator';
@@ -77,6 +78,9 @@ export async function runCompleteQualityGateTestMatrix(): Promise<{ passed: bool
   const baseTopic: DiscoveredTopic = {
     id: 'test_topic_blanket_yarn',
     keyword: 'how much yarn for blanket',
+    contentType: 'tool_guide',
+    category: 'tools',
+    toolSlug: 'yarn-calculator',
     trendScore: 82,
     trendDirection: 'rising',
     opportunityScore: 88,
@@ -463,7 +467,7 @@ export async function runCompleteQualityGateTestMatrix(): Promise<{ passed: bool
   // SCENARIO R: Pinterest Board Matching Fallback Safety
   // -----------------------------------------------------------------
   t0 = Date.now();
-  const boardMatch = matchPinterestBoard(baseTopic, 'tutorials');
+  const boardMatch = matchPinterestBoard(baseTopic, 'blankets');
   assert(
     boardMatch.boardName === 'Crochet Blankets & Afghans',
     'R',
@@ -532,13 +536,14 @@ export async function runCompleteQualityGateTestMatrix(): Promise<{ passed: bool
   // SCENARIO V: Duplicate Article / Slug Cannibalization
   // -----------------------------------------------------------------
   t0 = Date.now();
-  const mockPublishedArticle = {
+  const mockPublishedArticle: GeneratedArticle = {
     title: 'The Ultimate Guide to Crochet Hooks',
     slug: 'crochet-hooks-guide',
     excerpt: 'All about hook sizes and materials.',
     contentHtml: '<h2>Hook Guide</h2><p>Content...</p>',
     wordCount: 950,
     category: 'tools',
+    contentType: 'tool_guide',
     tags: ['hooks', 'crochet'],
     seoMeta: { title: 'The Ultimate Guide to Crochet Hooks', description: 'Complete hook guide', keywords: 'hooks' },
     internalLinks: [],
@@ -570,6 +575,8 @@ export async function runCompleteQualityGateTestMatrix(): Promise<{ passed: bool
   stateBeforeCrash.activeJobs.push({
     id: crashedJobId,
     dateScheduled: '2026-09-23',
+    contentType: 'tool_guide',
+    category: 'tools',
     topic: baseTopic,
     stage: 'writing', // Interrupted mid-write
     requiresApproval: true,

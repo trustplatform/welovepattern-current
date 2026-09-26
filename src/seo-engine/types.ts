@@ -22,24 +22,43 @@ export type ContentFormat =
   | 'pattern_roundup' 
   | 'explainer_comparison';
 
+/** Two strict daily production content slots */
+export type ArticleContentType = 'trending_crochet' | 'tool_guide';
+
 export interface DataForSeoTrendItem {
   keyword: string;
-  trendScore: number;
+  trendScore: number;                         // Combined 0-100 normalized trend score
   trendDirection: 'rising' | 'stable' | 'breakout';
+  freshTrendScore?: number;                   // 7-day window momentum (40% weight)
+  recentTrendScore?: number;                  // 30-day window momentum (35% weight)
+  historicalTrendScore?: number;              // 90-day window baseline (25% weight)
+  combinedTrendScore?: number;                // 0.40 * fresh + 0.35 * recent + 0.25 * historical
+  marketBreakdown?: Record<string, {          // Signals per English-speaking market (US, UK, CA, AU, NZ)
+    freshScore: number;
+    recentScore: number;
+    historicalScore: number;
+  }>;
 }
 
 export interface DiscoveredTopic {
   id: string;                                 // sha256 or unique slug of normalized keyword
   keyword: string;
-  source?: 'dataforseo_trends' | 'gsc_seed' | 'internal_catalog';
+  contentType: ArticleContentType;            // 'trending_crochet' (Slot 1) or 'tool_guide' (Slot 2)
+  category: 'crochet' | 'tools';              // Strictly 'crochet' or 'tools'
+  source?: 'dataforseo_trends' | 'gsc_seed' | 'internal_catalog' | 'problem_trend' | 'fresh_trend' | 'seasonal_trend';
   dataForSeoTaskId?: string;
   searchTrendSignal?: number;                 // 0-100 normalized trend score
-  trendScore?: number;                        // Alias for searchTrendSignal
+  trendScore?: number;                        // Alias for searchTrendSignal / combinedTrendScore
+  freshTrendScore?: number;                   // 7-day trend signal
+  recentTrendScore?: number;                  // 30-day trend signal
+  historicalTrendScore?: number;              // 90-day trend signal
+  combinedTrendScore?: number;                // Weighted combined trend score
   trendDirection?: 'rising' | 'stable' | 'breakout';
   relevanceScore?: number;                    // 0-100 crochet/fiber craft relevance
   siteFitScore?: number;                      // 0-100 fit to tools/patterns/categories
   opportunityScore: number;                   // 0-100 weighted final score
   targetContentFormat: ContentFormat;
+  toolSlug?: string;                          // When contentType is 'tool_guide', maps to real tool slug in toolsData.ts
   targetToolUrl?: string;                     // e.g. "/tools/blanket-yarn-estimator"
   targetCategoryUrl?: string;                 // e.g. "/category/blankets"
   targetPatternUrls?: string[];               // e.g. ["/pattern/cozy-granny-square-blanket"]
@@ -153,6 +172,8 @@ export type SeoEngineJobStage = TopicStatus;
 export interface SeoEngineArticleJob {
   id: string;                                 // e.g. "job_20260922_abc123"
   dateScheduled: string;                      // "YYYY-MM-DD"
+  contentType: ArticleContentType;            // 'trending_crochet' or 'tool_guide'
+  category: 'crochet' | 'tools';              // 'crochet' for Slot 1, 'tools' for Slot 2
   topic: DiscoveredTopic;
   factualResearch?: FactualResearchPacket;
   articleContent?: {
@@ -162,6 +183,7 @@ export interface SeoEngineArticleJob {
     contentHtml: string;
     wordCount: number;
     category: string;
+    contentType?: ArticleContentType;
     tags: string[];
     seoMeta: { title: string; description: string; keywords: string };
     heroImage?: ArticleHeroImage;
@@ -212,8 +234,8 @@ export interface ProductionQualityGateResult {
 }
 
 export interface SeoEngineConfig {
-  articlesPerDay: number;                     // Default: 4
-  pinsPerDay: number;                         // Default: 8
+  articlesPerDay: number;                     // Default: 2 (1 Trending Crochet + 1 Tool Guide)
+  pinsPerDay: number;                         // Default: 4
   pinsPerArticle: number;                     // Default: 2 (configurable)
   trendTasksPerDay: number;                   // Default: 20
   autoPublish: boolean;                       // Default: false
@@ -236,6 +258,18 @@ export interface SeoEngineConfig {
   minOpportunityScore: number;                // Default: 65
   seasonalDiscoveryEnabled: boolean;          // Default: true
   gscSeedCatalogEnabled: boolean;             // Default: true
+  // Trend Discovery Intelligence Configuration
+  targetMarkets?: ('US' | 'GB' | 'CA' | 'AU' | 'NZ')[]; // Default: ['US', 'GB', 'CA', 'AU', 'NZ']
+  freshTrendWindow?: number;                  // Default: 7 (days)
+  recentTrendWindow?: number;                 // Default: 30 (days)
+  historicalTrendWindow?: number;             // Default: 90 (days)
+  freshTrendWeight?: number;                  // Default: 0.40 (40%)
+  recentTrendWeight?: number;                 // Default: 0.35 (35%)
+  historicalTrendWeight?: number;             // Default: 0.25 (25%)
+  problemTrendsEnabled?: boolean;             // Default: true
+  dynamicRelatedQueriesEnabled?: boolean;     // Default: true
+  curatedSeedsEnabled?: boolean;              // Default: true
+
   factualValidationStrict: boolean;           // Default: true
   maxRegenerationAttempts: number;            // Default: 2
   openAiModel: string;                        // Configurable string (e.g. "gpt-4o", "gpt-4o-mini", etc.)
@@ -250,6 +284,8 @@ export interface HistoricalJobSummary {
   jobId: string;
   date: string;
   keyword: string;
+  contentType?: ArticleContentType;
+  category?: string;
   articleTitle: string;
   articleSlug: string;
   wordCount: number;

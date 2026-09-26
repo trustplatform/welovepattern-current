@@ -12,6 +12,8 @@ import { PatternSeoAdmin } from '../components/admin/PatternSeoAdmin';
 import { PagesAdmin } from '../components/admin/PagesAdmin';
 import { PinterestPinModal } from '../components/admin/PinterestPinModal';
 import { PinterestAdmin } from '../components/admin/PinterestAdmin';
+import { EngineSettingsAdmin } from '../components/admin/EngineSettingsAdmin';
+import { DashboardOverview } from '../components/admin/DashboardOverview';
 import { 
   ShieldCheck, 
   Grid, 
@@ -42,7 +44,8 @@ import {
   Mail,
   Menu,
   ChevronRight,
-  Share2
+  Share2,
+  Sliders
 } from 'lucide-react';
 
 interface AdminViewProps {
@@ -270,7 +273,7 @@ export const AdminView: React.FC<AdminViewProps> = ({
     );
   }
 
-  type AdminTabType = 'dashboard' | 'patterns' | 'pattern-seo' | 'blog' | 'pages' | 'categories' | 'reviews' | 'maillist' | 'analytics' | 'tools' | 'verification' | 'pinterest';
+  type AdminTabType = 'dashboard' | 'patterns' | 'pattern-seo' | 'blog' | 'pages' | 'categories' | 'reviews' | 'maillist' | 'analytics' | 'tools' | 'verification' | 'pinterest' | 'engine-settings';
 
   interface AdminNavItem {
     id: AdminTabType;
@@ -309,6 +312,7 @@ export const AdminView: React.FC<AdminViewProps> = ({
         { id: 'pinterest', label: 'Pinterest Integration', icon: Share2 },
         { id: 'analytics', label: 'Download Analytics', icon: BarChart3 },
         { id: 'tools', label: 'Craft Tools Metrics', icon: Wrench },
+        { id: 'engine-settings', label: 'SEO Engine Settings', icon: Sliders },
         { id: 'verification', label: 'Site Verification', icon: ShieldCheck },
       ]
     }
@@ -525,39 +529,13 @@ export const AdminView: React.FC<AdminViewProps> = ({
             <SiteVerificationAdmin />
           )}
 
-          {/* TAB CONTENT: DASHBOARD */}
+          {/* TAB CONTENT: DASHBOARD OVERVIEW */}
           {activeTab === 'dashboard' && (
-            <div className="space-y-6">
-              <div className="grid grid-cols-1 sm:grid-cols-2 xl:grid-cols-4 gap-4">
-                
-                <div className="bg-white dark:bg-slate-800 p-6 rounded-[24px] border border-slate-200/80 dark:border-slate-700 shadow-sm space-y-2">
-                  <span className="text-xs font-bold text-slate-400 uppercase">Total Published Patterns</span>
-                  <p className="text-3xl font-black text-slate-900 dark:text-white">{patterns.length}</p>
-                  <span className="text-xs text-emerald-600 font-bold">+100% Free Access</span>
-                </div>
-
-                <div className="bg-white dark:bg-slate-800 p-6 rounded-[24px] border border-slate-200/80 dark:border-slate-700 shadow-sm space-y-2">
-                  <span className="text-xs font-bold text-slate-400 uppercase">Total Maker Reviews</span>
-                  <p className="text-3xl font-black text-[#9B7CF8]">{reviews.length}</p>
-                  <span className="text-xs text-slate-500">Across all patterns</span>
-                </div>
-
-                <div className="bg-white dark:bg-slate-800 p-6 rounded-[24px] border border-slate-200/80 dark:border-slate-700 shadow-sm space-y-2">
-                  <span className="text-xs font-bold text-slate-400 uppercase">Total PDF Downloads</span>
-                  <p className="text-3xl font-black text-[#E96BA8]">{totalDownloads.toLocaleString('en-US')}</p>
-                  <span className="text-xs text-slate-500">Across 13 categories</span>
-                </div>
-
-                <div className="bg-white dark:bg-slate-800 p-6 rounded-[24px] border border-slate-200/80 dark:border-slate-700 shadow-sm space-y-2">
-                  <span className="text-xs font-bold text-slate-400 uppercase">System Status</span>
-                  <p className="text-2xl font-black text-emerald-500 flex items-center gap-1.5">
-                    <CheckCircle2 className="w-5 h-5" /> Operational
-                  </p>
-                  <span className="text-xs text-slate-500">PWA &amp; Offline Ready</span>
-                </div>
-
-              </div>
-            </div>
+            <DashboardOverview
+              patterns={patterns}
+              reviews={reviews}
+              totalDownloads={totalDownloads}
+            />
           )}
 
           {/* TAB CONTENT: PATTERNS LIST */}
@@ -679,6 +657,11 @@ export const AdminView: React.FC<AdminViewProps> = ({
           {/* TAB CONTENT: PINTEREST INTEGRATION & OAUTH */}
           {activeTab === 'pinterest' && (
             <PinterestAdmin />
+          )}
+
+          {/* TAB CONTENT: SEO ENGINE CONFIGURATION */}
+          {activeTab === 'engine-settings' && (
+            <EngineSettingsAdmin />
           )}
         </main>
       </div>

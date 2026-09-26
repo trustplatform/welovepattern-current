@@ -152,6 +152,7 @@ export interface BlogPost {
   excerpt: string;
   content: string;
   category: string;
+  contentType?: 'trending_crochet' | 'tool_guide';
   author: string;
   authorRole?: string;
   authorAvatar?: string;

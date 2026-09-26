@@ -473,3 +473,277 @@ export async function createPinterestPin(params: CreatePinParams): Promise<Creat
   }
 }
 
+/**
+ * Supported Pinterest Pin analytics metric types in Pinterest API v5.
+ */
+export type PinterestPinMetricType =
+  | 'IMPRESSION'
+  | 'SAVE'
+  | 'PIN_CLICK'
+  | 'OUTBOUND_CLICK'
+  | 'ENGAGEMENT'
+  | 'CLOSEUP';
+
+export const DEFAULT_PINTEREST_PIN_METRICS: PinterestPinMetricType[] = [
+  'IMPRESSION',
+  'SAVE',
+  'PIN_CLICK',
+  'OUTBOUND_CLICK',
+  'ENGAGEMENT',
+  'CLOSEUP'
+];
+
+export interface PinAnalyticsSummary {
+  impressions: number;
+  saves: number;
+  pinClicks: number;
+  outboundClicks: number;
+  engagements: number;
+  closeups: number;
+  engagementRate: number;      // engagements / impressions (0 to 1)
+  clickThroughRate: number;    // outboundClicks / impressions (0 to 1)
+}
+
+export interface PinDailyAnalyticsRecord {
+  date: string;                // YYYY-MM-DD
+  metrics: Partial<Record<PinterestPinMetricType, number>>;
+}
+
+export interface FetchPinAnalyticsResult {
+  success: boolean;
+  pinId?: string;
+  startDate?: string;
+  endDate?: string;
+  summary?: PinAnalyticsSummary;
+  dailyBreakdown?: PinDailyAnalyticsRecord[];
+  rawMetrics?: Record<string, any>;
+  error?: string;
+  missingScope?: boolean;
+}
+
+/**
+ * Fetches performance analytics for a specific Pin via Pinterest API v5:
+ * GET https://api.pinterest.com/v5/pins/{pin_id}/analytics
+ * 
+ * Reuses existing OAuth token management, auto-refresh on 401, and scope validation.
+ */
+export async function fetchPinAnalytics(
+  pinId: string,
+  startDate: string,
+  endDate: string,
+  metricTypes: string[] = DEFAULT_PINTEREST_PIN_METRICS
+): Promise<FetchPinAnalyticsResult> {
+  const cleanPinId = (pinId || '').trim();
+  if (!cleanPinId) {
+    return {
+      success: false,
+      error: 'A valid Pinterest Pin ID is required to fetch analytics.'
+    };
+  }
+
+  // Validate YYYY-MM-DD dates
+  const dateRegex = /^\d{4}-\d{2}-\d{2}$/;
+  if (!dateRegex.test(startDate) || !dateRegex.test(endDate)) {
+    return {
+      success: false,
+      pinId: cleanPinId,
+      error: `Invalid date format. Expected YYYY-MM-DD format (received: startDate="${startDate}", endDate="${endDate}").`
+    };
+  }
+
+  if (new Date(startDate).getTime() > new Date(endDate).getTime()) {
+    return {
+      success: false,
+      pinId: cleanPinId,
+      error: `startDate (${startDate}) cannot be after endDate (${endDate}).`
+    };
+  }
+
+  const useSandbox = process.env.PINTEREST_USE_SANDBOX === 'true';
+  let accessToken: string | undefined;
+
+  if (useSandbox) {
+    accessToken = process.env.PINTEREST_SANDBOX_ACCESS_TOKEN?.trim();
+    if (!accessToken) {
+      return {
+        success: false,
+        pinId: cleanPinId,
+        error: 'Pinterest Sandbox token is not configured on the server.'
+      };
+    }
+  } else {
+    const authRecord = getPinterestAuthRecord();
+    if (!authRecord || !authRecord.accessToken) {
+      return {
+        success: false,
+        pinId: cleanPinId,
+        error: 'Pinterest account is not connected. Please connect Pinterest in Admin Settings.'
+      };
+    }
+
+    const grantedScopes = (authRecord.scope || '')
+      .split(/[\s,]+/)
+      .map(s => s.trim().toLowerCase());
+
+    if (!grantedScopes.includes('pins:read') && !grantedScopes.includes('boards:read')) {
+      return {
+        success: false,
+        pinId: cleanPinId,
+        missingScope: true,
+        error: "Pinterest authorization is missing required 'pins:read' permission. Please reconnect your Pinterest account in Admin Settings."
+      };
+    }
+
+    const tokenResult = await getValidPinterestAccessToken();
+    if (!tokenResult.success || !tokenResult.accessToken) {
+      return {
+        success: false,
+        pinId: cleanPinId,
+        error: tokenResult.error || 'Failed to obtain valid Pinterest access token.'
+      };
+    }
+    accessToken = tokenResult.accessToken;
+  }
+
+  const metricsParam = metricTypes.length > 0 ? metricTypes.join(',') : DEFAULT_PINTEREST_PIN_METRICS.join(',');
+
+  const queryUrl = new URL(`${PINTEREST_API_BASE}/pins/${encodeURIComponent(cleanPinId)}/analytics`);
+  queryUrl.searchParams.set('start_date', startDate);
+  queryUrl.searchParams.set('end_date', endDate);
+  queryUrl.searchParams.set('metric_types', metricsParam);
+
+  try {
+    let response = await fetch(queryUrl.toString(), {
+      method: 'GET',
+      headers: {
+        'Authorization': `Bearer ${accessToken}`,
+        'Accept': 'application/json'
+      }
+    });
+
+    // Handle 401 Unauthorized with automatic token refresh
+    if (response.status === 401 && !useSandbox) {
+      const record = getPinterestAuthRecord();
+      if (record?.refreshToken) {
+        const refreshResult = await refreshPinterestToken(record.refreshToken);
+        if (refreshResult.success && refreshResult.data?.access_token) {
+          const refreshedData = refreshResult.data;
+          const updatedRecord: PinterestAuthRecord = {
+            ...record,
+            accessToken: refreshedData.access_token,
+            refreshToken: refreshedData.refresh_token || record.refreshToken,
+            expiresIn: refreshedData.expires_in,
+            expiresAt: refreshedData.expires_in
+              ? Date.now() + refreshedData.expires_in * 1000
+              : record.expiresAt,
+            updatedAt: new Date().toISOString()
+          };
+          savePinterestAuthRecord(updatedRecord);
+          accessToken = updatedRecord.accessToken;
+
+          // Retry request with fresh token
+          response = await fetch(queryUrl.toString(), {
+            method: 'GET',
+            headers: {
+              'Authorization': `Bearer ${accessToken}`,
+              'Accept': 'application/json'
+            }
+          });
+        }
+      }
+    }
+
+    if (!response.ok) {
+      const rawText = await response.text();
+      let errorMsg = `HTTP ${response.status}`;
+      let isScopeIssue = false;
+
+      try {
+        const json = JSON.parse(rawText);
+        errorMsg = json.message || json.error_description || json.error || errorMsg;
+        if (response.status === 403 || (typeof errorMsg === 'string' && /scope|pins:read|forbidden/i.test(errorMsg))) {
+          isScopeIssue = true;
+        }
+      } catch {
+        if (rawText) errorMsg = rawText.slice(0, 150);
+      }
+
+      if (response.status === 429) {
+        return {
+          success: false,
+          pinId: cleanPinId,
+          error: 'Pinterest API rate limit reached. Please wait a few moments before requesting Pin analytics again.'
+        };
+      }
+
+      if (isScopeIssue || response.status === 403) {
+        return {
+          success: false,
+          pinId: cleanPinId,
+          missingScope: true,
+          error: "Pinterest authorization missing required 'pins:read' scope. Please reconnect your Pinterest account in Admin Settings."
+        };
+      }
+
+      return {
+        success: false,
+        pinId: cleanPinId,
+        error: `Pinterest API analytics error: ${errorMsg}`
+      };
+    }
+
+    const data = await response.json();
+
+    // Parse summary and daily breakdown from Pinterest API v5 response
+    // Response structure: { all: { summary_metrics: { IMPRESSION: 100, ... }, daily_metrics: [ { date: "YYYY-MM-DD", metrics: { ... } } ] } }
+    // Or top-level { summary_metrics: { ... } }
+    const container = data?.all || data || {};
+    const summaryRaw = container.summary_metrics || container.summary || data?.summary_metrics || {};
+
+    const impressions = Number(summaryRaw.IMPRESSION || summaryRaw.impression || summaryRaw.IMPRESSIONS || 0);
+    const saves = Number(summaryRaw.SAVE || summaryRaw.save || summaryRaw.SAVES || 0);
+    const pinClicks = Number(summaryRaw.PIN_CLICK || summaryRaw.pin_click || summaryRaw.PIN_CLICKS || 0);
+    const outboundClicks = Number(summaryRaw.OUTBOUND_CLICK || summaryRaw.outbound_click || summaryRaw.OUTBOUND_CLICKS || 0);
+    const engagements = Number(summaryRaw.ENGAGEMENT || summaryRaw.engagement || summaryRaw.ENGAGEMENTS || (saves + pinClicks + outboundClicks));
+    const closeups = Number(summaryRaw.CLOSEUP || summaryRaw.closeup || summaryRaw.CLOSEUPS || 0);
+
+    const engagementRate = impressions > 0 ? Math.round((engagements / impressions) * 10000) / 10000 : 0;
+    const clickThroughRate = impressions > 0 ? Math.round((outboundClicks / impressions) * 10000) / 10000 : 0;
+
+    const summary: PinAnalyticsSummary = {
+      impressions,
+      saves,
+      pinClicks,
+      outboundClicks,
+      engagements,
+      closeups,
+      engagementRate,
+      clickThroughRate
+    };
+
+    // Extract daily breakdown if present
+    const rawDaily = Array.isArray(container.daily_metrics) ? container.daily_metrics : [];
+    const dailyBreakdown: PinDailyAnalyticsRecord[] = rawDaily.map((item: any) => ({
+      date: item.date || item.data_status || '',
+      metrics: item.metrics || {}
+    }));
+
+    return {
+      success: true,
+      pinId: cleanPinId,
+      startDate,
+      endDate,
+      summary,
+      dailyBreakdown,
+      rawMetrics: data
+    };
+  } catch (err: any) {
+    console.error('Error fetching Pinterest pin analytics via Pinterest API v5:', err?.message || err);
+    return {
+      success: false,
+      pinId: cleanPinId,
+      error: err?.message || 'Failed to communicate with Pinterest API.'
+    };
+  }
+}
+

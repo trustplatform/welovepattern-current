@@ -384,3 +384,33 @@ export function getCatalogItemByUrl(url: string): LinkCatalogItem | undefined {
   const normalized = url.trim().toLowerCase();
   return catalog.find(item => item.url.toLowerCase() === normalized);
 }
+
+/**
+ * Returns real existing blog posts for "Read Next" / "Related Guides" sections.
+ * Strictly guarantees that all returned items exist in the site catalog.
+ */
+export function getRelatedArticlesForTopic(
+  category: string,
+  currentSlug?: string,
+  limit = 3
+): { title: string; url: string; category?: string }[] {
+  const catalog = getVerifiedInternalLinkCatalog();
+  const blogItems = catalog.filter(c => c.entityType === 'blog');
+  const currentNormalized = currentSlug ? `/blog/${currentSlug.toLowerCase().trim()}` : '';
+
+  const candidates = blogItems.filter(b => b.url.toLowerCase() !== currentNormalized);
+
+  // Prioritize matching category
+  const matching = candidates.filter(b => 
+    b.keywords.some(k => k.includes(category.toLowerCase())) ||
+    b.url.toLowerCase().includes(category.toLowerCase())
+  );
+
+  const pool = [...matching, ...candidates.filter(b => !matching.includes(b))];
+  return pool.slice(0, limit).map(p => ({
+    title: p.title,
+    url: p.url,
+    category
+  }));
+}
+

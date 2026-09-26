@@ -38,18 +38,36 @@ interface GenerationLogEntry {
   stageAtCompletion?: string;
 }
 
-const TEST_TOPICS: { keyword: string; slug: string; targetTool: string; notes: string }[] = [
+const TEST_TOPICS: {
+  keyword: string;
+  slug: string;
+  contentType: 'trending_crochet' | 'tool_guide';
+  category: 'crochet' | 'tools';
+  toolSlug?: string;
+  targetTool?: string;
+  targetCategoryUrl: string;
+  targetFormat: 'tutorial' | 'tool_focus';
+  notes: string;
+}[] = [
   {
-    keyword: 'gauge swatch calculator',
-    slug: 'gauge-swatch-calculator',
-    targetTool: '/tools/gauge-calculator',
-    notes: 'High intent maker query for comparing swatch measurements against pattern gauge.',
+    keyword: 'easy crochet pumpkin pattern free',
+    slug: 'easy-crochet-pumpkin-pattern-free',
+    contentType: 'trending_crochet',
+    category: 'crochet',
+    targetCategoryUrl: '/categories/tutorials',
+    targetFormat: 'tutorial',
+    notes: 'Seasonal high-volume search for beginner-friendly plush ribbed pumpkins (Slot 1).',
   },
   {
     keyword: 'yarn calculator',
     slug: 'yarn-calculator',
+    contentType: 'tool_guide',
+    category: 'tools',
+    toolSlug: 'yarn-calculator',
     targetTool: '/tools/yarn-calculator',
-    notes: 'Top tier yardage and skein estimation search for fiber craft makers.',
+    targetCategoryUrl: '/categories/tools',
+    targetFormat: 'tool_focus',
+    notes: 'Top tier yardage and skein estimation search for fiber craft makers (Slot 2).',
   },
 ];
 
@@ -147,11 +165,14 @@ export async function runTwoArticleTest(): Promise<void> {
       const topic: DiscoveredTopic = {
         id: `test_topic_${item.slug.replace(/-/g, '_')}`,
         keyword: item.keyword,
+        contentType: item.contentType,
+        category: item.category,
+        toolSlug: item.toolSlug,
         source: 'gsc_seed',
         opportunityScore: 95 - i * 3,
-        targetContentFormat: 'tool_focus',
+        targetContentFormat: item.targetFormat,
         targetToolUrl: item.targetTool,
-        targetCategoryUrl: '/category/tools',
+        targetCategoryUrl: item.targetCategoryUrl,
         targetAudienceLevel: 'all_levels',
         searchIntentNotes: item.notes,
         discoveredAt: new Date().toISOString(),
@@ -170,6 +191,9 @@ export async function runTwoArticleTest(): Promise<void> {
       console.log(`[JobQueue] Created job ${queuedJob.id} in state "${queuedJob.stage}"`);
     }
 
+    // Record timestamp before starting execution to isolate current attempt logs from historical logs
+    const attemptStartTime = new Date().toISOString();
+
     // Execute lifecycle through all 5 stages with test fallback board allowed
     let completedJob: SeoEngineArticleJob;
     try {
@@ -180,8 +204,11 @@ export async function runTwoArticleTest(): Promise<void> {
     }
     processedJobs.push(completedJob);
 
-    // Extract all error logs from job
-    const jobErrorLogs = completedJob.logs.filter(l => l.level === 'error').map(l => l.message);
+    // Distinguish current execution attempt logs from historical logs
+    const currentAttemptLogs = completedJob.logs.filter(l => l.timestamp >= attemptStartTime);
+    const historicalLogs = completedJob.logs.filter(l => l.timestamp < attemptStartTime);
+    const currentErrorLogs = currentAttemptLogs.filter(l => l.level === 'error').map(l => l.message);
+    const historicalErrorLogs = historicalLogs.filter(l => l.level === 'error').map(l => l.message);
 
     // Audit Asset 1: Hero Image (16:9, 1k)
     const heroImage = completedJob.articleContent?.heroImage;
@@ -191,12 +218,12 @@ export async function runTwoArticleTest(): Promise<void> {
       fs.statSync(heroImage.stableAssetPath).size > 100
     );
 
-    const isHeroNew = completedJob.logs.some(l => l.message.includes('Hero image generated and saved'));
+    const isHeroNew = currentAttemptLogs.some(l => l.message.includes('Hero image generated and saved'));
     let heroError: string | undefined;
     if (!heroExists) {
       heroError = heroImage?.errorMessage ||
-        jobErrorLogs.find(msg => msg.includes('Hero') || msg.includes('Higgsfield') || msg.includes('Budget')) ||
-        (jobErrorLogs.length > 0 ? jobErrorLogs[jobErrorLogs.length - 1] : `Job halted at stage "${completedJob.stage}" before Hero generation`);
+        currentErrorLogs.find(msg => msg.includes('Hero') || msg.includes('Higgsfield') || msg.includes('Budget')) ||
+        (currentErrorLogs.length > 0 ? currentErrorLogs[currentErrorLogs.length - 1] : `Job halted at stage "${completedJob.stage}" before Hero generation`);
     }
 
     const heroEntry: GenerationLogEntry = {
@@ -226,7 +253,7 @@ export async function runTwoArticleTest(): Promise<void> {
       `[GENERATION] ${heroEntry.article} | ${heroEntry.asset} | ${heroEntry.aspectRatio} | ${heroEntry.resolution} | RequestID: ${heroEntry.providerRequestId} | Status: ${heroEntry.status.toUpperCase()}`
     );
     if (heroEntry.status === 'failed') {
-      console.error(`  ↳ Failure Cause: ${heroEntry.error}`);
+      console.error(`  ↳ Current Failure Cause: ${heroEntry.error}`);
     }
 
     // Audit Asset 2 & 3: Pins 1 & 2 (2:3, 1k)
@@ -239,12 +266,12 @@ export async function runTwoArticleTest(): Promise<void> {
         fs.statSync(pin.stableAssetPath).size > 100
       );
 
-      const isPinNew = completedJob.logs.some(l => l.message.includes(`Pin ${pinIndex} generated and saved`));
+      const isPinNew = currentAttemptLogs.some(l => l.message.includes(`Pin ${pinIndex} generated and saved`));
       let pinError: string | undefined;
       if (!pinExists) {
         pinError = pin?.errorMessage ||
-          jobErrorLogs.find(msg => msg.includes(`Pin ${pinIndex}`) || msg.includes('Higgsfield') || msg.includes('Board') || msg.includes('Budget')) ||
-          (jobErrorLogs.length > 0 ? jobErrorLogs[jobErrorLogs.length - 1] : `Job halted at stage "${completedJob.stage}" before Pin ${pinIndex} generation`);
+          currentErrorLogs.find(msg => msg.includes(`Pin ${pinIndex}`) || msg.includes('Higgsfield') || msg.includes('Board') || msg.includes('Budget')) ||
+          (currentErrorLogs.length > 0 ? currentErrorLogs[currentErrorLogs.length - 1] : `Job halted at stage "${completedJob.stage}" before Pin ${pinIndex} generation`);
       }
 
       const pinEntry: GenerationLogEntry = {
@@ -274,15 +301,19 @@ export async function runTwoArticleTest(): Promise<void> {
         `[GENERATION] ${pinEntry.article} | ${pinEntry.asset} | ${pinEntry.aspectRatio} | ${pinEntry.resolution} | RequestID: ${pinEntry.providerRequestId} | Status: ${pinEntry.status.toUpperCase()}`
       );
       if (pinEntry.status === 'failed') {
-        console.error(`  ↳ Failure Cause: ${pinEntry.error}`);
+        console.error(`  ↳ Current Failure Cause: ${pinEntry.error}`);
       }
     }
 
-    // Print all error logs if any occurred on this job
-    if (jobErrorLogs.length > 0) {
-      console.log(`\n  [JOB LOG ERRORS - Article ${articleIndex}]:`);
-      jobErrorLogs.forEach(err => console.log(`   * ${err}`));
+    // Print current attempt error logs if any occurred
+    if (currentErrorLogs.length > 0) {
+      console.log(`\n  [CURRENT ATTEMPT ERRORS - Article ${articleIndex}]:`);
+      currentErrorLogs.forEach(err => console.log(`   * ${err}`));
       console.log('');
+    }
+
+    if (historicalErrorLogs.length > 0 && Boolean(existingJob)) {
+      console.log(`  [HISTORICAL LOGS]: ${historicalErrorLogs.length} previous errors from prior runs safely ignored for current attempt audit.`);
     }
 
     console.log(`[ARTICLE ${articleIndex}/2] Lifecycle concluded at stage: "${completedJob.stage}"\n`);

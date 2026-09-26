@@ -147,26 +147,50 @@ export function generateStableImageFilename(slug: string, prompt: string, ext = 
 }
 
 /**
+ * Extracts an image URL safely from various Higgsfield API response schemas.
+ */
+function extractImageUrl(data: any): string | undefined {
+  if (!data) return undefined;
+  if (typeof data === 'string' && data.startsWith('http')) return data;
+
+  const candidates = [
+    data?.images?.[0]?.url,
+    data?.images?.[0],
+    data?.output_url,
+    data?.image_url,
+    data?.result?.[0]?.url,
+    data?.result?.[0],
+    data?.media?.[0]?.url,
+    data?.url,
+  ];
+
+  for (const c of candidates) {
+    if (typeof c === 'string' && c.startsWith('http')) return c;
+    if (c && typeof c === 'object' && typeof c.url === 'string' && c.url.startsWith('http')) return c.url;
+  }
+  return undefined;
+}
+
+/**
  * Polls for completion of an asynchronous Higgsfield generation task.
  * Fails immediately on fatal HTTP 401, 403, and 404 responses while retrying transient errors.
  */
 async function pollHiggsfieldTask(
   taskId: string,
   apiKey: string,
-  maxWaitMs: number,
+  maxWaitMs = 120000,
   explicitStatusUrl?: string
 ): Promise<{ success: boolean; imageUrl?: string; error?: string; fatalStatus?: number }> {
   const startTime = Date.now();
-  const pollIntervalMs = 2500;
+  const pollIntervalMs = 3000;
 
   const candidateUrls = explicitStatusUrl
     ? [explicitStatusUrl]
     : taskId.startsWith('http')
     ? [taskId]
     : [
-        `https://platform.higgsfield.ai/requests/${taskId}/status`,
         `https://api.higgsfield.ai/requests/${taskId}/status`,
-        `https://api.higgsfield.ai/v1/generations/${taskId}`,
+        `https://platform.higgsfield.ai/requests/${taskId}/status`,
       ];
 
   while (Date.now() - startTime < maxWaitMs) {
@@ -205,18 +229,11 @@ async function pollHiggsfieldTask(
         const status = data?.status?.toLowerCase();
 
         if (status === 'completed' || status === 'succeeded' || status === 'done') {
-          const rawUrl =
-            data?.output_url ||
-            data?.image_url ||
-            data?.result?.[0]?.url ||
-            data?.images?.[0] ||
-            data?.media?.[0]?.url ||
-            data?.url;
-          const urlStr = typeof rawUrl === 'string' ? rawUrl : (rawUrl?.url || undefined);
+          const urlStr = extractImageUrl(data);
           if (urlStr) {
             return { success: true, imageUrl: urlStr };
           }
-          return { success: false, error: 'Higgsfield task completed but no image URL was returned.' };
+          return { success: false, error: 'Higgsfield task completed but no image URL was returned in response payload.' };
         }
 
         if (status === 'failed' || status === 'error' || status === 'nsfw') {
@@ -234,7 +251,10 @@ async function pollHiggsfieldTask(
     }
   }
 
-  return { success: false, error: `Polling timed out after ${maxWaitMs / 1000}s` };
+  return {
+    success: false,
+    error: `Polling timed out after ${Math.round(maxWaitMs / 1000)}s while task ${taskId} is still processing. Task ID is preserved for recovery.`,
+  };
 }
 
 /**
@@ -250,7 +270,7 @@ export async function generateHiggsfieldImage(
     slug,
     targetFolder = 'blog',
     jobId,
-    timeoutMs = 60000,
+    timeoutMs = 150000,
     existingTaskId,
     onTaskIdReceived,
     estimatedCostUsd = 0.03,
@@ -298,7 +318,7 @@ export async function generateHiggsfieldImage(
     // 3. Resume existing remote task OR create a new generation request
     if (existingTaskId) {
       // Direct polling of existing task without creating a duplicate paid POST request
-      const pollResult = await pollHiggsfieldTask(existingTaskId, apiKey, 45000);
+      const pollResult = await pollHiggsfieldTask(existingTaskId, apiKey, Math.max(timeoutMs, 120000));
       if (!pollResult.success || !pollResult.imageUrl) {
         return {
           success: false,
@@ -320,7 +340,8 @@ export async function generateHiggsfieldImage(
           'Accept': 'application/json',
         },
         body: JSON.stringify({
-          prompt: prompt.slice(0, 480),
+          prompt: prompt,
+          quality: 'medium',
           resolution: '1k',
           aspect_ratio: aspectRatio,
           enhance_prompt: false,
@@ -368,21 +389,14 @@ export async function generateHiggsfieldImage(
         }
       }
 
-      const rawUrl =
-        data?.image_url ||
-        data?.output_url ||
-        data?.result?.[0]?.url ||
-        data?.images?.[0] ||
-        data?.media?.[0]?.url ||
-        data?.url;
-      cdnUrl = typeof rawUrl === 'string' ? rawUrl : (rawUrl?.url || undefined);
+      cdnUrl = extractImageUrl(data);
 
       // If response is async task, poll for completion
       if (!cdnUrl && currentTaskId) {
         const pollResult = await pollHiggsfieldTask(
           currentTaskId,
           apiKey,
-          45000,
+          Math.max(timeoutMs, 120000),
           data?.status_url || data?.statusUrl
         );
         if (!pollResult.success || !pollResult.imageUrl) {

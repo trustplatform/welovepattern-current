@@ -12,15 +12,16 @@
  */
 
 import fs from 'fs';
-import { DiscoveredTopic, SeoEngineArticleJob, SeoEngineConfig, SeoEngineJobStage } from '../types';
+import { DiscoveredTopic, SeoEngineArticleJob, SeoEngineConfig, SeoEngineJobStage, ArticleContentType } from '../types';
 import { readEngineState, writeEngineState, addJobToState, updateJobInState, getJobById } from './engineStorage';
 import { conductTopicResearch } from '../research/topicResearcher';
 import { validateFactualResearchPacket } from '../research/factualPacketValidator';
 import { generateOpenAiArticle, GeneratedArticle } from '../generation/openAiArticleGenerator';
-import { generatePinterestCreativeConcepts, resolveRealPinterestBoard } from '../generation/pinterestCreativeDirector';
+import { generatePinterestCreativeConcepts, resolveRealPinterestBoard, buildHiggsfieldHeroPrompt, validateToolCtaSemanticMatch } from '../generation/pinterestCreativeDirector';
 import { evaluateProductionQualityGates } from '../validation/productionQualityGates';
 import { getJobCostBreakdown, isBudgetPermitted, releaseBudgetReservation } from '../cost/costTracker';
 import { generateHiggsfieldImage, isHiggsfieldConfigured } from '../generation/higgsfieldClient';
+import { discoverDailyTwoSlotTopics } from '../discovery/topicDiscovery';
 
 let isProcessingQueue = false;
 
@@ -58,11 +59,19 @@ export function queueJobForTopic(topic: DiscoveredTopic, config: SeoEngineConfig
   const state = readEngineState();
   const todayStr = new Date().toISOString().split('T')[0];
   const jobId = `job_${todayStr}_${Math.random().toString(36).substring(2, 8)}`;
+  const contentType: ArticleContentType = topic.contentType || (topic.category === 'tools' ? 'tool_guide' : 'trending_crochet');
+  const category: 'crochet' | 'tools' = topic.category || (contentType === 'tool_guide' ? 'tools' : 'crochet');
 
   const newJob: SeoEngineArticleJob = {
     id: jobId,
     dateScheduled: todayStr,
-    topic,
+    contentType,
+    category,
+    topic: {
+      ...topic,
+      contentType,
+      category,
+    },
     pinterestPins: [],
     stage: 'selected',
     requiresApproval: config.requiresApproval,
@@ -73,13 +82,44 @@ export function queueJobForTopic(topic: DiscoveredTopic, config: SeoEngineConfig
       {
         timestamp: new Date().toISOString(),
         level: 'info',
-        message: `Job created for topic "${topic.keyword}" with opportunity score ${topic.opportunityScore}.`,
+        message: `Job created for ${contentType.toUpperCase()} (Category: ${category.toUpperCase()}): "${topic.keyword}" with opportunity score ${topic.opportunityScore}.`,
       }
     ],
   };
 
   addJobToState(newJob);
   return newJob;
+}
+
+/**
+ * Creates and queues the strict daily 2-slot production batch:
+ * Slot 1: 1 x Trending Crochet article (Category: 'crochet', Type: 'trending_crochet')
+ * Slot 2: 1 x Tool Guide article (Category: 'tools', Type: 'tool_guide')
+ */
+export async function createDailyProductionBatch(
+  options?: { useRealDataForSeo?: boolean }
+): Promise<[SeoEngineArticleJob, SeoEngineArticleJob]> {
+  const state = readEngineState();
+  const config = state.config;
+
+  // 1. Discover the two topics
+  const [topicSlot1, topicSlot2] = await discoverDailyTwoSlotTopics({
+    useRealDataForSeo: options?.useRealDataForSeo
+  });
+
+  // Strict validation
+  if (topicSlot1.contentType !== 'trending_crochet' || topicSlot1.category !== 'crochet') {
+    throw new Error(`Slot 1 topic invalid: Expected contentType 'trending_crochet' and category 'crochet', got '${topicSlot1.contentType}' / '${topicSlot1.category}'.`);
+  }
+  if (topicSlot2.contentType !== 'tool_guide' || topicSlot2.category !== 'tools' || !topicSlot2.toolSlug) {
+    throw new Error(`Slot 2 topic invalid: Expected contentType 'tool_guide', category 'tools', and real toolSlug, got '${topicSlot2.contentType}' / '${topicSlot2.category}' / '${topicSlot2.toolSlug}'.`);
+  }
+
+  // 2. Queue both jobs atomically
+  const job1 = queueJobForTopic(topicSlot1, config);
+  const job2 = queueJobForTopic(topicSlot2, config);
+
+  return [job1, job2];
 }
 
 export interface JobLifecycleOptions {
@@ -200,7 +240,8 @@ export async function executeJobLifecycle(
       excerpt: existingArticle.excerpt || '',
       contentHtml: existingArticle.contentHtml,
       wordCount: existingArticle.wordCount,
-      category: existingArticle.category || 'Guides',
+      category: existingArticle.category || job.category,
+      contentType: existingArticle.contentType || job.contentType,
       tags: existingArticle.tags || [],
       seoMeta: existingArticle.seoMeta || {
         title: existingArticle.title,
@@ -332,8 +373,28 @@ export async function executeJobLifecycle(
     });
   }
 
-  // 3. Generate exactly 2 unique Pinterest creative concepts (reuse if already present from interrupted run)
-  let pins = (job.pinterestPins && job.pinterestPins.length === 2)
+  // 3. Generate exactly 2 unique Pinterest creative concepts
+  // Regenerate if pins are not present, not yet rendered as valid files, or fail semantic tool validation
+  const hasValidRenderedPins = job.pinterestPins &&
+    job.pinterestPins.length === 2 &&
+    job.pinterestPins.every(p =>
+      p.publishStatus === 'image_ready' &&
+      p.stableAssetPath &&
+      fs.existsSync(p.stableAssetPath) &&
+      fs.statSync(p.stableAssetPath).size > 100
+    );
+
+  const hasSemanticCtaMismatch = Boolean(
+    job.pinterestPins && job.pinterestPins.some(p => {
+      if (job.contentType === 'tool_guide' || job.topic.toolSlug) {
+        const val = validateToolCtaSemanticMatch(p.typographyOverlay.ctaBadgeText, job.topic.toolSlug, job.topic.keyword);
+        return !val.valid;
+      }
+      return false;
+    })
+  );
+
+  let pins = (hasValidRenderedPins && !hasSemanticCtaMismatch && job.pinterestPins)
     ? job.pinterestPins
     : generatePinterestCreativeConcepts(
         job.topic,
@@ -356,7 +417,7 @@ export async function executeJobLifecycle(
 
   // --- ASSET 1: HERO IMAGE (16:9, 1k, Marketing Studio Image 2.0 Alpha) ---
   const heroPrompt = job.articleContent?.heroImage?.prompt ||
-    `Artisan editorial craft photography for "${article.title}", beautiful ${job.topic.keyword} textures, natural skeins of yarn, wooden crafting tools, soft warm window daylight, cozy aesthetic maker space, high resolution, authentic photography.`;
+    buildHiggsfieldHeroPrompt(job.topic, article, packet);
 
   let currentHeroImage = job.articleContent?.heroImage;
   const isHeroAlreadyValid = Boolean(
@@ -705,7 +766,8 @@ export async function executeJobLifecycle(
       excerpt: article.excerpt,
       contentHtml: article.contentHtml,
       wordCount: article.wordCount,
-      category: article.category,
+      category: article.category || j.category,
+      contentType: article.contentType || j.contentType,
       tags: article.tags,
       seoMeta: article.seoMeta,
       heroImage: currentHeroImage,
@@ -716,7 +778,7 @@ export async function executeJobLifecycle(
     j.logs.push({
       timestamp: new Date().toISOString(),
       level: 'info',
-      message: `Article passed all 9 quality gates (${article.wordCount} words). Saved safely as draft awaiting human approval.`,
+      message: `Article passed all 9 quality gates (${article.wordCount} words, Category: ${j.category.toUpperCase()}, Type: ${j.contentType}). Saved safely as draft awaiting human approval.`,
     });
     return j;
   });

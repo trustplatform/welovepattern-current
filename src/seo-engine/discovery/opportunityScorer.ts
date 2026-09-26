@@ -1,20 +1,45 @@
 /**
  * SEO Content Engine - Transparent 100-Point Opportunity Scorer
  * 
- * Evaluates discovered topics across 5 distinct dimensions:
- * 1. Fiber Craft Relevance (0–30 pts) [Hard Gate: non-crochet filtered immediately]
- * 2. Ecosystem / Tool Fit (0–25 pts)
- * 3. Search Momentum / Volume Signal (0–20 pts)
- * 4. Actionability & Maker Search Intent (0–15 pts)
- * 5. Seasonality & Freshness (0–10 pts)
+ * Evaluates discovered topics across explicit content slots:
  * 
- * Enforces 60-day duplicate prevention against completed and active jobs.
+ * 1. TRENDING_CROCHET (Slot 1):
+ *    - Strict disqualification of all tool/calculator words.
+ *    - Scores project interest, seasonal alignment, tutorial/pattern search intent, and crochet fit.
+ *    - Category: 'crochet', Format: 'tutorial' | 'guide' | 'pattern_roundup' | 'explainer_comparison'.
+ * 
+ * 2. TOOL_GUIDE (Slot 2):
+ *    - Strictly mapped to real WeLovePattern interactive tools in `src/data/toolsData.ts`.
+ *    - Scores problem clarity, calculator/estimator utility, search intent, and tool routing.
+ *    - Category: 'tools', Format: 'tool_focus', targetToolUrl: '/tools/[slug]'.
  */
 
-import { DiscoveredTopic, ContentFormat, SeoEngineDailyState } from '../types';
-import { GscSeedKeyword } from '../types';
+import { DiscoveredTopic, ContentFormat, ArticleContentType, GscSeedKeyword } from '../types';
+import { findGscSeedByKeyword, TOOL_SEEDS_CATALOG } from './gscSeedCatalog';
 import { getVerifiedInternalLinkCatalog } from '../generation/internalLinkCatalog';
-import { CONTENT_ENGINE_LIMITS } from '../config';
+import { TOOLS_DATA } from '../../data/toolsData';
+
+/** Compatibility alias for opportunity scorer */
+export function scoreTopicOpportunity(
+  keyword: string,
+  options?: {
+    searchTrendSignal?: number;
+    trendDirection?: 'rising' | 'stable' | 'breakout';
+    gscSeedMatch?: GscSeedKeyword;
+  }
+): ScoredTopicBreakdown {
+  if (isToolKeyword(keyword)) {
+    const matchingTool = TOOLS_DATA.find(t => keyword.toLowerCase().includes(t.slug) || keyword.toLowerCase().includes(t.title.toLowerCase())) || TOOLS_DATA[0];
+    return scoreToolGuideTopic(matchingTool.slug, keyword, options);
+  }
+  return scoreTrendingCrochetTopic(keyword, options);
+}
+
+/** Checks if a topic was covered in recent history */
+export function isDuplicateTopic(keyword: string, recentKeywords: string[]): boolean {
+  const norm = keyword.trim().toLowerCase();
+  return recentKeywords.some(k => k.trim().toLowerCase() === norm);
+}
 
 /** Irrelevant terms that disqualify a topic from production immediately */
 const DISQUALIFYING_PATTERNS = [
@@ -29,15 +54,39 @@ const DISQUALIFYING_PATTERNS = [
   /software/i
 ];
 
+/** Tool indicator words - STRICTLY FORBIDDEN in Trending Crochet Slot 1 */
+export const TOOL_DISQUALIFYING_KEYWORDS = [
+  'calculator',
+  'estimator',
+  'converter',
+  'generator',
+  'tool',
+  'counter',
+  'dictionary',
+  'organizer',
+  'timer',
+  'pricing chart',
+  'price calculator',
+  'cost calculator',
+  'gauge calculator',
+  'yarn calculator',
+  'blanket calculator',
+  'how much yarn'
+];
+
 /** Core positive fiber craft keywords */
 const FIBER_CRAFT_INDICATORS = [
   'crochet', 'yarn', 'stitch', 'stitches', 'hook', 'amigurumi', 'granny square',
   'skein', 'yardage', 'gauge', 'swatch', 'blanket', 'afghan', 'tapestry',
   'single crochet', 'double crochet', 'half double', 'slip stitch', 'magic ring',
-  'chain stitch', 'wip', 'tension', 'worsted', 'chunky yarn', 'acrylic yarn'
+  'chain stitch', 'wip', 'tension', 'worsted', 'chunky yarn', 'acrylic yarn',
+  'pumpkin', 'ghost', 'halloween', 'autumn', 'fall', 'christmas', 'beanie', 'hat',
+  'tote', 'bag', 'cardigan', 'sweater', 'leaf', 'flower', 'motif'
 ];
 
 export interface ScoredTopicBreakdown {
+  contentType: ArticleContentType;
+  category: 'crochet' | 'tools';
   relevanceScore: number;                     // 0-30
   siteFitScore: number;                       // 0-25
   momentumScore: number;                      // 0-20
@@ -47,9 +96,15 @@ export interface ScoredTopicBreakdown {
   isFilteredOut: boolean;
   filterReason?: string;
   targetFormat: ContentFormat;
+  toolSlug?: string;
   targetToolUrl?: string;
   targetCategoryUrl?: string;
   targetPatternUrls?: string[];
+  freshTrendScore?: number;
+  recentTrendScore?: number;
+  historicalTrendScore?: number;
+  combinedTrendScore?: number;
+  trendDirection?: 'rising' | 'stable' | 'breakout';
 }
 
 /**
@@ -61,46 +116,60 @@ function calculateSeasonalityScore(keyword: string): number {
 
   // Autumn / Winter season (September - February)
   if (currentMonth >= 9 || currentMonth <= 2) {
-    if (/blanket|afghan|sweater|cardigan|beanie|hat|scarf|chunky|velvet|cozy|winter|christmas|halloween/i.test(lower)) {
+    if (/halloween|pumpkin|ghost|fall|autumn|christmas|winter|holiday|beanie|hat|scarf|blanket|afghan|cozy/i.test(lower)) {
       return 10;
     }
-    if (/flower|top|tank|summer|market bag/i.test(lower)) {
-      return 4; // Off-peak
+    if (/flower|tank|summer|beach|market bag/i.test(lower)) {
+      return 4;
     }
-    return 7;
+    return 8;
   }
 
   // Spring / Summer season (March - August)
   if (currentMonth >= 3 && currentMonth <= 8) {
-    if (/flower|floral|cotton|market bag|tote|crop top|tank|summer|spring|baby/i.test(lower)) {
+    if (/flower|floral|spring|summer|cotton|market bag|tote|crop top|tank|baby/i.test(lower)) {
       return 10;
     }
-    if (/chunky blanket|wool sweater|heavy winter/i.test(lower)) {
+    if (/chunky blanket|wool sweater|heavy winter|snow/i.test(lower)) {
       return 3;
     }
-    return 7;
+    return 8;
   }
 
-  return 6;
+  return 7;
 }
 
 /**
- * Scores a raw keyword topic against the WeLovePattern ecosystem.
+ * Checks if a keyword string contains any tool/calculator terms.
  */
-export function scoreTopicOpportunity(
+export function isToolKeyword(keyword: string): boolean {
+  const lower = keyword.toLowerCase();
+  return TOOL_DISQUALIFYING_KEYWORDS.some(kw => lower.includes(kw));
+}
+
+/**
+ * Scores a candidate topic explicitly for SLOT 1: TRENDING CROCHET.
+ * Disqualifies any keyword containing tool/calculator words.
+ */
+export function scoreTrendingCrochetTopic(
   keyword: string,
   options?: {
-    searchTrendSignal?: number;               // 0-100 from DataForSEO
+    searchTrendSignal?: number;
     trendDirection?: 'rising' | 'stable' | 'breakout';
-    gscSeedMatch?: GscSeedKeyword;
+    freshTrendScore?: number;
+    recentTrendScore?: number;
+    historicalTrendScore?: number;
+    combinedTrendScore?: number;
   }
 ): ScoredTopicBreakdown {
   const normalized = keyword.trim().toLowerCase();
 
-  // 1. Hard Filter Check
+  // 1. General Disqualification
   for (const pattern of DISQUALIFYING_PATTERNS) {
     if (pattern.test(normalized)) {
       return {
+        contentType: 'trending_crochet',
+        category: 'crochet',
         relevanceScore: 0,
         siteFitScore: 0,
         momentumScore: 0,
@@ -114,17 +183,11 @@ export function scoreTopicOpportunity(
     }
   }
 
-  // 2. Fiber Craft Relevance (0-30 pts)
-  let relevanceScore = 0;
-  let matchesCount = 0;
-  for (const indicator of FIBER_CRAFT_INDICATORS) {
-    if (normalized.includes(indicator)) {
-      matchesCount++;
-    }
-  }
-
-  if (matchesCount === 0 && !options?.gscSeedMatch) {
+  // 2. Strict Slot 1 Tool Disqualification
+  if (isToolKeyword(normalized)) {
     return {
+      contentType: 'trending_crochet',
+      category: 'crochet',
       relevanceScore: 0,
       siteFitScore: 0,
       momentumScore: 0,
@@ -132,48 +195,52 @@ export function scoreTopicOpportunity(
       seasonalityScore: 0,
       totalOpportunityScore: 0,
       isFilteredOut: true,
-      filterReason: 'No fiber craft terminology detected',
+      filterReason: `Disqualified from Slot 1: Contains tool/calculator term. Tools are reserved for Slot 2.`,
       targetFormat: 'guide'
     };
   }
 
-  relevanceScore = Math.min(30, 15 + matchesCount * 5);
-  if (options?.gscSeedMatch) relevanceScore = 30;
-
-  // 3. Ecosystem / Tool Fit (0-25 pts)
-  const catalog = getVerifiedInternalLinkCatalog();
-  let siteFitScore = 10; // Base score for relevant craft
-  let targetToolUrl: string | undefined;
-  let targetCategoryUrl: string | undefined;
-  const targetPatternUrls: string[] = [];
-
-  // Check matching tools
-  const tools = catalog.filter(c => c.entityType === 'tool');
-  for (const tool of tools) {
-    if (tool.keywords.some(k => normalized.includes(k) || k.includes(normalized))) {
-      siteFitScore = 25; // Perfect tool fit
-      targetToolUrl = tool.url;
-      break;
+  // 3. Fiber Craft Relevance (0-30 pts)
+  let matchesCount = 0;
+  for (const indicator of FIBER_CRAFT_INDICATORS) {
+    if (normalized.includes(indicator)) {
+      matchesCount++;
     }
   }
 
-  // If GSC seed match specified a tool
-  if (options?.gscSeedMatch?.targetToolSlug) {
-    siteFitScore = 25;
-    targetToolUrl = `/tools/${options.gscSeedMatch.targetToolSlug}`;
+  if (matchesCount === 0) {
+    return {
+      contentType: 'trending_crochet',
+      category: 'crochet',
+      relevanceScore: 0,
+      siteFitScore: 0,
+      momentumScore: 0,
+      actionabilityScore: 0,
+      seasonalityScore: 0,
+      totalOpportunityScore: 0,
+      isFilteredOut: true,
+      filterReason: 'No fiber craft or project terminology detected',
+      targetFormat: 'guide'
+    };
   }
 
-  // Check matching categories
+  const relevanceScore = Math.min(30, 18 + matchesCount * 4);
+
+  // 4. Ecosystem & Category Fit (0-25 pts)
+  const catalog = getVerifiedInternalLinkCatalog();
+  let siteFitScore = 15;
+  let targetCategoryUrl = '/categories/tutorials';
+  const targetPatternUrls: string[] = [];
+
   const categories = catalog.filter(c => c.entityType === 'category');
   for (const cat of categories) {
     if (cat.keywords.some(k => normalized.includes(k))) {
-      if (siteFitScore < 20) siteFitScore = 20;
+      siteFitScore = 25;
       targetCategoryUrl = cat.url;
       break;
     }
   }
 
-  // Find 1-2 complementary patterns
   const patterns = catalog.filter(c => c.entityType === 'pattern');
   for (const pat of patterns) {
     if (targetPatternUrls.length >= 2) break;
@@ -182,50 +249,74 @@ export function scoreTopicOpportunity(
     }
   }
 
-  // 4. Search Momentum / Volume Signal (0-20 pts)
-  let momentumScore = 12;
-  if (options?.searchTrendSignal !== undefined) {
-    // Scale 0-100 to 0-20
-    momentumScore = Math.round((options.searchTrendSignal / 100) * 20);
-    if (options.trendDirection === 'breakout') {
-      momentumScore = Math.min(20, momentumScore + 4);
-    } else if (options.trendDirection === 'rising') {
-      momentumScore = Math.min(20, momentumScore + 2);
+  // 5. Multi-Window Trend Calculation (0-20 pts)
+  // Calculate combinedTrendScore = 40% 7-day (fresh) + 35% 30-day (recent) + 25% 90-day (historical)
+  let freshScore = options?.freshTrendScore;
+  let recentScore = options?.recentTrendScore;
+  let historicalScore = options?.historicalTrendScore ?? options?.searchTrendSignal;
+
+  let combinedTrend = options?.combinedTrendScore;
+  if (combinedTrend === undefined) {
+    if (freshScore !== undefined && recentScore !== undefined && historicalScore !== undefined) {
+      combinedTrend = Math.round(freshScore * 0.40 + recentScore * 0.35 + historicalScore * 0.25);
+    } else if (historicalScore !== undefined) {
+      combinedTrend = historicalScore;
+    } else {
+      combinedTrend = 0;
     }
-  } else if (options?.gscSeedMatch) {
-    momentumScore = options.gscSeedMatch.priority === 'very_high' ? 20 : 16;
+  }
+  combinedTrend = Math.min(100, Math.max(0, combinedTrend));
+
+  // Determine trend direction strictly using recent/fresh signals (Never classify rising/breakout solely on high 90-day baseline)
+  let derivedDirection: 'rising' | 'stable' | 'breakout' = options?.trendDirection || 'stable';
+  if (freshScore !== undefined && recentScore !== undefined && historicalScore !== undefined) {
+    if (freshScore > 75 && freshScore > historicalScore * 1.5) {
+      derivedDirection = 'breakout';
+    } else if (freshScore > 35 && (freshScore > historicalScore * 1.25 || recentScore > historicalScore * 1.2)) {
+      derivedDirection = 'rising';
+    } else {
+      derivedDirection = 'stable';
+    }
   }
 
-  // 5. Actionability & Maker Intent (0-15 pts)
-  let actionabilityScore = 8;
-  if (/calculator|converter|chart|formula|how much|size|dimensions/i.test(normalized)) {
+  let momentumScore = 14;
+  if (options?.combinedTrendScore !== undefined || options?.searchTrendSignal !== undefined || options?.freshTrendScore !== undefined) {
+    momentumScore = Math.round((combinedTrend / 100) * 20);
+    if (derivedDirection === 'breakout') {
+      momentumScore = Math.min(20, momentumScore + 4);
+    } else if (derivedDirection === 'rising') {
+      momentumScore = Math.min(20, momentumScore + 2);
+    }
+  }
+
+  // 6. Actionability / Craft Project Intent (0-15 pts)
+  let actionabilityScore = 12;
+  if (/tutorial|step by step|how to|instructions/i.test(normalized)) {
     actionabilityScore = 15;
-  } else if (/tutorial|how to|guide|step by step|beginner|instructions/i.test(normalized)) {
+  } else if (/pattern|patterns|free pattern|ideas|project/i.test(normalized)) {
     actionabilityScore = 14;
-  } else if (/pattern|patterns|free pattern|roundup|ideas/i.test(normalized)) {
-    actionabilityScore = 12;
-  } else if (/vs|difference|compare/i.test(normalized)) {
+  } else if (/technique|stitch|stitches|guide/i.test(normalized)) {
     actionabilityScore = 13;
   }
 
-  // 6. Seasonality & Freshness (0-10 pts)
+  // 7. Seasonality (0-10 pts)
   const seasonalityScore = calculateSeasonalityScore(normalized);
 
   const totalOpportunityScore = relevanceScore + siteFitScore + momentumScore + actionabilityScore + seasonalityScore;
 
-  // Determine Target Content Format
+  // Format Determination
   let targetFormat: ContentFormat = 'guide';
-  if (targetToolUrl || /calculator|converter|pricing chart/i.test(normalized)) {
-    targetFormat = 'tool_focus';
-  } else if (/vs|difference|conversion/i.test(normalized)) {
-    targetFormat = 'explainer_comparison';
-  } else if (/tutorial|how to|step by step/i.test(normalized)) {
+  if (/tutorial|how to|step by step/i.test(normalized)) {
     targetFormat = 'tutorial';
-  } else if (/patterns|roundup|best|ideas/i.test(normalized)) {
+  } else if (/pattern|patterns|roundup|best|ideas/i.test(normalized)) {
     targetFormat = 'pattern_roundup';
+  } else if (/vs|difference|compare/i.test(normalized)) {
+    targetFormat = 'explainer_comparison';
   }
 
   return {
+    contentType: 'trending_crochet',
+    category: 'crochet',
     relevanceScore,
     siteFitScore,
     momentumScore,
@@ -234,127 +325,145 @@ export function scoreTopicOpportunity(
     totalOpportunityScore: Math.min(100, Math.max(0, totalOpportunityScore)),
     isFilteredOut: false,
     targetFormat,
-    targetToolUrl,
     targetCategoryUrl,
-    targetPatternUrls: targetPatternUrls.length > 0 ? targetPatternUrls : undefined
+    targetPatternUrls: targetPatternUrls.length > 0 ? targetPatternUrls : undefined,
+    freshTrendScore: freshScore,
+    recentTrendScore: recentScore,
+    historicalTrendScore: historicalScore,
+    combinedTrendScore: combinedTrend,
+    trendDirection: derivedDirection
   };
 }
 
 /**
- * Convenience helper that evaluates a keyword and returns a fully-formed DiscoveredTopic.
+ * Scores a candidate topic explicitly for SLOT 2: TOOL GUIDE.
+ * Strictly verifies and binds to a real tool from `TOOLS_DATA`.
+ */
+export function scoreToolGuideTopic(
+  toolSlug: string,
+  customKeyword?: string,
+  options?: {
+    searchTrendSignal?: number;
+    trendDirection?: 'rising' | 'stable' | 'breakout';
+  }
+): ScoredTopicBreakdown {
+  const realTool = TOOLS_DATA.find(t => t.slug === toolSlug);
+  if (!realTool) {
+    return {
+      contentType: 'tool_guide',
+      category: 'tools',
+      relevanceScore: 0,
+      siteFitScore: 0,
+      momentumScore: 0,
+      actionabilityScore: 0,
+      seasonalityScore: 0,
+      totalOpportunityScore: 0,
+      isFilteredOut: true,
+      filterReason: `Tool slug "${toolSlug}" does not exist in WeLovePattern TOOLS_DATA catalog`,
+      targetFormat: 'tool_focus'
+    };
+  }
+
+  const toolMapping = TOOL_SEEDS_CATALOG.find(t => t.toolSlug === toolSlug);
+  const keyword = customKeyword || toolMapping?.primaryKeyword || `${realTool.title.toLowerCase()} crochet tool`;
+
+  const relevanceScore = 30; // 100% verified real tool
+  const siteFitScore = 25;    // Exact match to real site tool
+  
+  let momentumScore = 16;
+  if (options?.searchTrendSignal !== undefined) {
+    momentumScore = Math.round((options.searchTrendSignal / 100) * 20);
+    if (options.trendDirection === 'breakout') momentumScore = Math.min(20, momentumScore + 4);
+  } else if (realTool.isPopular) {
+    momentumScore = 19;
+  }
+
+  const actionabilityScore = 15; // Direct problem-solving utility
+  const seasonalityScore = 8;    // Tools have evergreen baseline utility with high seasonal spikes
+
+  const totalOpportunityScore = relevanceScore + siteFitScore + momentumScore + actionabilityScore + seasonalityScore;
+
+  return {
+    contentType: 'tool_guide',
+    category: 'tools',
+    relevanceScore,
+    siteFitScore,
+    momentumScore,
+    actionabilityScore,
+    seasonalityScore,
+    totalOpportunityScore: Math.min(100, Math.max(0, totalOpportunityScore)),
+    isFilteredOut: false,
+    targetFormat: 'tool_focus',
+    toolSlug: realTool.slug,
+    targetToolUrl: `/tools/${realTool.slug}`,
+    targetCategoryUrl: '/categories/tools'
+  };
+}
+
+/**
+ * Legacy compatibility scorer that routes cleanly to Slot 1 or Slot 2 based on keyword intent.
  */
 export function scoreDiscoveredTopic(
   keyword: string,
   trendItem?: { trendScore?: number; trendDirection?: 'rising' | 'stable' | 'breakout' }
 ): DiscoveredTopic {
-  const breakdown = scoreTopicOpportunity(keyword, {
-    searchTrendSignal: trendItem?.trendScore,
-    trendDirection: trendItem?.trendDirection
-  });
-
-  return {
-    id: `topic_${Date.now()}_${Math.random().toString(36).substring(2, 7)}`,
-    keyword: keyword.trim(),
-    trendScore: trendItem?.trendScore ?? 0,
-    trendDirection: trendItem?.trendDirection ?? 'stable',
-    opportunityScore: breakdown.totalOpportunityScore,
-    targetContentFormat: breakdown.targetFormat,
-    targetToolUrl: breakdown.targetToolUrl,
-    targetCategoryUrl: breakdown.targetCategoryUrl,
-    targetPatternUrls: breakdown.targetPatternUrls,
-    targetAudienceLevel: /beginner|easy/i.test(keyword) ? 'beginner' : 'all_levels',
-    searchIntentNotes: breakdown.isFilteredOut
-      ? (breakdown.filterReason || 'Filtered out')
-      : `Scored: ${breakdown.totalOpportunityScore}/100. Format: ${breakdown.targetFormat}`,
-    discoveredAt: new Date().toISOString(),
-    status: breakdown.isFilteredOut ? 'filtered_out' : 'discovered'
-  };
-}
-
-/**
- * Computes token overlap between two keyword strings.
- */
-function computeKeywordIntentOverlap(kwA: string, kwB: string): number {
-  const stopWords = new Set(['how', 'much', 'many', 'to', 'for', 'the', 'a', 'an', 'in', 'of', 'and', 'with', 'your']);
-  const tokensA = new Set(kwA.toLowerCase().split(/[\s_-]+/).filter(t => t.length > 2 && !stopWords.has(t)));
-  const tokensB = new Set(kwB.toLowerCase().split(/[\s_-]+/).filter(t => t.length > 2 && !stopWords.has(t)));
-
-  if (tokensA.size === 0 || tokensB.size === 0) return 0;
-  let intersection = 0;
-  for (const t of tokensA) {
-    if (tokensB.has(t)) intersection++;
-  }
-  const union = new Set([...tokensA, ...tokensB]).size;
-  return union > 0 ? intersection / union : 0;
-}
-
-/**
- * Checks whether a topic was already published or queued within the duplicate lookback window,
- * or duplicates search intent of an existing published article.
- */
-export function isDuplicateTopic(
-  keyword: string,
-  state: SeoEngineDailyState,
-  lookbackDays: number = CONTENT_ENGINE_LIMITS.DUPLICATE_CHECK_LOOKBACK_DAYS
-): boolean {
   const normalized = keyword.trim().toLowerCase();
-  const cutoffTime = Date.now() - lookbackDays * 24 * 60 * 60 * 1000;
+  const id = `topic_${Buffer.from(normalized).toString('hex').slice(0, 16)}`;
 
-  // 1. Check active jobs (exact or semantic intent overlap >= 75%)
-  for (const job of state.activeJobs) {
-    const jobKw = job.topic.keyword.trim().toLowerCase();
-    if (jobKw === normalized) return true;
-    if (computeKeywordIntentOverlap(jobKw, normalized) >= 0.75) return true;
+  if (isToolKeyword(normalized)) {
+    // Find matching tool
+    const matchingSeed = TOOL_SEEDS_CATALOG.find(t => 
+      normalized.includes(t.toolSlug) ||
+      normalized.includes(t.primaryKeyword) ||
+      t.secondaryKeywords.some(sk => normalized.includes(sk))
+    );
+    const matchingTool = (matchingSeed ? TOOLS_DATA.find(t => t.slug === matchingSeed.toolSlug) : undefined) ||
+      TOOLS_DATA.find(t => normalized.includes(t.slug) || normalized.includes(t.title.toLowerCase())) ||
+      TOOLS_DATA[0];
+
+    const breakdown = scoreToolGuideTopic(matchingTool.slug, normalized, {
+      searchTrendSignal: trendItem?.trendScore,
+      trendDirection: trendItem?.trendDirection
+    });
+
+    return {
+      id,
+      keyword: normalized,
+      contentType: 'tool_guide',
+      category: 'tools',
+      source: trendItem ? 'dataforseo_trends' : 'internal_catalog',
+      trendScore: trendItem?.trendScore !== undefined ? trendItem.trendScore : 0,
+      trendDirection: trendItem?.trendDirection || 'stable',
+      opportunityScore: breakdown.totalOpportunityScore,
+      targetContentFormat: 'tool_focus',
+      toolSlug: breakdown.toolSlug,
+      targetToolUrl: breakdown.targetToolUrl,
+      targetCategoryUrl: breakdown.targetCategoryUrl,
+      discoveredAt: new Date().toISOString(),
+      status: breakdown.isFilteredOut ? 'filtered_out' : 'discovered',
+      statusReason: breakdown.filterReason,
+    };
+  } else {
+    const breakdown = scoreTrendingCrochetTopic(normalized, {
+      searchTrendSignal: trendItem?.trendScore,
+      trendDirection: trendItem?.trendDirection
+    });
+
+    return {
+      id,
+      keyword: normalized,
+      contentType: 'trending_crochet',
+      category: 'crochet',
+      source: trendItem ? 'dataforseo_trends' : 'gsc_seed',
+      trendScore: trendItem?.trendScore !== undefined ? trendItem.trendScore : 0,
+      trendDirection: trendItem?.trendDirection || 'stable',
+      opportunityScore: breakdown.totalOpportunityScore,
+      targetContentFormat: breakdown.targetFormat,
+      targetCategoryUrl: breakdown.targetCategoryUrl,
+      targetPatternUrls: breakdown.targetPatternUrls,
+      discoveredAt: new Date().toISOString(),
+      status: breakdown.isFilteredOut ? 'filtered_out' : 'discovered',
+      statusReason: breakdown.filterReason,
+    };
   }
-
-  // 2. Check completed historical jobs
-  for (const history of state.completedJobsHistory) {
-    const jobTime = new Date(history.date).getTime();
-    const histKw = history.keyword.trim().toLowerCase();
-    if (histKw === normalized) return true;
-    if (jobTime >= cutoffTime && computeKeywordIntentOverlap(histKw, normalized) >= 0.75) {
-      return true;
-    }
-  }
-
-  // 3. Check published catalog to prevent cannibalization
-  const catalog = getVerifiedInternalLinkCatalog();
-  const blogItems = catalog.filter(c => c.entityType === 'blog');
-  for (const item of blogItems) {
-    if (computeKeywordIntentOverlap(item.title.toLowerCase(), normalized) >= 0.8) {
-      return true;
-    }
-  }
-
-  return false;
-}
-
-/**
- * Selects the top N topics from a candidate pool that meet the minimum opportunity score
- * and are not duplicates.
- */
-export function selectBestTopics(
-  candidates: DiscoveredTopic[],
-  state: SeoEngineDailyState,
-  limitCount: number = 4,
-  minScore: number = 65
-): DiscoveredTopic[] {
-  // Filter eligible topics
-  const eligible = candidates.filter(topic => {
-    if (topic.opportunityScore < minScore) return false;
-    if (topic.status === 'filtered_out') return false;
-    if (isDuplicateTopic(topic.keyword, state)) return false;
-    return true;
-  });
-
-  // Sort descending by opportunity score
-  eligible.sort((a, b) => b.opportunityScore - a.opportunityScore);
-
-  const selected = eligible.slice(0, limitCount);
-
-  for (const item of selected) {
-    item.status = 'selected';
-  }
-
-  return selected;
 }

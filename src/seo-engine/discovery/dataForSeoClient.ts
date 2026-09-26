@@ -47,6 +47,17 @@ function getAuthHeader(): string | null {
   return `Basic ${Buffer.from(credentials).toString('base64')}`;
 }
 
+/** Target English-speaking location codes supported by DataForSEO */
+export const TARGET_MARKET_LOCATIONS: Record<string, { code: number; name: string; countryCode: string }> = {
+  US: { code: 2840, name: 'United States', countryCode: 'US' },
+  UK: { code: 2826, name: 'United Kingdom', countryCode: 'GB' },
+  CA: { code: 2124, name: 'Canada', countryCode: 'CA' },
+  AU: { code: 2036, name: 'Australia', countryCode: 'AU' },
+  NZ: { code: 2554, name: 'New Zealand', countryCode: 'NZ' },
+};
+
+export type GoogleTrendsTimeRange = 'past_7_days' | 'past_30_days' | 'past_90_days';
+
 /**
  * Submits an asynchronous Google Trends Explore task to DataForSEO.
  * Returns the task ID to be polled later.
@@ -54,8 +65,9 @@ function getAuthHeader(): string | null {
 export async function createGoogleTrendsTask(
   keywords: string[],
   options?: {
-    locationCode?: number;                    // e.g. 2840 for US
+    locationCode?: number;                    // e.g. 2840 for US, 2826 for UK, 2124 for CA, 2036 for AU, 2554 for NZ
     languageCode?: string;                    // e.g. "en"
+    timeRange?: GoogleTrendsTimeRange;        // 'past_7_days' | 'past_30_days' | 'past_90_days'
   }
 ): Promise<{ taskId: string } | null> {
   const authHeader = getAuthHeader();
@@ -67,13 +79,14 @@ export async function createGoogleTrendsTask(
   const batch = keywords.slice(0, 5);
   const locationCode = options?.locationCode ?? 2840; // Default US
   const languageCode = options?.languageCode ?? 'en';
+  const timeRange = options?.timeRange ?? 'past_90_days';
 
   const taskItem: Record<string, any> = {
     keywords: batch,
     location_code: locationCode,
     language_code: languageCode,
     type: 'web',
-    time_range: 'past_90_days', // Past 90 days for reliable trend momentum
+    time_range: timeRange,
   };
 
   if (batch.length === 1) {

@@ -160,12 +160,17 @@ export async function conductTopicResearch(
   topic: DiscoveredTopic
 ): Promise<FactualResearchPacket> {
   // 1. Gather all verified internal links relevant to this topic
+  const isToolGuide = topic.contentType === 'tool_guide' || Boolean(topic.toolSlug);
+  const priorityTypes: Array<'tool' | 'pattern' | 'category' | 'blog'> = isToolGuide
+    ? ['tool', 'category', 'blog', 'pattern']
+    : ['category', 'pattern', 'blog', 'tool'];
+
   const verifiedLinks = findRelevantInternalLinks(
     `${topic.keyword} ${topic.targetToolUrl || ''} ${topic.targetCategoryUrl || ''}`,
-    { maxLinks: 6 }
+    { maxLinks: 6, priorityEntityTypes: priorityTypes }
   );
 
-  // If topic has a specific tool URL, make sure it is included
+  // If topic has a specific tool URL, make sure it is prominently included at the top
   if (topic.targetToolUrl) {
     const catalog = getVerifiedInternalLinkCatalog();
     const toolItem = catalog.find(c => c.url === topic.targetToolUrl);

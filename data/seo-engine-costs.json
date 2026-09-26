@@ -1,6 +1,897 @@
 {
   "version": 1,
-  "totalSpendAllTimeUsd": 0,
-  "records": [],
-  "updatedAt": "2026-09-23T12:45:53.599Z"
+  "totalSpendAllTimeUsd": 1.4713,
+  "records": [
+    {
+      "provider": "openai",
+      "operation": "chat_completion",
+      "unitsConsumed": 1498,
+      "costUsd": 0.0091,
+      "meta": {
+        "model": "gpt-4o",
+        "promptTokens": 785,
+        "completionTokens": 713
+      },
+      "id": "cost_1790285483980_0wut9",
+      "timestamp": "2026-09-24T21:31:23.980Z"
+    },
+    {
+      "provider": "openai",
+      "operation": "chat_completion",
+      "unitsConsumed": 2417,
+      "costUsd": 0.0136,
+      "meta": {
+        "model": "gpt-4o",
+        "promptTokens": 1408,
+        "completionTokens": 1009
+      },
+      "id": "cost_1790285491671_42lb2",
+      "timestamp": "2026-09-24T21:31:31.671Z"
+    },
+    {
+      "provider": "openai",
+      "operation": "chat_completion",
+      "unitsConsumed": 2949,
+      "costUsd": 0.0164,
+      "meta": {
+        "model": "gpt-4o",
+        "promptTokens": 1751,
+        "completionTokens": 1198
+      },
+      "id": "cost_1790285498485_oehvb",
+      "timestamp": "2026-09-24T21:31:38.485Z"
+    },
+    {
+      "provider": "openai",
+      "operation": "chat_completion",
+      "unitsConsumed": 3527,
+      "costUsd": 0.0197,
+      "meta": {
+        "model": "gpt-4o",
+        "promptTokens": 2081,
+        "completionTokens": 1446
+      },
+      "id": "cost_1790285507506_adalz",
+      "timestamp": "2026-09-24T21:31:47.506Z"
+    },
+    {
+      "jobId": "job_2026-09-24_rgs0c0",
+      "provider": "higgsfield",
+      "operation": "image_generation",
+      "unitsConsumed": 1,
+      "costUsd": 0.03,
+      "meta": {
+        "prompt": "Artisan editorial craft photography for \"Mastering the Gauge Swatch Calculator for Accurate Yarn Est",
+        "targetFolder": "blog"
+      },
+      "id": "cost_1790285594362_df3w1",
+      "timestamp": "2026-09-24T21:33:14.362Z"
+    },
+    {
+      "jobId": "job_2026-09-24_rgs0c0",
+      "provider": "higgsfield",
+      "operation": "image_generation",
+      "unitsConsumed": 1,
+      "costUsd": 0.03,
+      "meta": {
+        "prompt": "Authentic Pinterest photo, overhead flatlay of natural wool yarn skeins, a smooth wooden crochet hoo",
+        "targetFolder": "pinterest"
+      },
+      "id": "cost_1790285680976_l1fbg",
+      "timestamp": "2026-09-24T21:34:40.976Z"
+    },
+    {
+      "jobId": "job_2026-09-24_rgs0c0",
+      "provider": "higgsfield",
+      "operation": "image_generation",
+      "unitsConsumed": 1,
+      "costUsd": 0.03,
+      "meta": {
+        "prompt": "Cozy lifestyle portrait of a woman sitting on a comfortable sofa holding an unfinished crochet proje",
+        "targetFolder": "pinterest"
+      },
+      "id": "cost_1790285770595_60z4q",
+      "timestamp": "2026-09-24T21:36:10.595Z"
+    },
+    {
+      "provider": "openai",
+      "operation": "chat_completion",
+      "unitsConsumed": 1484,
+      "costUsd": 0.009,
+      "meta": {
+        "model": "gpt-4o",
+        "promptTokens": 779,
+        "completionTokens": 705
+      },
+      "id": "cost_1790285780887_08bps",
+      "timestamp": "2026-09-24T21:36:20.887Z"
+    },
+    {
+      "provider": "openai",
+      "operation": "chat_completion",
+      "unitsConsumed": 2438,
+      "costUsd": 0.0139,
+      "meta": {
+        "model": "gpt-4o",
+        "promptTokens": 1395,
+        "completionTokens": 1043
+      },
+      "id": "cost_1790285788931_wisl3",
+      "timestamp": "2026-09-24T21:36:28.931Z"
+    },
+    {
+      "provider": "openai",
+      "operation": "chat_completion",
+      "unitsConsumed": 3092,
+      "costUsd": 0.0176,
+      "meta": {
+        "model": "gpt-4o",
+        "promptTokens": 1779,
+        "completionTokens": 1313
+      },
+      "id": "cost_1790285798823_y5py3",
+      "timestamp": "2026-09-24T21:36:38.823Z"
+    },
+    {
+      "provider": "openai",
+      "operation": "chat_completion",
+      "unitsConsumed": 3729,
+      "costUsd": 0.0201,
+      "meta": {
+        "model": "gpt-4o",
+        "promptTokens": 2289,
+        "completionTokens": 1440
+      },
+      "id": "cost_1790285807828_mnr4a",
+      "timestamp": "2026-09-24T21:36:47.828Z"
+    },
+    {
+      "jobId": "job_2026-09-24_zj966c",
+      "provider": "higgsfield",
+      "operation": "image_generation",
+      "unitsConsumed": 1,
+      "costUsd": 0.03,
+      "meta": {
+        "prompt": "Artisan editorial craft photography for \"Mastering the Yarn Calculator for Crochet Projects\", beauti",
+        "targetFolder": "blog"
+      },
+      "id": "cost_1790285892102_o344x",
+      "timestamp": "2026-09-24T21:38:12.102Z"
+    },
+    {
+      "jobId": "job_2026-09-24_zj966c",
+      "provider": "higgsfield",
+      "operation": "image_generation",
+      "unitsConsumed": 1,
+      "costUsd": 0.03,
+      "meta": {
+        "prompt": "Authentic Pinterest photo, overhead flatlay of natural wool yarn skeins, a smooth wooden crochet hoo",
+        "targetFolder": "pinterest"
+      },
+      "id": "cost_1790285981328_l6xo4",
+      "timestamp": "2026-09-24T21:39:41.328Z"
+    },
+    {
+      "jobId": "job_2026-09-24_zj966c",
+      "provider": "higgsfield",
+      "operation": "image_generation",
+      "unitsConsumed": 1,
+      "costUsd": 0.03,
+      "meta": {
+        "prompt": "Cozy lifestyle portrait of a woman sitting on a comfortable sofa holding an unfinished crochet proje",
+        "targetFolder": "pinterest"
+      },
+      "id": "cost_1790286067459_syq2y",
+      "timestamp": "2026-09-24T21:41:07.459Z"
+    },
+    {
+      "provider": "higgsfield",
+      "operation": "image_generation",
+      "unitsConsumed": 1,
+      "costUsd": 0.03,
+      "meta": {
+        "prompt": "Cozy crochet blanket on armchair",
+        "targetFolder": "blog"
+      },
+      "id": "cost_1790286684505_s8w7d",
+      "timestamp": "2026-09-24T21:51:24.505Z"
+    },
+    {
+      "provider": "dataforseo",
+      "operation": "google_trends_task_post",
+      "unitsConsumed": 2,
+      "costUsd": 0.0027,
+      "meta": {
+        "taskId": "09242350-2571-0170-0000-d01b98c27283",
+        "keywords": [
+          "crochet gauge calculator",
+          "crochet blanket yarn calculator"
+        ]
+      },
+      "id": "cost_1790293836764_nzu1p",
+      "timestamp": "2026-09-24T23:50:36.764Z"
+    },
+    {
+      "provider": "openai",
+      "operation": "chat_completion",
+      "unitsConsumed": 1540,
+      "costUsd": 0.0095,
+      "meta": {
+        "model": "gpt-4o",
+        "promptTokens": 785,
+        "completionTokens": 755
+      },
+      "id": "cost_1790293859527_m7e4r",
+      "timestamp": "2026-09-24T23:50:59.527Z"
+    },
+    {
+      "provider": "openai",
+      "operation": "chat_completion",
+      "unitsConsumed": 2475,
+      "costUsd": 0.0139,
+      "meta": {
+        "model": "gpt-4o",
+        "promptTokens": 1442,
+        "completionTokens": 1033
+      },
+      "id": "cost_1790293867636_t3zc5",
+      "timestamp": "2026-09-24T23:51:07.636Z"
+    },
+    {
+      "provider": "openai",
+      "operation": "chat_completion",
+      "unitsConsumed": 3233,
+      "costUsd": 0.0187,
+      "meta": {
+        "model": "gpt-4o",
+        "promptTokens": 1814,
+        "completionTokens": 1419
+      },
+      "id": "cost_1790293879263_4w2z9",
+      "timestamp": "2026-09-24T23:51:19.263Z"
+    },
+    {
+      "provider": "openai",
+      "operation": "chat_completion",
+      "unitsConsumed": 4060,
+      "costUsd": 0.0217,
+      "meta": {
+        "model": "gpt-4o",
+        "promptTokens": 2515,
+        "completionTokens": 1545
+      },
+      "id": "cost_1790293891880_6hg4h",
+      "timestamp": "2026-09-24T23:51:31.880Z"
+    },
+    {
+      "jobId": "job_2026-09-24_syhmmf",
+      "provider": "higgsfield",
+      "operation": "image_generation",
+      "unitsConsumed": 1,
+      "costUsd": 0.03,
+      "meta": {
+        "prompt": "Artisan editorial craft photography for \"Crochet Blanket Yarn Calculator: Accurate Yarn Estimation f",
+        "targetFolder": "blog"
+      },
+      "id": "cost_1790293972351_624s3",
+      "timestamp": "2026-09-24T23:52:52.351Z"
+    },
+    {
+      "jobId": "job_2026-09-24_syhmmf",
+      "provider": "higgsfield",
+      "operation": "image_generation",
+      "unitsConsumed": 1,
+      "costUsd": 0.03,
+      "meta": {
+        "prompt": "Authentic Pinterest photo, overhead flatlay of natural wool yarn skeins, a smooth wooden crochet hoo",
+        "targetFolder": "pinterest"
+      },
+      "id": "cost_1790294061938_tz4jy",
+      "timestamp": "2026-09-24T23:54:21.938Z"
+    },
+    {
+      "jobId": "job_2026-09-24_syhmmf",
+      "provider": "higgsfield",
+      "operation": "image_generation",
+      "unitsConsumed": 1,
+      "costUsd": 0.03,
+      "meta": {
+        "prompt": "Cozy lifestyle portrait of a woman sitting on a comfortable sofa holding an unfinished crochet proje",
+        "targetFolder": "pinterest"
+      },
+      "id": "cost_1790294154947_qa9ef",
+      "timestamp": "2026-09-24T23:55:54.947Z"
+    },
+    {
+      "provider": "dataforseo",
+      "operation": "google_trends_task_post",
+      "unitsConsumed": 2,
+      "costUsd": 0.0027,
+      "meta": {
+        "taskId": "09251245-2571-0170-0000-6e215c860116",
+        "keywords": [
+          "crochet gauge calculator",
+          "granny square calculator"
+        ]
+      },
+      "id": "cost_1790340342938_o96tx",
+      "timestamp": "2026-09-25T12:45:42.938Z"
+    },
+    {
+      "provider": "openai",
+      "operation": "chat_completion",
+      "unitsConsumed": 1547,
+      "costUsd": 0.0096,
+      "meta": {
+        "model": "gpt-4o",
+        "promptTokens": 782,
+        "completionTokens": 765
+      },
+      "id": "cost_1790340365940_gmyve",
+      "timestamp": "2026-09-25T12:46:05.940Z"
+    },
+    {
+      "provider": "openai",
+      "operation": "chat_completion",
+      "unitsConsumed": 2551,
+      "costUsd": 0.0146,
+      "meta": {
+        "model": "gpt-4o",
+        "promptTokens": 1455,
+        "completionTokens": 1096
+      },
+      "id": "cost_1790340374090_h0wi8",
+      "timestamp": "2026-09-25T12:46:14.090Z"
+    },
+    {
+      "provider": "openai",
+      "operation": "chat_completion",
+      "unitsConsumed": 3222,
+      "costUsd": 0.018,
+      "meta": {
+        "model": "gpt-4o",
+        "promptTokens": 1901,
+        "completionTokens": 1321
+      },
+      "id": "cost_1790340389861_ajlrd",
+      "timestamp": "2026-09-25T12:46:29.861Z"
+    },
+    {
+      "jobId": "job_2026-09-25_ohcoyu",
+      "provider": "higgsfield",
+      "operation": "image_generation",
+      "unitsConsumed": 1,
+      "costUsd": 0.03,
+      "meta": {
+        "prompt": "Editorial craft flatlay photography for crochet article \"Mastering Crochet Gauge: Your Ultimate Calc",
+        "targetFolder": "blog"
+      },
+      "id": "cost_1790340470693_wp9og",
+      "timestamp": "2026-09-25T12:47:50.693Z"
+    },
+    {
+      "jobId": "job_2026-09-25_ohcoyu",
+      "provider": "higgsfield",
+      "operation": "image_generation",
+      "unitsConsumed": 1,
+      "costUsd": 0.03,
+      "meta": {
+        "prompt": "Complete editorial Pinterest Pin graphic in 2:3 vertical layout. Top half features beautiful overhea",
+        "targetFolder": "pinterest"
+      },
+      "id": "cost_1790340560481_fqxbg",
+      "timestamp": "2026-09-25T12:49:20.481Z"
+    },
+    {
+      "jobId": "job_2026-09-25_ohcoyu",
+      "provider": "higgsfield",
+      "operation": "image_generation",
+      "unitsConsumed": 1,
+      "costUsd": 0.03,
+      "meta": {
+        "prompt": "Complete Pinterest Pin graphic in 2:3 vertical layout. Cozy lifestyle portrait of a maker in a sunli",
+        "targetFolder": "pinterest"
+      },
+      "id": "cost_1790340659205_7sy3t",
+      "timestamp": "2026-09-25T12:50:59.205Z"
+    },
+    {
+      "provider": "higgsfield",
+      "operation": "image_generation",
+      "unitsConsumed": 1,
+      "costUsd": 0.03,
+      "meta": {
+        "prompt": "Complete editorial Pinterest Pin photograph in 2:3 vertical layout. High-end craft photography of a ",
+        "targetFolder": "pinterest"
+      },
+      "id": "cost_1790359753883_8zonc",
+      "timestamp": "2026-09-25T18:09:13.883Z"
+    },
+    {
+      "provider": "higgsfield",
+      "operation": "image_generation",
+      "unitsConsumed": 1,
+      "costUsd": 0.03,
+      "meta": {
+        "prompt": "Complete editorial Pinterest Pin photograph in 2:3 vertical aspect ratio. Atmospheric lifestyle phot",
+        "targetFolder": "pinterest"
+      },
+      "id": "cost_1790359852617_50s78",
+      "timestamp": "2026-09-25T18:10:52.618Z"
+    },
+    {
+      "provider": "higgsfield",
+      "operation": "image_generation",
+      "unitsConsumed": 1,
+      "costUsd": 0.03,
+      "meta": {
+        "prompt": "Complete editorial Pinterest Pin photograph in 2:3 vertical layout. High-end cohesive editorial craf",
+        "targetFolder": "pinterest"
+      },
+      "id": "cost_1790361319693_hedgb",
+      "timestamp": "2026-09-25T18:35:19.693Z"
+    },
+    {
+      "provider": "higgsfield",
+      "operation": "image_generation",
+      "unitsConsumed": 1,
+      "costUsd": 0.03,
+      "meta": {
+        "prompt": "Complete editorial Pinterest Pin in 2:3 vertical aspect ratio. Authentic lifestyle photography of a ",
+        "targetFolder": "pinterest"
+      },
+      "id": "cost_1790361409220_06n8f",
+      "timestamp": "2026-09-25T18:36:49.220Z"
+    },
+    {
+      "provider": "higgsfield",
+      "operation": "image_generation",
+      "unitsConsumed": 1,
+      "costUsd": 0.03,
+      "meta": {
+        "prompt": "Complete editorial Pinterest Pin photograph in 2:3 vertical layout. High-end cohesive craft photogra",
+        "targetFolder": "pinterest"
+      },
+      "id": "cost_1790365512307_jclil",
+      "timestamp": "2026-09-25T19:45:12.307Z"
+    },
+    {
+      "provider": "higgsfield",
+      "operation": "image_generation",
+      "unitsConsumed": 1,
+      "costUsd": 0.03,
+      "meta": {
+        "prompt": "Complete editorial Pinterest Pin photograph in 2:3 vertical layout. High-end cohesive craft photogra",
+        "targetFolder": "pinterest"
+      },
+      "id": "cost_1790367029588_nj9cn",
+      "timestamp": "2026-09-25T20:10:29.588Z"
+    },
+    {
+      "provider": "higgsfield",
+      "operation": "image_generation",
+      "unitsConsumed": 1,
+      "costUsd": 0.03,
+      "meta": {
+        "prompt": "Complete editorial Pinterest Pin photograph in 2:3 vertical layout. High-end cohesive craft photogra",
+        "targetFolder": "pinterest"
+      },
+      "id": "cost_1790368494836_d4htj",
+      "timestamp": "2026-09-25T20:34:54.836Z"
+    },
+    {
+      "provider": "higgsfield",
+      "operation": "image_generation",
+      "unitsConsumed": 1,
+      "costUsd": 0.03,
+      "meta": {
+        "prompt": "Complete editorial Pinterest Pin photograph in 2:3 vertical layout. High-end cohesive craft photogra",
+        "targetFolder": "pinterest"
+      },
+      "id": "cost_1790370183904_8ansf",
+      "timestamp": "2026-09-25T21:03:03.904Z"
+    },
+    {
+      "provider": "higgsfield",
+      "operation": "image_generation",
+      "unitsConsumed": 1,
+      "costUsd": 0.03,
+      "meta": {
+        "prompt": "Complete editorial Pinterest Pin photograph in 2:3 vertical layout. High-end cohesive craft photogra",
+        "targetFolder": "pinterest"
+      },
+      "id": "cost_1790370734639_bqhlo",
+      "timestamp": "2026-09-25T21:12:14.639Z"
+    },
+    {
+      "provider": "dataforseo",
+      "operation": "google_trends_task_post",
+      "unitsConsumed": 5,
+      "costUsd": 0.0027,
+      "meta": {
+        "taskId": "09252122-2571-0170-0000-1d01527c42a3",
+        "keywords": [
+          "fall crochet projects for beginners",
+          "crochet snowflake pattern easy",
+          "quick crochet gifts under 1 hour",
+          "crochet bucket hat pattern easy",
+          "magic ring crochet tutorial step by step"
+        ]
+      },
+      "id": "cost_1790371371330_fs5te",
+      "timestamp": "2026-09-25T21:22:51.330Z"
+    },
+    {
+      "provider": "dataforseo",
+      "operation": "google_trends_task_post",
+      "unitsConsumed": 1,
+      "costUsd": 0.0027,
+      "meta": {
+        "taskId": "09252122-2571-0170-0000-a78126b042da",
+        "keywords": [
+          "stitch counter online"
+        ]
+      },
+      "id": "cost_1790371371372_brixw",
+      "timestamp": "2026-09-25T21:22:51.372Z"
+    },
+    {
+      "provider": "openai",
+      "operation": "chat_completion",
+      "unitsConsumed": 1592,
+      "costUsd": 0.01,
+      "meta": {
+        "model": "gpt-4o",
+        "promptTokens": 794,
+        "completionTokens": 798
+      },
+      "id": "cost_1790371400324_v8gxg",
+      "timestamp": "2026-09-25T21:23:20.324Z"
+    },
+    {
+      "provider": "openai",
+      "operation": "chat_completion",
+      "unitsConsumed": 2913,
+      "costUsd": 0.0172,
+      "meta": {
+        "model": "gpt-4o",
+        "promptTokens": 1588,
+        "completionTokens": 1325
+      },
+      "id": "cost_1790371411122_1geid",
+      "timestamp": "2026-09-25T21:23:31.122Z"
+    },
+    {
+      "provider": "openai",
+      "operation": "chat_completion",
+      "unitsConsumed": 4033,
+      "costUsd": 0.0244,
+      "meta": {
+        "model": "gpt-4o",
+        "promptTokens": 2126,
+        "completionTokens": 1907
+      },
+      "id": "cost_1790371426954_7qj5v",
+      "timestamp": "2026-09-25T21:23:46.954Z"
+    },
+    {
+      "jobId": "job_2026-09-25_c4q1nv",
+      "provider": "higgsfield",
+      "operation": "image_generation",
+      "unitsConsumed": 1,
+      "costUsd": 0.03,
+      "meta": {
+        "prompt": "Warm lifestyle interior photography for \"Mastering the Invisible Decrease for Amigurumi Crochet\". A ",
+        "targetFolder": "blog"
+      },
+      "id": "cost_1790371455542_kzveb",
+      "timestamp": "2026-09-25T21:24:15.542Z"
+    },
+    {
+      "jobId": "job_2026-09-25_c4q1nv",
+      "provider": "higgsfield",
+      "operation": "image_generation",
+      "unitsConsumed": 1,
+      "costUsd": 0.03,
+      "meta": {
+        "prompt": "Complete editorial Pinterest Pin in 2:3 vertical layout. Macro artisan craft photography highlightin",
+        "targetFolder": "pinterest"
+      },
+      "id": "cost_1790371486689_5eo8n",
+      "timestamp": "2026-09-25T21:24:46.689Z"
+    },
+    {
+      "jobId": "job_2026-09-25_c4q1nv",
+      "provider": "higgsfield",
+      "operation": "image_generation",
+      "unitsConsumed": 1,
+      "costUsd": 0.03,
+      "meta": {
+        "prompt": "Complete 2:3 vertical editorial Pinterest Pin photograph. Atmospheric close-up photography of artisa",
+        "targetFolder": "pinterest"
+      },
+      "id": "cost_1790371520829_1rd6d",
+      "timestamp": "2026-09-25T21:25:20.829Z"
+    },
+    {
+      "provider": "openai",
+      "operation": "chat_completion",
+      "unitsConsumed": 1473,
+      "costUsd": 0.0089,
+      "meta": {
+        "model": "gpt-4o",
+        "promptTokens": 782,
+        "completionTokens": 691
+      },
+      "id": "cost_1790371528820_xydsz",
+      "timestamp": "2026-09-25T21:25:28.820Z"
+    },
+    {
+      "provider": "openai",
+      "operation": "chat_completion",
+      "unitsConsumed": 2487,
+      "costUsd": 0.014,
+      "meta": {
+        "model": "gpt-4o",
+        "promptTokens": 1449,
+        "completionTokens": 1038
+      },
+      "id": "cost_1790371542396_87gdf",
+      "timestamp": "2026-09-25T21:25:42.396Z"
+    },
+    {
+      "provider": "openai",
+      "operation": "chat_completion",
+      "unitsConsumed": 3238,
+      "costUsd": 0.0191,
+      "meta": {
+        "model": "gpt-4o",
+        "promptTokens": 1771,
+        "completionTokens": 1467
+      },
+      "id": "cost_1790371553215_01v5q",
+      "timestamp": "2026-09-25T21:25:53.215Z"
+    },
+    {
+      "jobId": "job_2026-09-25_6j4jbo",
+      "provider": "higgsfield",
+      "operation": "image_generation",
+      "unitsConsumed": 1,
+      "costUsd": 0.03,
+      "meta": {
+        "prompt": "Editorial craft flatlay photography for crochet article \"Mastering Crochet with Our Online Stitch Co",
+        "targetFolder": "blog"
+      },
+      "id": "cost_1790371584812_dydqt",
+      "timestamp": "2026-09-25T21:26:24.812Z"
+    },
+    {
+      "jobId": "job_2026-09-25_6j4jbo",
+      "provider": "higgsfield",
+      "operation": "image_generation",
+      "unitsConsumed": 1,
+      "costUsd": 0.03,
+      "meta": {
+        "prompt": "Complete editorial Pinterest Pin in 2:3 vertical format. Artful overhead flatlay photography of natu",
+        "targetFolder": "pinterest"
+      },
+      "id": "cost_1790371619078_sb5pn",
+      "timestamp": "2026-09-25T21:26:59.078Z"
+    },
+    {
+      "jobId": "job_2026-09-25_6j4jbo",
+      "provider": "higgsfield",
+      "operation": "image_generation",
+      "unitsConsumed": 1,
+      "costUsd": 0.03,
+      "meta": {
+        "prompt": "Complete editorial Pinterest Pin in 2:3 vertical aspect ratio. Authentic lifestyle craft photography",
+        "targetFolder": "pinterest"
+      },
+      "id": "cost_1790371656652_1gnha",
+      "timestamp": "2026-09-25T21:27:36.652Z"
+    },
+    {
+      "provider": "dataforseo",
+      "operation": "google_trends_task_post",
+      "unitsConsumed": 1,
+      "costUsd": 0.0027,
+      "meta": {
+        "taskId": "09252153-2571-0170-0000-be9c5b05d21c",
+        "keywords": [
+          "crochet blanket border calculator"
+        ]
+      },
+      "id": "cost_1790373204005_1leda",
+      "timestamp": "2026-09-25T21:53:24.005Z"
+    },
+    {
+      "provider": "dataforseo",
+      "operation": "google_trends_task_post",
+      "unitsConsumed": 5,
+      "costUsd": 0.0027,
+      "meta": {
+        "taskId": "09252153-2571-0170-0000-aa77bf032a32",
+        "keywords": [
+          "crochet snowflake pattern easy",
+          "quick crochet gifts under 1 hour",
+          "crochet bucket hat pattern easy",
+          "magic ring crochet tutorial step by step",
+          "foundation single crochet tutorial no chain"
+        ]
+      },
+      "id": "cost_1790373204007_6a9sk",
+      "timestamp": "2026-09-25T21:53:24.007Z"
+    },
+    {
+      "provider": "openai",
+      "operation": "chat_completion",
+      "unitsConsumed": 1477,
+      "costUsd": 0.0089,
+      "meta": {
+        "model": "gpt-4o",
+        "promptTokens": 788,
+        "completionTokens": 689
+      },
+      "id": "cost_1790373226561_v6k1g",
+      "timestamp": "2026-09-25T21:53:46.561Z"
+    },
+    {
+      "provider": "openai",
+      "operation": "chat_completion",
+      "unitsConsumed": 2701,
+      "costUsd": 0.016,
+      "meta": {
+        "model": "gpt-4o",
+        "promptTokens": 1467,
+        "completionTokens": 1234
+      },
+      "id": "cost_1790373236401_xd3eo",
+      "timestamp": "2026-09-25T21:53:56.401Z"
+    },
+    {
+      "provider": "openai",
+      "operation": "chat_completion",
+      "unitsConsumed": 3859,
+      "costUsd": 0.0239,
+      "meta": {
+        "model": "gpt-4o",
+        "promptTokens": 1963,
+        "completionTokens": 1896
+      },
+      "id": "cost_1790373253732_85zbe",
+      "timestamp": "2026-09-25T21:54:13.732Z"
+    },
+    {
+      "jobId": "job_2026-09-25_z5x37b",
+      "provider": "higgsfield",
+      "operation": "image_generation",
+      "unitsConsumed": 1,
+      "costUsd": 0.03,
+      "meta": {
+        "prompt": "Warm lifestyle interior photography for \"Effortless Crochet Bucket Hat Pattern for Beginners\". A fin",
+        "targetFolder": "blog"
+      },
+      "id": "cost_1790373282610_h42vj",
+      "timestamp": "2026-09-25T21:54:42.610Z"
+    },
+    {
+      "jobId": "job_2026-09-25_z5x37b",
+      "provider": "higgsfield",
+      "operation": "image_generation",
+      "unitsConsumed": 1,
+      "costUsd": 0.03,
+      "meta": {
+        "prompt": "Complete editorial Pinterest Pin photograph in 2:3 vertical layout. High-end cohesive craft photogra",
+        "targetFolder": "pinterest"
+      },
+      "id": "cost_1790373317123_3zt4h",
+      "timestamp": "2026-09-25T21:55:17.123Z"
+    },
+    {
+      "jobId": "job_2026-09-25_z5x37b",
+      "provider": "higgsfield",
+      "operation": "image_generation",
+      "unitsConsumed": 1,
+      "costUsd": 0.03,
+      "meta": {
+        "prompt": "Complete editorial Pinterest Pin in 2:3 vertical aspect ratio. Authentic lifestyle craft photography",
+        "targetFolder": "pinterest"
+      },
+      "id": "cost_1790373351656_diptn",
+      "timestamp": "2026-09-25T21:55:51.656Z"
+    },
+    {
+      "provider": "openai",
+      "operation": "chat_completion",
+      "unitsConsumed": 1554,
+      "costUsd": 0.0097,
+      "meta": {
+        "model": "gpt-4o",
+        "promptTokens": 785,
+        "completionTokens": 769
+      },
+      "id": "cost_1790373359311_ijjrd",
+      "timestamp": "2026-09-25T21:55:59.311Z"
+    },
+    {
+      "provider": "openai",
+      "operation": "chat_completion",
+      "unitsConsumed": 2660,
+      "costUsd": 0.0152,
+      "meta": {
+        "model": "gpt-4o",
+        "promptTokens": 1525,
+        "completionTokens": 1135
+      },
+      "id": "cost_1790373375123_39eq3",
+      "timestamp": "2026-09-25T21:56:15.123Z"
+    },
+    {
+      "provider": "openai",
+      "operation": "chat_completion",
+      "unitsConsumed": 3426,
+      "costUsd": 0.0197,
+      "meta": {
+        "model": "gpt-4o",
+        "promptTokens": 1947,
+        "completionTokens": 1479
+      },
+      "id": "cost_1790373387473_yugyh",
+      "timestamp": "2026-09-25T21:56:27.473Z"
+    },
+    {
+      "provider": "openai",
+      "operation": "chat_completion",
+      "unitsConsumed": 4228,
+      "costUsd": 0.0227,
+      "meta": {
+        "model": "gpt-4o",
+        "promptTokens": 2609,
+        "completionTokens": 1619
+      },
+      "id": "cost_1790373404055_z7jyw",
+      "timestamp": "2026-09-25T21:56:44.055Z"
+    },
+    {
+      "jobId": "job_2026-09-25_y6r9v2",
+      "provider": "higgsfield",
+      "operation": "image_generation",
+      "unitsConsumed": 1,
+      "costUsd": 0.03,
+      "meta": {
+        "prompt": "Editorial craft flatlay photography for crochet article \"Crochet Blanket Border Calculator: Accurate",
+        "targetFolder": "blog"
+      },
+      "id": "cost_1790373438842_ij05s",
+      "timestamp": "2026-09-25T21:57:18.842Z"
+    },
+    {
+      "jobId": "job_2026-09-25_y6r9v2",
+      "provider": "higgsfield",
+      "operation": "image_generation",
+      "unitsConsumed": 1,
+      "costUsd": 0.03,
+      "meta": {
+        "prompt": "Complete editorial Pinterest Pin in 2:3 vertical format. Artful overhead flatlay photography of natu",
+        "targetFolder": "pinterest"
+      },
+      "id": "cost_1790373473154_a4smv",
+      "timestamp": "2026-09-25T21:57:53.154Z"
+    },
+    {
+      "jobId": "job_2026-09-25_y6r9v2",
+      "provider": "higgsfield",
+      "operation": "image_generation",
+      "unitsConsumed": 1,
+      "costUsd": 0.03,
+      "meta": {
+        "prompt": "Complete editorial Pinterest Pin in 2:3 vertical aspect ratio. Authentic lifestyle craft photography",
+        "targetFolder": "pinterest"
+      },
+      "id": "cost_1790373507418_4ecd0",
+      "timestamp": "2026-09-25T21:58:27.418Z"
+    }
+  ],
+  "updatedAt": "2026-09-25T21:58:27.418Z"
 }

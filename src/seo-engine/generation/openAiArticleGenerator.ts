@@ -24,7 +24,8 @@ export interface GeneratedArticle {
   excerpt: string;
   contentHtml: string;
   wordCount: number;
-  category: string;
+  category: 'crochet' | 'tools' | string;
+  contentType: 'trending_crochet' | 'tool_guide';
   tags: string[];
   seoMeta: {
     title: string;
@@ -138,9 +139,17 @@ function buildGenerationPrompt(
   maxWords: number
 ): { systemPrompt: string; userPrompt: string } {
   const factualContext = formatFactualContext(packet);
+  const isToolGuide = topic.contentType === 'tool_guide' || topic.category === 'tools';
+  const slotRoleInstruction = isToolGuide
+    ? `CONTENT SLOT: DAILY WE-LOVE-PATTERN TOOL GUIDE (Category: TOOLS).
+Your goal is to thoroughly explain the practical craft problem/intent ("${topic.keyword}"), provide clear manual calculation or technique steps, and guide makers on how the real interactive WeLovePattern tool at "${topic.targetToolUrl || '/tools'}" helps them achieve perfect results effortlessly.`
+    : `CONTENT SLOT: DAILY TRENDING CROCHET ARTICLE (Category: CROCHET).
+Your goal is to deliver an in-depth, deeply useful and engaging crochet guide for the current search trend ("${topic.keyword}"). Cover the project overview, materials, hook sizes, yarn weights, stitch technique, construction steps, sizing, helpful tips, and variations.`;
 
   const systemPrompt = `You are the Senior Editorial Director for WeLovePattern (welovepattern.com), the premier authoritative crochet and yarn crafting resource.
 You write deeply helpful, comprehensive, friendly, and technically impeccable articles for makers of all skill levels.
+
+${slotRoleInstruction}
 
 AUTHORITATIVE FACTUAL CONTEXT (MANDATORY IMMUTABLE SOURCE OF TRUTH):
 ${factualContext}
@@ -166,6 +175,7 @@ STRICT EDITORIAL & FACTUAL GROUNDING RULES:
 7. FORMAT: Return strict JSON matching the schema.`;
 
   const userPrompt = `Generate a complete, publish-ready crochet article for the topic: "${topic.keyword}".
+Content Slot: ${isToolGuide ? 'Tool Guide (Category: tools)' : 'Trending Crochet (Category: crochet)'}
 Content Format: ${topic.targetContentFormat}
 Target word count: ~${targetWords} words (Minimum: ${minWords} words).
 
@@ -173,7 +183,7 @@ Output your response as strict JSON with this exact structure:
 {
   "title": "Compelling, search-optimized title directly addressing '${topic.keyword}' (50-65 characters)",
   "excerpt": "Engaging 1-2 sentence article summary (140-160 characters)",
-  "category": "One of: blankets, tutorials, tools, tips, guides, amigurumi, yarn",
+  "category": "${isToolGuide ? 'tools' : 'crochet'}",
   "tags": ["3 to 6 relevant craft tags"],
   "seoMeta": {
     "title": "SEO title tag (< 60 chars)",
@@ -379,13 +389,17 @@ REVISION INSTRUCTIONS:
     }
   }
 
+  const resolvedCategory = (topic.contentType === 'tool_guide' || topic.category === 'tools') ? 'tools' : 'crochet';
+  const resolvedContentType = (topic.contentType === 'tool_guide' || topic.category === 'tools') ? 'tool_guide' : 'trending_crochet';
+
   return {
     title,
     slug,
     excerpt,
     contentHtml: injection.html,
     wordCount: countHtmlWords(injection.html),
-    category,
+    category: resolvedCategory,
+    contentType: resolvedContentType,
     tags,
     seoMeta,
     internalLinks: injection.injectedLinks,

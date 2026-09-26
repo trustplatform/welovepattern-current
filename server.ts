@@ -35,6 +35,14 @@ import {
   generatePinterestTitle,
   generatePinterestDescription
 } from "./src/pinterest/pinterestApi";
+import {
+  getPinAnalytics,
+  calculatePeriodDates,
+  calculateAggregatedSummary,
+  PinterestAnalyticsPeriod,
+  GetAdminPinAnalyticsResponse
+} from "./src/pinterest/pinterestAnalytics";
+import { readEngineState } from "./src/seo-engine/queue/engineStorage";
 import { createSeoEngineRouter } from "./src/seo-engine/api/seoEngineRouter";
 
 dotenv.config();
@@ -2540,6 +2548,59 @@ app.get("/api/admin/pinterest/boards", requireAdminAuth, async (req, res) => {
       success: false,
       boards: [],
       error: err?.message || "Failed to load Pinterest boards"
+    });
+  }
+});
+
+// 7. Pinterest Pin Analytics Endpoint (Authenticated Admin only)
+// Computes and aggregates per-Pin Pinterest metrics across all published SEO Engine Pins
+app.get("/api/admin/pinterest/analytics/pins", requireAdminAuth, async (req, res) => {
+  try {
+    const periodParam = (typeof req.query.period === "string" ? req.query.period.trim().toLowerCase() : "today") as PinterestAnalyticsPeriod;
+    const validPeriods: PinterestAnalyticsPeriod[] = ["today", "yesterday", "7d", "this_month", "last_month", "custom"];
+
+    if (!validPeriods.includes(periodParam)) {
+      return res.status(400).json({
+        success: false,
+        error: `Invalid period "${periodParam}". Supported periods: ${validPeriods.join(", ")}.`
+      });
+    }
+
+    const customStart = typeof req.query.startDate === "string" ? req.query.startDate.trim() : undefined;
+    const customEnd = typeof req.query.endDate === "string" ? req.query.endDate.trim() : undefined;
+
+    // Retrieve configured timezone from SEO engine or fallback to America/New_York
+    const state = readEngineState();
+    const timeZone = state.config?.timezone || "America/New_York";
+
+    const dateCalc = calculatePeriodDates(periodParam, customStart, customEnd, timeZone);
+    if (dateCalc.error) {
+      return res.status(400).json({
+        success: false,
+        error: dateCalc.error
+      });
+    }
+
+    // Call getPinAnalytics exactly once per request
+    const analyticsResult = await getPinAnalytics(dateCalc.startDate, dateCalc.endDate, { state });
+
+    const summary = calculateAggregatedSummary(analyticsResult.pins);
+
+    const response: GetAdminPinAnalyticsResponse = {
+      success: true,
+      period: periodParam,
+      startDate: dateCalc.startDate,
+      endDate: dateCalc.endDate,
+      summary,
+      pins: analyticsResult.pins
+    };
+
+    return res.json(response);
+  } catch (err: any) {
+    console.error("Error processing Pinterest Pin Analytics request:", err);
+    return res.status(500).json({
+      success: false,
+      error: "Failed to retrieve Pinterest Pin analytics."
     });
   }
 });

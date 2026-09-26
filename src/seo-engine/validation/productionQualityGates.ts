@@ -127,7 +127,30 @@ export function evaluateProductionQualityGates(
   // GATE 2: SEO INTENT ALIGNMENT & GATE 3: METADATA QUALITY
   // -----------------------------------------------------------------
   const metaResult = validateSeoMetadata(article.seoMeta.title, article.seoMeta.description, topic);
-  const seoIntentPassed = metaResult.intentAlignmentScore >= 60 && metaResult.titleValid;
+  let slotAlignmentPassed = true;
+
+  if (topic.contentType === 'trending_crochet') {
+    if (article.category !== 'crochet') {
+      slotAlignmentPassed = false;
+      rejectionReasons.push(`Slot 1 Category Error: Expected category 'crochet', got '${article.category}'.`);
+    }
+    const toolWords = ['calculator', 'estimator', 'converter', 'generator'];
+    if (toolWords.some(w => topic.keyword.toLowerCase().includes(w))) {
+      slotAlignmentPassed = false;
+      rejectionReasons.push(`Slot 1 Classification Error: Trending Crochet topic "${topic.keyword}" contains prohibited tool keyword.`);
+    }
+  } else if (topic.contentType === 'tool_guide') {
+    if (article.category !== 'tools') {
+      slotAlignmentPassed = false;
+      rejectionReasons.push(`Slot 2 Category Error: Expected category 'tools', got '${article.category}'.`);
+    }
+    if (!topic.toolSlug || !topic.targetToolUrl || !isRouteValid(topic.targetToolUrl)) {
+      slotAlignmentPassed = false;
+      rejectionReasons.push(`Slot 2 Tool Route Error: Invalid or missing target tool URL "${topic.targetToolUrl}".`);
+    }
+  }
+
+  const seoIntentPassed = metaResult.intentAlignmentScore >= 60 && metaResult.titleValid && slotAlignmentPassed;
   const metadataPassed = metaResult.metaValid && metaResult.titleValid;
 
   if (!seoIntentPassed) {
