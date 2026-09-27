@@ -16,6 +16,7 @@
 
 import { readEngineState, writeEngineState } from './queue/engineStorage';
 import { createDailyProductionBatch, processQueueWorker } from './queue/jobQueueManager';
+import { dispatchScheduledPinterestSlot } from './publishing/pinterestSlotDispatcher';
 
 let schedulerIntervalTimer: NodeJS.Timeout | null = null;
 let isTickRunning = false;
@@ -220,7 +221,10 @@ export async function evaluateSchedulerTick(
     state.lastExecutedPinterestSlot = slotKey;
     writeEngineState(state);
 
-    // Advance queue worker (only processes existing queued/awaiting jobs) unless skipped in test
+    // 1. Dispatch the specific Pin mapped to this slot (09:00 -> Pin 1, 13:00 -> Pin 2, 17:00 -> Pin 3, 21:00 -> Pin 4)
+    const pinDispatchResult = await dispatchScheduledPinterestSlot(timeStr, dateStr);
+
+    // 2. Also advance queue worker (only processes existing queued/awaiting jobs) unless skipped in test
     if (!options?.skipQueueWorkerExecution) {
       await processQueueWorker();
     }
@@ -229,7 +233,7 @@ export async function evaluateSchedulerTick(
       triggered: true,
       action: 'pinterest_publish',
       slotKey,
-      reason: `Processed Pinterest publishing queue worker for slot ${slotKey}`,
+      reason: pinDispatchResult.reason || `Processed Pinterest publishing for slot ${slotKey}`,
     };
   }
 

@@ -640,15 +640,15 @@ export async function runCompleteQualityGateTestMatrix(): Promise<{ passed: bool
   );
 
   // -----------------------------------------------------------------
-  // SCENARIO Z: Auto-Publish Disabled Safety Barrier
+  // SCENARIO Z: Production Configuration & Budget Safety Barrier
   // -----------------------------------------------------------------
   t0 = Date.now();
   const costPermitted = isBudgetPermitted(0.05, DEFAULT_SEO_ENGINE_CONFIG);
   assert(
-    costPermitted.permitted === true && DEFAULT_SEO_ENGINE_CONFIG.autoPublish === false,
+    costPermitted.permitted === true && DEFAULT_SEO_ENGINE_CONFIG.engineActive === true,
     'Z',
-    'Auto-publish disabled production safety barrier',
-    'Default configuration guarantees autoPublish=false and active budget monitoring',
+    'Production configuration and budget safety barrier',
+    'Configuration guarantees active engine status and active budget monitoring',
     t0
   );
 

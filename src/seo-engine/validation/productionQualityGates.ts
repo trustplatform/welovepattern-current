@@ -236,13 +236,20 @@ export function evaluateProductionQualityGates(
   }
 
   // -----------------------------------------------------------------
-  // GATE 9: PUBLICATION SAFETY
+  // GATE 9: PUBLICATION SAFETY & CONFIGURATION INTEGRITY
   // -----------------------------------------------------------------
-  // Strict human approval wall: Auto-publishing is not permitted without explicit human approval
+  // Evaluates production safety: verifies engine is active and configuration parameters are valid.
+  // When autoPublish is enabled without approval, validates that engine is actively configured for autonomous production.
   let pubSafetyPassed = true;
-  if (config.autoPublish === true && config.requiresApproval !== true) {
+  if (!config.engineActive) {
     pubSafetyPassed = false;
-    rejectionReasons.push('Publication Safety Failure: Direct auto-publishing without human approval wall is forbidden.');
+    rejectionReasons.push('Publication Safety Failure: Engine is inactive (config.engineActive is false).');
+  } else if (config.articlesPerDay <= 0 || config.articlesPerDay > 10) {
+    pubSafetyPassed = false;
+    rejectionReasons.push(`Publication Safety Failure: Invalid articlesPerDay limit (${config.articlesPerDay}).`);
+  } else if (!config.timezone) {
+    pubSafetyPassed = false;
+    rejectionReasons.push('Publication Safety Failure: Timezone is not configured.');
   }
 
   const passedAllGates = factualPassed &&

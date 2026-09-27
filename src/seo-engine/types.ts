@@ -154,6 +154,8 @@ export interface PinterestCreativeConcept {
   stablePublicUrl?: string;                   // Public URL served by Express
   pinterestPinId?: string;
   publishStatus: 'pending' | 'generating_image' | 'image_ready' | 'publishing' | 'published' | 'failed';
+  scheduledTime?: string;                     // e.g. "09:00", "13:00", "17:00", "21:00"
+  publishedAt?: string;                       // ISO timestamp of successful Pinterest publication
   errorMessage?: string;
 }
 
@@ -191,7 +193,14 @@ export interface SeoEngineArticleJob {
   pinterestPins: PinterestCreativeConcept[];  // Dynamically sized array (default 2, configurable)
   stage: SeoEngineJobStage;
   requiresApproval: boolean;
+  generatedAt?: string;                       // ISO timestamp when content was generated
+  validatedAt?: string;                       // ISO timestamp when quality gates passed
+  publicationScheduledAt?: string;           // ISO timestamp or target slot time (e.g. "08:00")
+  publishedAt?: string;                       // ISO timestamp of live website blog publication
   publishedBlogPostId?: string;
+  publishedSlug?: string;                     // Live website URL slug
+  publishedUrl?: string;                      // Full canonical live website URL
+  publicationError?: string;
   indexNowNotified: boolean;
   costBreakdown?: {
     dataForSeoCostUsd: number;

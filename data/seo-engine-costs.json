@@ -1,6 +1,6 @@
 {
   "version": 1,
-  "totalSpendAllTimeUsd": 2.1236,
+  "totalSpendAllTimeUsd": 2.3918,
   "records": [
     {
       "provider": "openai",
@@ -1255,7 +1255,163 @@
       },
       "id": "cost_1790500729722_8gl9b",
       "timestamp": "2026-09-27T09:18:49.722Z"
+    },
+    {
+      "provider": "openai",
+      "operation": "chat_completion",
+      "unitsConsumed": 1513,
+      "costUsd": 0.0093,
+      "meta": {
+        "model": "gpt-4o",
+        "promptTokens": 780,
+        "completionTokens": 733
+      },
+      "id": "cost_1790500788310_1fqkp",
+      "timestamp": "2026-09-27T09:19:48.310Z"
+    },
+    {
+      "provider": "openai",
+      "operation": "chat_completion",
+      "unitsConsumed": 2671,
+      "costUsd": 0.0156,
+      "meta": {
+        "model": "gpt-4o",
+        "promptTokens": 1483,
+        "completionTokens": 1188
+      },
+      "id": "cost_1790500798246_5lnuw",
+      "timestamp": "2026-09-27T09:19:58.246Z"
+    },
+    {
+      "provider": "openai",
+      "operation": "chat_completion",
+      "unitsConsumed": 3510,
+      "costUsd": 0.0204,
+      "meta": {
+        "model": "gpt-4o",
+        "promptTokens": 1963,
+        "completionTokens": 1547
+      },
+      "id": "cost_1790500808789_hjxqn",
+      "timestamp": "2026-09-27T09:20:08.789Z"
+    },
+    {
+      "jobId": "job_2026-09-27_05z1x8",
+      "provider": "higgsfield",
+      "operation": "image_generation",
+      "unitsConsumed": 1,
+      "costUsd": 0.03,
+      "meta": {
+        "prompt": "Editorial craft flatlay photography for crochet article \"Master Your Crochet Projects with an Online",
+        "targetFolder": "blog"
+      },
+      "id": "cost_1790500840372_tyhf5",
+      "timestamp": "2026-09-27T09:20:40.372Z"
+    },
+    {
+      "jobId": "job_2026-09-27_05z1x8",
+      "provider": "higgsfield",
+      "operation": "image_generation",
+      "unitsConsumed": 1,
+      "costUsd": 0.03,
+      "meta": {
+        "prompt": "Complete editorial Pinterest Pin photograph in 2:3 vertical layout. High-end cohesive craft photogra",
+        "targetFolder": "pinterest"
+      },
+      "id": "cost_1790500874850_wa4xs",
+      "timestamp": "2026-09-27T09:21:14.850Z"
+    },
+    {
+      "jobId": "job_2026-09-27_05z1x8",
+      "provider": "higgsfield",
+      "operation": "image_generation",
+      "unitsConsumed": 1,
+      "costUsd": 0.03,
+      "meta": {
+        "prompt": "Complete editorial Pinterest Pin in 2:3 vertical aspect ratio. Authentic lifestyle craft photography",
+        "targetFolder": "pinterest"
+      },
+      "id": "cost_1790500912278_992uc",
+      "timestamp": "2026-09-27T09:21:52.278Z"
+    },
+    {
+      "provider": "openai",
+      "operation": "chat_completion",
+      "unitsConsumed": 2267,
+      "costUsd": 0.0149,
+      "meta": {
+        "model": "gpt-4o",
+        "promptTokens": 1036,
+        "completionTokens": 1231
+      },
+      "id": "cost_1790504840022_za1oo",
+      "timestamp": "2026-09-27T10:27:20.022Z"
+    },
+    {
+      "provider": "openai",
+      "operation": "chat_completion",
+      "unitsConsumed": 3262,
+      "costUsd": 0.0212,
+      "meta": {
+        "model": "gpt-4o",
+        "promptTokens": 1521,
+        "completionTokens": 1741
+      },
+      "id": "cost_1790504849667_hfqpv",
+      "timestamp": "2026-09-27T10:27:29.667Z"
+    },
+    {
+      "provider": "openai",
+      "operation": "chat_completion",
+      "unitsConsumed": 2279,
+      "costUsd": 0.015,
+      "meta": {
+        "model": "gpt-4o",
+        "promptTokens": 1036,
+        "completionTokens": 1243
+      },
+      "id": "cost_1790504881194_xvc3t",
+      "timestamp": "2026-09-27T10:28:01.194Z"
+    },
+    {
+      "provider": "openai",
+      "operation": "chat_completion",
+      "unitsConsumed": 3332,
+      "costUsd": 0.0218,
+      "meta": {
+        "model": "gpt-4o",
+        "promptTokens": 1541,
+        "completionTokens": 1791
+      },
+      "id": "cost_1790504891998_3hp5y",
+      "timestamp": "2026-09-27T10:28:11.998Z"
+    },
+    {
+      "jobId": "job_smoke_1790504892008",
+      "provider": "higgsfield",
+      "operation": "image_generation",
+      "unitsConsumed": 1,
+      "costUsd": 0.03,
+      "meta": {
+        "prompt": "A cozy handmade crochet autumn leaf coaster resting on a warm wooden coffee table with a steaming ce",
+        "targetFolder": "blog"
+      },
+      "id": "cost_1790504923372_fgc4i",
+      "timestamp": "2026-09-27T10:28:43.372Z"
+    },
+    {
+      "jobId": "job_smoke_1790504923372",
+      "provider": "higgsfield",
+      "operation": "image_generation",
+      "unitsConsumed": 1,
+      "costUsd": 0.03,
+      "meta": {
+        "prompt": "Pinterest graphic of an easy crochet coaster, step-by-step handmade craft flatlay with yarn and croc",
+        "targetFolder": "pins"
+      },
+      "id": "cost_1790504960610_xw3yr",
+      "timestamp": "2026-09-27T10:29:20.610Z"
     }
   ],
-  "updatedAt": "2026-09-27T09:18:49.722Z"
+  "updatedAt": "2026-09-27T10:29:20.611Z"
 }

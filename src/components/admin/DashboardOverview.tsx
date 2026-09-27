@@ -168,8 +168,13 @@ export const DashboardOverview: React.FC<DashboardOverviewProps> = ({
   }, [allJobs, activeDateRange]);
 
   const totalArticlesProduced = periodJobs.length;
-  const totalPublishedArticles = periodJobs.filter(j => j.stage === 'published' || j.articlePublished).length;
-  const totalPinsGenerated = periodJobs.reduce((acc, j) => acc + (j.pins?.length || 2), 0);
+  const totalPublishedArticles = periodJobs.filter(j => j.stage === 'completed' || j.stage === 'published' || j.articlePublished || Boolean(j.publishedBlogPostId)).length;
+  const totalPinsGenerated = periodJobs.reduce((acc, j) => acc + (j.pins?.length || j.pinterestPins?.length || 2), 0);
+  const totalPinsPublished = periodJobs.reduce((acc, j) => {
+    const pins = j.pinterestPins || j.pins || [];
+    return acc + pins.filter((p: any) => p.publishStatus === 'published' || Boolean(p.pinterestPinId)).length;
+  }, 0);
+  const totalPinsScheduled = Math.max(0, totalPinsGenerated - totalPinsPublished);
   const totalFailedJobs = periodJobs.filter(j => j.stage === 'failed').length;
   const awaitingApprovalJobs = allJobs.filter(j => j.stage === 'awaiting_approval');
 
@@ -325,7 +330,7 @@ export const DashboardOverview: React.FC<DashboardOverviewProps> = ({
             {isLoading ? '...' : totalPinsGenerated}
           </p>
           <span className="text-xs text-slate-500 block truncate">
-            Higgsfield Image 2.0 Alpha
+            {totalPinsPublished} published · {totalPinsScheduled} scheduled
           </span>
         </div>
 

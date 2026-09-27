@@ -22,6 +22,7 @@ import { evaluateProductionQualityGates } from '../validation/productionQualityG
 import { getJobCostBreakdown, isBudgetPermitted, releaseBudgetReservation } from '../cost/costTracker';
 import { generateHiggsfieldImage, isHiggsfieldConfigured } from '../generation/higgsfieldClient';
 import { discoverDailyTwoSlotTopics } from '../discovery/topicDiscovery';
+import { publishArticleToLiveSite } from '../publishing/articlePublisher';
 
 let isProcessingQueue = false;
 
@@ -756,10 +757,13 @@ export async function executeJobLifecycle(
   // Record cost breakdown onto job
   const costBreakdown = getJobCostBreakdown(jobId);
 
+  const nowIso = new Date().toISOString();
+
   // -----------------------------------------------------------------
-  // STAGE 5: SAVE AS TEST DRAFT / AWAITING APPROVAL
+  // STAGE 5: SAVE ARTICLE & PUBLISH OR AWAIT APPROVAL
   // -----------------------------------------------------------------
-  const updatedJob = updateJobInState(jobId, j => {
+  // Record verified content, validation timestamp, and pin creative concepts
+  let updatedJob = updateJobInState(jobId, j => {
     j.articleContent = {
       title: article.title,
       slug: article.slug,
@@ -774,16 +778,65 @@ export async function executeJobLifecycle(
     };
     j.pinterestPins = pins;
     j.costBreakdown = costBreakdown;
-    j.stage = 'awaiting_approval'; // Always halts safely at approval
-    j.logs.push({
-      timestamp: new Date().toISOString(),
-      level: 'info',
-      message: `Article passed all 9 quality gates (${article.wordCount} words, Category: ${j.category.toUpperCase()}, Type: ${j.contentType}). Saved safely as draft awaiting human approval.`,
-    });
-    return j;
-  });
+    j.validatedAt = nowIso;
+    j.generatedAt = j.generatedAt || nowIso;
+    j.publicationScheduledAt = j.publicationScheduledAt || (config.articlePublishTimes?.[0] || '08:00');
 
-  return updatedJob!;
+    // Human Approval Wall: If requiresApproval === true or autoPublish === false, halt safely in awaiting_approval
+    if (config.requiresApproval === true || config.autoPublish === false) {
+      j.stage = 'awaiting_approval';
+      j.logs.push({
+        timestamp: nowIso,
+        level: 'info',
+        message: `Article passed all 9 quality gates (${article.wordCount} words, Category: ${j.category.toUpperCase()}, Type: ${j.contentType}). Saved safely as draft awaiting human approval.`,
+      });
+    } else {
+      // Ready for autonomous publishing
+      j.stage = 'ready_to_publish' as any;
+      j.logs.push({
+        timestamp: nowIso,
+        level: 'info',
+        message: `Article passed all 9 quality gates. Auto-publishing directly to live website...`,
+      });
+    }
+    return j;
+  })!;
+
+  // -----------------------------------------------------------------
+  // STAGE 6: AUTOMATIC WEBSITE ARTICLE PUBLICATION
+  // -----------------------------------------------------------------
+  if (config.autoPublish === true && config.requiresApproval !== true) {
+    const pubResult = await publishArticleToLiveSite(updatedJob);
+    if (pubResult.success && pubResult.blogPostId) {
+      updatedJob = updateJobInState(jobId, j => {
+        j.stage = 'completed';
+        j.publishedBlogPostId = pubResult.blogPostId;
+        j.publishedSlug = pubResult.slug;
+        j.publishedUrl = pubResult.publicUrl;
+        j.publishedAt = new Date().toISOString();
+        j.indexNowNotified = true;
+        j.logs.push({
+          timestamp: new Date().toISOString(),
+          level: 'info',
+          message: `Article successfully published to live website: ${pubResult.publicUrl} (Blog Post ID: ${pubResult.blogPostId})`,
+        });
+        return j;
+      })!;
+    } else {
+      updatedJob = updateJobInState(jobId, j => {
+        j.stage = 'failed';
+        j.publicationError = pubResult.error || 'Failed to publish article to live website.';
+        j.logs.push({
+          timestamp: new Date().toISOString(),
+          level: 'error',
+          message: `Website Publication Error: ${pubResult.error}`,
+        });
+        return j;
+      })!;
+    }
+  }
+
+  return updatedJob;
 }
 
 /**
