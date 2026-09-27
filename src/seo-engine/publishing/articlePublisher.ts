@@ -104,7 +104,10 @@ export async function publishArticleToLiveSite(job: SeoEngineArticleJob): Promis
 
     const cleanSlug = slug.trim().toLowerCase().replace(/[^a-z0-9]+/g, '-').replace(/(^-|-$)/g, '');
     const cleanHtml = typeof sanitizeBlogHtml === 'function' ? sanitizeBlogHtml(contentHtml) : contentHtml;
-    const heroImageUrl = heroImage?.stablePublicUrl || '/uploads/blog/default-crochet.jpg';
+    let heroImageUrl = heroImage?.stablePublicUrl || '/uploads/blog/default-crochet.jpg';
+    if (heroImageUrl.startsWith('/public/')) {
+      heroImageUrl = heroImageUrl.replace(/^\/public\//, '/');
+    }
     const canonicalUrl = `${SITE_URL}/blog/${cleanSlug}`;
 
     const posts = getLiveBlogPosts();

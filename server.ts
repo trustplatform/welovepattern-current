@@ -4106,15 +4106,21 @@ app.use((err: any, _req: express.Request, res: express.Response, _next: express.
 });
 
 async function startServer() {
-  // Explicit runtime static serving for Pinterest generated pins
-  const generatedPinterestPath = path.join(process.cwd(), "public", "generated", "pinterest");
-  if (!fs.existsSync(generatedPinterestPath)) {
-    fs.mkdirSync(generatedPinterestPath, { recursive: true });
+  // Explicit runtime static serving for SEO generated assets (blog images + pinterest pins)
+  const generatedPath = path.join(process.cwd(), "public", "generated");
+  if (!fs.existsSync(generatedPath)) {
+    fs.mkdirSync(generatedPath, { recursive: true });
   }
-  app.use("/generated/pinterest", express.static(generatedPinterestPath, {
-    maxAge: "1m",
+  app.use("/generated", express.static(generatedPath, {
+    maxAge: "1d",
     setHeaders: (res) => {
-      res.setHeader("Cache-Control", "public, max-age=60");
+      res.setHeader("Cache-Control", "public, max-age=86400");
+    }
+  }));
+  app.use("/public/generated", express.static(generatedPath, {
+    maxAge: "1d",
+    setHeaders: (res) => {
+      res.setHeader("Cache-Control", "public, max-age=86400");
     }
   }));
 

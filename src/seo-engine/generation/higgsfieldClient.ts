@@ -288,7 +288,8 @@ export async function generateHiggsfieldImage(
 
   const filename = generateStableImageFilename(slug, prompt);
   const localFilePath = path.join(absoluteDir, filename);
-  const publicUrl = `/${relativeDir}/${filename}`;
+  const publicPath = relativeDir.startsWith('public/') ? relativeDir.substring('public/'.length) : relativeDir;
+  const publicUrl = `/${publicPath}/${filename}`;
 
   // 1. Duplicate check: If asset already exists on local disk, reuse it immediately (idempotency)
   if (fs.existsSync(localFilePath) && fs.statSync(localFilePath).size > 100) {
