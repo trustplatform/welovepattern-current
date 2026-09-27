@@ -17,6 +17,8 @@
 import { readEngineState, writeEngineState } from './queue/engineStorage';
 import { createDailyProductionBatch, processQueueWorker } from './queue/jobQueueManager';
 import { dispatchScheduledPinterestSlot } from './publishing/pinterestSlotDispatcher';
+import { getLiveBlogPosts } from './publishing/articlePublisher';
+import { SeoEngineArticleJob, PinterestCreativeConcept } from './types';
 
 let schedulerIntervalTimer: NodeJS.Timeout | null = null;
 let isTickRunning = false;
@@ -99,6 +101,80 @@ export interface SchedulerTickResult {
 }
 
 /**
+ * Strictly verifies if an article job was genuinely and successfully published to live website blog storage.
+ * 
+ * Strict Invariants:
+ * - Failed for ANY reason -> returns false (count = 0)
+ * - Incomplete / in-progress -> returns false (count = 0)
+ * - Generated but awaiting approval -> returns false (count = 0)
+ * - Stage 'failed' / 'filtered_out' -> returns false (count = 0)
+ * - Any publication error -> returns false (count = 0)
+ * - ONLY returns true if stage is 'completed' (or 'published'), has a valid publishedBlogPostId,
+ *   and is confirmed present in live website storage (data/blog-posts.json) with status 'published'.
+ */
+export function isArticleJobPublished(job: SeoEngineArticleJob, livePosts: any[]): boolean {
+  if (!job) return false;
+  if (job.stage !== 'completed' && (job.stage as string) !== 'published') {
+    return false;
+  }
+  if (!job.publishedBlogPostId || typeof job.publishedBlogPostId !== 'string' || !job.publishedBlogPostId.trim()) {
+    return false;
+  }
+  if (job.publicationError) {
+    return false;
+  }
+  if (!Array.isArray(livePosts) || livePosts.length === 0) {
+    return false;
+  }
+  const matchingPost = livePosts.find(p =>
+    (p.id && p.id === job.publishedBlogPostId) ||
+    (p.seoEngineJobId && p.seoEngineJobId === job.id) ||
+    (job.publishedSlug && p.slug === job.publishedSlug)
+  );
+  if (!matchingPost) {
+    return false;
+  }
+  return matchingPost.status === 'published' || matchingPost.status === undefined;
+}
+
+/**
+ * Strictly verifies if a historical job record was genuinely published to live website blog storage.
+ */
+export function isHistoricalJobPublished(historyItem: any, livePosts: any[]): boolean {
+  if (!historyItem) return false;
+  if (historyItem.status !== 'completed' && historyItem.status !== 'published') {
+    return false;
+  }
+  const blogPostId = historyItem.publishedBlogPostId;
+  const slug = historyItem.slug || historyItem.publishedSlug;
+  if (!blogPostId && !slug) {
+    return false;
+  }
+  if (!Array.isArray(livePosts) || livePosts.length === 0) {
+    return false;
+  }
+  const matchingPost = livePosts.find(p =>
+    (blogPostId && p.id === blogPostId) ||
+    (historyItem.jobId && p.seoEngineJobId === historyItem.jobId) ||
+    (slug && p.slug === slug)
+  );
+  if (!matchingPost) {
+    return false;
+  }
+  return matchingPost.status === 'published' || matchingPost.status === undefined;
+}
+
+/**
+ * Strictly checks if a Pinterest pin is genuinely published to Pinterest.
+ * Strict rules:
+ * - publishStatus MUST be 'published'
+ * - pinterestPinId MUST be a non-empty string ID
+ */
+export function isPinterestPinPublished(pin: PinterestCreativeConcept): boolean {
+  return pin?.publishStatus === 'published' && typeof pin?.pinterestPinId === 'string' && pin.pinterestPinId.trim().length > 0;
+}
+
+/**
  * Evaluates whether the current clock time matches an article or Pinterest slot, and executes the pipeline if appropriate.
  * Can be called with an explicit simulated Date for deterministic unit testing.
  */
@@ -146,9 +222,25 @@ export async function evaluateSchedulerTick(
       };
     }
 
-    // Daily quota check: Have we already reached articlesPerDay (default: 2) for this date?
-    const todaysArticlesCount = (state.activeJobs || []).filter(j => j.dateScheduled === dateStr).length +
-      (state.completedJobsHistory || []).filter(j => j.date === dateStr).length;
+    // Daily quota check: Count ONLY articles that were actually successfully published to the live blog data for this date
+    const livePosts = getLiveBlogPosts();
+    const publishedArticleKeys = new Set<string>();
+
+    // 1. Count published jobs from activeJobs
+    for (const job of state.activeJobs || []) {
+      if (job.dateScheduled === dateStr && isArticleJobPublished(job, livePosts)) {
+        publishedArticleKeys.add(job.publishedBlogPostId || job.publishedSlug || job.id);
+      }
+    }
+
+    // 2. Count published jobs from completedJobsHistory
+    for (const historyItem of state.completedJobsHistory || []) {
+      if (historyItem.date === dateStr && isHistoricalJobPublished(historyItem, livePosts)) {
+        publishedArticleKeys.add(historyItem.publishedBlogPostId || historyItem.slug || historyItem.jobId || historyItem.id);
+      }
+    }
+
+    const todaysArticlesCount = publishedArticleKeys.size;
 
     const articlesPerDayLimit = config.articlesPerDay || 2;
     if (todaysArticlesCount >= articlesPerDayLimit) {
@@ -161,7 +253,7 @@ export async function evaluateSchedulerTick(
         triggered: false,
         action: 'skipped_quota_reached',
         slotKey,
-        reason: `Daily articles limit reached (${todaysArticlesCount}/${articlesPerDayLimit}) for date ${dateStr}.`,
+        reason: `Daily articles limit reached (${todaysArticlesCount}/${articlesPerDayLimit} published articles) for date ${dateStr}.`,
       };
     }
 

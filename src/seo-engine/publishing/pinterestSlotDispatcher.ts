@@ -96,8 +96,8 @@ export async function dispatchScheduledPinterestSlot(
   const target = allDailyPins[slotIndex];
   const { job, pin } = target;
 
-  // 1. Verify Article is Published
-  if (job.stage !== 'completed' && !job.publishedBlogPostId) {
+  // 1. Verify Article is Strictly Published
+  if (job.stage !== 'completed' || !job.publishedBlogPostId || Boolean(job.publicationError)) {
     return {
       triggered: true,
       pinPublished: false,
