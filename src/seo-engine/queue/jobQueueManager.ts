@@ -797,12 +797,31 @@ export async function processQueueWorker(): Promise<void> {
   isProcessingQueue = true;
   try {
     recoverInterruptedJobs();
-    const state = readEngineState();
-    const pending = state.activeJobs.filter(j => j.stage === 'selected');
+    
+    // Process pending jobs one by one, freshly reading state on each iteration
+    while (true) {
+      const state = readEngineState();
+      const nextPendingJob = state.activeJobs.find(j => j.stage === 'selected');
+      if (!nextPendingJob) {
+        break;
+      }
 
-    for (const job of pending) {
-      console.log(`[JobQueueManager] Processing pending job ${job.id} ("${job.topic.keyword}")...`);
-      await executeJobLifecycle(job.id);
+      console.log(`[JobQueueManager] Processing pending job ${nextPendingJob.id} ("${nextPendingJob.topic.keyword}")...`);
+      try {
+        await executeJobLifecycle(nextPendingJob.id);
+      } catch (err) {
+        console.error(`[JobQueueManager] Error processing job ${nextPendingJob.id}:`, err);
+        // Mark job as failed so the queue worker does not loop indefinitely on the same job
+        updateJobInState(nextPendingJob.id, j => {
+          j.stage = 'failed';
+          j.logs.push({
+            timestamp: new Date().toISOString(),
+            level: 'error',
+            message: `Job lifecycle failed: ${err instanceof Error ? err.message : String(err)}`,
+          });
+          return j;
+        });
+      }
     }
   } finally {
     isProcessingQueue = false;

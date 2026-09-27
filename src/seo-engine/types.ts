@@ -297,6 +297,8 @@ export interface SeoEngineDailyState {
   version: number;
   config: SeoEngineConfig;
   lastRunDate: string;
+  lastExecutedArticleSlot?: string;           // Tracks e.g. "2026-09-27_08:00" for exact slot deduplication
+  lastExecutedPinterestSlot?: string;         // Tracks e.g. "2026-09-27_09:00" for exact slot deduplication
   todayDiscoveredTopics: DiscoveredTopic[];
   discoveredTopics?: DiscoveredTopic[];       // Convenience alias
   activeJobs: SeoEngineArticleJob[];

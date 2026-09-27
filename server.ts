@@ -44,6 +44,7 @@ import {
 } from "./src/pinterest/pinterestAnalytics";
 import { readEngineState } from "./src/seo-engine/queue/engineStorage";
 import { createSeoEngineRouter } from "./src/seo-engine/api/seoEngineRouter";
+import { startSeoEngineScheduler } from "./src/seo-engine/scheduler";
 
 dotenv.config();
 
@@ -4140,6 +4141,8 @@ async function startServer() {
 
   app.listen(PORT, "0.0.0.0", () => {
     console.log(`🧶 CrochetHub Server running on http://0.0.0.0:${PORT}`);
+    // Start background autonomous SEO Content Engine scheduler
+    startSeoEngineScheduler();
   });
 }
 

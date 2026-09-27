@@ -1,6 +1,6 @@
 {
   "version": 1,
-  "totalSpendAllTimeUsd": 1.4713,
+  "totalSpendAllTimeUsd": 2.1236,
   "records": [
     {
       "provider": "openai",
@@ -891,7 +891,371 @@
       },
       "id": "cost_1790373507418_4ecd0",
       "timestamp": "2026-09-25T21:58:27.418Z"
+    },
+    {
+      "provider": "openai",
+      "operation": "chat_completion",
+      "unitsConsumed": 1528,
+      "costUsd": 0.0094,
+      "meta": {
+        "model": "gpt-4o",
+        "promptTokens": 785,
+        "completionTokens": 743
+      },
+      "id": "cost_1790500512085_ut3nj",
+      "timestamp": "2026-09-27T09:15:12.085Z"
+    },
+    {
+      "provider": "openai",
+      "operation": "chat_completion",
+      "unitsConsumed": 2737,
+      "costUsd": 0.0161,
+      "meta": {
+        "model": "gpt-4o",
+        "promptTokens": 1502,
+        "completionTokens": 1235
+      },
+      "id": "cost_1790500520022_mq02y",
+      "timestamp": "2026-09-27T09:15:20.022Z"
+    },
+    {
+      "provider": "openai",
+      "operation": "chat_completion",
+      "unitsConsumed": 3878,
+      "costUsd": 0.0237,
+      "meta": {
+        "model": "gpt-4o",
+        "promptTokens": 2011,
+        "completionTokens": 1867
+      },
+      "id": "cost_1790500534011_trvg1",
+      "timestamp": "2026-09-27T09:15:34.011Z"
+    },
+    {
+      "jobId": "job_2026-09-27_93ybgk",
+      "provider": "higgsfield",
+      "operation": "image_generation",
+      "unitsConsumed": 1,
+      "costUsd": 0.03,
+      "meta": {
+        "prompt": "Warm lifestyle interior photography for \"Craft Spooky Crochet Halloween Granny Squares\". A finished ",
+        "targetFolder": "blog"
+      },
+      "id": "cost_1790500562725_xzy45",
+      "timestamp": "2026-09-27T09:16:02.725Z"
+    },
+    {
+      "provider": "openai",
+      "operation": "chat_completion",
+      "unitsConsumed": 1521,
+      "costUsd": 0.0093,
+      "meta": {
+        "model": "gpt-4o",
+        "promptTokens": 785,
+        "completionTokens": 736
+      },
+      "id": "cost_1790500563332_l0kaz",
+      "timestamp": "2026-09-27T09:16:03.332Z"
+    },
+    {
+      "provider": "openai",
+      "operation": "chat_completion",
+      "unitsConsumed": 2809,
+      "costUsd": 0.0169,
+      "meta": {
+        "model": "gpt-4o",
+        "promptTokens": 1493,
+        "completionTokens": 1316
+      },
+      "id": "cost_1790500573331_zwf0y",
+      "timestamp": "2026-09-27T09:16:13.331Z"
+    },
+    {
+      "provider": "openai",
+      "operation": "chat_completion",
+      "unitsConsumed": 1561,
+      "costUsd": 0.0097,
+      "meta": {
+        "model": "gpt-4o",
+        "promptTokens": 785,
+        "completionTokens": 776
+      },
+      "id": "cost_1790500575799_g8gdw",
+      "timestamp": "2026-09-27T09:16:15.800Z"
+    },
+    {
+      "provider": "openai",
+      "operation": "chat_completion",
+      "unitsConsumed": 3783,
+      "costUsd": 0.0227,
+      "meta": {
+        "model": "gpt-4o",
+        "promptTokens": 2013,
+        "completionTokens": 1770
+      },
+      "id": "cost_1790500584905_c8wga",
+      "timestamp": "2026-09-27T09:16:24.905Z"
+    },
+    {
+      "provider": "openai",
+      "operation": "chat_completion",
+      "unitsConsumed": 2913,
+      "costUsd": 0.0176,
+      "meta": {
+        "model": "gpt-4o",
+        "promptTokens": 1539,
+        "completionTokens": 1374
+      },
+      "id": "cost_1790500584970_hjohq",
+      "timestamp": "2026-09-27T09:16:24.970Z"
+    },
+    {
+      "provider": "openai",
+      "operation": "chat_completion",
+      "unitsConsumed": 3971,
+      "costUsd": 0.0233,
+      "meta": {
+        "model": "gpt-4o",
+        "promptTokens": 2188,
+        "completionTokens": 1783
+      },
+      "id": "cost_1790500596879_kbdbz",
+      "timestamp": "2026-09-27T09:16:36.879Z"
+    },
+    {
+      "jobId": "job_2026-09-27_93ybgk",
+      "provider": "higgsfield",
+      "operation": "image_generation",
+      "unitsConsumed": 1,
+      "costUsd": 0.03,
+      "meta": {
+        "prompt": "Complete editorial Pinterest Pin artwork in 2:3 vertical aspect ratio. Aesthetic lifestyle photograp",
+        "targetFolder": "pinterest"
+      },
+      "id": "cost_1790500597287_a1diw",
+      "timestamp": "2026-09-27T09:16:37.287Z"
+    },
+    {
+      "provider": "openai",
+      "operation": "chat_completion",
+      "unitsConsumed": 1466,
+      "costUsd": 0.0088,
+      "meta": {
+        "model": "gpt-4o",
+        "promptTokens": 785,
+        "completionTokens": 681
+      },
+      "id": "cost_1790500612218_yrtch",
+      "timestamp": "2026-09-27T09:16:52.218Z"
+    },
+    {
+      "jobId": "job_2026-09-27_q5rzs4",
+      "provider": "higgsfield",
+      "operation": "image_generation",
+      "unitsConsumed": 1,
+      "costUsd": 0.03,
+      "meta": {
+        "prompt": "Warm lifestyle interior photography for \"Create Stunning Halloween Granny Squares for Crochet\". A fi",
+        "targetFolder": "blog"
+      },
+      "id": "cost_1790500616863_5d5up",
+      "timestamp": "2026-09-27T09:16:56.863Z"
+    },
+    {
+      "provider": "openai",
+      "operation": "chat_completion",
+      "unitsConsumed": 2794,
+      "costUsd": 0.0171,
+      "meta": {
+        "model": "gpt-4o",
+        "promptTokens": 1444,
+        "completionTokens": 1350
+      },
+      "id": "cost_1790500620073_2rv7g",
+      "timestamp": "2026-09-27T09:17:00.073Z"
+    },
+    {
+      "jobId": "job_2026-09-27_c3t642",
+      "provider": "higgsfield",
+      "operation": "image_generation",
+      "unitsConsumed": 1,
+      "costUsd": 0.03,
+      "meta": {
+        "prompt": "Warm lifestyle interior photography for \"Create Spooky Crochet Halloween Granny Squares\". A finished",
+        "targetFolder": "blog"
+      },
+      "id": "cost_1790500628543_ba00r",
+      "timestamp": "2026-09-27T09:17:08.543Z"
+    },
+    {
+      "jobId": "job_2026-09-27_93ybgk",
+      "provider": "higgsfield",
+      "operation": "image_generation",
+      "unitsConsumed": 1,
+      "costUsd": 0.03,
+      "meta": {
+        "prompt": "Complete 2:3 vertical editorial Pinterest Pin photograph. Atmospheric close-up photography of artisa",
+        "targetFolder": "pinterest"
+      },
+      "id": "cost_1790500631506_fic8p",
+      "timestamp": "2026-09-27T09:17:11.506Z"
+    },
+    {
+      "provider": "openai",
+      "operation": "chat_completion",
+      "unitsConsumed": 4034,
+      "costUsd": 0.0249,
+      "meta": {
+        "model": "gpt-4o",
+        "promptTokens": 2064,
+        "completionTokens": 1970
+      },
+      "id": "cost_1790500632717_61t0t",
+      "timestamp": "2026-09-27T09:17:12.717Z"
+    },
+    {
+      "provider": "openai",
+      "operation": "chat_completion",
+      "unitsConsumed": 2463,
+      "costUsd": 0.0138,
+      "meta": {
+        "model": "gpt-4o",
+        "promptTokens": 1444,
+        "completionTokens": 1019
+      },
+      "id": "cost_1790500638489_1y8i7",
+      "timestamp": "2026-09-27T09:17:18.489Z"
+    },
+    {
+      "provider": "openai",
+      "operation": "chat_completion",
+      "unitsConsumed": 3207,
+      "costUsd": 0.019,
+      "meta": {
+        "model": "gpt-4o",
+        "promptTokens": 1745,
+        "completionTokens": 1462
+      },
+      "id": "cost_1790500648084_b9i5y",
+      "timestamp": "2026-09-27T09:17:28.084Z"
+    },
+    {
+      "jobId": "job_2026-09-27_q5rzs4",
+      "provider": "higgsfield",
+      "operation": "image_generation",
+      "unitsConsumed": 1,
+      "costUsd": 0.03,
+      "meta": {
+        "prompt": "Complete editorial Pinterest Pin artwork in 2:3 vertical aspect ratio. Aesthetic lifestyle photograp",
+        "targetFolder": "pinterest"
+      },
+      "id": "cost_1790500651060_ha560",
+      "timestamp": "2026-09-27T09:17:31.060Z"
+    },
+    {
+      "jobId": "job_2026-09-27_c3t642",
+      "provider": "higgsfield",
+      "operation": "image_generation",
+      "unitsConsumed": 1,
+      "costUsd": 0.03,
+      "meta": {
+        "prompt": "Complete editorial Pinterest Pin artwork in 2:3 vertical aspect ratio. Aesthetic lifestyle photograp",
+        "targetFolder": "pinterest"
+      },
+      "id": "cost_1790500662770_v06ws",
+      "timestamp": "2026-09-27T09:17:42.770Z"
+    },
+    {
+      "jobId": "job_2026-09-27_i0wd69",
+      "provider": "higgsfield",
+      "operation": "image_generation",
+      "unitsConsumed": 1,
+      "costUsd": 0.03,
+      "meta": {
+        "prompt": "Warm lifestyle interior photography for \"Mastering Crochet Halloween Granny Squares: A Complete Guid",
+        "targetFolder": "blog"
+      },
+      "id": "cost_1790500664289_gth12",
+      "timestamp": "2026-09-27T09:17:44.289Z"
+    },
+    {
+      "jobId": "job_2026-09-27_i0wd69",
+      "provider": "higgsfield",
+      "operation": "image_generation",
+      "unitsConsumed": 1,
+      "costUsd": 0.03,
+      "meta": {
+        "prompt": "Warm lifestyle interior photography for \"Create Spooky Crochet Halloween Granny Squares with Ease\". ",
+        "targetFolder": "blog"
+      },
+      "id": "cost_1790500679613_5eam1",
+      "timestamp": "2026-09-27T09:17:59.613Z"
+    },
+    {
+      "jobId": "job_2026-09-27_q5rzs4",
+      "provider": "higgsfield",
+      "operation": "image_generation",
+      "unitsConsumed": 1,
+      "costUsd": 0.03,
+      "meta": {
+        "prompt": "Complete 2:3 vertical editorial Pinterest Pin photograph. Atmospheric close-up photography of artisa",
+        "targetFolder": "pinterest"
+      },
+      "id": "cost_1790500685350_pdtq5",
+      "timestamp": "2026-09-27T09:18:05.350Z"
+    },
+    {
+      "jobId": "job_2026-09-27_i0wd69",
+      "provider": "higgsfield",
+      "operation": "image_generation",
+      "unitsConsumed": 1,
+      "costUsd": 0.03,
+      "meta": {
+        "prompt": "Complete editorial Pinterest Pin artwork in 2:3 vertical aspect ratio. Aesthetic lifestyle photograp",
+        "targetFolder": "pinterest"
+      },
+      "id": "cost_1790500695460_6j2ti",
+      "timestamp": "2026-09-27T09:18:15.460Z"
+    },
+    {
+      "jobId": "job_2026-09-27_c3t642",
+      "provider": "higgsfield",
+      "operation": "image_generation",
+      "unitsConsumed": 1,
+      "costUsd": 0.03,
+      "meta": {
+        "prompt": "Complete 2:3 vertical editorial Pinterest Pin photograph. Atmospheric close-up photography of artisa",
+        "targetFolder": "pinterest"
+      },
+      "id": "cost_1790500697263_evrr4",
+      "timestamp": "2026-09-27T09:18:17.263Z"
+    },
+    {
+      "jobId": "job_2026-09-27_i0wd69",
+      "provider": "higgsfield",
+      "operation": "image_generation",
+      "unitsConsumed": 1,
+      "costUsd": 0.03,
+      "meta": {
+        "prompt": "Complete 2:3 vertical editorial Pinterest Pin photograph. Atmospheric close-up photography of artisa",
+        "targetFolder": "pinterest"
+      },
+      "id": "cost_1790500714178_7q4fe",
+      "timestamp": "2026-09-27T09:18:34.178Z"
+    },
+    {
+      "jobId": "job_2026-09-27_i0wd69",
+      "provider": "higgsfield",
+      "operation": "image_generation",
+      "unitsConsumed": 1,
+      "costUsd": 0.03,
+      "meta": {
+        "prompt": "Complete 2:3 vertical editorial Pinterest Pin photograph. Atmospheric close-up photography of artisa",
+        "targetFolder": "pinterest"
+      },
+      "id": "cost_1790500729722_8gl9b",
+      "timestamp": "2026-09-27T09:18:49.722Z"
     }
   ],
-  "updatedAt": "2026-09-25T21:58:27.418Z"
+  "updatedAt": "2026-09-27T09:18:49.722Z"
 }
