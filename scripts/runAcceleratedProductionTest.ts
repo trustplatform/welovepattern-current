@@ -19,6 +19,9 @@
  * All permanent scheduler settings remain completely untouched.
  */
 
+import dotenv from 'dotenv';
+dotenv.config();
+
 import fs from 'fs';
 import path from 'path';
 import { readEngineState } from '../src/seo-engine/queue/engineStorage';
