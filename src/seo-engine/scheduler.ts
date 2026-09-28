@@ -16,7 +16,7 @@
 
 import { readEngineState, writeEngineState } from './queue/engineStorage';
 import { createDailyProductionBatch, processQueueWorker } from './queue/jobQueueManager';
-import { dispatchScheduledPinterestSlot } from './publishing/pinterestSlotDispatcher';
+import { dispatchScheduledPinterestSlot, dispatchNextOverduePinterestPin } from './publishing/pinterestSlotDispatcher';
 import { getLiveBlogPosts } from './publishing/articlePublisher';
 import { SeoEngineArticleJob, PinterestCreativeConcept } from './types';
 
@@ -314,7 +314,15 @@ export async function evaluateSchedulerTick(
     writeEngineState(state);
 
     // 1. Dispatch the specific Pin mapped to this slot (09:00 -> Pin 1, 13:00 -> Pin 2, 17:00 -> Pin 3, 21:00 -> Pin 4)
-    const pinDispatchResult = await dispatchScheduledPinterestSlot(timeStr, dateStr);
+    let pinDispatchResult = await dispatchScheduledPinterestSlot(timeStr, dateStr);
+
+    // If the exact slot pin was deferred/skipped (e.g. earlier slot was missed), attempt the earliest overdue eligible Pin
+    if (!pinDispatchResult.pinPublished && config.autoPublishPinterest !== false) {
+      const catchUpResult = await dispatchNextOverduePinterestPin(timeStr, dateStr);
+      if (catchUpResult && catchUpResult.pinPublished) {
+        pinDispatchResult = catchUpResult;
+      }
+    }
 
     // 2. Also advance queue worker (only processes existing queued/awaiting jobs) unless skipped in test
     if (!options?.skipQueueWorkerExecution) {
@@ -327,6 +335,22 @@ export async function evaluateSchedulerTick(
       slotKey,
       reason: pinDispatchResult.reason || `Processed Pinterest publishing for slot ${slotKey}`,
     };
+  }
+
+  // -----------------------------------------------------------------
+  // C. PINTEREST MISSED-SLOT CATCH-UP (Non-scheduled ticks)
+  // -----------------------------------------------------------------
+  // If an article finished publishing after its scheduled slot time, or if a slot was missed,
+  // dispatch the earliest overdue Pin in strict chronological slot order (at most 1 per tick).
+  if (config.autoPublishPinterest !== false) {
+    const overduePinResult = await dispatchNextOverduePinterestPin(timeStr, dateStr);
+    if (overduePinResult && overduePinResult.pinPublished) {
+      return {
+        triggered: true,
+        action: 'pinterest_publish',
+        reason: overduePinResult.reason || `Catch-up dispatched overdue Pin ${overduePinResult.pinNumber} for job ${overduePinResult.jobId}`,
+      };
+    }
   }
 
   // If there are pending selected jobs in queue, ensure queue worker continues
