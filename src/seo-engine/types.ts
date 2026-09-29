@@ -129,7 +129,7 @@ export interface PinterestTypographyOverlay {
   primaryHeadline: string;                    // Max 4-6 words, high mobile readability
   supportingText?: string;
   ctaBadgeText: string;                       // Dynamic from Creative Director: e.g. "Try the Calculator Free →", "Get the Free Pattern →"
-  textContainerStyle: 'soft_comfort_card' | 'warm_neutral_box' | 'clean_lower_banner';
+  textContainerStyle?: 'soft_comfort_card' | 'warm_neutral_box' | 'clean_lower_banner' | string;
   isManualOverride?: boolean;                 // Set if user manually edited the CTA in Admin
 }
 

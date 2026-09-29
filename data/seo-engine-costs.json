@@ -1,6 +1,6 @@
 {
   "version": 1,
-  "totalSpendAllTimeUsd": 2.3918,
+  "totalSpendAllTimeUsd": 2.5638,
   "records": [
     {
       "provider": "openai",
@@ -1411,7 +1411,115 @@
       },
       "id": "cost_1790504960610_xw3yr",
       "timestamp": "2026-09-27T10:29:20.610Z"
+    },
+    {
+      "provider": "higgsfield",
+      "operation": "image_generation",
+      "unitsConsumed": 1,
+      "costUsd": 0.03,
+      "meta": {
+        "prompt": "Complete editorial Pinterest Pin in 2:3 vertical aspect ratio. Dynamic high-fashion diagonal composi",
+        "targetFolder": "pinterest"
+      },
+      "id": "cost_1790685618303_oohi4",
+      "timestamp": "2026-09-29T12:40:18.303Z"
+    },
+    {
+      "provider": "dataforseo",
+      "operation": "google_trends_task_post",
+      "unitsConsumed": 5,
+      "costUsd": 0.0027,
+      "meta": {
+        "taskId": "09291246-2571-0170-0000-191d7fc06946",
+        "keywords": [
+          "easy crochet pumpkin pattern free",
+          "crochet ghost pattern free",
+          "fall crochet projects for beginners",
+          "crochet autumn leaf pattern",
+          "crochet christmas tree ornament pattern"
+        ]
+      },
+      "id": "cost_1790685976351_45080",
+      "timestamp": "2026-09-29T12:46:16.351Z"
+    },
+    {
+      "provider": "openai",
+      "operation": "chat_completion",
+      "unitsConsumed": 1516,
+      "costUsd": 0.0093,
+      "meta": {
+        "model": "gpt-4o",
+        "promptTokens": 786,
+        "completionTokens": 730
+      },
+      "id": "cost_1790685997680_mkxxl",
+      "timestamp": "2026-09-29T12:46:37.680Z"
+    },
+    {
+      "provider": "openai",
+      "operation": "chat_completion",
+      "unitsConsumed": 2885,
+      "costUsd": 0.0176,
+      "meta": {
+        "model": "gpt-4o",
+        "promptTokens": 1504,
+        "completionTokens": 1381
+      },
+      "id": "cost_1790686010144_gdttx",
+      "timestamp": "2026-09-29T12:46:50.144Z"
+    },
+    {
+      "provider": "openai",
+      "operation": "chat_completion",
+      "unitsConsumed": 3856,
+      "costUsd": 0.0224,
+      "meta": {
+        "model": "gpt-4o",
+        "promptTokens": 2155,
+        "completionTokens": 1701
+      },
+      "id": "cost_1790686022827_tyupt",
+      "timestamp": "2026-09-29T12:47:02.827Z"
+    },
+    {
+      "jobId": "job_2026-09-29_mo6a67",
+      "provider": "higgsfield",
+      "operation": "image_generation",
+      "unitsConsumed": 1,
+      "costUsd": 0.03,
+      "meta": {
+        "prompt": "Warm lifestyle interior photography for \"Mastering the Classic Granny Square Blanket Pattern\". A fin",
+        "targetFolder": "blog"
+      },
+      "id": "cost_1790686055311_t06bt",
+      "timestamp": "2026-09-29T12:47:35.311Z"
+    },
+    {
+      "jobId": "job_2026-09-29_mo6a67",
+      "provider": "higgsfield",
+      "operation": "image_generation",
+      "unitsConsumed": 1,
+      "costUsd": 0.03,
+      "meta": {
+        "prompt": "Complete editorial Pinterest Pin photograph in 2:3 vertical layout. Curated editorial display of 3 t",
+        "targetFolder": "pinterest"
+      },
+      "id": "cost_1790686092616_fvn1g",
+      "timestamp": "2026-09-29T12:48:12.616Z"
+    },
+    {
+      "jobId": "job_2026-09-29_mo6a67",
+      "provider": "higgsfield",
+      "operation": "image_generation",
+      "unitsConsumed": 1,
+      "costUsd": 0.03,
+      "meta": {
+        "prompt": "Complete editorial Pinterest Pin in 2:3 vertical aspect ratio. Modern asymmetric hero composition fe",
+        "targetFolder": "pinterest"
+      },
+      "id": "cost_1790686126848_ugasr",
+      "timestamp": "2026-09-29T12:48:46.848Z"
     }
   ],
-  "updatedAt": "2026-09-27T10:29:20.611Z"
+  "updatedAt": "2026-09-29T12:48:46.848Z"
 }

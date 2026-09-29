@@ -135,16 +135,17 @@ export type PinterestCtaStyle =
   | 'clean_minimal_text'
   | 'subtle_capsule'
   | 'editorial_label'
-  | 'artisan_pigment_wash'
   | 'minimal_underline'
-  | 'tonal_comfort_pill';
+  | 'tonal_tint_box'
+  | 'framed_tag';
 
 export type PinterestTextBackground =
   | 'none_direct_photo'
-  | 'subtle_soft_vignette'
-  | 'organic_pigment_stroke'
-  | 'fine_line_frame'
-  | 'artisan_paper_wash';
+  | 'natural_shadow'
+  | 'environmental_negative_space'
+  | 'architectural_surface'
+  | 'textile_texture'
+  | 'subtle_light_gradient';
 
 /**
  * Complete Multi-Dimensional Concept Profile
@@ -188,14 +189,14 @@ export function analyzeTopicAesthetic(
       return {
         themeName: 'Midnight Harvest Studio',
         paletteDescription: 'Deep plum, rich terracotta, warm parchment, and vintage amber gold',
-        ctaVisualTreatment: 'deep plum and warm terracotta organic wash with crisp cream editorial typography',
+        ctaVisualTreatment: 'deep plum and warm terracotta tones with crisp cream editorial typography',
         lightingAndMood: 'Moody directional candlelight and golden hour amber tones',
       };
     }
     return {
       themeName: 'Autumn Warmth',
       paletteDescription: 'Warm terracotta, burnt pumpkin orange, deep espresso, and antique linen',
-      ctaVisualTreatment: 'warm terracotta and burnt pumpkin organic pigment wash with crisp cream editorial typography',
+      ctaVisualTreatment: 'warm terracotta and burnt pumpkin tones with crisp cream editorial typography',
       lightingAndMood: 'Warm golden autumn afternoon sunlight, cozy harvest textures',
     };
   }
@@ -205,14 +206,14 @@ export function analyzeTopicAesthetic(
       return {
         themeName: 'Winter Cozy Fireside',
         paletteDescription: 'Warm oatmeal wool, rich cinnamon, toasted pecan, and alpine white',
-        ctaVisualTreatment: 'warm cinnamon and oatmeal textured paper wash with refined typography',
+        ctaVisualTreatment: 'warm cinnamon and oatmeal tones with refined typography',
         lightingAndMood: 'Cozy hearthside glow with soft ambient shadows',
       };
     }
     return {
       themeName: 'Festive Botanical',
       paletteDescription: 'Deep forest pine green, cranberry red, winter cream, and warm brass',
-      ctaVisualTreatment: 'deep forest pine and winter cream textured paper wash with crisp high-contrast typography',
+      ctaVisualTreatment: 'deep forest pine and winter cream tones with crisp high-contrast typography',
       lightingAndMood: 'Soft ambient winter morning light, cozy festive ambiance',
     };
   }
@@ -222,14 +223,14 @@ export function analyzeTopicAesthetic(
       return {
         themeName: 'Vibrant Garden Bloom',
         paletteDescription: 'Fresh buttercup yellow, crisp meadow green, petal coral, and chalk white',
-        ctaVisualTreatment: 'crisp meadow green and petal coral watercolor wash with modern high-contrast typography',
+        ctaVisualTreatment: 'crisp meadow green and petal coral tones with modern high-contrast typography',
         lightingAndMood: 'Vibrant sun-drenched outdoor morning light with fresh botanical textures',
       };
     }
     return {
       themeName: 'Delicate Botanical',
       paletteDescription: 'Soft dusty rose, sage leaf green, warm biscuit, and gentle cream',
-      ctaVisualTreatment: 'soft sage leaf and gentle ecru watercolor brush wash with elegant refined typography',
+      ctaVisualTreatment: 'soft sage leaf and gentle ecru tones with elegant refined typography',
       lightingAndMood: 'Bright, airy spring window light with soft botanical shadows',
     };
   }
@@ -238,8 +239,25 @@ export function analyzeTopicAesthetic(
     return {
       themeName: 'Fresh Coastal Artisan',
       paletteDescription: 'Warm sand, sunlit ochre, light canvas ecru, and soft seafoam',
-      ctaVisualTreatment: 'sunlit ochre and warm canvas texture with high-readability typography',
+      ctaVisualTreatment: 'sunlit ochre and warm canvas tones with high-readability typography',
       lightingAndMood: 'Breezy sunlit craft studio, crisp natural daylight',
+    };
+  }
+
+  if (/parandi|hair|accessory|accessories|braid|headband|scrunchie/i.test(textCorpus)) {
+    if (variationSeed === 2) {
+      return {
+        themeName: 'Midnight Velvet & Gold',
+        paletteDescription: 'Deep sapphire cobalt, royal amethyst, burnished gold, and midnight black',
+        ctaVisualTreatment: 'deep sapphire and burnished gold tones with modern high-contrast typography',
+        lightingAndMood: 'Dramatic editorial rim lighting with rich jewel-toned contrast and velvety shadows',
+      };
+    }
+    return {
+      themeName: 'Jewel Tone Fashion Studio',
+      paletteDescription: 'Vibrant jewel tones with deep emerald green, rich plum, vivid cobalt blue, and subtle antique gold',
+      ctaVisualTreatment: 'rich emerald and cobalt jewel tones with high-contrast modern typography',
+      lightingAndMood: 'Dramatic high-fashion editorial lighting with soft natural shadows and realistic highlights',
     };
   }
 
@@ -249,14 +267,14 @@ export function analyzeTopicAesthetic(
       return {
         themeName: 'Creative Maker Workspace',
         paletteDescription: 'Rich indigo dye, warm birch wood, slate charcoal, and crisp milk cotton',
-        ctaVisualTreatment: 'rich indigo and warm birch organic wash with sharp modern legibility',
+        ctaVisualTreatment: 'rich indigo and warm birch tones with sharp modern legibility',
         lightingAndMood: 'Warm natural side light in an authentic craft workshop',
       };
     }
     return {
       themeName: 'Modern Maker Studio',
       paletteDescription: 'Natural oatmeal, warm terracotta, slate charcoal, and creamy linen',
-      ctaVisualTreatment: 'warm terracotta and oatmeal textured wash with sharp editorial legibility',
+      ctaVisualTreatment: 'warm terracotta and oatmeal tones with sharp editorial legibility',
       lightingAndMood: 'Clean diffused overhead daylight, pristine maker workspace layout',
     };
   }
@@ -266,14 +284,14 @@ export function analyzeTopicAesthetic(
       return {
         themeName: 'Rich Artisan Studio',
         paletteDescription: 'Deep walnut wood, warm ochre yarn, natural wool ecru, and aged brass',
-        ctaVisualTreatment: 'deep walnut and warm ochre textured wash with clean editorial typography',
+        ctaVisualTreatment: 'deep walnut and warm ochre tones with clean editorial typography',
         lightingAndMood: 'Artisan workshop studio lighting with warm directional depth',
       };
     }
     return {
       themeName: 'Calm Studio Craft',
       paletteDescription: 'Soft sage green, warm stone, natural unbleached wool, and muted caramel',
-      ctaVisualTreatment: 'soft sage green and ivory artisan paper texture with refined typography',
+      ctaVisualTreatment: 'soft sage green and ivory tones with refined typography',
       lightingAndMood: 'Soft side-lit studio lighting highlighting textured stitch definition',
     };
   }
@@ -283,14 +301,14 @@ export function analyzeTopicAesthetic(
       return {
         themeName: 'Colorful Yarn Wonderland',
         paletteDescription: 'Vibrant mustard, berry magenta, soft mint, and warm honey',
-        ctaVisualTreatment: 'vibrant berry magenta and warm honey organic wash with playful refined typography',
+        ctaVisualTreatment: 'vibrant berry magenta and warm honey tones with playful refined typography',
         lightingAndMood: 'Bright cheerful daylight with colorful craft backdrop',
       };
     }
     return {
       themeName: 'Playful Artisan',
       paletteDescription: 'Warm buttercup, dusty pastel peach, soft linen, and cocoa',
-      ctaVisualTreatment: 'warm honey-gold and dark cocoa organic wash with clear readability',
+      ctaVisualTreatment: 'warm honey-gold and dark cocoa tones with clear readability',
       lightingAndMood: 'Cheerful soft natural lighting with gentle warm tones',
     };
   }
@@ -300,7 +318,7 @@ export function analyzeTopicAesthetic(
     return {
       themeName: 'Modern Craft Editorial',
       paletteDescription: 'Rich charcoal, warm mustard gold, raw linen, and deep pine',
-      ctaVisualTreatment: 'mustard gold and charcoal textured wash with crisp modern typography',
+      ctaVisualTreatment: 'mustard gold and charcoal tones with crisp modern typography',
       lightingAndMood: 'Bright architectural studio daylight with soft textured shadows',
     };
   }
@@ -308,7 +326,7 @@ export function analyzeTopicAesthetic(
   return {
     themeName: 'Organic Craft Editorial',
     paletteDescription: 'Warm ecru, rich caramel, soft moss, and natural birch wood',
-    ctaVisualTreatment: 'warm caramel and crisp linen textured wash with natural craft styling',
+    ctaVisualTreatment: 'warm caramel and crisp linen tones with natural craft styling',
     lightingAndMood: 'Warm natural window light, authentic cozy maker atmosphere',
   };
 }
@@ -650,6 +668,35 @@ export function selectDistinctCreativeConceptPair(
   const theme1 = analyzeTopicAesthetic(topic, article, packet, 1);
   const theme2 = analyzeTopicAesthetic(topic, article, packet, 2);
 
+  // Concept Pair: Hair Accessories, Parandi & Wearables
+  if (/parandi|hair|accessory|accessories|braid|headband|scrunchie/i.test(textCorpus)) {
+    const dim1: PinterestCreativeDimensions = {
+      composition: 'lifestyle_scene',
+      cameraFraming: 'close_up',
+      colorMood: theme1,
+      typographyStyle: 'bold_modern_sans',
+      titlePosition: 'top_right',
+      ctaPosition: 'bottom_right',
+      ctaStyle: 'editorial_label',
+      textBackground: 'none_direct_photo',
+      propStorytelling: `Dynamic high-fashion diagonal composition of a chic woman with an intricately braided hairstyle wearing a handmade ${craftType} parandi with lush jewel-toned yarn tassels, rich texture, and subtle golden accents`,
+    };
+
+    const dim2: PinterestCreativeDimensions = {
+      composition: 'craftsmanship_macro',
+      cameraFraming: 'macro',
+      colorMood: theme2,
+      typographyStyle: 'refined_minimal',
+      titlePosition: 'bottom_left',
+      ctaPosition: 'top_left',
+      ctaStyle: 'clean_minimal_text',
+      textBackground: 'natural_shadow',
+      propStorytelling: `Artisan macro photography of jewel-toned ${craftType} parandi tassel craftsmanship with delicate stitch details, golden threads, and rich yarn plies`,
+    };
+
+    return [dim1, dim2];
+  }
+
   // Concept Pair 1: Tool Guides & Interactive Utilities
   if (topic.targetContentFormat === 'tool_focus' || topic.contentType === 'tool_guide' || /calculator|gauge|yardage|counter|converter|tracker|timer/i.test(textCorpus)) {
     const dim1: PinterestCreativeDimensions = {
@@ -672,7 +719,7 @@ export function selectDistinctCreativeConceptPair(
       titlePosition: 'top_left',
       ctaPosition: 'bottom_right',
       ctaStyle: 'subtle_capsule',
-      textBackground: 'organic_pigment_stroke',
+      textBackground: 'environmental_negative_space',
       propStorytelling: `Atmospheric natural craft lifestyle scene of a real crafter in a sunlit craft nook holding active handmade work alongside cozy wooden furniture and textured ambient backdrop`,
     };
 
@@ -689,7 +736,7 @@ export function selectDistinctCreativeConceptPair(
       titlePosition: 'top_left',
       ctaPosition: 'bottom_right',
       ctaStyle: 'clean_minimal_text',
-      textBackground: 'subtle_soft_vignette',
+      textBackground: 'natural_shadow',
       propStorytelling: `Extreme macro close-up photography highlighting intricate ${craftType} stitch definition, individual yarn plies, and exquisite textured handmade detail`,
     };
 
@@ -701,7 +748,7 @@ export function selectDistinctCreativeConceptPair(
       titlePosition: 'bottom_left',
       ctaPosition: 'top_right',
       ctaStyle: 'editorial_label',
-      textBackground: 'artisan_paper_wash',
+      textBackground: 'architectural_surface',
       propStorytelling: `Close-up artisan maker hands in action actively working textured yarn with a smooth wooden ${craftType} hook on a warm rustic workbench`,
     };
 
@@ -717,8 +764,8 @@ export function selectDistinctCreativeConceptPair(
       typographyStyle: 'editorial_serif',
       titlePosition: 'top_center',
       ctaPosition: 'bottom_right',
-      ctaStyle: 'artisan_pigment_wash',
-      textBackground: 'organic_pigment_stroke',
+      ctaStyle: 'framed_tag',
+      textBackground: 'subtle_light_gradient',
       propStorytelling: `Curated editorial display of 3 to 4 distinct finished handmade ${craftType} motifs naturally grouped across a rustic textured surface in cozy ambient lighting`,
     };
 
@@ -746,7 +793,7 @@ export function selectDistinctCreativeConceptPair(
     titlePosition: 'top_left',
     ctaPosition: 'bottom_right',
     ctaStyle: 'subtle_capsule',
-    textBackground: 'subtle_soft_vignette',
+    textBackground: 'textile_texture',
     propStorytelling: `Striking hero photography of a finished handmade ${craftType} project elegantly styled over a natural wooden chair beside a woven craft basket in warm natural light`,
   };
 
@@ -769,7 +816,8 @@ export function selectDistinctCreativeConceptPair(
  * Builds a dedicated, dynamic Higgsfield prompt enforcing STRICT IMMUTABLE TEXT & EDITORIAL ART DIRECTION:
  * - EXACTLY TWO text elements: Headline and CTA.
  * - Dynamic Title & CTA Placement: No hardcoded top-left / bottom-left. Placement adapts directly to chosen dimensions.
- * - Dynamic Typography & Backgrounds: Editorial serif, bold modern sans, compact stacked; paper panels are optional.
+ * - Dynamic Typography & Backgrounds: Editorial serif, bold modern sans, compact stacked.
+ * - ZERO PAPER / ZERO CARDS: Global hard prohibition on paper panels, pigment washes, paint dabs, watercolor shapes, badges, and UI boxes.
  * - Strict Literal Text Lock: Headline and CTA strings locked character-for-character.
  * - ZERO other text, ZERO subtitles, ZERO decorative filler words, ZERO SaaS UI elements.
  */
@@ -789,8 +837,8 @@ export function buildHiggsfieldPinPrompt(
   const titlePos = dimensions?.titlePosition || 'top_left';
   const ctaPos = dimensions?.ctaPosition || 'bottom_right';
   const typoStyle = dimensions?.typographyStyle || 'editorial_serif';
-  const bgStyle = dimensions?.textBackground || 'organic_pigment_stroke';
-  const ctaVisual = dimensions?.ctaStyle || 'artisan_pigment_wash';
+  const bgStyle = dimensions?.textBackground || 'none_direct_photo';
+  const ctaVisual = dimensions?.ctaStyle || 'clean_minimal_text';
   const framing = dimensions?.cameraFraming || 'three_quarter';
   const moodTheme = dimensions?.colorMood || theme;
 
@@ -831,27 +879,31 @@ export function buildHiggsfieldPinPrompt(
       ? 'Refined, airy uppercase editorial typography with generous letter tracking and sophisticated breathing room.'
       : 'Elegant high-end editorial SERIF typeface inspired by luxury fashion magazines and fine Pinterest editorial design. Sophisticated, feminine, refined, and artistic with high visual impact and generous scale. (NOT a heavy generic display font, NOT a playful cartoon font, NOT handwriting).';
 
-  // Format Headline Background Description
+  // Format Headline Background Description (Strictly NON-PAPER, integrated into photography)
   const headlineBgText =
     bgStyle === 'none_direct_photo'
-      ? 'Typography is integrated directly into clean, quiet negative photographic space without any background panel, card, box, or paper patch.'
-      : bgStyle === 'subtle_soft_vignette'
-      ? 'Layered with a subtle natural photographic gradient shadow that ensures high contrast against the photography.'
-      : bgStyle === 'fine_line_frame'
-      ? 'Delicate hairline artisan border framing the headline with generous negative space.'
-      : bgStyle === 'artisan_paper_wash'
-      ? 'Layered directly behind the headline is a delicate, organic artisan paper wash texture sized closely to naturally frame the headline.'
-      : 'Layered directly behind the headline is a delicate, organic textured background—such as a hand-painted watercolor/pigment wash, torn artisan paper texture, or soft textured brushstroke—sized closely to naturally frame the headline. (NOT a rectangular card, NOT a banner, NOT a UI box).';
+      ? 'Place typography directly into clean photographic negative space. No text background treatment whatsoever.'
+      : bgStyle === 'natural_shadow'
+      ? 'Typography is integrated over a natural soft photographic shadow with high organic contrast. No artificial panels or paper.'
+      : bgStyle === 'environmental_negative_space'
+      ? 'Positioned naturally within clean environmental negative space in the photographic composition. No background shape or panel.'
+      : bgStyle === 'architectural_surface'
+      ? 'Rendered cleanly across a natural background architectural surface (such as smooth wooden table or stone surface) in the photograph. No artificial cards or boxes.'
+      : bgStyle === 'textile_texture'
+      ? 'Integrated smoothly over natural background textile texture in the photograph with crisp legibility. No artificial panel.'
+      : 'Positioned over a subtle photographic ambient light gradient with clean contrast. No artificial card or panel elements.';
 
-  // Format CTA Background Description
+  // Format CTA Background Description (Strictly NON-PAPER)
   const ctaBgText =
     ctaVisual === 'clean_minimal_text'
-      ? 'Rendered as clean standalone editorial typography directly over the photograph negative space without any panel or card.'
+      ? 'Rendered as clean standalone editorial typography directly over the photograph negative space without any panel, badge, button, or container.'
       : ctaVisual === 'editorial_label'
-      ? 'Layered inside a small, compact craft label with crisp fine-line border sized closely around the text.'
+      ? 'Rendered as crisp editorial text with a delicate, minimalist fine hairline boundary sized tightly to the text.'
       : ctaVisual === 'subtle_capsule'
-      ? 'Layered inside a compact, delicate soft-toned capsule sized closely around the text.'
-      : 'Layered behind the CTA is its own dedicated, compact organic background treatment—such as an artisan textured pigment stroke, irregular paper wash, or soft paint dab—sized closely around the text. (Does NOT stretch across the image; NOT a button, NOT a pill, NOT a rounded button, NOT a badge, NOT a card, NOT a website UI element).';
+      ? 'Rendered cleanly with a subtle, soft tonal tint sized closely around the text.'
+      : ctaVisual === 'minimal_underline'
+      ? 'Rendered with a single crisp minimalist hairline underline.'
+      : 'Rendered as clean, compact editorial typography positioned naturally in negative space.';
 
   const editorialArtDirection = `
 EDITORIAL TYPOGRAPHY & ART DIRECTION (RENDER EXACTLY TWO TEXT ELEMENTS):
@@ -891,7 +943,8 @@ Before rendering, internally verify that the visible CTA exactly matches the sup
 STRICT PROHIBITIONS & FINAL TEXT CONFIRMATION:
 - ABSOLUTELY ZERO OTHER TEXT ON THE ENTIRE IMAGE: No subtitles, no secondary descriptions, no bullet points, no website headers, no URLs, no logos.
 - NEVER ADD decorative filler words such as "PATTERNS", "PROJECTS", "INSPIRATION", "COZY", "HANDMADE", or any random phrases.
-- ZERO UI ELEMENTS: No buttons, badges, pills, cards, panels, boxes, or Canva template graphics. Text backgrounds must feel like natural, artistic, organic painting/paper elements integrated into the photograph.
+- GLOBAL HARD PROHIBITION: ABSOLUTELY NO paper, torn paper, paper wash, pigment wash, paint wash, brushstroke, watercolor shape, card, panel, banner, badge, button, pill, UI element, Canva-style graphic, or artificial text container.
+- Typography must feel like natural, artistic editorial text placed directly within the photographic space.
 - Photography must dominate the frame with ample breathing room.
 - FINAL CONFIRMED TEXT ELEMENTS TO RENDER (EXACTLY TWO):
   1. HEADLINE: "${headline}"
@@ -1316,12 +1369,7 @@ export function generatePinterestCreativeConcepts(
     const typography: PinterestTypographyOverlay = {
       primaryHeadline: headline,
       ctaBadgeText: cta,
-      textContainerStyle:
-        dimensions.ctaStyle === 'editorial_label'
-          ? 'warm_neutral_box'
-          : dimensions.ctaStyle === 'clean_minimal_text'
-          ? 'clean_lower_banner'
-          : 'soft_comfort_card',
+      textContainerStyle: dimensions.textBackground,
     };
 
     const compactHiggsfieldPrompt = buildHiggsfieldPinPrompt(

@@ -1,5 +1,5 @@
 /**
- * Pinterest Creative Diversity Test Suite
+ * Pinterest Creative Diversity & Non-Paper Verification Test Suite
  * 
  * Verifies that:
  * 1. For any given article, Pin 1 and Pin 2 differ in at least 5 meaningful visual dimensions.
@@ -7,7 +7,9 @@
  * 3. Title is NOT always top-left.
  * 4. CTA is NOT always bottom-left.
  * 5. Text background panel is NOT mandatory.
- * 6. Literal Text Lock and exact tool-specific CTAs are strictly preserved.
+ * 6. ZERO paper/pigment/paint wash language in none_direct_photo prompts.
+ * 7. GLOBAL HARD PROHIBITION is included in every generated prompt.
+ * 8. Literal Text Lock and exact tool-specific CTAs are strictly preserved.
  */
 
 import {
@@ -33,9 +35,12 @@ function check(assertion: boolean, name: string, details?: string) {
 
 const dummyBoard = { id: 'board_blankets', name: 'Crochet Blankets & Afghans' };
 
+const GLOBAL_PROHIBITION_SNIPPET = 'GLOBAL HARD PROHIBITION: ABSOLUTELY NO paper, torn paper, paper wash, pigment wash, paint wash, brushstroke, watercolor shape, card, panel, banner, badge, button, pill, UI element, Canva-style graphic, or artificial text container.';
+const NONE_DIRECT_SNIPPET = 'Place typography directly into clean photographic negative space. No text background treatment whatsoever.';
+
 export function runCreativeDiversityTests(): boolean {
   console.log('===============================================================');
-  console.log('STARTING PINTEREST CREATIVE DIVERSITY TESTS');
+  console.log('STARTING PINTEREST CREATIVE DIVERSITY & NON-PAPER TESTS');
   console.log('===============================================================\n');
 
   // Test Case 1: Seasonal Roundup / Idea Collection
@@ -96,6 +101,9 @@ export function runCreativeDiversityTests(): boolean {
   check(halloweenPins[1].compactHiggsfieldPrompt.includes('LITERAL TEXT LOCK'), 'Halloween Pin 2 has Literal Text Lock');
   check(halloweenPins[0].compactHiggsfieldPrompt.includes('CROCHET HALLOWEEN GRANNY SQUARE'), 'Halloween Pin 1 has exact headline');
   check(halloweenPins[1].compactHiggsfieldPrompt.includes('CROCHET HALLOWEEN GRANNY SQUARE'), 'Halloween Pin 2 has exact headline');
+  check(halloweenPins[0].compactHiggsfieldPrompt.includes(GLOBAL_PROHIBITION_SNIPPET), 'Halloween Pin 1 contains Global Hard Prohibition');
+  check(halloweenPins[1].compactHiggsfieldPrompt.includes(GLOBAL_PROHIBITION_SNIPPET), 'Halloween Pin 2 contains Global Hard Prohibition');
+  check(halloweenPins[1].compactHiggsfieldPrompt.includes(NONE_DIRECT_SNIPPET), 'Halloween Pin 2 (none_direct_photo) contains exact clean negative space instruction');
 
   // Test Case 2: Tool Guide (Row Counter)
   const toolTopic: DiscoveredTopic = {
@@ -157,6 +165,9 @@ export function runCreativeDiversityTests(): boolean {
   check(toolPins[1].typographyOverlay.ctaBadgeText === 'USE ROW COUNTER →', 'Tool Pin 2 has exact dedicated CTA "USE ROW COUNTER →"');
   check(toolPins[0].compactHiggsfieldPrompt.includes('USE ROW COUNTER →'), 'Tool Pin 1 prompt contains exact CTA "USE ROW COUNTER →"');
   check(toolPins[1].compactHiggsfieldPrompt.includes('USE ROW COUNTER →'), 'Tool Pin 2 prompt contains exact CTA "USE ROW COUNTER →"');
+  check(toolPins[0].compactHiggsfieldPrompt.includes(GLOBAL_PROHIBITION_SNIPPET), 'Tool Pin 1 contains Global Hard Prohibition');
+  check(toolPins[1].compactHiggsfieldPrompt.includes(GLOBAL_PROHIBITION_SNIPPET), 'Tool Pin 2 contains Global Hard Prohibition');
+  check(toolPins[0].compactHiggsfieldPrompt.includes(NONE_DIRECT_SNIPPET), 'Tool Pin 1 (none_direct_photo) contains exact clean negative space instruction');
 
   // Verify non-repetitive Title & CTA placements across the pairs
   const prompt1 = toolPins[0].compactHiggsfieldPrompt;
@@ -207,9 +218,43 @@ export function runCreativeDiversityTests(): boolean {
 
   console.log(`\n[Tutorial Pins Diversity] Differences (${tutorialDiversity.differenceCount}):\n- ${tutorialDiversity.differences.join('\n- ')}`);
   check(tutorialDiversity.diverse === true, 'Tutorial Pin 1 vs Pin 2 has at least 5 visual dimension differences', `Count: ${tutorialDiversity.differenceCount}`);
+  check(tutorialPins[0].compactHiggsfieldPrompt.includes(GLOBAL_PROHIBITION_SNIPPET), 'Tutorial Pin 1 contains Global Hard Prohibition');
+  check(tutorialPins[1].compactHiggsfieldPrompt.includes(GLOBAL_PROHIBITION_SNIPPET), 'Tutorial Pin 2 contains Global Hard Prohibition');
+
+  // Test Case 4: Rigorous Paper / Pigment / Paint Wash Prohibition Check across ALL generated prompts
+  const allPrompts = [
+    ...halloweenPins.map(p => p.compactHiggsfieldPrompt),
+    ...toolPins.map(p => p.compactHiggsfieldPrompt),
+    ...tutorialPins.map(p => p.compactHiggsfieldPrompt),
+  ];
+
+  const forbiddenPhrases = [
+    'torn paper',
+    'artisan paper',
+    'paper wash',
+    'pigment wash',
+    'paint wash',
+    'brushstroke',
+    'paint dab',
+    'watercolor wash',
+    'watercolor brush',
+    'soft comfort card',
+  ];
+
+  allPrompts.forEach((prompt, idx) => {
+    // Note: The prompt contains the prohibition string "ABSOLUTELY NO paper, torn paper...", which is allowed as a negative instruction.
+    // We check that the styling descriptions outside the prohibition string do not contain forbidden positive instructions.
+    const stylingSection = prompt.split('STRICT PROHIBITIONS & FINAL TEXT CONFIRMATION:')[0];
+    forbiddenPhrases.forEach(phrase => {
+      check(
+        !stylingSection.toLowerCase().includes(phrase.toLowerCase()),
+        `Prompt ${idx + 1} styling section contains ZERO positive references to "${phrase}"`
+      );
+    });
+  });
 
   console.log('\n===============================================================');
-  console.log(`CREATIVE DIVERSITY SUMMARY: ${passed} PASSED, ${failed} FAILED`);
+  console.log(`CREATIVE DIVERSITY & PROHIBITION SUMMARY: ${passed} PASSED, ${failed} FAILED`);
   console.log('===============================================================');
 
   return failed === 0;

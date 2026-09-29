@@ -73,6 +73,45 @@
   "lastExecutedPinterestSlot": "2026-09-27_09:00",
   "todayDiscoveredTopics": [
     {
+      "id": "topic_crochet_636c61737369",
+      "keyword": "classic granny square blanket pattern",
+      "contentType": "trending_crochet",
+      "category": "crochet",
+      "source": "gsc_seed",
+      "trendScore": 0,
+      "combinedTrendScore": 0,
+      "trendDirection": "stable",
+      "opportunityScore": 89,
+      "targetContentFormat": "pattern_roundup",
+      "targetCategoryUrl": "/category/blankets",
+      "targetPatternUrls": [
+        "/pattern/cozy-granny-square-blanket",
+        "/pattern/cloud-soft-baby-blanket"
+      ],
+      "targetAudienceLevel": "all_levels",
+      "searchIntentNotes": "Timeless high-intent project guide for multi-colored heirloom blankets.",
+      "discoveredAt": "2026-09-29T12:46:29.176Z",
+      "status": "discovered"
+    },
+    {
+      "id": "topic_tool_project_tracker_70726f6a",
+      "keyword": "project tracker crochet tool",
+      "contentType": "tool_guide",
+      "category": "tools",
+      "source": "internal_catalog",
+      "trendScore": 85,
+      "trendDirection": "stable",
+      "opportunityScore": 95,
+      "targetContentFormat": "tool_focus",
+      "toolSlug": "project-tracker",
+      "targetToolUrl": "/tools/project-tracker",
+      "targetCategoryUrl": "/categories/tools",
+      "targetAudienceLevel": "all_levels",
+      "searchIntentNotes": "Tool Guide for real WeLovePattern interactive tool: Project Tracker. Problem: Keep track of active WIPs, completion status, yarn stash used, hook sizes, and photo logs.",
+      "discoveredAt": "2026-09-29T12:46:16.156Z",
+      "status": "discovered"
+    },
+    {
       "id": "topic_crochet_63726f636865",
       "keyword": "crochet halloween granny square",
       "contentType": "trending_crochet",
@@ -670,8 +709,316 @@
           "status": "ready"
         }
       }
+    },
+    {
+      "id": "job_2026-09-29_mo6a67",
+      "dateScheduled": "2026-09-29",
+      "contentType": "trending_crochet",
+      "category": "crochet",
+      "topic": {
+        "id": "topic_crochet_636c61737369",
+        "keyword": "classic granny square blanket pattern",
+        "contentType": "trending_crochet",
+        "category": "crochet",
+        "source": "gsc_seed",
+        "trendScore": 0,
+        "combinedTrendScore": 0,
+        "trendDirection": "stable",
+        "opportunityScore": 89,
+        "targetContentFormat": "pattern_roundup",
+        "targetCategoryUrl": "/category/blankets",
+        "targetPatternUrls": [
+          "/pattern/cozy-granny-square-blanket",
+          "/pattern/cloud-soft-baby-blanket"
+        ],
+        "targetAudienceLevel": "all_levels",
+        "searchIntentNotes": "Timeless high-intent project guide for multi-colored heirloom blankets.",
+        "discoveredAt": "2026-09-29T12:46:29.176Z",
+        "status": "discovered"
+      },
+      "pinterestPins": [
+        {
+          "pinNumber": 1,
+          "conceptAngle": "Curated Editorial Multi-Project Showcase",
+          "visualStyle": {
+            "imageCount": 4,
+            "compositionType": "4_image_grid",
+            "subjectDescription": "Curated Editorial Multi-Project Showcase for Mastering the Classic Granny Square Blanket Pattern",
+            "colorPalette": "Warm ecru, rich caramel, soft moss, and natural birch wood",
+            "humanElement": "none"
+          },
+          "compactHiggsfieldPrompt": "Complete editorial Pinterest Pin photograph in 2:3 vertical layout. Curated editorial display of 3 to 4 distinct finished handmade crochet motifs naturally grouped across a rustic textured surface in cozy ambient lighting. The composition is one unified, organic photograph—NOT a Canva grid, NOT UI cards, and NOT boxed panels. Warm natural window light, authentic cozy maker atmosphere, color palette of Warm ecru, rich caramel, soft moss, and natural birch wood. Authentic artisan aesthetic.\nEDITORIAL TYPOGRAPHY & ART DIRECTION (RENDER EXACTLY TWO TEXT ELEMENTS):\n\nLITERAL TEXT LOCK — TYPOGRAPHY MUST RENDER THE FOLLOWING STRINGS CHARACTER-FOR-CHARACTER:\nHEADLINE — EXACT LITERAL STRING:\n\"CLASSIC GRANNY SQUARE BLANKET PATTERN\"\n\nCTA — EXACT LITERAL STRING:\n\"SEE ALL IDEAS →\"\n\nThe words above are not semantic instructions. They are literal visual text.\nDo not interpret their meaning.\nDo not substitute synonyms.\nDo not rewrite them.\nDo not improve them.\nDo not paraphrase them.\nDo not change any individual word.\nDo not change punctuation.\nDo not replace MORE with ALL.\nDo not replace ALL with MORE.\nDo not replace the arrow.\nRender the exact supplied characters as visible typography.\n\nBefore rendering, internally verify that the visible CTA exactly matches the supplied CTA string \"SEE ALL IDEAS →\". If the rendered wording differs in any word, it is incorrect.\n\n1. HEADLINE VISUAL STYLING:\n   - Placement: Upper-center area in clean negative space above the focal subject.\n   - Typography: Elegant high-end editorial SERIF typeface inspired by luxury fashion magazines and fine Pinterest editorial design. Sophisticated, feminine, refined, and artistic with high visual impact and generous scale. (NOT a heavy generic display font, NOT a playful cartoon font, NOT handwriting).\n   - Creative Background: Layered directly behind the headline is a delicate, organic textured background—such as a hand-painted watercolor/pigment wash, torn artisan paper texture, or soft textured brushstroke—sized closely to naturally frame the headline. (NOT a rectangular card, NOT a banner, NOT a UI box).\n\n2. ACTION CTA VISUAL STYLING:\n   - Placement: Lower-right area in natural negative space with generous breathing room and clear physical separation from the headline. Never attached or placed directly beneath the headline.\n   - Typography: Rendered in Montserrat ExtraBold (font-weight 800, uppercase, ~24px visual size, letter spacing 1.2–1.5px, line height 1.0–1.1). Bold, crisp, highly readable on mobile, modern, premium, and confident (warm caramel and crisp linen textured wash with natural craft styling).\n   - Creative Background: Layered behind the CTA is its own dedicated, compact organic background treatment—such as an artisan textured pigment stroke, irregular paper wash, or soft paint dab—sized closely around the text. (Does NOT stretch across the image; NOT a button, NOT a pill, NOT a rounded button, NOT a badge, NOT a card, NOT a website UI element).\n\nSTRICT PROHIBITIONS & FINAL TEXT CONFIRMATION:\n- ABSOLUTELY ZERO OTHER TEXT ON THE ENTIRE IMAGE: No subtitles, no secondary descriptions, no bullet points, no website headers, no URLs, no logos.\n- NEVER ADD decorative filler words such as \"PATTERNS\", \"PROJECTS\", \"INSPIRATION\", \"COZY\", \"HANDMADE\", or any random phrases.\n- ZERO UI ELEMENTS: No buttons, badges, pills, cards, panels, boxes, or Canva template graphics. Text backgrounds must feel like natural, artistic, organic painting/paper elements integrated into the photograph.\n- Photography must dominate the frame with ample breathing room.\n- FINAL CONFIRMED TEXT ELEMENTS TO RENDER (EXACTLY TWO):\n  1. HEADLINE: \"CLASSIC GRANNY SQUARE BLANKET PATTERN\"\n  2. CTA: \"SEE ALL IDEAS →\"",
+          "typographyOverlay": {
+            "primaryHeadline": "CLASSIC GRANNY SQUARE BLANKET PATTERN",
+            "ctaBadgeText": "SEE ALL IDEAS →",
+            "textContainerStyle": "soft_comfort_card"
+          },
+          "destinationUrl": "https://welovepattern.com/blog/mastering-the-classic-granny-square-blanket-pattern",
+          "targetBoardId": "board_blankets",
+          "targetBoardName": "Crochet Blankets & Afghans",
+          "boardName": "Crochet Blankets & Afghans",
+          "publishStatus": "image_ready",
+          "higgsfieldRequestId": "20285a15-d1e9-410b-acbf-769fed31f246",
+          "stableAssetPath": "/app/applet/public/generated/pinterest/seo-pins/mastering-the-classic-granny-square-blan-01ac56d323.jpg",
+          "stablePublicUrl": "/generated/pinterest/seo-pins/mastering-the-classic-granny-square-blan-01ac56d323.jpg"
+        },
+        {
+          "pinNumber": 2,
+          "conceptAngle": "Asymmetric Dynamic Editorial Feature",
+          "visualStyle": {
+            "imageCount": 1,
+            "compositionType": "single_hero",
+            "subjectDescription": "Asymmetric Dynamic Editorial Feature for Mastering the Classic Granny Square Blanket Pattern",
+            "colorPalette": "Rich charcoal, warm mustard gold, raw linen, and deep pine",
+            "humanElement": "none"
+          },
+          "compactHiggsfieldPrompt": "Complete editorial Pinterest Pin in 2:3 vertical aspect ratio. Modern asymmetric hero composition featuring a single striking handmade crochet project positioned dynamically in negative space with rich natural textures. Bright architectural studio daylight with soft textured shadows, palette of Rich charcoal, warm mustard gold, raw linen, and deep pine. High-resolution real photography dominates the frame.\nEDITORIAL TYPOGRAPHY & ART DIRECTION (RENDER EXACTLY TWO TEXT ELEMENTS):\n\nLITERAL TEXT LOCK — TYPOGRAPHY MUST RENDER THE FOLLOWING STRINGS CHARACTER-FOR-CHARACTER:\nHEADLINE — EXACT LITERAL STRING:\n\"CLASSIC GRANNY SQUARE BLANKET PATTERN\"\n\nCTA — EXACT LITERAL STRING:\n\"SEE ALL IDEAS →\"\n\nThe words above are not semantic instructions. They are literal visual text.\nDo not interpret their meaning.\nDo not substitute synonyms.\nDo not rewrite them.\nDo not improve them.\nDo not paraphrase them.\nDo not change any individual word.\nDo not change punctuation.\nDo not replace MORE with ALL.\nDo not replace ALL with MORE.\nDo not replace the arrow.\nRender the exact supplied characters as visible typography.\n\nBefore rendering, internally verify that the visible CTA exactly matches the supplied CTA string \"SEE ALL IDEAS →\". If the rendered wording differs in any word, it is incorrect.\n\n1. HEADLINE VISUAL STYLING:\n   - Placement: Lower-right area in natural negative space balanced with the composition.\n   - Typography: Bold, clean modern architectural SANS-SERIF typeface (geometric, heavy, crisp, contemporary editorial style with high visual impact and immaculate readability).\n   - Creative Background: Typography is integrated directly into clean, quiet negative photographic space without any background panel, card, box, or paper patch.\n\n2. ACTION CTA VISUAL STYLING:\n   - Placement: Upper-left area in natural negative space, well separated from the headline.\n   - Typography: Rendered in Montserrat ExtraBold (font-weight 800, uppercase, ~24px visual size, letter spacing 1.2–1.5px, line height 1.0–1.1). Bold, crisp, highly readable on mobile, modern, premium, and confident (mustard gold and charcoal textured wash with crisp modern typography).\n   - Creative Background: Rendered as clean standalone editorial typography directly over the photograph negative space without any panel or card.\n\nSTRICT PROHIBITIONS & FINAL TEXT CONFIRMATION:\n- ABSOLUTELY ZERO OTHER TEXT ON THE ENTIRE IMAGE: No subtitles, no secondary descriptions, no bullet points, no website headers, no URLs, no logos.\n- NEVER ADD decorative filler words such as \"PATTERNS\", \"PROJECTS\", \"INSPIRATION\", \"COZY\", \"HANDMADE\", or any random phrases.\n- ZERO UI ELEMENTS: No buttons, badges, pills, cards, panels, boxes, or Canva template graphics. Text backgrounds must feel like natural, artistic, organic painting/paper elements integrated into the photograph.\n- Photography must dominate the frame with ample breathing room.\n- FINAL CONFIRMED TEXT ELEMENTS TO RENDER (EXACTLY TWO):\n  1. HEADLINE: \"CLASSIC GRANNY SQUARE BLANKET PATTERN\"\n  2. CTA: \"SEE ALL IDEAS →\"",
+          "typographyOverlay": {
+            "primaryHeadline": "CLASSIC GRANNY SQUARE BLANKET PATTERN",
+            "ctaBadgeText": "SEE ALL IDEAS →",
+            "textContainerStyle": "clean_lower_banner"
+          },
+          "destinationUrl": "https://welovepattern.com/blog/mastering-the-classic-granny-square-blanket-pattern",
+          "targetBoardId": "board_blankets",
+          "targetBoardName": "Crochet Blankets & Afghans",
+          "boardName": "Crochet Blankets & Afghans",
+          "publishStatus": "image_ready",
+          "higgsfieldRequestId": "00d21afd-4c5f-410b-b857-5d807e21db82",
+          "stableAssetPath": "/app/applet/public/generated/pinterest/seo-pins/mastering-the-classic-granny-square-blan-983b353965.jpg",
+          "stablePublicUrl": "/generated/pinterest/seo-pins/mastering-the-classic-granny-square-blan-983b353965.jpg"
+        }
+      ],
+      "stage": "completed",
+      "requiresApproval": true,
+      "indexNowNotified": true,
+      "createdAt": "2026-09-29T12:46:29.184Z",
+      "updatedAt": "2026-09-29T12:48:46.868Z",
+      "logs": [
+        {
+          "timestamp": "2026-09-29T12:46:29.185Z",
+          "level": "info",
+          "message": "Job created for TRENDING_CROCHET (Category: CROCHET): \"classic granny square blanket pattern\" with opportunity score 89."
+        },
+        {
+          "timestamp": "2026-09-29T12:46:29.201Z",
+          "level": "info",
+          "message": "Starting technical craft research..."
+        },
+        {
+          "timestamp": "2026-09-29T12:46:37.686Z",
+          "level": "info",
+          "message": "Factual research packet validated successfully."
+        },
+        {
+          "timestamp": "2026-09-29T12:46:37.689Z",
+          "level": "info",
+          "message": "Generating article with OpenAI..."
+        },
+        {
+          "timestamp": "2026-09-29T12:47:02.840Z",
+          "level": "info",
+          "message": "Article generated successfully (1122 words). Content safely persisted to job state."
+        },
+        {
+          "timestamp": "2026-09-29T12:47:02.842Z",
+          "level": "info",
+          "message": "Starting Stage 3: Board resolution and visual asset generation..."
+        },
+        {
+          "timestamp": "2026-09-29T12:47:02.852Z",
+          "level": "info",
+          "message": "Generating Hero image (Marketing Studio Image 2.0 Alpha, 1k, 16:9)..."
+        },
+        {
+          "timestamp": "2026-09-29T12:47:35.312Z",
+          "level": "info",
+          "message": "Hero image generated and saved to /generated/blog/mastering-the-classic-granny-square-blan-9497b7ee59.jpg"
+        },
+        {
+          "timestamp": "2026-09-29T12:47:35.319Z",
+          "level": "info",
+          "message": "Generating Pin 1 image (Marketing Studio Image 2.0 Alpha, 1k, 2:3)..."
+        },
+        {
+          "timestamp": "2026-09-29T12:48:12.618Z",
+          "level": "info",
+          "message": "Pin 1 generated and saved to /generated/pinterest/seo-pins/mastering-the-classic-granny-square-blan-01ac56d323.jpg"
+        },
+        {
+          "timestamp": "2026-09-29T12:48:12.623Z",
+          "level": "info",
+          "message": "Generating Pin 2 image (Marketing Studio Image 2.0 Alpha, 1k, 2:3)..."
+        },
+        {
+          "timestamp": "2026-09-29T12:48:46.851Z",
+          "level": "info",
+          "message": "Pin 2 generated and saved to /generated/pinterest/seo-pins/mastering-the-classic-granny-square-blan-983b353965.jpg"
+        },
+        {
+          "timestamp": "2026-09-29T12:48:46.857Z",
+          "level": "info",
+          "message": "Article passed all 9 quality gates. Auto-publishing directly to live website..."
+        },
+        {
+          "timestamp": "2026-09-29T12:48:46.868Z",
+          "level": "info",
+          "message": "Article successfully published to live website: https://welovepattern.com/blog/mastering-the-classic-granny-square-blanket-pattern (Blog Post ID: blog_1790686126864_15o1157)"
+        }
+      ],
+      "factualResearch": {
+        "topicId": "topic_crochet_636c61737369",
+        "topic": "classic granny square blanket pattern",
+        "searchIntent": "The user likely wants to understand how to crochet a classic granny square blanket, including materials, techniques, and accurate measurements.",
+        "craftType": "crochet",
+        "sourceAuthority": "Craft Yarn Council Technical Standards & OpenAI Craft Research",
+        "cycStandardVersion": "CYC 2024 Guidelines",
+        "generatedAt": "2026-09-29T12:46:37.681Z",
+        "verifiedTerminology": [
+          "Double crochet (UK: Treble crochet)",
+          "Chain stitch"
+        ],
+        "verifiedMaterials": {
+          "yarnWeights": [
+            "CYC #4 Worsted",
+            "CYC #3 DK"
+          ],
+          "hookSizes": [
+            "5.0 mm (H-8)",
+            "4.0 mm (G-6)"
+          ],
+          "standardYardages": "Baby blanket: 700 - 1,000 meters, Throw blanket: 1,300 - 1,800 meters",
+          "verifiedDimensions": {
+            "Baby Blanket": "30 x 36 inches (76 x 91 cm)",
+            "Lapghan": "36 x 48 inches (91 x 122 cm)",
+            "Throw Blanket": "50 x 60 inches (127 x 152 cm)",
+            "Twin Blanket": "66 x 90 inches (168 x 229 cm)"
+          }
+        },
+        "authorizedPercentages": [
+          10,
+          15,
+          20
+        ],
+        "prohibitedMetrics": [
+          "stitches per skein",
+          "divide stitches by stitches per skein",
+          "arbitrary yards per stitch",
+          "invented mattress or bed sizes",
+          "commercial sales pricing or revenue claims"
+        ],
+        "verifiedFormulas": [
+          {
+            "name": "Area Ratio Swatch Scaling Method",
+            "description": "Calculates total project yardage by scaling swatch yardage to blanket surface area",
+            "formulaText": "Total Yardage = (Blanket Area / Swatch Area) * Swatch Yardage * 1.10",
+            "steps": [
+              "Step 1: Crochet a swatch with known dimensions.",
+              "Step 2: Measure the area of the swatch.",
+              "Step 3: Calculate the blanket area based on desired dimensions.",
+              "Step 4: Use the formula to estimate total yardage, adding a 10% buffer."
+            ]
+          }
+        ],
+        "supportedClaims": [
+          "Textured stitches like bobbles and puff stitches consume more yarn than flat stitches like single crochet and double crochet.",
+          "A 10% to 15% safety buffer is standard practice.",
+          "Yarn is sold by weight and yardage, not by stitch count."
+        ],
+        "techniqueKeyPoints": [
+          "Granny squares are typically constructed using a series of chain and double crochet stitches.",
+          "Color changes can be made at the end of each round to create multicolored squares.",
+          "Joining granny squares can be done using a whip stitch or crochet join techniques."
+        ],
+        "makerPainPoints": [
+          "Ensuring consistent tension throughout multiple squares.",
+          "Managing and weaving in multiple yarn ends from color changes.",
+          "Calculating the correct number of squares and yardage needed for desired blanket size."
+        ],
+        "faqItems": [
+          {
+            "question": "What is the best yarn for a granny square blanket?",
+            "factualAnswer": "Worsted weight yarn (CYC #4) is commonly used for its balance of warmth and stitch definition."
+          },
+          {
+            "question": "How do I join granny squares?",
+            "factualAnswer": "Granny squares can be joined using various methods such as sewing with a tapestry needle or crocheting together with slip stitches or single crochet."
+          },
+          {
+            "question": "How do I ensure my squares are the same size?",
+            "factualAnswer": "Consistent tension and using the same hook size throughout are key. Blocking the squares after completion can also help achieve uniformity."
+          }
+        ],
+        "verifiedInternalLinks": [
+          {
+            "anchorText": "blanket pattern",
+            "url": "/category/blankets",
+            "entityType": "category"
+          },
+          {
+            "anchorText": "granny square",
+            "url": "/category/granny-squares",
+            "entityType": "category"
+          },
+          {
+            "anchorText": "blanket pattern",
+            "url": "/pattern/cozy-granny-square-blanket",
+            "entityType": "pattern"
+          },
+          {
+            "anchorText": "blanket pattern",
+            "url": "/pattern/cloud-soft-baby-blanket",
+            "entityType": "pattern"
+          },
+          {
+            "anchorText": "blanket pattern",
+            "url": "/pattern/rainbow-granny-stripe-throw",
+            "entityType": "pattern"
+          }
+        ]
+      },
+      "articleContent": {
+        "title": "Mastering the Classic Granny Square Blanket Pattern",
+        "slug": "mastering-the-classic-granny-square-blanket-pattern",
+        "excerpt": "Discover how to crochet a timeless classic granny square blanket with our detailed step-by-step guide, perfect for all skill levels.",
+        "contentHtml": "<h2>Introduction to the Classic Granny Square Blanket</h2><p>The classic <a href=\"/category/granny-squares\" class=\"text-amber-700 underline hover:text-amber-800 transition-colors\">granny square</a> blanket is a beloved project among crocheters, offering a perfect blend of simplicity and versatility. Whether you're a seasoned crocheter or new to the craft, this pattern allows you to create a stunning blanket that can be customized in size, color, and style. In this guide, we'll cover everything you need to know to successfully crochet a classic granny square blanket, from selecting materials to joining your squares.</p><h2>Materials and Tools</h2><h3>Yarn Selection</h3><p>For a classic granny square blanket, worsted weight yarn (CYC #4) is an excellent choice due to its balance of warmth and stitch definition. Alternatively, you can use DK weight yarn (CYC #3) for a lighter, more delicate finish. When choosing yarn, consider the final use of the blanket. Wool yarn offers excellent insulation and warmth, making it ideal for colder climates. Acrylic yarn, on the other hand, is durable and easy to care for, making it a practical choice for everyday use. Cotton yarn provides a breathable and natural option, perfect for summer blankets or those with sensitive skin.</p><h3>Hook Sizes</h3><p>Recommended hook sizes for this project are 5.0 mm (H-8) for worsted weight yarn and 4.0 mm (G-6) for DK weight yarn. Choose the hook size that matches your yarn choice and achieves the desired drape and texture. A larger hook size can result in a looser stitch and a softer blanket, while a smaller hook will create a denser fabric.</p><h3>Additional Tools</h3><ul><li>Tapestry needle for weaving in ends and joining squares</li><li>Scissors</li><li>Measuring tape</li><li>Blocking mats and pins for finishing</li></ul><h2>Stitch Techniques</h2><p>The classic granny square is primarily constructed using chain stitches and double crochet stitches. Understanding these basic stitches is crucial before you begin.</p><h3>Chain Stitch (ch)</h3><p>This stitch is used to create the foundation chains and spaces between clusters of double crochet stitches. To create a chain stitch, yarn over and pull through the loop on the hook. Repeat this to create the desired number of chains.</p><h3>Double Crochet (dc)</h3><p>This stitch forms the main structure of the granny squares, creating the iconic clusters. To make a double crochet, yarn over, insert the hook into the stitch, yarn over again and pull through the stitch, yarn over and pull through two loops on the hook, yarn over and pull through the remaining two loops.</p><h2>Project Overview and Construction</h2><p>The beauty of a granny square blanket lies in its modular nature. You can create as many squares as needed to achieve your desired blanket size. This modularity also allows for easy customization of color patterns and design.</p><h3>Calculating Yardage</h3><p>To estimate the amount of yarn needed, use the Area Ratio Swatch Scaling Method. Start by crocheting a swatch and measure its area. Then calculate your blanket's total area using the dimensions provided below:</p><ul><li>Baby Blanket: 30 x 36 inches (76 x 91 cm)</li><li>Lapghan: 36 x 48 inches (91 x 122 cm)</li><li>Throw Blanket: 50 x 60 inches (127 x 152 cm)</li><li>Twin Blanket: 66 x 90 inches (168 x 229 cm)</li></ul><p>Apply the formula: Total Yardage = (Blanket Area / Swatch Area) * Swatch Yardage * 1.10, incorporating a 10% buffer for any discrepancies. This buffer helps account for variations in tension, stitch patterns, and any potential errors.</p><h3>Square Construction</h3><p>Begin each granny square with a slip knot and chain 4, joining with a slip stitch to form a ring. Follow these steps to create each round:</p><ol><li><strong>Round 1:</strong> Ch 3 (counts as dc), 2 dc into the ring, ch 2, *3 dc into the ring, ch 2* repeat from * to * twice, join with a slip stitch to the top of the starting ch 3.</li><li><strong>Round 2 and beyond:</strong> Ch 3, 2 dc in the corner space, ch 2, 3 dc in the same space, *3 dc in the next space, 3 dc, ch 2, 3 dc in the corner space* repeat around, join with a slip stitch.</li></ol><p>Continue adding rounds until your square reaches the desired size. Maintain consistent tension to ensure all squares are uniform.</p><h3>Joining Squares</h3><p>Once you've crocheted the desired number of squares, it's time to join them. You can use a whip stitch with a tapestry needle or crochet them together using slip stitches or single crochet for a seamless finish. The method you choose will affect the overall look and flexibility of the blanket.</p><h2>Tips for Success</h2><ul><li><strong>Consistent Tension:</strong> Maintain consistent tension to ensure all squares are uniform in size. Blocking each square can also help achieve uniformity. Wet blocking involves soaking the squares and pinning them to shape, while steam blocking uses heat and moisture to set the stitches.</li><li><strong>Managing Yarn Ends:</strong> To manage multiple yarn ends from color changes, weave them in as you go to save time during finishing. This will also keep the back of your work neat.</li><li><strong>Color Changes:</strong> Experiment with color changes at the end of each round for a vibrant, multicolored effect. Consider using a color wheel to select complementary colors for a harmonious design.</li><li><strong>Handling Border Curling:</strong> If the borders of your squares curl, ensure your tension is not too tight and consider adding an extra round of single crochet to stabilize the edges.</li></ul><h2>Variations and Customizations</h2><p>The classic granny square blanket can be personalized in countless ways. Consider these variations:</p><ul><li><strong>Gradient Yarn:</strong> Use a gradient yarn for a subtle color transition across your squares. This can create a beautiful ombre effect without the need for frequent color changes.</li><li><strong>Textured Stitches:</strong> Incorporate textured stitches like bobbles for additional depth and interest, keeping in mind that they will consume more yarn. These can be used selectively to create patterns or motifs within the blanket.</li><li><strong>Square Size Variation:</strong> Vary the size of your squares for a dynamic, patchwork effect. Larger squares can highlight particular colors or patterns, while smaller squares can add intricate detail.</li></ul><h2>Frequently Asked Questions</h2><h3>What is the best yarn for a granny square blanket?</h3><p>Worsted weight yarn (CYC #4) is commonly used for its balance of warmth and stitch definition.</p><h3>How do I join granny squares?</h3><p>Granny squares can be joined using various methods such as sewing with a tapestry needle or crocheting together with slip stitches or single crochet.</p><h3>How do I ensure my squares are the same size?</h3><p>Consistent tension and using the same hook size throughout are key. Blocking the squares after completion can also help achieve uniformity.</p><h2>Conclusion</h2><p>Crocheting a classic granny square blanket is a rewarding project that combines tradition and creativity. By following this comprehensive guide, you'll be able to create a beautiful and personalized blanket that showcases your crochet skills. Enjoy the process and the warmth of your handmade creation, knowing that each stitch contributes to a cherished heirloom.</p>",
+        "wordCount": 1122,
+        "category": "crochet",
+        "contentType": "trending_crochet",
+        "tags": [
+          "granny square",
+          "crochet blanket",
+          "yarn crafts",
+          "crochet patterns"
+        ],
+        "seoMeta": {
+          "title": "Classic Granny Square Blanket Pattern Guide",
+          "description": "Learn how to crochet a classic granny square blanket with detailed steps, materials, and tips for perfect results.",
+          "keywords": "classic granny square blanket pattern, crochet, yarn"
+        },
+        "heroImage": {
+          "prompt": "Warm lifestyle interior photography for \"Mastering the Classic Granny Square Blanket Pattern\". A finished hand-crafted crochet blanket draped gracefully over a comfortable wooden armchair beside a woven basket of cozy yarn cakes, warm sunlight streaming through window, elegant rustic home decor, authentic high-resolution craft photography.",
+          "compactPrompt": "Warm lifestyle interior photography for \"Mastering the Classic Granny Square Blanket Pattern\". A finished hand-crafted crochet blanket draped gracefully over a comfortable wooden armchair beside a woven basket of cozy yarn cakes, warm sunlight streaming through window, elegant rustic home decor, authentic high-resolution craft photography.",
+          "higgsfieldRequestId": "8087ef5b-8503-45e4-86a6-ba4de9b8a3de",
+          "stableAssetPath": "/app/applet/public/generated/blog/mastering-the-classic-granny-square-blan-9497b7ee59.jpg",
+          "stablePublicUrl": "/generated/blog/mastering-the-classic-granny-square-blan-9497b7ee59.jpg",
+          "status": "ready"
+        }
+      },
+      "costBreakdown": {
+        "dataForSeoCostUsd": 0,
+        "openAiCostUsd": 0,
+        "higgsfieldCostUsd": 0.09,
+        "totalCostUsd": 0.09
+      },
+      "validatedAt": "2026-09-29T12:48:46.857Z",
+      "generatedAt": "2026-09-29T12:48:46.857Z",
+      "publicationScheduledAt": "08:00",
+      "publishedBlogPostId": "blog_1790686126864_15o1157",
+      "publishedSlug": "mastering-the-classic-granny-square-blanket-pattern",
+      "publishedUrl": "https://welovepattern.com/blog/mastering-the-classic-granny-square-blanket-pattern",
+      "publishedAt": "2026-09-29T12:48:46.868Z"
     }
   ],
   "completedJobsHistory": [],
-  "updatedAt": "2026-09-27T09:21:52.284Z"
+  "updatedAt": "2026-09-29T12:48:46.868Z"
 }
