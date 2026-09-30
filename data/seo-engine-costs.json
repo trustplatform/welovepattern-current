@@ -1,6 +1,6 @@
 {
   "version": 1,
-  "totalSpendAllTimeUsd": 2.5638,
+  "totalSpendAllTimeUsd": 2.6696,
   "records": [
     {
       "provider": "openai",
@@ -1519,7 +1519,179 @@
       },
       "id": "cost_1790686126848_ugasr",
       "timestamp": "2026-09-29T12:48:46.848Z"
+    },
+    {
+      "provider": "dataforseo",
+      "operation": "google_trends_task_post",
+      "unitsConsumed": 5,
+      "costUsd": 0.0027,
+      "meta": {
+        "taskId": "09291306-2571-0170-0000-0b2ea5867e17",
+        "keywords": [
+          "easy crochet pumpkin pattern free",
+          "crochet ghost pattern free",
+          "fall crochet projects for beginners",
+          "crochet autumn leaf pattern",
+          "crochet christmas tree ornament pattern"
+        ]
+      },
+      "id": "cost_1790687192718_1fczt",
+      "timestamp": "2026-09-29T13:06:32.718Z"
+    },
+    {
+      "provider": "dataforseo",
+      "operation": "google_trends_task_post",
+      "unitsConsumed": 5,
+      "costUsd": 0.0027,
+      "meta": {
+        "taskId": "09291306-2571-0170-0000-9dcad13e60f9",
+        "keywords": [
+          "easy crochet pumpkin pattern free",
+          "crochet ghost pattern free",
+          "fall crochet projects for beginners",
+          "crochet autumn leaf pattern",
+          "crochet christmas tree ornament pattern"
+        ]
+      },
+      "id": "cost_1790687192730_ys06n",
+      "timestamp": "2026-09-29T13:06:32.730Z"
+    },
+    {
+      "provider": "dataforseo",
+      "operation": "google_trends_task_post",
+      "unitsConsumed": 5,
+      "costUsd": 0.0027,
+      "meta": {
+        "taskId": "09291306-2571-0170-0000-ea321dfd09d3",
+        "keywords": [
+          "easy crochet pumpkin pattern free",
+          "crochet ghost pattern free",
+          "fall crochet projects for beginners",
+          "crochet autumn leaf pattern",
+          "crochet christmas tree ornament pattern"
+        ]
+      },
+      "id": "cost_1790687192773_fvrx3",
+      "timestamp": "2026-09-29T13:06:32.773Z"
+    },
+    {
+      "provider": "openai",
+      "operation": "chat_completion",
+      "unitsConsumed": 1465,
+      "costUsd": 0.0087,
+      "meta": {
+        "model": "gpt-4o",
+        "promptTokens": 798,
+        "completionTokens": 667
+      },
+      "id": "cost_1790687216458_0ewp5",
+      "timestamp": "2026-09-29T13:06:56.458Z"
+    },
+    {
+      "provider": "dataforseo",
+      "operation": "google_trends_task_post",
+      "unitsConsumed": 5,
+      "costUsd": 0.0027,
+      "meta": {
+        "taskId": "09291307-2571-0170-0000-32debcb7a39b",
+        "keywords": [
+          "easy crochet pumpkin pattern free",
+          "crochet ghost pattern free",
+          "fall crochet projects for beginners",
+          "crochet autumn leaf pattern",
+          "crochet christmas tree ornament pattern"
+        ]
+      },
+      "id": "cost_1790687237844_07br3",
+      "timestamp": "2026-09-29T13:07:17.844Z"
+    },
+    {
+      "provider": "dataforseo",
+      "operation": "google_trends_task_post",
+      "unitsConsumed": 5,
+      "costUsd": 0.0027,
+      "meta": {
+        "taskId": "09291307-2571-0170-0000-af43173de2fd",
+        "keywords": [
+          "easy crochet pumpkin pattern free",
+          "crochet ghost pattern free",
+          "fall crochet projects for beginners",
+          "crochet autumn leaf pattern",
+          "crochet christmas tree ornament pattern"
+        ]
+      },
+      "id": "cost_1790687237845_q27uh",
+      "timestamp": "2026-09-29T13:07:17.845Z"
+    },
+    {
+      "provider": "dataforseo",
+      "operation": "google_trends_task_post",
+      "unitsConsumed": 5,
+      "costUsd": 0.0027,
+      "meta": {
+        "taskId": "09291307-2571-0170-0000-6145e159ed82",
+        "keywords": [
+          "easy crochet pumpkin pattern free",
+          "crochet ghost pattern free",
+          "fall crochet projects for beginners",
+          "crochet autumn leaf pattern",
+          "crochet christmas tree ornament pattern"
+        ]
+      },
+      "id": "cost_1790687238116_z3ow0",
+      "timestamp": "2026-09-29T13:07:18.116Z"
+    },
+    {
+      "provider": "openai",
+      "operation": "chat_completion",
+      "unitsConsumed": 1500,
+      "costUsd": 0.009,
+      "meta": {
+        "model": "gpt-4o",
+        "promptTokens": 798,
+        "completionTokens": 702
+      },
+      "id": "cost_1790687259097_yeual",
+      "timestamp": "2026-09-29T13:07:39.097Z"
+    },
+    {
+      "provider": "openai",
+      "operation": "chat_completion",
+      "unitsConsumed": 2828,
+      "costUsd": 0.0171,
+      "meta": {
+        "model": "gpt-4o",
+        "promptTokens": 1491,
+        "completionTokens": 1337
+      },
+      "id": "cost_1790687273275_w5y75",
+      "timestamp": "2026-09-29T13:07:53.275Z"
+    },
+    {
+      "provider": "openai",
+      "operation": "chat_completion",
+      "unitsConsumed": 3973,
+      "costUsd": 0.0248,
+      "meta": {
+        "model": "gpt-4o",
+        "promptTokens": 1997,
+        "completionTokens": 1976
+      },
+      "id": "cost_1790687293007_s66vx",
+      "timestamp": "2026-09-29T13:08:13.007Z"
+    },
+    {
+      "provider": "higgsfield",
+      "operation": "image_generation",
+      "unitsConsumed": 1,
+      "costUsd": 0.03,
+      "meta": {
+        "prompt": "Complete editorial Pinterest Pin in 2:3 vertical layout. Extreme macro close-up photography highligh",
+        "targetFolder": "pinterest"
+      },
+      "id": "cost_1790687324470_q6elr",
+      "timestamp": "2026-09-29T13:08:44.470Z"
     }
   ],
-  "updatedAt": "2026-09-29T12:48:46.848Z"
+  "updatedAt": "2026-09-29T13:08:44.470Z"
 }

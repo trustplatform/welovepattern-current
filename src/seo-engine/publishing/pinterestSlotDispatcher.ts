@@ -20,6 +20,16 @@ import fs from 'fs';
 import { readEngineState, updateJobInState } from '../queue/engineStorage';
 import { publishPinToPinterest, PublishPinResult } from './pinterestPublisher';
 import { SeoEngineArticleJob, PinterestCreativeConcept } from '../types';
+import { getPinterestAuthRecord } from '../../pinterest/pinterestOAuth';
+
+export function isPinterestConnected(): boolean {
+  const useSandbox = process.env.PINTEREST_USE_SANDBOX === 'true';
+  if (useSandbox) {
+    return Boolean(process.env.PINTEREST_SANDBOX_ACCESS_TOKEN?.trim());
+  }
+  const authRecord = getPinterestAuthRecord();
+  return Boolean(authRecord && authRecord.accessToken);
+}
 
 export interface DispatchPinterestSlotResult {
   triggered: boolean;
@@ -122,9 +132,22 @@ export async function dispatchScheduledPinterestSlot(
     };
   }
 
+  // 3. Pre-flight Check: Pinterest connection
+  if (!isPinterestConnected()) {
+    console.log(`[PinterestSlotDispatcher] ℹ️ Pinterest account is not connected. Deferring live Pin dispatch for Slot ${slotIndex + 1} (${slotTime}) until connected in Admin Settings.`);
+    return {
+      triggered: true,
+      pinPublished: false,
+      slotIndex,
+      jobId: job.id,
+      pinNumber: pin.pinNumber,
+      reason: 'Pinterest account is not connected. Please connect Pinterest in Admin Settings.',
+    };
+  }
+
   console.log(`[PinterestSlotDispatcher] 📌 Dispatching Slot ${slotIndex + 1} (${slotTime}) -> Job ${job.id}, Pin ${pin.pinNumber}...`);
 
-  // 3. Dispatch to Pinterest API
+  // 4. Dispatch to Pinterest API
   const pubResult: PublishPinResult = await publishPinToPinterest(job, pin);
 
   if (pubResult.success && pubResult.pinId) {
@@ -198,7 +221,7 @@ export async function dispatchNextOverduePinterestPin(
   const state = readEngineState();
   const config = state.config;
 
-  if (!config.engineActive || config.autoPublishPinterest === false) {
+  if (!config.engineActive || config.autoPublishPinterest === false || !isPinterestConnected()) {
     return null;
   }
 

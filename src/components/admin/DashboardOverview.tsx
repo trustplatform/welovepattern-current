@@ -174,7 +174,10 @@ export const DashboardOverview: React.FC<DashboardOverviewProps> = ({
     const pins = j.pinterestPins || j.pins || [];
     return acc + pins.filter((p: any) => p.publishStatus === 'published' || Boolean(p.pinterestPinId)).length;
   }, 0);
-  const totalPinsScheduled = Math.max(0, totalPinsGenerated - totalPinsPublished);
+  const totalPinsScheduled = periodJobs.reduce((acc, j) => {
+    const pins = j.pinterestPins || j.pins || [];
+    return acc + pins.filter((p: any) => p.publishStatus === 'image_ready').length;
+  }, 0);
   const totalFailedJobs = periodJobs.filter(j => j.stage === 'failed').length;
   const awaitingApprovalJobs = allJobs.filter(j => j.stage === 'awaiting_approval');
 
