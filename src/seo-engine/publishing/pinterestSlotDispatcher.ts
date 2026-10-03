@@ -145,9 +145,22 @@ export async function dispatchScheduledPinterestSlot(
     };
   }
 
+  // 4. Pre-flight Check: Target Board ID assigned
+  if (!pin.targetBoardId) {
+    console.log(`[PinterestSlotDispatcher] ℹ️ Pin ${pin.pinNumber} for job ${job.id} has no target Pinterest board assigned. Deferring live Pin dispatch for Slot ${slotIndex + 1} (${slotTime}) until a board is assigned.`);
+    return {
+      triggered: true,
+      pinPublished: false,
+      slotIndex,
+      jobId: job.id,
+      pinNumber: pin.pinNumber,
+      reason: 'No suitable Pinterest board assigned. Pin publication safely deferred until board assignment.',
+    };
+  }
+
   console.log(`[PinterestSlotDispatcher] 📌 Dispatching Slot ${slotIndex + 1} (${slotTime}) -> Job ${job.id}, Pin ${pin.pinNumber}...`);
 
-  // 4. Dispatch to Pinterest API
+  // 5. Dispatch to Pinterest API
   const pubResult: PublishPinResult = await publishPinToPinterest(job, pin);
 
   if (pubResult.success && pubResult.pinId) {
@@ -274,6 +287,11 @@ export async function dispatchNextOverduePinterestPin(
 
     // Check 4: Does local image asset exist?
     if (!pin.stableAssetPath || !fs.existsSync(pin.stableAssetPath)) {
+      continue;
+    }
+
+    // Check 5: Is target board assigned?
+    if (!pin.targetBoardId) {
       continue;
     }
 

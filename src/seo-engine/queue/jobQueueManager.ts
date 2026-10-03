@@ -332,7 +332,11 @@ export async function executeJobLifecycle(
     job.topic,
     article.category,
     undefined,
-    { allowTestFallback: isTestExecution }
+    {
+      allowTestFallback: isTestExecution,
+      fallbackBoardId: config.fallbackBoardId,
+      fallbackBoardName: config.fallbackBoardName,
+    }
   );
 
   let resolvedBoard = boardResolution.board;
@@ -351,17 +355,34 @@ export async function executeJobLifecycle(
         });
         return j;
       });
-    } else {
+    } else if (config.fallbackBoardId && config.fallbackBoardName) {
+      resolvedBoard = {
+        id: config.fallbackBoardId,
+        name: config.fallbackBoardName,
+      };
       updateJobInState(jobId, j => {
-        j.stage = 'failed';
         j.logs.push({
           timestamp: new Date().toISOString(),
-          level: 'error',
-          message: `Pinterest Board Selection Paused: ${boardResolution.reason}`,
+          level: 'warn',
+          message: `Pinterest Board Auto-Match had low confidence (${boardResolution.confidenceScore}/100 for topic "${job.topic.keyword}"). Using configured fallback board "${resolvedBoard?.name}" for creative concepts.`,
         });
         return j;
       });
-      return getJobById(jobId)!;
+    } else {
+      // Safe non-fatal handling: Article was generated successfully and must NOT be failed.
+      // Pinterest Pin publishing is deferred until an appropriate board is connected or assigned in Admin.
+      resolvedBoard = {
+        id: '',
+        name: 'Unassigned (No Matching Board)',
+      };
+      updateJobInState(jobId, j => {
+        j.logs.push({
+          timestamp: new Date().toISOString(),
+          level: 'warn',
+          message: `No suitable Pinterest board found (${boardResolution.reason}). Article generation will proceed to completion. Pinterest Pin publication deferred until a matching board is assigned in Admin.`,
+        });
+        return j;
+      });
     }
   } else if (boardResolution.isTestFallback) {
     updateJobInState(jobId, j => {

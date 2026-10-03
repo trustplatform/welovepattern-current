@@ -43,32 +43,111 @@ export interface BoardResolutionResult {
 
 export interface BoardResolutionOptions {
   allowTestFallback?: boolean;
+  fallbackBoardId?: string;
+  fallbackBoardName?: string;
 }
 
 /** Known craft boards catalog used for offline matching and test-safe fallback */
 export const DEFAULT_KNOWN_CRAFT_BOARDS: NormalizedPinterestBoard[] = [
-  { id: 'board_blankets', name: 'Crochet Blankets & Afghans' },
-  { id: 'board_tutorials', name: 'Crochet Tutorials & Stitches' },
-  { id: 'board_tools', name: 'Crochet Tools & Yarn Calculators' },
-  { id: 'board_flowers', name: 'Crochet Flowers & Motifs' },
-  { id: 'board_amigurumi', name: 'Crochet Amigurumi & Toys' },
-  { id: 'board_baby', name: 'Crochet Baby Patterns & Gifts' },
-  { id: 'board_clothing', name: 'Crochet Clothing & Wearables' },
-  { id: 'board_accessories', name: 'Crochet Bags & Accessories' },
-  { id: 'board_decor', name: 'Crochet Home Decor' },
+  { id: 'board_blankets', name: 'Crochet Blankets & Afghans', description: 'Cozy crochet blanket patterns, afghans, throws, and baby blankets.' },
+  { id: 'board_tutorials', name: 'Crochet Tutorials & Stitches', description: 'Step-by-step crochet stitch tutorials, techniques, beginner how-tos, and stitch guides.' },
+  { id: 'board_tools', name: 'Crochet Tools & Yarn Calculators', description: 'Interactive crochet tools, yarn calculators, gauge swatch calculators, row counters, and converters.' },
+  { id: 'board_flowers', name: 'Crochet Flowers & Motifs', description: 'Crochet flower patterns, floral appliques, granny squares, and decorative motifs.' },
+  { id: 'board_amigurumi', name: 'Crochet Amigurumi & Toys', description: 'Cute amigurumi crochet patterns, plush toys, stuffed animals, and dolls.' },
+  { id: 'board_baby', name: 'Crochet Baby Patterns & Gifts', description: 'Handmade crochet baby blankets, booties, hats, sweaters, and baby shower gifts.' },
+  { id: 'board_clothing', name: 'Crochet Clothing & Wearables', description: 'Modern crochet clothing patterns, sweaters, cardigans, tops, vests, and wearable fashion.' },
+  { id: 'board_accessories', name: 'Crochet Bags & Accessories', description: 'Handmade crochet bags, totes, beanies, hats, scarves, cowls, headbands, and accessories.' },
+  { id: 'board_decor', name: 'Crochet Home Decor', description: 'Cozy crochet home decor ideas, pillows, cushions, coasters, potholders, and baskets.' },
 ];
 
-/** Semantic synonyms for craft project categories */
-const CRAFT_SEMANTIC_TAXONOMY: Record<string, string[]> = {
-  blankets: ['blanket', 'blankets', 'afghan', 'afghans', 'throw', 'throws', 'lapghan', 'bedspread', 'granny square'],
-  tools: ['tool', 'tools', 'calculator', 'calculators', 'guide', 'guides', 'gauge', 'chart', 'convert', 'yardage', 'tips'],
-  flowers: ['flower', 'flowers', 'rose', 'roses', 'floral', 'applique', 'motifs', 'botanical'],
-  amigurumi: ['amigurumi', 'toy', 'toys', 'plush', 'plushie', 'doll', 'animal', 'creature', 'stuffed'],
-  baby: ['baby', 'infant', 'toddler', 'nursery', 'bootie', 'booties', 'layette', 'baby blanket'],
-  clothing: ['sweater', 'cardigan', 'top', 'crop top', 'garment', 'wearable', 'vest', 'pullover'],
-  accessories: ['hat', 'beanie', 'scarf', 'shawl', 'cowl', 'headband', 'mittens', 'gloves', 'tote', 'bag'],
-  stitches: ['stitch', 'stitches', 'tutorial', 'technique', 'how-to', 'step-by-step', 'beginner', 'learn'],
-  decor: ['home decor', 'pillow', 'cushion', 'potholder', 'coaster', 'rug', 'basket'],
+/** Semantic synonyms and negative keyword boundaries for craft project categories */
+export const CRAFT_SEMANTIC_TAXONOMY: Record<string, { category: string; keywords: string[]; negativeKeywords?: string[] }> = {
+  tools: {
+    category: 'tools',
+    keywords: [
+      'tool', 'tools', 'calculator', 'calculators', 'calculate', 'counter', 'counters',
+      'tracker', 'trackers', 'converter', 'converters', 'convert', 'yardage', 'gauge',
+      'timer', 'timers', 'dictionary', 'abbreviation', 'abbreviations', 'planner', 'layout',
+      'cost', 'pricing', 'price', 'stitch counter', 'row counter', 'yarn calculator',
+      'gauge calculator', 'blanket calculator', 'border calculator', 'hook size', 'needle size',
+      'substitute', 'stash', 'pdf organizer', 'library', 'difficulty checker', 'resource', 'resources',
+      'utility', 'utilities', 'cheat sheet', 'chart', 'charts'
+    ],
+    negativeKeywords: ['clothing', 'sweater', 'garment', 'amigurumi', 'toy', 'doll', 'blanket', 'afghan', 'flower', 'motif', 'decor', 'pillow', 'rug', 'bag', 'tote', 'hat', 'beanie']
+  },
+  tutorials: {
+    category: 'tutorials',
+    keywords: [
+      'tutorial', 'tutorials', 'stitch', 'stitches', 'technique', 'techniques',
+      'how to', 'how-to', 'step-by-step', 'step by step', 'beginner', 'learn',
+      'guide', 'guides', 'lesson', 'lessons', 'basics', 'masterclass', 'method',
+      'instruction', 'instructions', 'waffle stitch', 'moss stitch', 'magic ring',
+      'single crochet', 'double crochet', 'half double', 'slip stitch', 'decrease',
+      'increase', 'invisible decrease', 'ribbed', 'ribbing', 'joining', 'border'
+    ],
+    negativeKeywords: ['calculator', 'converter', 'tool']
+  },
+  blankets: {
+    category: 'blankets',
+    keywords: [
+      'blanket', 'blankets', 'afghan', 'afghans', 'throw', 'throws', 'lapghan',
+      'bedspread', 'granny square blanket', 'baby blanket', 'heirloom blanket'
+    ],
+    negativeKeywords: ['amigurumi', 'toy', 'doll', 'calculator', 'counter', 'converter', 'tool']
+  },
+  flowers: {
+    category: 'flowers',
+    keywords: [
+      'flower', 'flowers', 'rose', 'roses', 'daisy', 'floral', 'applique', 'motifs',
+      'motif', 'botanical', 'leaves', 'leaf', 'bloom', 'blossom', 'sunflower', 'tulip'
+    ],
+    negativeKeywords: ['calculator', 'counter', 'tool']
+  },
+  amigurumi: {
+    category: 'amigurumi',
+    keywords: [
+      'amigurumi', 'toy', 'toys', 'plush', 'plushie', 'doll', 'dolls', 'animal',
+      'animals', 'creature', 'stuffed', 'teddy', 'bear', 'cat', 'dog', 'character'
+    ],
+    negativeKeywords: ['blanket', 'afghan', 'sweater', 'calculator', 'counter', 'tool']
+  },
+  baby: {
+    category: 'baby',
+    keywords: [
+      'baby', 'infant', 'toddler', 'nursery', 'bootie', 'booties', 'layette',
+      'baby blanket', 'baby shower', 'newborn', 'baby hat', 'baby gift', 'baby gifts'
+    ],
+    negativeKeywords: ['calculator', 'counter', 'tool']
+  },
+  clothing: {
+    category: 'clothing',
+    keywords: [
+      'sweater', 'sweaters', 'cardigan', 'cardigans', 'top', 'tops', 'crop top',
+      'garment', 'garments', 'wearable', 'wearables', 'vest', 'vests', 'pullover',
+      'pullovers', 'dress', 'dresses', 'skirt', 'jacket', 'hoodie', 'apparel'
+    ],
+    negativeKeywords: ['calculator', 'counter', 'tool', 'amigurumi', 'toy', 'blanket']
+  },
+  accessories: {
+    category: 'accessories',
+    keywords: [
+      'bag', 'bags', 'tote', 'totes', 'purse', 'handbag', 'backpack', 'pouch',
+      'hat', 'hats', 'beanie', 'beanies', 'scarf', 'scarves', 'shawl', 'shawls',
+      'cowl', 'cowls', 'headband', 'headbands', 'mittens', 'gloves', 'wrist warmers',
+      'scrunchie', 'parandi', 'hair accessory', 'bucket hat', 'ear warmer'
+    ],
+    negativeKeywords: ['calculator', 'counter', 'tool', 'blanket', 'afghan']
+  },
+  decor: {
+    category: 'decor',
+    keywords: [
+      'home decor', 'pillow', 'pillows', 'cushion', 'cushions', 'potholder', 'potholders',
+      'coaster', 'coasters', 'rug', 'rugs', 'basket', 'baskets', 'wall hanging',
+      'table runner', 'placemat', 'wreath', 'garland', 'pumpkin', 'christmas tree',
+      'holiday decor', 'halloween decor', 'autumn decor'
+    ],
+    negativeKeywords: ['calculator', 'counter', 'tool', 'sweater', 'cardigan']
+  }
 };
 
 /**
@@ -983,52 +1062,159 @@ STRICT PROHIBITIONS & FINAL TEXT CONFIRMATION:
 
 /**
  * Evaluates semantic match score between a candidate board and the topic/category.
+ * Evaluates board name, description, taxonomy synonyms, negative keywords, content format, and tool identity.
  */
-function scoreBoardMatch(
+export function scoreBoardMatch(
   board: NormalizedPinterestBoard,
   topic: DiscoveredTopic,
-  articleCategory: string
+  articleCategory?: string
 ): number {
-  const boardNameLower = board.name.toLowerCase().trim();
-  const kwLower = topic.keyword.toLowerCase().trim();
-  const catLower = (articleCategory || '').toLowerCase().trim();
+  const boardNameLower = (board.name || '').toLowerCase().trim();
+  const boardDescLower = (board.description || '').toLowerCase().trim();
+  const kwLower = (topic.keyword || '').toLowerCase().trim();
+  const catLower = (topic.category || articleCategory || '').toLowerCase().trim();
+  const formatLower = (topic.targetContentFormat || '').toLowerCase().trim();
+  const toolSlugLower = (topic.toolSlug || '').toLowerCase().trim();
+  const contentTypeLower = (topic.contentType || '').toLowerCase().trim();
 
-  // 1. Exact match (case-insensitive)
-  if (boardNameLower === kwLower || boardNameLower.includes(kwLower)) {
+  // 1. Exact match on board name or keyword
+  if (boardNameLower === kwLower || boardNameLower.includes(kwLower) || (kwLower.length >= 6 && kwLower.includes(boardNameLower))) {
     return 100;
   }
 
-  let score = 0;
+  // Determine Primary Topic Category Intent:
+  const isTool = contentTypeLower === 'tool_guide' || catLower === 'tools' || formatLower === 'tool_focus' || Boolean(toolSlugLower) || /calculator|gauge|yardage|counter|converter|tracker|timer|dictionary/i.test(kwLower);
+  const isTutorial = formatLower === 'tutorial' || /stitch|technique|how to|how-to|step-by-step|beginner|learn|lesson/i.test(kwLower);
+  const isBlanket = /blanket|afghan|throw|lapghan|bedspread/i.test(kwLower);
+  const isAmigurumi = /amigurumi|toy|toys|plush|doll|animal/i.test(kwLower);
+  const isFlower = /flower|floral|rose|applique|motif|botanical|leaf|leaves/i.test(kwLower);
+  const isBaby = /baby|infant|toddler|nursery|bootie|layette/i.test(kwLower);
+  const isClothing = /sweater|cardigan|top|garment|wearable|vest|pullover|dress|skirt|jacket/i.test(kwLower);
+  const isAccessory = /bag|tote|purse|hat|beanie|scarf|shawl|cowl|headband|mittens|gloves|scrunchie|parandi/i.test(kwLower);
+  const isDecor = /decor|pillow|cushion|potholder|coaster|rug|basket|wreath|garland/i.test(kwLower);
 
-  // 2. Category matching
-  if (catLower && boardNameLower.includes(catLower)) {
-    score += 40;
+  // 2. Tool Guides: Strict Matching & Unrelated Board Guard
+  if (isTool) {
+    const hasToolInName = /tool|calculator|counter|tracker|converter|gauge|yardage|timer|dictionary|resource|utility/i.test(boardNameLower);
+    const hasToolInDesc = /tool|calculator|counter|tracker|converter|gauge|yardage|timer|dictionary|resource|utility/i.test(boardDescLower);
+
+    if (hasToolInName) {
+      return 95;
+    }
+    if (hasToolInDesc) {
+      return 85;
+    }
+
+    // Guard: Reject unrelated specific project category boards for tool topics
+    const isUnrelatedProjectBoard = /accessor|bag|tote|clothing|sweater|wearable|amigurumi|toy|blanket|afghan|flower|motif|decor|pillow|baby/i.test(boardNameLower);
+    if (isUnrelatedProjectBoard) {
+      return 0;
+    }
+
+    // Generic crochet anchor
+    if (/crochet|yarn|craft/i.test(boardNameLower)) {
+      return 20;
+    }
+
+    return 0;
   }
 
-  // 3. Taxonomy semantic matching
-  for (const [group, keywords] of Object.entries(CRAFT_SEMANTIC_TAXONOMY)) {
-    const topicMatchesGroup = keywords.some(k => kwLower.includes(k) || catLower.includes(k));
-    const boardMatchesGroup = keywords.some(k => boardNameLower.includes(k));
+  // 3. Tutorials & Stitches
+  if (isTutorial) {
+    const hasTutorialInName = /tutorial|stitch|technique|how to|how-to|learn|lesson|step-by-step|guide|basics|masterclass/i.test(boardNameLower);
+    const hasTutorialInDesc = /tutorial|stitch|technique|how to|how-to|learn|lesson|step-by-step|guide|basics|masterclass/i.test(boardDescLower);
 
-    if (topicMatchesGroup && boardMatchesGroup) {
-      score += 45;
-      break;
+    let tutorialScore = 0;
+    if (hasTutorialInName) tutorialScore = 90;
+    else if (hasTutorialInDesc) tutorialScore = 80;
+
+    // Check if tutorial is about a specific project category
+    if (isAccessory && /accessor|bag|hat|beanie|scarf/i.test(boardNameLower)) {
+      return Math.max(tutorialScore, 85);
+    }
+    if (isBlanket && /blanket|afghan/i.test(boardNameLower)) {
+      return Math.max(tutorialScore, 85);
+    }
+    if (isAmigurumi && /amigurumi|toy/i.test(boardNameLower)) {
+      return Math.max(tutorialScore, 85);
+    }
+    if (isClothing && /clothing|sweater|wearable/i.test(boardNameLower)) {
+      return Math.max(tutorialScore, 85);
+    }
+    if (isFlower && /flower|motif/i.test(boardNameLower)) {
+      return Math.max(tutorialScore, 85);
+    }
+    if (isDecor && /decor|pillow|coaster/i.test(boardNameLower)) {
+      return Math.max(tutorialScore, 85);
+    }
+
+    if (tutorialScore > 0) return tutorialScore;
+
+    // Reject pure calculator/counter boards for tutorial topics
+    if (/calculator|counter|converter/i.test(boardNameLower) && !hasTutorialInDesc) {
+      return 0;
     }
   }
 
-  // 4. Content format bonus
-  if (topic.targetContentFormat === 'tool_focus' && /tool|guide|tip|calculator/i.test(boardNameLower)) {
-    score += 20;
-  } else if (topic.targetContentFormat === 'tutorial' && /tutorial|stitch|learn|how/i.test(boardNameLower)) {
-    score += 20;
+  // 4. Specific Craft Categories Scoring
+  let bestCategoryScore = 0;
+
+  for (const [groupKey, taxonomy] of Object.entries(CRAFT_SEMANTIC_TAXONOMY)) {
+    const groupKeywords = Array.isArray(taxonomy) ? taxonomy : (taxonomy as any).keywords || [];
+    const negativeKeywords = (taxonomy as any).negativeKeywords || [];
+
+    const topicMatchesGroup = groupKeywords.some((k: string) => kwLower.includes(k) || catLower.includes(k));
+    if (!topicMatchesGroup) continue;
+
+    const boardNameMatches = groupKeywords.some((k: string) => boardNameLower.includes(k));
+    const boardDescMatches = groupKeywords.some((k: string) => boardDescLower.includes(k));
+    const boardHasNegative = negativeKeywords.some((nk: string) => boardNameLower.includes(nk));
+
+    if (boardHasNegative && !boardNameMatches) {
+      continue;
+    }
+
+    if (boardNameMatches) {
+      bestCategoryScore = Math.max(bestCategoryScore, 90);
+    } else if (boardDescMatches) {
+      bestCategoryScore = Math.max(bestCategoryScore, 75);
+    }
   }
 
-  // 5. General crochet anchor
-  if (/crochet|yarn/i.test(boardNameLower)) {
-    score += 10;
+  if (bestCategoryScore > 0) {
+    return bestCategoryScore;
   }
 
-  return Math.min(100, score);
+  // 5. Category Name Direct Match (Only for specific sub-categories, NOT universal 'crochet')
+  if (catLower && catLower !== 'crochet' && (boardNameLower.includes(catLower) || (catLower.length >= 4 && boardDescLower.includes(catLower)))) {
+    return 70;
+  }
+
+  // 6. If topic belongs to a specific category (blanket, amigurumi, clothing, etc.) and board belongs to a different specific category, reject
+  const specificTopicCategories = [
+    { key: 'blankets', matches: isBlanket, boardMatches: /blanket|afghan|throw/i.test(boardNameLower) },
+    { key: 'amigurumi', matches: isAmigurumi, boardMatches: /amigurumi|toy|plush/i.test(boardNameLower) },
+    { key: 'clothing', matches: isClothing, boardMatches: /clothing|sweater|wearable|top|cardigan/i.test(boardNameLower) },
+    { key: 'accessories', matches: isAccessory, boardMatches: /accessor|bag|tote|hat|beanie|scarf/i.test(boardNameLower) },
+    { key: 'flowers', matches: isFlower, boardMatches: /flower|floral|motif/i.test(boardNameLower) },
+    { key: 'decor', matches: isDecor, boardMatches: /decor|pillow|cushion|coaster|rug/i.test(boardNameLower) },
+    { key: 'baby', matches: isBaby, boardMatches: /baby|infant|bootie/i.test(boardNameLower) }
+  ];
+
+  const matchedTopicCat = specificTopicCategories.find(c => c.matches);
+  if (matchedTopicCat && !matchedTopicCat.boardMatches) {
+    const isDifferentSpecificBoard = specificTopicCategories.some(c => c.key !== matchedTopicCat.key && c.boardMatches);
+    if (isDifferentSpecificBoard) {
+      return 0; // Cross-category conflict: e.g. Blanket topic vs Accessories board
+    }
+  }
+
+  // 7. Generic Crochet Anchor (Low baseline, will not pass confidence threshold on its own)
+  if (/crochet|yarn|craft|pattern/i.test(boardNameLower)) {
+    return 20;
+  }
+
+  return 0;
 }
 
 /**
@@ -1158,7 +1344,24 @@ export async function resolveRealPinterestBoard(
   }
 
   // Strict confidence threshold: require at least 60% confidence
-  if (best.score < 60) {
+  if (!best || best.score < 60) {
+    // Check if a designated fallback board was provided via options
+    if (options?.fallbackBoardId && options?.fallbackBoardName) {
+      const configuredFallback: NormalizedPinterestBoard = {
+        id: options.fallbackBoardId,
+        name: options.fallbackBoardName,
+      };
+      return {
+        success: true,
+        board: configuredFallback,
+        confidenceScore: 70,
+        matchType: 'fallback',
+        requiresOperatorDecision: false,
+        reason: `Low auto-match score (${best ? best.score : 0}/100) on live boards. Selected configured fallback board "${configuredFallback.name}".`,
+        candidateBoards: scoredCandidates,
+      };
+    }
+
     if (options?.allowTestFallback) {
       const fallbackCandidates = DEFAULT_KNOWN_CRAFT_BOARDS;
       const scoredFallback = fallbackCandidates.map(b => ({
@@ -1185,10 +1388,10 @@ export async function resolveRealPinterestBoard(
 
     return {
       success: false,
-      confidenceScore: best.score,
-      matchType: 'semantic',
+      confidenceScore: best ? best.score : 0,
+      matchType: 'none',
       requiresOperatorDecision: true,
-      reason: `Low confidence semantic match (${best.score}/100) for topic "${topic.keyword}" with board "${best.board.name}". Operator decision required.`,
+      reason: `Low confidence semantic match (${best ? best.score : 0}/100) for topic "${topic.keyword}" with board "${best ? best.board.name : 'None'}".`,
       candidateBoards: scoredCandidates,
     };
   }
@@ -1227,7 +1430,7 @@ export function matchPinterestBoard(
   scored.sort((a, b) => b.score - a.score);
   const best = scored[0];
 
-  if (best && best.score > 0) {
+  if (best && best.score >= 50) {
     return {
       boardName: best.board.name,
       boardId: best.board.id,
@@ -1238,11 +1441,11 @@ export function matchPinterestBoard(
   }
 
   return {
-    boardName: 'Crochet Blankets & Afghans',
+    boardName: 'Crochet Tools & Yarn Calculators',
     boardId: 'default_board',
-    confidenceScore: 50,
+    confidenceScore: best ? best.score : 0,
     reason: 'Default craft board fallback',
-    success: true,
+    success: false,
   };
 }
 

@@ -14,6 +14,7 @@ const PINTEREST_API_BASE = PINTEREST_USE_SANDBOX
 export interface NormalizedPinterestBoard {
   id: string;
   name: string;
+  description?: string;
   imageThumbnailUrl?: string;
 }
 
@@ -209,6 +210,7 @@ export async function fetchPinterestBoards(): Promise<FetchBoardsResult> {
         allBoards.push({
           id: String(item.id),
           name: String(item.name || "Untitled Board"),
+          description: typeof item.description === 'string' && item.description.trim() ? item.description.trim() : undefined,
           imageThumbnailUrl: typeof thumbnail === "string" ? thumbnail : undefined
         });
       }
