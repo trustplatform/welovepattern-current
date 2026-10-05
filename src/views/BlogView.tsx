@@ -1,7 +1,7 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useCallback } from 'react';
 import { BLOG_DATA } from '../data/blogData';
 import { BlogPost } from '../types';
-import { Clock, ArrowLeft, ArrowRight, Calendar, User, Tag } from 'lucide-react';
+import { Clock, ArrowLeft, ArrowRight, Calendar, User, Tag, AlertCircle } from 'lucide-react';
 import { handleImageError } from '../utils/imageUtils';
 import { sanitizeBlogHtml } from '../utils/sanitizeHtml';
 
@@ -10,23 +10,49 @@ interface BlogViewProps {
   initialSlug?: string;
 }
 
+/**
+ * Normalizes image paths so `/public/generated/...` is properly served as `/generated/...`.
+ */
+const normalizeImageUrl = (url?: string): string => {
+  if (!url) return '';
+  if (url.startsWith('/public/')) {
+    return url.replace(/^\/public\//, '/');
+  }
+  return url;
+};
+
 export const BlogView: React.FC<BlogViewProps> = ({ initialPosts, initialSlug }) => {
   const [posts, setPosts] = useState<BlogPost[]>(() => {
     if (initialPosts && Array.isArray(initialPosts) && initialPosts.length > 0) {
-      return initialPosts.filter(p => p.status === 'published');
+      return initialPosts.filter(p => p.status === 'published' || !p.status);
     }
     return BLOG_DATA.map(p => ({ ...p, status: 'published' as const }));
   });
 
   const [activePost, setActivePost] = useState<BlogPost | null>(() => {
-    if (initialSlug && initialPosts && Array.isArray(initialPosts)) {
-      return initialPosts.find(p => p.slug === initialSlug && p.status === 'published') || null;
+    const slug = initialSlug || (typeof window !== 'undefined' && window.location.pathname.startsWith('/blog/') && window.location.pathname !== '/blog' && window.location.pathname !== '/blog/'
+      ? decodeURIComponent(window.location.pathname.replace('/blog/', '').replace(/\/$/, ''))
+      : undefined);
+    if (slug && initialPosts && Array.isArray(initialPosts)) {
+      return initialPosts.find(p => p.slug === slug && (p.status === 'published' || !p.status)) || null;
     }
     return null;
   });
-  const [loading, setLoading] = useState<boolean>(true);
 
-  // Fetch published blog posts from API
+  const [loading, setLoading] = useState<boolean>(true);
+  const [articleLoading, setArticleLoading] = useState<boolean>(false);
+  const [articleError, setArticleError] = useState<string | null>(null);
+
+  const getSlugFromLocation = useCallback((): string => {
+    if (typeof window === 'undefined') return initialSlug || '';
+    const pathname = window.location.pathname;
+    if (pathname.startsWith('/blog/') && pathname !== '/blog' && pathname !== '/blog/') {
+      return decodeURIComponent(pathname.replace('/blog/', '').replace(/\/$/, ''));
+    }
+    return initialSlug || '';
+  }, [initialSlug]);
+
+  // Fetch published blog posts list from API
   useEffect(() => {
     let isMounted = true;
     const fetchBlog = async () => {
@@ -39,7 +65,7 @@ export const BlogView: React.FC<BlogViewProps> = ({ initialPosts, initialSlug })
           }
         }
       } catch (err) {
-        console.error('Error fetching blog posts:', err);
+        console.error('[BlogView] Error fetching blog posts list:', err);
       } finally {
         if (isMounted) setLoading(false);
       }
@@ -48,30 +74,150 @@ export const BlogView: React.FC<BlogViewProps> = ({ initialPosts, initialSlug })
     return () => { isMounted = false; };
   }, []);
 
-  // Check URL pathname for direct article slug e.g. /blog/master-crochet-stitches
+  // Direct slug loader: Resolves article via memory or direct GET /api/blog/:slug
   useEffect(() => {
-    const pathname = window.location.pathname;
-    if (pathname.startsWith('/blog/') && pathname !== '/blog' && pathname !== '/blog/') {
-      const slug = pathname.replace('/blog/', '').replace(/\/$/, '');
-      const match = posts.find(p => p.slug === slug);
-      if (match) {
-        setActivePost(match);
+    const targetSlug = getSlugFromLocation();
+
+    if (!targetSlug) {
+      if (typeof window !== 'undefined' && (window.location.pathname === '/blog' || window.location.pathname === '/blog/')) {
+        setActivePost(null);
+        setArticleError(null);
       }
+      return;
     }
-  }, [posts]);
+
+    // 1. Check if already present in posts state
+    const localMatch = posts.find(p => p.slug === targetSlug);
+    if (localMatch) {
+      setActivePost(localMatch);
+      setArticleError(null);
+      return;
+    }
+
+    // 2. Fetch directly from /api/blog/:slug for dynamic SEO articles or direct external visits
+    let isMounted = true;
+    setArticleLoading(true);
+    setArticleError(null);
+
+    fetch(`/api/blog/${encodeURIComponent(targetSlug)}`)
+      .then(async (res) => {
+        if (!res.ok) {
+          throw new Error(res.status === 404 ? 'Article not found.' : `Error loading article (status ${res.status})`);
+        }
+        return res.json();
+      })
+      .then((article: BlogPost) => {
+        if (isMounted && article && article.slug) {
+          setActivePost(article);
+          setArticleError(null);
+          // Merge into posts list if not already present
+          setPosts(prev => {
+            if (prev.some(p => p.slug === article.slug)) return prev;
+            return [article, ...prev];
+          });
+        }
+      })
+      .catch((err: any) => {
+        if (isMounted) {
+          console.warn(`[BlogView] Could not load direct article for slug "${targetSlug}":`, err?.message || err);
+          setArticleError(err?.message || 'The requested article could not be loaded.');
+        }
+      })
+      .finally(() => {
+        if (isMounted) setArticleLoading(false);
+      });
+
+    return () => { isMounted = false; };
+  }, [initialSlug, getSlugFromLocation, posts]);
+
+  // Handle browser popstate navigation (Back / Forward)
+  useEffect(() => {
+    if (typeof window === 'undefined') return;
+
+    const handlePopState = () => {
+      const slug = getSlugFromLocation();
+      if (!slug) {
+        setActivePost(null);
+        setArticleError(null);
+      } else {
+        const match = posts.find(p => p.slug === slug);
+        if (match) {
+          setActivePost(match);
+          setArticleError(null);
+        } else {
+          fetch(`/api/blog/${encodeURIComponent(slug)}`)
+            .then(res => res.ok ? res.json() : null)
+            .then(data => {
+              if (data && data.slug) {
+                setActivePost(data);
+                setArticleError(null);
+              }
+            })
+            .catch(() => {});
+        }
+      }
+    };
+
+    window.addEventListener('popstate', handlePopState);
+    return () => window.removeEventListener('popstate', handlePopState);
+  }, [getSlugFromLocation, posts]);
 
   const handleOpenArticle = (post: BlogPost) => {
     setActivePost(post);
-    window.history.pushState({}, '', `/blog/${post.slug}`);
+    setArticleError(null);
+    if (typeof window !== 'undefined') {
+      window.history.pushState({}, '', `/blog/${post.slug}`);
+      window.scrollTo({ top: 0, behavior: 'smooth' });
+    }
   };
 
   const handleBackToList = () => {
     setActivePost(null);
-    window.history.pushState({}, '', '/blog');
+    setArticleError(null);
+    if (typeof window !== 'undefined') {
+      window.history.pushState({}, '', '/blog');
+      window.scrollTo({ top: 0, behavior: 'smooth' });
+    }
   };
 
+  // Direct article loading state
+  if (articleLoading && !activePost) {
+    return (
+      <div className="max-w-3xl mx-auto py-16 text-center space-y-4 animate-fadeIn">
+        <div className="w-12 h-12 border-4 border-[#E96BA8] border-t-transparent rounded-full animate-spin mx-auto"></div>
+        <p className="text-slate-600 dark:text-slate-300 font-medium text-sm">Loading article...</p>
+      </div>
+    );
+  }
+
+  // Direct article error / not found state
+  if (articleError && !activePost) {
+    return (
+      <div className="max-w-2xl mx-auto py-12 px-6 text-center space-y-6 bg-white dark:bg-slate-800 rounded-3xl border border-slate-200 dark:border-slate-700 shadow-sm animate-fadeIn">
+        <div className="w-14 h-14 bg-pink-50 dark:bg-pink-950/50 rounded-2xl flex items-center justify-center mx-auto text-[#E96BA8]">
+          <AlertCircle className="w-7 h-7" />
+        </div>
+        <div className="space-y-2">
+          <h2 className="text-2xl font-black text-slate-900 dark:text-white">Article Not Found</h2>
+          <p className="text-slate-500 dark:text-slate-400 text-sm max-w-md mx-auto">
+            {articleError}
+          </p>
+        </div>
+        <button
+          onClick={handleBackToList}
+          className="inline-flex items-center gap-2 bg-[#E96BA8] hover:bg-[#d85897] text-white font-bold px-6 py-3 rounded-xl text-sm transition-all shadow-md cursor-pointer"
+        >
+          <ArrowLeft className="w-4 h-4" />
+          <span>Browse All Articles</span>
+        </button>
+      </div>
+    );
+  }
+
+  // Active Article View
   if (activePost) {
     const sanitizedHtml = sanitizeBlogHtml(activePost.content);
+    const heroImageSrc = normalizeImageUrl(activePost.image);
 
     return (
       <div className="max-w-3xl mx-auto space-y-8 animate-fadeIn">
@@ -91,10 +237,12 @@ export const BlogView: React.FC<BlogViewProps> = ({ initialPosts, initialSlug })
             <span className="bg-pink-100 dark:bg-pink-950/60 text-[#E96BA8] text-xs font-black px-3 py-1 rounded-full uppercase border border-pink-200 dark:border-pink-800">
               {activePost.category}
             </span>
-            <span className="text-xs font-medium text-slate-400 flex items-center gap-1">
-              <Calendar className="w-3.5 h-3.5" />
-              {activePost.date}
-            </span>
+            {activePost.date && (
+              <span className="text-xs font-medium text-slate-400 flex items-center gap-1">
+                <Calendar className="w-3.5 h-3.5" />
+                {activePost.date}
+              </span>
+            )}
             {activePost.readTime && (
               <span className="text-xs font-medium text-slate-400 flex items-center gap-1">
                 <Clock className="w-3.5 h-3.5" />
@@ -117,7 +265,7 @@ export const BlogView: React.FC<BlogViewProps> = ({ initialPosts, initialSlug })
           <div className="flex items-center gap-3 text-xs text-slate-500 pt-3 border-t border-slate-100 dark:border-slate-800">
             {activePost.authorAvatar ? (
               <img
-                src={activePost.authorAvatar}
+                src={normalizeImageUrl(activePost.authorAvatar)}
                 alt={activePost.author}
                 referrerPolicy="no-referrer"
                 onError={(e) => handleImageError(e)}
@@ -135,12 +283,12 @@ export const BlogView: React.FC<BlogViewProps> = ({ initialPosts, initialSlug })
           </div>
         </div>
 
-        {/* Featured Image */}
-        {activePost.image && (
+        {/* Featured Production Hero Image */}
+        {heroImageSrc && (
           <figure className="space-y-2">
             <div className="aspect-[16/9] bg-slate-100 rounded-[24px] overflow-hidden border border-slate-200 dark:border-slate-800">
               <img
-                src={activePost.image}
+                src={heroImageSrc}
                 alt={activePost.imageAlt || activePost.title}
                 referrerPolicy="no-referrer"
                 onError={(e) => handleImageError(e)}
@@ -177,6 +325,7 @@ export const BlogView: React.FC<BlogViewProps> = ({ initialPosts, initialSlug })
     );
   }
 
+  // Blog Listing View
   return (
     <div className="space-y-8">
       <div className="space-y-2">
@@ -189,47 +338,50 @@ export const BlogView: React.FC<BlogViewProps> = ({ initialPosts, initialSlug })
       </div>
 
       <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-        {posts.map((post) => (
-          <div
-            key={post.id}
-            onClick={() => handleOpenArticle(post)}
-            className="group bg-white dark:bg-slate-800 border border-slate-200/80 dark:border-slate-700 rounded-[24px] overflow-hidden shadow-xs hover:shadow-xl transition-all cursor-pointer flex flex-col justify-between"
-          >
-            <div>
-              <div className="aspect-[16/10] bg-slate-100 dark:bg-slate-900 overflow-hidden relative">
-                <img
-                  src={post.image}
-                  alt={post.imageAlt || post.title}
-                  referrerPolicy="no-referrer"
-                  onError={(e) => handleImageError(e)}
-                  className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300"
-                />
-              </div>
-              <div className="p-5 space-y-2">
-                <div className="flex items-center justify-between">
-                  <span className="text-[11px] font-black text-[#E96BA8] uppercase tracking-wider">{post.category}</span>
-                  {post.readTime && (
-                    <span className="text-[10px] text-slate-400 flex items-center gap-1 font-medium">
-                      <Clock className="w-3 h-3" />
-                      {post.readTime}
-                    </span>
-                  )}
+        {posts.map((post) => {
+          const cardImageSrc = normalizeImageUrl(post.image);
+          return (
+            <div
+              key={post.id || post.slug}
+              onClick={() => handleOpenArticle(post)}
+              className="group bg-white dark:bg-slate-800 border border-slate-200/80 dark:border-slate-700 rounded-[24px] overflow-hidden shadow-xs hover:shadow-xl transition-all cursor-pointer flex flex-col justify-between"
+            >
+              <div>
+                <div className="aspect-[16/10] bg-slate-100 dark:bg-slate-900 overflow-hidden relative">
+                  <img
+                    src={cardImageSrc}
+                    alt={post.imageAlt || post.title}
+                    referrerPolicy="no-referrer"
+                    onError={(e) => handleImageError(e)}
+                    className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300"
+                  />
                 </div>
-                <h3 className="font-bold text-slate-900 dark:text-white text-base group-hover:text-[#E96BA8] transition-colors leading-snug">
-                  {post.title}
-                </h3>
-                <p className="text-xs text-slate-500 dark:text-slate-400 line-clamp-2 leading-relaxed">
-                  {post.excerpt}
-                </p>
+                <div className="p-5 space-y-2">
+                  <div className="flex items-center justify-between">
+                    <span className="text-[11px] font-black text-[#E96BA8] uppercase tracking-wider">{post.category}</span>
+                    {post.readTime && (
+                      <span className="text-[10px] text-slate-400 flex items-center gap-1 font-medium">
+                        <Clock className="w-3 h-3" />
+                        {post.readTime}
+                      </span>
+                    )}
+                  </div>
+                  <h3 className="font-bold text-slate-900 dark:text-white text-base group-hover:text-[#E96BA8] transition-colors leading-snug">
+                    {post.title}
+                  </h3>
+                  <p className="text-xs text-slate-500 dark:text-slate-400 line-clamp-2 leading-relaxed">
+                    {post.excerpt}
+                  </p>
+                </div>
+              </div>
+
+              <div className="px-5 pb-5 pt-3 flex items-center justify-between text-xs font-bold text-[#9B7CF8] border-t border-slate-100 dark:border-slate-700/60">
+                <span>Read Full Article</span>
+                <ArrowRight className="w-4 h-4 group-hover:translate-x-1 transition-transform" />
               </div>
             </div>
-
-            <div className="px-5 pb-5 pt-3 flex items-center justify-between text-xs font-bold text-[#9B7CF8] border-t border-slate-100 dark:border-slate-700/60">
-              <span>Read Full Article</span>
-              <ArrowRight className="w-4 h-4 group-hover:translate-x-1 transition-transform" />
-            </div>
-          </div>
-        ))}
+          );
+        })}
       </div>
     </div>
   );

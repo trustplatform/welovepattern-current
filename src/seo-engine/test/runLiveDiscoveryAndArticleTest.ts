@@ -181,6 +181,9 @@ export async function runEndToEndDiscoveryTest(taskId: string): Promise<EndToEnd
   const selectedTopic: DiscoveredTopic = {
     id: `topic-${Date.now()}`,
     keyword: selectedCandidate.keyword,
+    contentType: selectedCandidate.breakdown.contentType,
+    category: selectedCandidate.breakdown.category,
+    toolSlug: selectedCandidate.breakdown.toolSlug,
     source: 'dataforseo_trends',
     dataForSeoTaskId: taskId,
     searchTrendSignal: selectedCandidate.trendScore,

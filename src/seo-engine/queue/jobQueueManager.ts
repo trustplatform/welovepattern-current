@@ -12,17 +12,29 @@
  */
 
 import fs from 'fs';
-import { DiscoveredTopic, SeoEngineArticleJob, SeoEngineConfig, SeoEngineJobStage } from '../types';
+import { DiscoveredTopic, SeoEngineArticleJob, SeoEngineConfig, SeoEngineJobStage, ArticleContentType } from '../types';
 import { readEngineState, writeEngineState, addJobToState, updateJobInState, getJobById } from './engineStorage';
 import { conductTopicResearch } from '../research/topicResearcher';
 import { validateFactualResearchPacket } from '../research/factualPacketValidator';
 import { generateOpenAiArticle, GeneratedArticle } from '../generation/openAiArticleGenerator';
-import { generatePinterestCreativeConcepts, resolveRealPinterestBoard } from '../generation/pinterestCreativeDirector';
+import { generatePinterestCreativeConcepts, resolveRealPinterestBoard, buildHiggsfieldHeroPrompt, validateToolCtaSemanticMatch } from '../generation/pinterestCreativeDirector';
 import { evaluateProductionQualityGates } from '../validation/productionQualityGates';
 import { getJobCostBreakdown, isBudgetPermitted, releaseBudgetReservation } from '../cost/costTracker';
 import { generateHiggsfieldImage, isHiggsfieldConfigured } from '../generation/higgsfieldClient';
+import { discoverDailyTwoSlotTopics } from '../discovery/topicDiscovery';
+import { publishArticleToLiveSite } from '../publishing/articlePublisher';
 
 let isProcessingQueue = false;
+
+/**
+ * Per-job lifecycle lock.
+ *
+ * Prevents concurrent executions of the same job (for example a manual
+ * run endpoint racing with the scheduler/queue worker). Without this,
+ * two executions can both observe a missing image asset before either
+ * persists the Higgsfield request ID, causing duplicate paid generations.
+ */
+const activeJobLifecycles = new Set<string>();
 
 /**
  * Recovers any in-flight jobs that were interrupted by a server restart or crash.
@@ -58,11 +70,19 @@ export function queueJobForTopic(topic: DiscoveredTopic, config: SeoEngineConfig
   const state = readEngineState();
   const todayStr = new Date().toISOString().split('T')[0];
   const jobId = `job_${todayStr}_${Math.random().toString(36).substring(2, 8)}`;
+  const contentType: ArticleContentType = topic.contentType || (topic.category === 'tools' ? 'tool_guide' : 'trending_crochet');
+  const category: 'crochet' | 'tools' = topic.category || (contentType === 'tool_guide' ? 'tools' : 'crochet');
 
   const newJob: SeoEngineArticleJob = {
     id: jobId,
     dateScheduled: todayStr,
-    topic,
+    contentType,
+    category,
+    topic: {
+      ...topic,
+      contentType,
+      category,
+    },
     pinterestPins: [],
     stage: 'selected',
     requiresApproval: config.requiresApproval,
@@ -73,13 +93,44 @@ export function queueJobForTopic(topic: DiscoveredTopic, config: SeoEngineConfig
       {
         timestamp: new Date().toISOString(),
         level: 'info',
-        message: `Job created for topic "${topic.keyword}" with opportunity score ${topic.opportunityScore}.`,
+        message: `Job created for ${contentType.toUpperCase()} (Category: ${category.toUpperCase()}): "${topic.keyword}" with opportunity score ${topic.opportunityScore}.`,
       }
     ],
   };
 
   addJobToState(newJob);
   return newJob;
+}
+
+/**
+ * Creates and queues the strict daily 2-slot production batch:
+ * Slot 1: 1 x Trending Crochet article (Category: 'crochet', Type: 'trending_crochet')
+ * Slot 2: 1 x Tool Guide article (Category: 'tools', Type: 'tool_guide')
+ */
+export async function createDailyProductionBatch(
+  options?: { useRealDataForSeo?: boolean }
+): Promise<[SeoEngineArticleJob, SeoEngineArticleJob]> {
+  const state = readEngineState();
+  const config = state.config;
+
+  // 1. Discover the two topics
+  const [topicSlot1, topicSlot2] = await discoverDailyTwoSlotTopics({
+    useRealDataForSeo: options?.useRealDataForSeo
+  });
+
+  // Strict validation
+  if (topicSlot1.contentType !== 'trending_crochet' || topicSlot1.category !== 'crochet') {
+    throw new Error(`Slot 1 topic invalid: Expected contentType 'trending_crochet' and category 'crochet', got '${topicSlot1.contentType}' / '${topicSlot1.category}'.`);
+  }
+  if (topicSlot2.contentType !== 'tool_guide' || topicSlot2.category !== 'tools' || !topicSlot2.toolSlug) {
+    throw new Error(`Slot 2 topic invalid: Expected contentType 'tool_guide', category 'tools', and real toolSlug, got '${topicSlot2.contentType}' / '${topicSlot2.category}' / '${topicSlot2.toolSlug}'.`);
+  }
+
+  // 2. Queue both jobs atomically
+  const job1 = queueJobForTopic(topicSlot1, config);
+  const job2 = queueJobForTopic(topicSlot2, config);
+
+  return [job1, job2];
 }
 
 export interface JobLifecycleOptions {
@@ -97,6 +148,18 @@ export async function executeJobLifecycle(
   if (!job) {
     throw new Error(`Job not found with id: ${jobId}`);
   }
+
+  // Prevent concurrent lifecycle executions for the same job.
+  // This closes the race where two callers can both reach Higgsfield
+  // before the first caller persists its provider request ID.
+  if (activeJobLifecycles.has(jobId)) {
+    console.warn(`[JobQueueManager] Job ${jobId} is already running; skipping concurrent execution.`);
+    return getJobById(jobId)!;
+  }
+
+  activeJobLifecycles.add(jobId);
+
+  try {
 
   // Idempotency check: If already completed or awaiting approval, do not duplicate
   if (job.stage === 'completed' || job.stage === 'awaiting_approval') {
@@ -200,7 +263,8 @@ export async function executeJobLifecycle(
       excerpt: existingArticle.excerpt || '',
       contentHtml: existingArticle.contentHtml,
       wordCount: existingArticle.wordCount,
-      category: existingArticle.category || 'Guides',
+      category: existingArticle.category || job.category,
+      contentType: existingArticle.contentType || job.contentType,
       tags: existingArticle.tags || [],
       seoMeta: existingArticle.seoMeta || {
         title: existingArticle.title,
@@ -290,7 +354,11 @@ export async function executeJobLifecycle(
     job.topic,
     article.category,
     undefined,
-    { allowTestFallback: isTestExecution }
+    {
+      allowTestFallback: isTestExecution,
+      fallbackBoardId: config.fallbackBoardId,
+      fallbackBoardName: config.fallbackBoardName,
+    }
   );
 
   let resolvedBoard = boardResolution.board;
@@ -309,17 +377,34 @@ export async function executeJobLifecycle(
         });
         return j;
       });
-    } else {
+    } else if (config.fallbackBoardId && config.fallbackBoardName) {
+      resolvedBoard = {
+        id: config.fallbackBoardId,
+        name: config.fallbackBoardName,
+      };
       updateJobInState(jobId, j => {
-        j.stage = 'failed';
         j.logs.push({
           timestamp: new Date().toISOString(),
-          level: 'error',
-          message: `Pinterest Board Selection Paused: ${boardResolution.reason}`,
+          level: 'warn',
+          message: `Pinterest Board Auto-Match had low confidence (${boardResolution.confidenceScore}/100 for topic "${job.topic.keyword}"). Using configured fallback board "${resolvedBoard?.name}" for creative concepts.`,
         });
         return j;
       });
-      return getJobById(jobId)!;
+    } else {
+      // Safe non-fatal handling: Article was generated successfully and must NOT be failed.
+      // Pinterest Pin publishing is deferred until an appropriate board is connected or assigned in Admin.
+      resolvedBoard = {
+        id: '',
+        name: 'Unassigned (No Matching Board)',
+      };
+      updateJobInState(jobId, j => {
+        j.logs.push({
+          timestamp: new Date().toISOString(),
+          level: 'warn',
+          message: `No suitable Pinterest board found (${boardResolution.reason}). Article generation will proceed to completion. Pinterest Pin publication deferred until a matching board is assigned in Admin.`,
+        });
+        return j;
+      });
     }
   } else if (boardResolution.isTestFallback) {
     updateJobInState(jobId, j => {
@@ -332,8 +417,28 @@ export async function executeJobLifecycle(
     });
   }
 
-  // 3. Generate exactly 2 unique Pinterest creative concepts (reuse if already present from interrupted run)
-  let pins = (job.pinterestPins && job.pinterestPins.length === 2)
+  // 3. Generate exactly 2 unique Pinterest creative concepts
+  // Regenerate if pins are not present, not yet rendered as valid files, or fail semantic tool validation
+  const hasValidRenderedPins = job.pinterestPins &&
+    job.pinterestPins.length === 2 &&
+    job.pinterestPins.every(p =>
+      p.publishStatus === 'image_ready' &&
+      p.stableAssetPath &&
+      fs.existsSync(p.stableAssetPath) &&
+      fs.statSync(p.stableAssetPath).size > 100
+    );
+
+  const hasSemanticCtaMismatch = Boolean(
+    job.pinterestPins && job.pinterestPins.some(p => {
+      if (job.contentType === 'tool_guide' || job.topic.toolSlug) {
+        const val = validateToolCtaSemanticMatch(p.typographyOverlay.ctaBadgeText, job.topic.toolSlug, job.topic.keyword);
+        return !val.valid;
+      }
+      return false;
+    })
+  );
+
+  let pins = (hasValidRenderedPins && !hasSemanticCtaMismatch && job.pinterestPins)
     ? job.pinterestPins
     : generatePinterestCreativeConcepts(
         job.topic,
@@ -356,7 +461,7 @@ export async function executeJobLifecycle(
 
   // --- ASSET 1: HERO IMAGE (16:9, 1k, Marketing Studio Image 2.0 Alpha) ---
   const heroPrompt = job.articleContent?.heroImage?.prompt ||
-    `Artisan editorial craft photography for "${article.title}", beautiful ${job.topic.keyword} textures, natural skeins of yarn, wooden crafting tools, soft warm window daylight, cozy aesthetic maker space, high resolution, authentic photography.`;
+    buildHiggsfieldHeroPrompt(job.topic, article, packet);
 
   let currentHeroImage = job.articleContent?.heroImage;
   const isHeroAlreadyValid = Boolean(
@@ -695,33 +800,89 @@ export async function executeJobLifecycle(
   // Record cost breakdown onto job
   const costBreakdown = getJobCostBreakdown(jobId);
 
+  const nowIso = new Date().toISOString();
+
   // -----------------------------------------------------------------
-  // STAGE 5: SAVE AS TEST DRAFT / AWAITING APPROVAL
+  // STAGE 5: SAVE ARTICLE & PUBLISH OR AWAIT APPROVAL
   // -----------------------------------------------------------------
-  const updatedJob = updateJobInState(jobId, j => {
+  // Record verified content, validation timestamp, and pin creative concepts
+  let updatedJob = updateJobInState(jobId, j => {
     j.articleContent = {
       title: article.title,
       slug: article.slug,
       excerpt: article.excerpt,
       contentHtml: article.contentHtml,
       wordCount: article.wordCount,
-      category: article.category,
+      category: article.category || j.category,
+      contentType: article.contentType || j.contentType,
       tags: article.tags,
       seoMeta: article.seoMeta,
       heroImage: currentHeroImage,
     };
     j.pinterestPins = pins;
     j.costBreakdown = costBreakdown;
-    j.stage = 'awaiting_approval'; // Always halts safely at approval
-    j.logs.push({
-      timestamp: new Date().toISOString(),
-      level: 'info',
-      message: `Article passed all 9 quality gates (${article.wordCount} words). Saved safely as draft awaiting human approval.`,
-    });
-    return j;
-  });
+    j.validatedAt = nowIso;
+    j.generatedAt = j.generatedAt || nowIso;
+    j.publicationScheduledAt = j.publicationScheduledAt || (config.articlePublishTimes?.[0] || '08:00');
 
-  return updatedJob!;
+    // Human Approval Wall: If requiresApproval === true or autoPublish === false, halt safely in awaiting_approval
+    if (config.requiresApproval === true || config.autoPublish === false) {
+      j.stage = 'awaiting_approval';
+      j.logs.push({
+        timestamp: nowIso,
+        level: 'info',
+        message: `Article passed all 9 quality gates (${article.wordCount} words, Category: ${j.category.toUpperCase()}, Type: ${j.contentType}). Saved safely as draft awaiting human approval.`,
+      });
+    } else {
+      // Ready for autonomous publishing
+      j.stage = 'ready_to_publish' as any;
+      j.logs.push({
+        timestamp: nowIso,
+        level: 'info',
+        message: `Article passed all 9 quality gates. Auto-publishing directly to live website...`,
+      });
+    }
+    return j;
+  })!;
+
+  // -----------------------------------------------------------------
+  // STAGE 6: AUTOMATIC WEBSITE ARTICLE PUBLICATION
+  // -----------------------------------------------------------------
+  if (config.autoPublish === true && config.requiresApproval !== true) {
+    const pubResult = await publishArticleToLiveSite(updatedJob);
+    if (pubResult.success && pubResult.blogPostId) {
+      updatedJob = updateJobInState(jobId, j => {
+        j.stage = 'completed';
+        j.publishedBlogPostId = pubResult.blogPostId;
+        j.publishedSlug = pubResult.slug;
+        j.publishedUrl = pubResult.publicUrl;
+        j.publishedAt = new Date().toISOString();
+        j.indexNowNotified = true;
+        j.logs.push({
+          timestamp: new Date().toISOString(),
+          level: 'info',
+          message: `Article successfully published to live website: ${pubResult.publicUrl} (Blog Post ID: ${pubResult.blogPostId})`,
+        });
+        return j;
+      })!;
+    } else {
+      updatedJob = updateJobInState(jobId, j => {
+        j.stage = 'failed';
+        j.publicationError = pubResult.error || 'Failed to publish article to live website.';
+        j.logs.push({
+          timestamp: new Date().toISOString(),
+          level: 'error',
+          message: `Website Publication Error: ${pubResult.error}`,
+        });
+        return j;
+      })!;
+    }
+  }
+
+  return updatedJob;
+  } finally {
+    activeJobLifecycles.delete(jobId);
+  }
 }
 
 /**
@@ -735,12 +896,31 @@ export async function processQueueWorker(): Promise<void> {
   isProcessingQueue = true;
   try {
     recoverInterruptedJobs();
-    const state = readEngineState();
-    const pending = state.activeJobs.filter(j => j.stage === 'selected');
+    
+    // Process pending jobs one by one, freshly reading state on each iteration
+    while (true) {
+      const state = readEngineState();
+      const nextPendingJob = state.activeJobs.find(j => j.stage === 'selected');
+      if (!nextPendingJob) {
+        break;
+      }
 
-    for (const job of pending) {
-      console.log(`[JobQueueManager] Processing pending job ${job.id} ("${job.topic.keyword}")...`);
-      await executeJobLifecycle(job.id);
+      console.log(`[JobQueueManager] Processing pending job ${nextPendingJob.id} ("${nextPendingJob.topic.keyword}")...`);
+      try {
+        await executeJobLifecycle(nextPendingJob.id);
+      } catch (err) {
+        console.error(`[JobQueueManager] Error processing job ${nextPendingJob.id}:`, err);
+        // Mark job as failed so the queue worker does not loop indefinitely on the same job
+        updateJobInState(nextPendingJob.id, j => {
+          j.stage = 'failed';
+          j.logs.push({
+            timestamp: new Date().toISOString(),
+            level: 'error',
+            message: `Job lifecycle failed: ${err instanceof Error ? err.message : String(err)}`,
+          });
+          return j;
+        });
+      }
     }
   } finally {
     isProcessingQueue = false;

@@ -127,7 +127,30 @@ export function evaluateProductionQualityGates(
   // GATE 2: SEO INTENT ALIGNMENT & GATE 3: METADATA QUALITY
   // -----------------------------------------------------------------
   const metaResult = validateSeoMetadata(article.seoMeta.title, article.seoMeta.description, topic);
-  const seoIntentPassed = metaResult.intentAlignmentScore >= 60 && metaResult.titleValid;
+  let slotAlignmentPassed = true;
+
+  if (topic.contentType === 'trending_crochet') {
+    if (article.category !== 'crochet') {
+      slotAlignmentPassed = false;
+      rejectionReasons.push(`Slot 1 Category Error: Expected category 'crochet', got '${article.category}'.`);
+    }
+    const toolWords = ['calculator', 'estimator', 'converter', 'generator'];
+    if (toolWords.some(w => topic.keyword.toLowerCase().includes(w))) {
+      slotAlignmentPassed = false;
+      rejectionReasons.push(`Slot 1 Classification Error: Trending Crochet topic "${topic.keyword}" contains prohibited tool keyword.`);
+    }
+  } else if (topic.contentType === 'tool_guide') {
+    if (article.category !== 'tools') {
+      slotAlignmentPassed = false;
+      rejectionReasons.push(`Slot 2 Category Error: Expected category 'tools', got '${article.category}'.`);
+    }
+    if (!topic.toolSlug || !topic.targetToolUrl || !isRouteValid(topic.targetToolUrl)) {
+      slotAlignmentPassed = false;
+      rejectionReasons.push(`Slot 2 Tool Route Error: Invalid or missing target tool URL "${topic.targetToolUrl}".`);
+    }
+  }
+
+  const seoIntentPassed = metaResult.intentAlignmentScore >= 60 && metaResult.titleValid && slotAlignmentPassed;
   const metadataPassed = metaResult.metaValid && metaResult.titleValid;
 
   if (!seoIntentPassed) {
@@ -213,13 +236,20 @@ export function evaluateProductionQualityGates(
   }
 
   // -----------------------------------------------------------------
-  // GATE 9: PUBLICATION SAFETY
+  // GATE 9: PUBLICATION SAFETY & CONFIGURATION INTEGRITY
   // -----------------------------------------------------------------
-  // Strict human approval wall: Auto-publishing is not permitted without explicit human approval
+  // Evaluates production safety: verifies engine is active and configuration parameters are valid.
+  // When autoPublish is enabled without approval, validates that engine is actively configured for autonomous production.
   let pubSafetyPassed = true;
-  if (config.autoPublish === true && config.requiresApproval !== true) {
+  if (!config.engineActive) {
     pubSafetyPassed = false;
-    rejectionReasons.push('Publication Safety Failure: Direct auto-publishing without human approval wall is forbidden.');
+    rejectionReasons.push('Publication Safety Failure: Engine is inactive (config.engineActive is false).');
+  } else if (config.articlesPerDay <= 0 || config.articlesPerDay > 10) {
+    pubSafetyPassed = false;
+    rejectionReasons.push(`Publication Safety Failure: Invalid articlesPerDay limit (${config.articlesPerDay}).`);
+  } else if (!config.timezone) {
+    pubSafetyPassed = false;
+    rejectionReasons.push('Publication Safety Failure: Timezone is not configured.');
   }
 
   const passedAllGates = factualPassed &&

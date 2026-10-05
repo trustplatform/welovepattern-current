@@ -54,6 +54,8 @@ function normalizeAndRepairState(raw: Partial<SeoEngineDailyState>): SeoEngineDa
     version: raw.version || 1,
     config,
     lastRunDate: typeof raw.lastRunDate === 'string' ? raw.lastRunDate : defaults.lastRunDate,
+    lastExecutedArticleSlot: typeof raw.lastExecutedArticleSlot === 'string' ? raw.lastExecutedArticleSlot : undefined,
+    lastExecutedPinterestSlot: typeof raw.lastExecutedPinterestSlot === 'string' ? raw.lastExecutedPinterestSlot : undefined,
     todayDiscoveredTopics: Array.isArray(raw.todayDiscoveredTopics) ? raw.todayDiscoveredTopics : [],
     activeJobs: Array.isArray(raw.activeJobs) ? raw.activeJobs : [],
     completedJobsHistory: Array.isArray(raw.completedJobsHistory) ? raw.completedJobsHistory : [],

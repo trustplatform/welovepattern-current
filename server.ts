@@ -35,7 +35,16 @@ import {
   generatePinterestTitle,
   generatePinterestDescription
 } from "./src/pinterest/pinterestApi";
+import {
+  getPinAnalytics,
+  calculatePeriodDates,
+  calculateAggregatedSummary,
+  PinterestAnalyticsPeriod,
+  GetAdminPinAnalyticsResponse
+} from "./src/pinterest/pinterestAnalytics";
+import { readEngineState } from "./src/seo-engine/queue/engineStorage";
 import { createSeoEngineRouter } from "./src/seo-engine/api/seoEngineRouter";
+import { startSeoEngineScheduler } from "./src/seo-engine/scheduler";
 
 dotenv.config();
 
@@ -2544,6 +2553,59 @@ app.get("/api/admin/pinterest/boards", requireAdminAuth, async (req, res) => {
   }
 });
 
+// 7. Pinterest Pin Analytics Endpoint (Authenticated Admin only)
+// Computes and aggregates per-Pin Pinterest metrics across all published SEO Engine Pins
+app.get("/api/admin/pinterest/analytics/pins", requireAdminAuth, async (req, res) => {
+  try {
+    const periodParam = (typeof req.query.period === "string" ? req.query.period.trim().toLowerCase() : "today") as PinterestAnalyticsPeriod;
+    const validPeriods: PinterestAnalyticsPeriod[] = ["today", "yesterday", "7d", "this_month", "last_month", "custom"];
+
+    if (!validPeriods.includes(periodParam)) {
+      return res.status(400).json({
+        success: false,
+        error: `Invalid period "${periodParam}". Supported periods: ${validPeriods.join(", ")}.`
+      });
+    }
+
+    const customStart = typeof req.query.startDate === "string" ? req.query.startDate.trim() : undefined;
+    const customEnd = typeof req.query.endDate === "string" ? req.query.endDate.trim() : undefined;
+
+    // Retrieve configured timezone from SEO engine or fallback to America/New_York
+    const state = readEngineState();
+    const timeZone = state.config?.timezone || "America/New_York";
+
+    const dateCalc = calculatePeriodDates(periodParam, customStart, customEnd, timeZone);
+    if (dateCalc.error) {
+      return res.status(400).json({
+        success: false,
+        error: dateCalc.error
+      });
+    }
+
+    // Call getPinAnalytics exactly once per request
+    const analyticsResult = await getPinAnalytics(dateCalc.startDate, dateCalc.endDate, { state });
+
+    const summary = calculateAggregatedSummary(analyticsResult.pins);
+
+    const response: GetAdminPinAnalyticsResponse = {
+      success: true,
+      period: periodParam,
+      startDate: dateCalc.startDate,
+      endDate: dateCalc.endDate,
+      summary,
+      pins: analyticsResult.pins
+    };
+
+    return res.json(response);
+  } catch (err: any) {
+    console.error("Error processing Pinterest Pin Analytics request:", err);
+    return res.status(500).json({
+      success: false,
+      error: "Failed to retrieve Pinterest Pin analytics."
+    });
+  }
+});
+
 // --- CATEGORY MANAGEMENT API ENDPOINTS ---
 
 // Public GET Categories
@@ -3937,7 +3999,15 @@ Ensure all steps, rows, rounds, and materials are extracted thoroughly.`;
 });
 
 // Mount Autonomous SEO Content Engine Operator API Router
-app.use("/api/admin/seo-engine", createSeoEngineRouter(requireAdminAuth));
+// Mounted at /api/seo-engine (primary) and /api/admin/seo-engine (legacy alias)
+const seoEngineRouter = createSeoEngineRouter(requireAdminAuth);
+app.use("/api/seo-engine", seoEngineRouter);
+app.use("/api/admin/seo-engine", seoEngineRouter);
+
+// Explicit 404 handler for unknown /api/* routes to always return JSON rather than SPA index.html
+app.use("/api/*", (_req, res) => {
+  res.status(404).json({ error: "API route not found", code: "NOT_FOUND" });
+});
 
 // SSR Request Handler
 async function handleSsrRequest(req: express.Request, res: express.Response, viteDevServer?: any) {
@@ -4036,15 +4106,21 @@ app.use((err: any, _req: express.Request, res: express.Response, _next: express.
 });
 
 async function startServer() {
-  // Explicit runtime static serving for Pinterest generated pins
-  const generatedPinterestPath = path.join(process.cwd(), "public", "generated", "pinterest");
-  if (!fs.existsSync(generatedPinterestPath)) {
-    fs.mkdirSync(generatedPinterestPath, { recursive: true });
+  // Explicit runtime static serving for SEO generated assets (blog images + pinterest pins)
+  const generatedPath = path.join(process.cwd(), "public", "generated");
+  if (!fs.existsSync(generatedPath)) {
+    fs.mkdirSync(generatedPath, { recursive: true });
   }
-  app.use("/generated/pinterest", express.static(generatedPinterestPath, {
-    maxAge: "1m",
+  app.use("/generated", express.static(generatedPath, {
+    maxAge: "1d",
     setHeaders: (res) => {
-      res.setHeader("Cache-Control", "public, max-age=60");
+      res.setHeader("Cache-Control", "public, max-age=86400");
+    }
+  }));
+  app.use("/public/generated", express.static(generatedPath, {
+    maxAge: "1d",
+    setHeaders: (res) => {
+      res.setHeader("Cache-Control", "public, max-age=86400");
     }
   }));
 
@@ -4071,6 +4147,8 @@ async function startServer() {
 
   app.listen(PORT, "0.0.0.0", () => {
     console.log(`🧶 CrochetHub Server running on http://0.0.0.0:${PORT}`);
+    // Start background autonomous SEO Content Engine scheduler
+    startSeoEngineScheduler();
   });
 }
 

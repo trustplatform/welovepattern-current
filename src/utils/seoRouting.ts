@@ -79,11 +79,16 @@ export function parsePathname(
     return { view: 'blog' };
   }
   if (path.startsWith('/blog/')) {
-    const blogSlug = decodeURIComponent(path.replace('/blog/', ''));
-    const postsPool = customBlogPosts && Array.isArray(customBlogPosts) ? customBlogPosts : BLOG_DATA;
-    const exists = postsPool.some(b => b.slug === blogSlug && b.status === 'published');
-    if (!exists) {
-      return { view: 'not-found', isNotFound: true };
+    const blogSlug = decodeURIComponent(path.replace('/blog/', '')).replace(/\/$/, '');
+    if (!blogSlug) {
+      return { view: 'blog' };
+    }
+    // If blog posts pool is provided and non-empty, check if slug exists
+    if (customBlogPosts && Array.isArray(customBlogPosts) && customBlogPosts.length > 0) {
+      const exists = customBlogPosts.some(b => b.slug === blogSlug && (b.status === 'published' || !b.status));
+      if (!exists && !BLOG_DATA.some(b => b.slug === blogSlug)) {
+        return { view: 'not-found', isNotFound: true };
+      }
     }
     return { view: 'blog', blogParam: blogSlug };
   }
@@ -477,7 +482,11 @@ export function generateSeoHead(
       title = meta.metaTitle || `${post.title} | WeLovePattern Blog`;
       description = meta.metaDescription || post.excerpt;
       keywords = meta.metaKeywords || (post.tags ? post.tags.join(', ') : keywords);
-      imageUrl = meta.ogImage || post.image;
+      const rawImg = meta.ogImage || post.image;
+      if (rawImg) {
+        const cleanImg = rawImg.startsWith('/public/') ? rawImg.replace(/^\/public\//, '/') : rawImg;
+        imageUrl = cleanImg.startsWith('http') ? cleanImg : `${cleanOrigin}${cleanImg.startsWith('/') ? cleanImg : '/' + cleanImg}`;
+      }
       canonicalUrl = meta.canonicalUrl || `${cleanOrigin}/blog/${post.slug}`;
       ogType = 'article';
 

@@ -14,6 +14,7 @@ import {
   Folder
 } from 'lucide-react';
 import { SafePinterestStatus, PinterestBoard } from '../../types';
+import { PinterestPinAnalyticsSection } from './PinterestPinAnalyticsSection';
 
 export const PinterestAdmin: React.FC = () => {
   const [status, setStatus] = useState<SafePinterestStatus | null>(null);
@@ -572,6 +573,11 @@ export const PinterestAdmin: React.FC = () => {
           </div>
         )}
       </div>
+
+      {/* Pinterest Pin Performance Analytics Section (Rendered when connected) */}
+      {isConnected && (
+        <PinterestPinAnalyticsSection />
+      )}
 
       {/* Integration Setup & Configuration Details */}
       <div className="grid grid-cols-1 md:grid-cols-2 gap-6">

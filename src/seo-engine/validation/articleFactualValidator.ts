@@ -39,7 +39,10 @@ export interface FactualValidationOutput {
  * Normalizes dimension strings like "30 x 36" or "50x60" into standardized pairs.
  */
 function extractDimensionPairs(text: string): { width: number; length: number; raw: string }[] {
-  const regex = /\b(\d{1,3})\s*(?:x|by|\*)\s*(\d{1,3})\s*(?:inches|in\b|cm\b)?/gi;
+  // Matches physical dimension pairs like "30 x 36", "36 × 48", "30 by 36 inches", "50x60cm"
+  // Excludes decimal arithmetic like "193.04 x 1.10" or "12.5 x 1.2"
+  // Excludes arithmetic multiplication with bare '*'
+  const regex = /(?<![\d.])\b(\d{1,3})\s*(?:x|×|by)\s*(\d{1,3})\b(?!\.\d)\s*(?:inches|in\b|cm\b)?/gi;
   const pairs: { width: number; length: number; raw: string }[] = [];
   let m: RegExpExecArray | null;
 
@@ -320,13 +323,18 @@ export function validateArticleFactualGrounding(
   }
 
   // Check for unverified mattress/bed sizes when not in packet
-  const commonBedSizes = ['queen', 'king', 'twin', 'full size', 'california king'];
+  const commonBedSizes = [
+    { name: 'queen', regex: /\bqueen\b/i },
+    { name: 'king', regex: /\bking\b/i },
+    { name: 'twin', regex: /\btwin\b/i },
+    { name: 'california king', regex: /\bcalifornia\s+king\b/i },
+    { name: 'full size', regex: /\bfull(?:-|\s+)size\s+(?:bed|mattress|blanket|quilt|afghan|bedspread|dimensions?|size)\b|\bfull\s+(?:bed|mattress|blanket|quilt)\b/i }
+  ];
   for (const bed of commonBedSizes) {
-    const regex = new RegExp(`\\b${bed}\\b`, 'i');
-    if (regex.test(plainText)) {
-      const packetMentionsBed = Object.keys(packetDimensions).some(k => k.toLowerCase().includes(bed));
-      if (!packetMentionsBed && !plainText.toLowerCase().includes(`not in standard ${bed}`)) {
-        unsupportedClaims.push(`Unsupported dimension reference: "${bed}" size was mentioned but is not authorized in the verified dimensions packet.`);
+    if (bed.regex.test(plainText)) {
+      const packetMentionsBed = Object.keys(packetDimensions).some(k => k.toLowerCase().includes(bed.name.split(' ')[0]));
+      if (!packetMentionsBed && !plainText.toLowerCase().includes(`not in standard ${bed.name}`)) {
+        unsupportedClaims.push(`Unsupported dimension reference: "${bed.name}" size was mentioned but is not authorized in the verified dimensions packet.`);
       }
     }
   }

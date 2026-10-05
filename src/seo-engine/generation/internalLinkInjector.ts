@@ -55,34 +55,9 @@ export function injectInternalLinks(
     injectedUrls.add(`/blog/${options.currentArticleSlug.toLowerCase()}`);
   }
 
-  // First pass: scan and clean any pre-existing <a href="..."> tags in the incoming HTML
-  // If an existing link is invalid or a duplicate destination, unwrap it.
-  // If valid, preserve it, apply standard classes, and record in injectedUrls.
-  let preProcessedHtml = html.replace(/<a\s+([^>]*?)href=["']([^"']+)["']([^>]*?)>([\s\S]*?)<\/a>/gi, (match, beforeHref, url, afterHref, innerText) => {
-    const normUrl = url.trim().toLowerCase();
-    
-    // Check validity
-    if (!isRouteValid(url) || injectedUrls.has(normUrl) || injectedLinks.length >= maxLinks) {
-      // Unwrap link (keep inner text) to avoid invalid route or duplicate destination
-      return innerText;
-    }
-
-    // Determine entity type
-    const matchedCandidate = candidateLinks.find(c => c.url.toLowerCase() === normUrl);
-    const entityType = matchedCandidate?.entityType || (normUrl.startsWith('/tools/') ? 'tool' : 'blog');
-    const linkClass = entityType === 'tool'
-      ? 'text-amber-800 underline decoration-amber-500 font-semibold hover:text-amber-900 transition-colors'
-      : 'text-amber-700 underline hover:text-amber-800 transition-colors';
-
-    injectedUrls.add(normUrl);
-    injectedLinks.push({
-      anchorText: innerText.replace(/<[^>]+>/g, '').trim(),
-      url: matchedCandidate?.url || url,
-      entityType
-    });
-
-    return `<a href="${matchedCandidate?.url || url}" class="${linkClass}">${innerText}</a>`;
-  });
+  // Strip all pre-existing or malformed anchor tags to clean plain inner text
+  // to ensure links are injected deterministically without nesting or attribute corruption.
+  const preProcessedHtml = html.replace(/<a\b[^>]*>([\s\S]*?)<\/a>/gi, '$1');
 
   // Pre-filter candidate links to ensure route validity and uniqueness
   const validCandidates: VerifiedInternalLink[] = [];
@@ -139,18 +114,33 @@ export function injectInternalLinks(
 
       if (textMatch && textMatch.index !== undefined) {
         const matchedStr = textMatch[0];
+        const matchIdx = textMatch.index;
         const linkClass = candidate.entityType === 'tool'
           ? 'text-amber-800 underline decoration-amber-500 font-semibold hover:text-amber-900 transition-colors'
           : 'text-amber-700 underline hover:text-amber-800 transition-colors';
 
-        const replacement = `<a href="${candidate.url}" class="${linkClass}">${matchedStr}</a>`;
+        const before = tokens[i].text.slice(0, matchIdx);
+        const linkTag = `<a href="${candidate.url}" class="${linkClass}">${matchedStr}</a>`;
+        const after = tokens[i].text.slice(matchIdx + matchedStr.length);
 
-        tokens[i].text = tokens[i].text.replace(regex, replacement);
+        // Replace current token with: before (unprotected), linkTag (protected), after (unprotected)
+        tokens.splice(
+          i,
+          1,
+          { text: before, isProtected: false },
+          { text: linkTag, isProtected: true },
+          { text: after, isProtected: false }
+        );
+
         injectedUrls.add(candidate.url.toLowerCase());
         injectedLinks.push({
           ...candidate,
           anchorText: matchedStr
         });
+
+        // Continue from the 'after' token (index i + 2) or re-evaluate
+        i = i + 1; // points to protected linkTag, next loop iteration will increment to 'after'
+        break;
       }
     }
   }
