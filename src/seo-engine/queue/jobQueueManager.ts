@@ -12,12 +12,13 @@
  */
 
 import fs from 'fs';
-import { DiscoveredTopic, SeoEngineArticleJob, SeoEngineConfig, SeoEngineJobStage, ArticleContentType } from '../types';
+import { DiscoveredTopic, SeoEngineArticleJob, SeoEngineConfig, SeoEngineJobStage, ArticleContentType, FactualResearchPacket, PinterestCreativeConcept } from '../types';
 import { readEngineState, writeEngineState, addJobToState, updateJobInState, getJobById } from './engineStorage';
 import { conductTopicResearch } from '../research/topicResearcher';
 import { validateFactualResearchPacket } from '../research/factualPacketValidator';
 import { generateOpenAiArticle, GeneratedArticle } from '../generation/openAiArticleGenerator';
 import { generatePinterestCreativeConcepts, resolveRealPinterestBoard, buildHiggsfieldHeroPrompt, validateToolCtaSemanticMatch } from '../generation/pinterestCreativeDirector';
+import { NormalizedPinterestBoard } from '../../pinterest/pinterestApi';
 import { evaluateProductionQualityGates } from '../validation/productionQualityGates';
 import { getJobCostBreakdown, isBudgetPermitted, releaseBudgetReservation } from '../cost/costTracker';
 import { generateHiggsfieldImage, isHiggsfieldConfigured } from '../generation/higgsfieldClient';
@@ -135,6 +136,95 @@ export async function createDailyProductionBatch(
 
 export interface JobLifecycleOptions {
   allowTestFallbackBoard?: boolean;
+}
+
+/**
+ * Resolves or preserves Pinterest creative concepts per slot independently.
+ * Reuses existing valid rendered pin assets without mutating objects in place,
+ * and generates replacements ONLY for missing, invalid, or semantically mismatched pins.
+ * Already-published pins are strictly preserved with immutable metadata regardless of CTA validation.
+ */
+export function resolveOrPreservePinterestPins(
+  existingPins: PinterestCreativeConcept[] | undefined,
+  topic: DiscoveredTopic,
+  article: GeneratedArticle,
+  packet: FactualResearchPacket,
+  resolvedBoard: NormalizedPinterestBoard,
+  contentType: ArticleContentType = topic.contentType || 'trending_crochet',
+  conceptGenerator: (
+    topic: DiscoveredTopic,
+    article: GeneratedArticle,
+    packet: FactualResearchPacket,
+    resolvedBoard: NormalizedPinterestBoard,
+    pinsPerArticle?: number
+  ) => PinterestCreativeConcept[] = generatePinterestCreativeConcepts
+): PinterestCreativeConcept[] {
+  const currentPins = existingPins || [];
+  let generatedConcepts: PinterestCreativeConcept[] | null = null;
+
+  return [0, 1].map(index => {
+    const existingPin = currentPins[index];
+
+    // 1. Never replace or alter an already-published Pinterest Pin
+    const isAlreadyPublished = Boolean(
+      existingPin &&
+      existingPin.publishStatus === 'published' &&
+      existingPin.pinterestPinId
+    );
+    if (isAlreadyPublished && existingPin) {
+      return { ...existingPin };
+    }
+
+    // 2. Validate existing unpublished pin asset on disk
+    const hasValidAsset = Boolean(
+      existingPin &&
+      existingPin.publishStatus === 'image_ready' &&
+      existingPin.stableAssetPath &&
+      fs.existsSync(existingPin.stableAssetPath) &&
+      fs.statSync(existingPin.stableAssetPath).size > 100
+    );
+
+    // 3. Exact original semantic validation condition: contentType === 'tool_guide' || Boolean(topic.toolSlug)
+    const isToolContext = contentType === 'tool_guide' || Boolean(topic.toolSlug);
+    const hasCtaMismatch = Boolean(
+      existingPin &&
+      isToolContext &&
+      !validateToolCtaSemanticMatch(
+        existingPin.typographyOverlay?.ctaBadgeText || '',
+        topic.toolSlug,
+        topic.keyword
+      ).valid
+    );
+
+    // 4. Preserve existing valid pin without in-place mutation
+    if (hasValidAsset && !hasCtaMismatch && existingPin) {
+      if (
+        resolvedBoard.id &&
+        (!existingPin.targetBoardId || existingPin.targetBoardId !== resolvedBoard.id)
+      ) {
+        return {
+          ...existingPin,
+          targetBoardId: resolvedBoard.id,
+          targetBoardName: resolvedBoard.name,
+          boardName: resolvedBoard.name,
+        };
+      }
+      return { ...existingPin };
+    }
+
+    // 5. Lazy-generate fresh creative concepts only when at least one pin requires replacement
+    if (!generatedConcepts) {
+      generatedConcepts = conceptGenerator(
+        topic,
+        article,
+        packet,
+        resolvedBoard,
+        2
+      );
+    }
+
+    return generatedConcepts[index];
+  });
 }
 
 /**
@@ -418,35 +508,14 @@ export async function executeJobLifecycle(
   }
 
   // 3. Generate exactly 2 unique Pinterest creative concepts
-  // Regenerate if pins are not present, not yet rendered as valid files, or fail semantic tool validation
-  const hasValidRenderedPins = job.pinterestPins &&
-    job.pinterestPins.length === 2 &&
-    job.pinterestPins.every(p =>
-      p.publishStatus === 'image_ready' &&
-      p.stableAssetPath &&
-      fs.existsSync(p.stableAssetPath) &&
-      fs.statSync(p.stableAssetPath).size > 100
+let pins = resolveOrPreservePinterestPins(
+      job.pinterestPins,
+      job.topic,
+      article,
+      packet,
+      resolvedBoard,
+      job.contentType
     );
-
-  const hasSemanticCtaMismatch = Boolean(
-    job.pinterestPins && job.pinterestPins.some(p => {
-      if (job.contentType === 'tool_guide' || job.topic.toolSlug) {
-        const val = validateToolCtaSemanticMatch(p.typographyOverlay.ctaBadgeText, job.topic.toolSlug, job.topic.keyword);
-        return !val.valid;
-      }
-      return false;
-    })
-  );
-
-  let pins = (hasValidRenderedPins && !hasSemanticCtaMismatch && job.pinterestPins)
-    ? job.pinterestPins
-    : generatePinterestCreativeConcepts(
-        job.topic,
-        article,
-        packet,
-        resolvedBoard,
-        2
-      );
 
   // Persist concepts to state immediately
   updateJobInState(jobId, j => {

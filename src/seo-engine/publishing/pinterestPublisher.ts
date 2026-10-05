@@ -46,7 +46,7 @@ export async function publishPinToPinterest(
       };
     }
 
-const destinationUrl = `${SITE_URL}/blog/${job.articleContent.slug}`;
+    const destinationUrl = pin.destinationUrl || `${SITE_URL}/blog/${job.articleContent.slug}`;
 
     // Verify local image file exists
     if (!pin.stableAssetPath || !fs.existsSync(pin.stableAssetPath)) {
@@ -68,6 +68,24 @@ const destinationUrl = `${SITE_URL}/blog/${job.articleContent.slug}`;
       };
     }
 
+    // Pre-flight check: Pinterest connection
+    const useSandbox = process.env.PINTEREST_USE_SANDBOX === 'true';
+    const sandboxToken = process.env.PINTEREST_SANDBOX_ACCESS_TOKEN?.trim();
+    const authRecord = getPinterestAuthRecord();
+    if (!useSandbox && (!authRecord || !authRecord.accessToken)) {
+      console.warn('[PinterestPublisher] ⚠️ Pinterest account is not connected. Please connect Pinterest in Admin Settings.');
+      return {
+        success: false,
+        error: 'Pinterest account is not connected. Please connect Pinterest in Admin Settings.',
+      };
+    }
+    if (useSandbox && !sandboxToken) {
+      console.warn('[PinterestPublisher] ⚠️ Pinterest Sandbox token is not configured on the server.');
+      return {
+        success: false,
+        error: 'Pinterest Sandbox token is not configured on the server.',
+      };
+    }
     const title = pin.typographyOverlay.primaryHeadline || job.articleContent.title;
     const description = pin.typographyOverlay.supportingText || job.articleContent.excerpt || job.articleContent.title;
 
