@@ -17,6 +17,8 @@ import {
 } from '../generation/pinterestCreativeDirector';
 import { DiscoveredTopic } from '../types';
 import { NormalizedPinterestBoard } from '../../pinterest/pinterestApi';
+import { resolveOrPreservePinterestPins } from '../queue/jobQueueManager';
+import fs from 'fs';
 
 let passed = 0;
 let failed = 0;
@@ -310,6 +312,156 @@ export async function runBoardResolutionTests(): Promise<boolean> {
 
   const isAlreadyPublished = mockAlreadyPublishedPin.publishStatus === 'published' && Boolean(mockAlreadyPublishedPin.pinterestPinId);
   check(isAlreadyPublished === true, 'Published Pin is recognized by idempotency guard and prevents duplicate posting');
+
+  // =================================================================
+  // ASSET RECOVERY MATRIX TESTS (Direct Production Helper Execution)
+  // =================================================================
+  console.log('\n--- Verification Area 6: Real Asset Recovery Matrix ---');
+
+  const testPacket: any = {
+    topicId: 'test_topic_recovery',
+    topic: 'online row counter',
+    keyword: 'online row counter',
+    craftType: 'crochet',
+    searchIntent: 'Find an online row counter for crochet',
+    keyTechniques: ['Row counting', 'Stitch tracking'],
+    materialRequirements: ['Crochet hook', 'Yarn'],
+    difficultyLevel: 'beginner',
+    stepByStepSummary: ['Open tool', 'Increment rows'],
+    verifiedTerminology: ['row counter', 'stitch count'],
+    verifiedMaterials: { yarnWeights: ['Worsted'], hookSizes: ['5.0 mm'] },
+    techniqueKeyPoints: ['Count accurately'],
+    makerPainPoints: ['Losing track of rows'],
+    faqItems: [],
+    verifiedInternalLinks: [],
+  };
+
+  const testArticle: any = {
+    title: 'How to Use the Online Row Counter for Crochet',
+    slug: 'how-to-use-online-row-counter',
+    excerpt: 'Track crochet stitches effortlessly.',
+    category: 'tools',
+    contentType: 'tool_guide',
+  };
+
+  const testBoard: NormalizedPinterestBoard = {
+    id: 'board_tools_123',
+    name: 'Crochet Tools & Calculators',
+  };
+
+  const fixturePin1Path = 'public/generated/pinterest/seo-pins/test-fixture-pin-1.jpg';
+  const fixturePin2Path = 'public/generated/pinterest/seo-pins/test-fixture-pin-2.jpg';
+  fs.mkdirSync('public/generated/pinterest/seo-pins', { recursive: true });
+  fs.writeFileSync(fixturePin1Path, Buffer.alloc(200, 'a'));
+  fs.writeFileSync(fixturePin2Path, Buffer.alloc(200, 'b'));
+
+  try {
+    let generatorCallCount = 0;
+    const trackedGenerator = () => {
+      generatorCallCount++;
+      return [
+        { pinNumber: 1, publishStatus: 'pending', typographyOverlay: { ctaBadgeText: 'USE ROW COUNTER →' }, compactHiggsfieldPrompt: 'Prompt 1' } as any,
+        { pinNumber: 2, publishStatus: 'pending', typographyOverlay: { ctaBadgeText: 'USE ROW COUNTER →' }, compactHiggsfieldPrompt: 'Prompt 2' } as any,
+      ];
+    };
+
+    // 1. Both Pins Valid: Both preserved without calling concept generation
+    generatorCallCount = 0;
+    const existingBothValid: any[] = [
+      { pinNumber: 1, publishStatus: 'image_ready', stableAssetPath: fixturePin1Path, typographyOverlay: { ctaBadgeText: 'USE ROW COUNTER →' }, targetBoardId: 'board_tools_123' },
+      { pinNumber: 2, publishStatus: 'image_ready', stableAssetPath: fixturePin2Path, typographyOverlay: { ctaBadgeText: 'USE ROW COUNTER →' }, targetBoardId: 'board_tools_123' },
+    ];
+    const resBothValid = resolveOrPreservePinterestPins(existingBothValid, rowCounterTopic, testArticle, testPacket, testBoard, 'tool_guide', trackedGenerator);
+    check(generatorCallCount === 0, 'Both pins valid: generator is never called');
+    check(resBothValid[0].stableAssetPath === fixturePin1Path, 'Both pins valid: Pin 1 asset path preserved');
+    check(resBothValid[1].stableAssetPath === fixturePin2Path, 'Both pins valid: Pin 2 asset path preserved');
+    check(resBothValid[0] !== existingBothValid[0], 'Both pins valid: returns safe immutable copy');
+
+    // 2. Pin 1 Valid, Pin 2 Invalid: Preserve Pin 1; Replace only Pin 2
+    generatorCallCount = 0;
+    const existingPin1OnlyValid: any[] = [
+      { pinNumber: 1, publishStatus: 'image_ready', stableAssetPath: fixturePin1Path, typographyOverlay: { ctaBadgeText: 'USE ROW COUNTER →' }, targetBoardId: 'board_tools_123' },
+      { pinNumber: 2, publishStatus: 'failed', stableAssetPath: '', errorMessage: 'Network timeout' },
+    ];
+    const resPin1Valid = resolveOrPreservePinterestPins(existingPin1OnlyValid, rowCounterTopic, testArticle, testPacket, testBoard, 'tool_guide', trackedGenerator);
+    check(generatorCallCount === 1, 'Pin 1 valid, Pin 2 invalid: generator called once');
+    check(resPin1Valid[0].stableAssetPath === fixturePin1Path, 'Pin 1 valid, Pin 2 invalid: Pin 1 asset preserved');
+    check(resPin1Valid[1].publishStatus === 'pending', 'Pin 1 valid, Pin 2 invalid: Pin 2 replaced with new concept');
+    check(!resPin1Valid[1].stableAssetPath, 'Pin 1 valid, Pin 2 invalid: Pin 2 has no stale asset path');
+
+    // 3. Pin 2 Valid, Pin 1 Invalid: Preserve Pin 2; Replace only Pin 1
+    generatorCallCount = 0;
+    const existingPin2OnlyValid: any[] = [
+      { pinNumber: 1, publishStatus: 'failed', stableAssetPath: '' },
+      { pinNumber: 2, publishStatus: 'image_ready', stableAssetPath: fixturePin2Path, typographyOverlay: { ctaBadgeText: 'USE ROW COUNTER →' }, targetBoardId: 'board_tools_123' },
+    ];
+    const resPin2Valid = resolveOrPreservePinterestPins(existingPin2OnlyValid, rowCounterTopic, testArticle, testPacket, testBoard, 'tool_guide', trackedGenerator);
+    check(generatorCallCount === 1, 'Pin 2 valid, Pin 1 invalid: generator called once');
+    check(resPin2Valid[0].publishStatus === 'pending', 'Pin 2 valid, Pin 1 invalid: Pin 1 replaced with new concept');
+    check(resPin2Valid[1].stableAssetPath === fixturePin2Path, 'Pin 2 valid, Pin 1 invalid: Pin 2 asset preserved');
+
+    // 4. Both Invalid: Replace Both
+    generatorCallCount = 0;
+    const existingBothInvalid: any[] = [
+      { pinNumber: 1, publishStatus: 'failed', stableAssetPath: '' },
+      { pinNumber: 2, publishStatus: 'failed', stableAssetPath: '' },
+    ];
+    const resBothInvalid = resolveOrPreservePinterestPins(existingBothInvalid, rowCounterTopic, testArticle, testPacket, testBoard, 'tool_guide', trackedGenerator);
+    check(generatorCallCount === 1, 'Both invalid: generator called once');
+    check(resBothInvalid[0].publishStatus === 'pending', 'Both invalid: Pin 1 replaced with new concept');
+    check(resBothInvalid[1].publishStatus === 'pending', 'Both invalid: Pin 2 replaced with new concept');
+
+    // 5. File exists on disk but publishStatus is 'failed' -> Replaced
+    generatorCallCount = 0;
+    const existingFailedStatusWithFile: any[] = [
+      { pinNumber: 1, publishStatus: 'failed', stableAssetPath: fixturePin1Path },
+      { pinNumber: 2, publishStatus: 'failed', stableAssetPath: fixturePin2Path },
+    ];
+    const resFailedStatus = resolveOrPreservePinterestPins(existingFailedStatusWithFile, rowCounterTopic, testArticle, testPacket, testBoard, 'tool_guide', trackedGenerator);
+    check(resFailedStatus[0].publishStatus === 'pending' && !resFailedStatus[0].stableAssetPath, 'File exists but status is failed: Pin 1 replaced');
+    check(resFailedStatus[1].publishStatus === 'pending' && !resFailedStatus[1].stableAssetPath, 'File exists but status is failed: Pin 2 replaced');
+
+    // 6. Tool-guide pin has semantically invalid CTA -> Replaced
+    generatorCallCount = 0;
+    const existingMismatchCta: any[] = [
+      { pinNumber: 1, publishStatus: 'image_ready', stableAssetPath: fixturePin1Path, typographyOverlay: { ctaBadgeText: 'CALCULATE YARN FREE →' } },
+      { pinNumber: 2, publishStatus: 'image_ready', stableAssetPath: fixturePin2Path, typographyOverlay: { ctaBadgeText: 'USE ROW COUNTER →' } },
+    ];
+    const resMismatch = resolveOrPreservePinterestPins(existingMismatchCta, rowCounterTopic, testArticle, testPacket, testBoard, 'tool_guide', trackedGenerator);
+    check(resMismatch[0].publishStatus === 'pending' && !resMismatch[0].stableAssetPath, 'Semantic CTA mismatch on tool guide: Pin 1 replaced');
+    check(resMismatch[1].stableAssetPath === fixturePin2Path, 'Valid CTA on tool guide: Pin 2 preserved');
+
+    // 7. Job-level contentType === 'tool_guide' independently triggers semantic validation even when topic is non-tool and has no toolSlug
+    generatorCallCount = 0;
+    const nonToolTopicWithoutSlug: DiscoveredTopic = {
+      id: 'topic_non_tool',
+      keyword: 'online row counter',
+      contentType: 'trending_crochet',
+      category: 'crochet',
+      opportunityScore: 85,
+      status: 'discovered',
+    };
+    const resJobLevelContentType = resolveOrPreservePinterestPins(existingMismatchCta, nonToolTopicWithoutSlug, testArticle, testPacket, testBoard, 'tool_guide', trackedGenerator);
+    check(resJobLevelContentType[0].publishStatus === 'pending', 'Job-level contentType === "tool_guide" independently triggers CTA validation and replaces invalid CTA');
+
+    // 8. Published Pin with CTA mismatch is NEVER regenerated or altered
+    generatorCallCount = 0;
+    const existingPublishedMismatchPin: any[] = [
+      { pinNumber: 1, publishStatus: 'published', pinterestPinId: 'pin_live_published_123', targetBoardId: 'orig_board_111', stableAssetPath: fixturePin1Path, typographyOverlay: { ctaBadgeText: 'CALCULATE YARN FREE →' } },
+      { pinNumber: 2, publishStatus: 'image_ready', targetBoardId: '', stableAssetPath: fixturePin2Path, typographyOverlay: { ctaBadgeText: 'USE ROW COUNTER →' } },
+    ];
+    const newResolvedBoard: NormalizedPinterestBoard = { id: 'new_board_222', name: 'New Board' };
+    const resPublished = resolveOrPreservePinterestPins(existingPublishedMismatchPin, rowCounterTopic, testArticle, testPacket, newResolvedBoard, 'tool_guide', trackedGenerator);
+    check(resPublished[0].publishStatus === 'published', 'Published Pin status remains "published"');
+    check(resPublished[0].pinterestPinId === 'pin_live_published_123', 'Published Pin ID remains intact');
+    check(resPublished[0].targetBoardId === 'orig_board_111', 'Published Pin board association remains immutable even when board changes');
+    check(resPublished[0].stableAssetPath === fixturePin1Path, 'Published Pin asset path preserved regardless of CTA mismatch');
+    check(resPublished[1].targetBoardId === 'new_board_222', 'Unpublished valid Pin board association safely updated');
+  } finally {
+    // Clean up test fixture files
+    if (fs.existsSync(fixturePin1Path)) fs.unlinkSync(fixturePin1Path);
+    if (fs.existsSync(fixturePin2Path)) fs.unlinkSync(fixturePin2Path);
+  }
 
   console.log('\n===============================================================');
   console.log(`PINTEREST BOARD RESOLUTION TEST SUMMARY: ${passed} PASSED, ${failed} FAILED`);
