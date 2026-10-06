@@ -2,6 +2,7 @@ import React from 'react';
 import { BlogPost } from '../../types';
 import { Clock, Calendar, User, Eye, X, Tag } from 'lucide-react';
 import { sanitizeBlogHtml } from '../../utils/sanitizeHtml';
+import { getBlogPostHeroImage } from '../../views/BlogView';
 
 interface BlogPreviewModalProps {
   post: BlogPost;
@@ -10,6 +11,7 @@ interface BlogPreviewModalProps {
 
 export const BlogPreviewModal: React.FC<BlogPreviewModalProps> = ({ post, onClose }) => {
   const sanitizedContent = sanitizeBlogHtml(post.content);
+  const heroImageSrc = getBlogPostHeroImage(post);
 
   return (
     <div className="fixed inset-0 z-50 bg-slate-950/80 backdrop-blur-md flex flex-col items-center justify-start overflow-y-auto p-2 sm:p-6">
@@ -76,10 +78,10 @@ export const BlogPreviewModal: React.FC<BlogPreviewModalProps> = ({ post, onClos
         </div>
 
         {/* Featured Image */}
-        {post.image && (
+        {heroImageSrc && (
           <figure className="space-y-2">
             <img
-              src={post.image}
+              src={heroImageSrc}
               alt={post.imageAlt || post.title}
               className="w-full h-[280px] sm:h-[420px] object-cover rounded-3xl border border-slate-200 dark:border-slate-800"
             />

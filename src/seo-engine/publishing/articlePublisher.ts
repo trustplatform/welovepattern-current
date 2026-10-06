@@ -104,7 +104,7 @@ export async function publishArticleToLiveSite(job: SeoEngineArticleJob): Promis
 
     const cleanSlug = slug.trim().toLowerCase().replace(/[^a-z0-9]+/g, '-').replace(/(^-|-$)/g, '');
     const cleanHtml = typeof sanitizeBlogHtml === 'function' ? sanitizeBlogHtml(contentHtml) : contentHtml;
-    let heroImageUrl = heroImage?.stablePublicUrl || '/uploads/blog/default-crochet.jpg';
+    let heroImageUrl = (heroImage?.stablePublicUrl || heroImage?.publicUrl || (typeof heroImage === 'string' ? heroImage : '')) || '/uploads/blog/default-crochet.jpg';
     if (heroImageUrl.startsWith('/public/')) {
       heroImageUrl = heroImageUrl.replace(/^\/public\//, '/');
     }
@@ -131,6 +131,7 @@ export async function publishArticleToLiveSite(job: SeoEngineArticleJob): Promis
       category: category || (job.category === 'tools' ? 'Tools' : 'Crochet'),
       tags: Array.isArray(tags) && tags.length > 0 ? tags : ['Crochet', 'Patterns', 'Free Guides'],
       image: heroImageUrl,
+      heroImage: heroImageUrl,
       author: 'WeLovePattern Editorial Team',
       readTime: `${readTimeMinutes} min read`,
       readTimeMinutes,
