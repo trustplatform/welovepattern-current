@@ -12,13 +12,47 @@ interface BlogViewProps {
 
 /**
  * Normalizes image paths so `/public/generated/...` is properly served as `/generated/...`.
+ * Robustly accepts both URL strings and nested image object structures.
  */
-const normalizeImageUrl = (url?: string): string => {
+export const normalizeImageUrl = (raw?: any): string => {
+  if (!raw) return '';
+  let url = '';
+  if (typeof raw === 'string') {
+    url = raw.trim();
+  } else if (typeof raw === 'object') {
+    url = (
+      raw.stablePublicUrl ||
+      raw.publicUrl ||
+      raw.url ||
+      raw.src ||
+      raw.assetPath ||
+      raw.stableAssetPath ||
+      ''
+    ).toString().trim();
+  }
   if (!url) return '';
   if (url.startsWith('/public/')) {
     return url.replace(/^\/public\//, '/');
   }
   return url;
+};
+
+/**
+ * Robustly resolves the Hero / Featured image URL from any blog post representation.
+ * Searches across canonical schema keys: image, heroImage, hero_image, hero, featuredImage, seoMeta.
+ */
+export const getBlogPostHeroImage = (post?: any): string => {
+  if (!post) return '';
+  const candidate =
+    normalizeImageUrl(post.image) ||
+    normalizeImageUrl(post.heroImage) ||
+    normalizeImageUrl(post.hero_image) ||
+    normalizeImageUrl(post.hero) ||
+    normalizeImageUrl(post.featuredImage) ||
+    normalizeImageUrl(post.featured_image) ||
+    normalizeImageUrl(post.seoMeta?.ogImage) ||
+    normalizeImageUrl(post.seoMeta?.twitterImage);
+  return candidate;
 };
 
 export const BlogView: React.FC<BlogViewProps> = ({ initialPosts, initialSlug }) => {
@@ -217,7 +251,7 @@ export const BlogView: React.FC<BlogViewProps> = ({ initialPosts, initialSlug })
   // Active Article View
   if (activePost) {
     const sanitizedHtml = sanitizeBlogHtml(activePost.content);
-    const heroImageSrc = normalizeImageUrl(activePost.image);
+    const heroImageSrc = getBlogPostHeroImage(activePost);
 
     return (
       <div className="max-w-3xl mx-auto space-y-8 animate-fadeIn">
@@ -339,7 +373,7 @@ export const BlogView: React.FC<BlogViewProps> = ({ initialPosts, initialSlug })
 
       <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
         {posts.map((post) => {
-          const cardImageSrc = normalizeImageUrl(post.image);
+          const cardImageSrc = getBlogPostHeroImage(post);
           return (
             <div
               key={post.id || post.slug}

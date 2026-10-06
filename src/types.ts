@@ -160,6 +160,8 @@ export interface BlogPost {
   updatedAt?: string;
   readTime?: string;
   image: string;
+  heroImage?: any;
+  featuredImage?: string;
   imageAlt?: string;
   imageCaption?: string;
   tags: string[];

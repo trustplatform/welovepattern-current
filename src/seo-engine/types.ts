@@ -179,6 +179,8 @@ export interface ArticleHeroImage {
   higgsfieldRequestId?: string;
   stableAssetPath?: string;
   stablePublicUrl?: string;
+  assetPath?: string;
+  publicUrl?: string;
   status: 'pending' | 'ready' | 'failed';
   errorMessage?: string;
 }
