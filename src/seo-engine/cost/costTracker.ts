@@ -17,6 +17,7 @@ import fs from 'fs';
 import path from 'path';
 import { CostRecordItem, SeoEngineConfig } from '../types';
 import { DEFAULT_SEO_ENGINE_CONFIG, SEO_ENGINE_STORAGE_PATHS } from '../config';
+import { getTimeInTimezone } from '../scheduler';
 
 export interface CostStorageData {
   version: number;
@@ -38,6 +39,20 @@ const RESERVATION_TTL_MS = 10 * 60 * 1000; // 10 minutes TTL for in-flight jobs
 // In-memory state protections
 let inMemoryLastKnownStorage: CostStorageData | null = null;
 const activeReservations = new Map<string, ActiveReservation>();
+
+/**
+ * Extracts the calendar date string (YYYY-MM-DD) for a given ISO timestamp in the target timezone.
+ * Defaults to 'America/New_York' to match the production scheduler.
+ */
+export function getRecordDateInTimezone(isoTimestamp: string, timeZone: string = 'America/New_York'): string {
+  try {
+    const d = new Date(isoTimestamp);
+    if (isNaN(d.getTime())) return '';
+    return getTimeInTimezone(d, timeZone).dateStr;
+  } catch {
+    return '';
+  }
+}
 
 /**
  * Validates that a cost amount is a valid, positive, finite number.
@@ -199,14 +214,29 @@ function writeCostStorage(data: CostStorageData): void {
 }
 
 /**
- * Computes today's settled spend in USD.
+ * Computes today's settled spend in USD within the target timezone (default America/New_York).
  */
-export function getDailySpendUsd(dateIso?: string): number {
-  const targetDate = dateIso || new Date().toISOString().split('T')[0];
+export function getDailySpendUsd(dateStr?: string, timeZone: string = 'America/New_York'): number {
+  const targetDate = dateStr || getTimeInTimezone(new Date(), timeZone).dateStr;
   const storage = ensureCostFileExists();
   return storage.records
-    .filter(r => r.timestamp.startsWith(targetDate) && isValidCostAmount(r.costUsd))
+    .filter(r => isValidCostAmount(r.costUsd) && getRecordDateInTimezone(r.timestamp, timeZone) === targetDate)
     .reduce((sum, r) => sum + r.costUsd, 0);
+}
+
+/**
+ * Computes today's settled Higgsfield image generations count from persistent storage
+ * using the configured timezone (default America/New_York to match scheduler).
+ * Survives process restarts and container reboots.
+ */
+export function getDailyHiggsfieldGenerationsCount(dateStr?: string, timeZone: string = 'America/New_York'): number {
+  const targetDate = dateStr || getTimeInTimezone(new Date(), timeZone).dateStr;
+  const storage = ensureCostFileExists();
+  return (storage.records || []).filter(r =>
+    r.provider === 'higgsfield' &&
+    (r.operation === 'image_generation' || r.operation === 'paid_image_generation') &&
+    getRecordDateInTimezone(r.timestamp, timeZone) === targetDate
+  ).length;
 }
 
 /**
@@ -309,7 +339,8 @@ export function isBudgetPermitted(
 
 /**
  * Records an API cost transaction atomically.
- * Validates inputs strictly, prevents NaN contamination, and releases/deducts in-flight reservations.
+ * Validates inputs strictly, prevents NaN contamination, releases/deducts in-flight reservations,
+ * and enforces strict idempotency by taskId / providerRequestId.
  */
 export function recordCostTransaction(record: Omit<CostRecordItem, 'id' | 'timestamp'>): CostRecordItem {
   // 1. Strict validation: reject NaN, Infinity, negative, zero, null, undefined
@@ -317,8 +348,26 @@ export function recordCostTransaction(record: Omit<CostRecordItem, 'id' | 'times
     throw new Error(`[CostTracker] Rejected invalid cost value: ${record.costUsd}. Cost must be a positive finite number.`);
   }
 
-  const sanitizedCost = Math.round(record.costUsd * 100000) / 100000;
   const storage = ensureCostFileExists();
+
+  // Strict Idempotency Guard: Unique by taskId / providerRequestId
+  const incomingTaskId = record.meta?.taskId || record.meta?.providerRequestId;
+  if (incomingTaskId && typeof incomingTaskId === 'string' && incomingTaskId.trim()) {
+    const existing = storage.records.find(r => 
+      r.meta?.taskId === incomingTaskId ||
+      r.meta?.providerRequestId === incomingTaskId
+    );
+    if (existing) {
+      // If status changed to completed, update metadata in place without creating duplicate or re-billing
+      if (record.meta?.status && existing.meta && existing.meta.status !== record.meta.status) {
+        existing.meta.status = record.meta.status;
+        writeCostStorage(storage);
+      }
+      return existing; // Idempotent no-op: already recorded
+    }
+  }
+
+  const sanitizedCost = Math.round(record.costUsd * 100000) / 100000;
   const newRecord: CostRecordItem = {
     ...record,
     costUsd: sanitizedCost,
@@ -340,11 +389,11 @@ export function recordCostTransaction(record: Omit<CostRecordItem, 'id' | 'times
     }
   }
 
-  // 3. Preserve today's records during historical truncation
-  const todayStr = new Date().toISOString().split('T')[0];
+  // 3. Preserve today's records during historical truncation (America/New_York)
+  const todayStr = getTimeInTimezone(new Date(), 'America/New_York').dateStr;
   if (storage.records.length > 2000) {
-    const todayRecords = storage.records.filter(r => r.timestamp.startsWith(todayStr));
-    const olderRecords = storage.records.filter(r => !r.timestamp.startsWith(todayStr));
+    const todayRecords = storage.records.filter(r => getRecordDateInTimezone(r.timestamp, 'America/New_York') === todayStr);
+    const olderRecords = storage.records.filter(r => getRecordDateInTimezone(r.timestamp, 'America/New_York') !== todayStr);
     const keptOlder = olderRecords.slice(-Math.max(500, 2000 - todayRecords.length));
     storage.records = [...keptOlder, ...todayRecords];
   }

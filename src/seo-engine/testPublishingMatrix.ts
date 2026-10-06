@@ -233,7 +233,7 @@ async function runPublishingTests() {
     freshState.config.engineActive = true;
     freshState.config.timezone = 'America/New_York';
     freshState.config.articlesPerDay = 2;
-    freshState.config.articlePublishTimes = ['08:00', '20:00'];
+    freshState.config.articlePublishTimes = ['08:00', '16:00'];
     freshState.config.pinterestPublishTimes = ['09:00', '13:00', '17:00', '21:00'];
     freshState.lastExecutedArticleSlot = undefined;
     freshState.lastExecutedPinterestSlot = undefined;
@@ -241,23 +241,23 @@ async function runPublishingTests() {
     freshState.completedJobsHistory = [];
     writeEngineState(freshState);
 
-    // 08:00 Slot -> Discovers 2 topics and creates batch
+    // 08:00 Slot 1 -> Creates Slot 1 Trending Crochet job
     const slot0800 = new Date('2026-09-27T12:00:00.000Z'); // 08:00 EDT
     const tick0800 = await evaluateSchedulerTick(slot0800, { useRealDataForSeo: false, skipQueueWorkerExecution: true });
     assert(tick0800.triggered === true, '8. 08:00 article slot triggers successfully');
     assert(tick0800.action === 'article_batch', '8b. Action is article_batch');
 
     const stateAfter0800 = readEngineState();
-    assert(stateAfter0800.activeJobs.length === 2, `8c. Exactly 2 active jobs created (Got: ${stateAfter0800.activeJobs.length})`);
-    assert(stateAfter0800.activeJobs[0].contentType === 'trending_crochet', '8d. Job 1 is trending_crochet');
-    assert(stateAfter0800.activeJobs[1].contentType === 'tool_guide', '8e. Job 2 is tool_guide');
+    assert(stateAfter0800.activeJobs.length === 1, `8c. Exactly 1 active job created for Slot 1 (Got: ${stateAfter0800.activeJobs.length})`);
+    assert(stateAfter0800.activeJobs[0].contentType === 'trending_crochet', '8d. Slot 1 is trending_crochet');
 
-    // 20:00 Slot -> Daily quota prevents another batch
-    const slot2000 = new Date('2026-09-28T00:00:00.000Z'); // 20:00 EDT on 2026-09-27
-    const tick2000 = await evaluateSchedulerTick(slot2000, { useRealDataForSeo: false, skipQueueWorkerExecution: true });
-    assert(tick2000.triggered === false, '9. 20:00 slot does not create another article batch');
-    assert(tick2000.action === 'skipped_quota_reached', '9b. Action is skipped_quota_reached');
-    assert(readEngineState().activeJobs.length === 2, '9c. Still exactly 2 active jobs in queue');
+    // 16:00 Slot 2 -> Creates Slot 2 Tool Guide job
+    const slot1600 = new Date('2026-09-27T20:00:00.000Z'); // 16:00 EDT
+    const tick1600 = await evaluateSchedulerTick(slot1600, { useRealDataForSeo: false, skipQueueWorkerExecution: true });
+    assert(tick1600.triggered === true, '9. 16:00 article slot triggers successfully');
+    const stateAfter1600 = readEngineState();
+    assert(stateAfter1600.activeJobs.length === 2, `9b. Exactly 2 active jobs created across both slots (Got: ${stateAfter1600.activeJobs.length})`);
+    assert(stateAfter1600.activeJobs[1].contentType === 'tool_guide', '9c. Slot 2 is tool_guide');
 
     // -----------------------------------------------------------------
     // TEST 10, 11, 12, 13: Pinterest Slots (09:00, 13:00, 17:00, 21:00)
@@ -363,7 +363,7 @@ async function runPublishingTests() {
     assert(allPinsPublished, '14a. All 4 Pins recorded as published in persisted state');
 
     const slot09Rerun = await dispatchScheduledPinterestSlot('09:00', '2026-09-27');
-    assert(slot09Rerun.pinPublished === false && slot09Rerun.reason?.includes('already published'), '14b. Post-restart run for 09:00 does not re-publish Pin 1');
+    assert(slot09Rerun.pinPublished === false && (slot09Rerun.reason?.includes('already published') || slot09Rerun.reason?.includes('limit reached')), '14b. Post-restart run for 09:00 does not re-publish Pin 1');
 
     // -----------------------------------------------------------------
     // TEST 15, 16, 17, 18: Auto-publish & Quality Gate 9 Configurations

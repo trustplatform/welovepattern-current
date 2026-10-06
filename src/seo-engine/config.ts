@@ -16,7 +16,7 @@ export const DEFAULT_SEO_ENGINE_CONFIG: SeoEngineConfig = {
   engineActive: true,
   timezone: 'America/New_York',
   activeDays: [1, 2, 3, 4, 5, 6, 7],
-  articlePublishTimes: ['08:00', '12:00', '16:00', '20:00'],
+  articlePublishTimes: ['08:00', '16:00'],
   pinterestPublishTimes: ['09:00', '13:00', '17:00', '21:00'],
   maxConcurrentJobs: 1,
   fallbackBoardId: '',

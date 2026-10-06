@@ -411,27 +411,28 @@ export async function runBoardResolutionTests(): Promise<boolean> {
     check(resBothInvalid[0].publishStatus === 'pending', 'Both invalid: Pin 1 replaced with new concept');
     check(resBothInvalid[1].publishStatus === 'pending', 'Both invalid: Pin 2 replaced with new concept');
 
-    // 5. File exists on disk but publishStatus is 'failed' -> Replaced
+    // 5. File exists on disk but publishStatus is 'failed' -> Asset is preserved and restored to image_ready
     generatorCallCount = 0;
     const existingFailedStatusWithFile: any[] = [
       { pinNumber: 1, publishStatus: 'failed', stableAssetPath: fixturePin1Path },
       { pinNumber: 2, publishStatus: 'failed', stableAssetPath: fixturePin2Path },
     ];
     const resFailedStatus = resolveOrPreservePinterestPins(existingFailedStatusWithFile, rowCounterTopic, testArticle, testPacket, testBoard, 'tool_guide', trackedGenerator);
-    check(resFailedStatus[0].publishStatus === 'pending' && !resFailedStatus[0].stableAssetPath, 'File exists but status is failed: Pin 1 replaced');
-    check(resFailedStatus[1].publishStatus === 'pending' && !resFailedStatus[1].stableAssetPath, 'File exists but status is failed: Pin 2 replaced');
+    check(resFailedStatus[0].publishStatus === 'image_ready' && resFailedStatus[0].stableAssetPath === fixturePin1Path, 'File exists on disk: Pin 1 asset preserved and restored to image_ready');
+    check(resFailedStatus[1].publishStatus === 'image_ready' && resFailedStatus[1].stableAssetPath === fixturePin2Path, 'File exists on disk: Pin 2 asset preserved and restored to image_ready');
 
-    // 6. Tool-guide pin has semantically invalid CTA -> Replaced
+    // 6. Tool-guide pin has semantically invalid CTA -> CTA corrected in metadata without regenerating image asset
     generatorCallCount = 0;
     const existingMismatchCta: any[] = [
       { pinNumber: 1, publishStatus: 'image_ready', stableAssetPath: fixturePin1Path, typographyOverlay: { ctaBadgeText: 'CALCULATE YARN FREE →' } },
       { pinNumber: 2, publishStatus: 'image_ready', stableAssetPath: fixturePin2Path, typographyOverlay: { ctaBadgeText: 'USE ROW COUNTER →' } },
     ];
     const resMismatch = resolveOrPreservePinterestPins(existingMismatchCta, rowCounterTopic, testArticle, testPacket, testBoard, 'tool_guide', trackedGenerator);
-    check(resMismatch[0].publishStatus === 'pending' && !resMismatch[0].stableAssetPath, 'Semantic CTA mismatch on tool guide: Pin 1 replaced');
+    check(resMismatch[0].stableAssetPath === fixturePin1Path, 'Semantic CTA mismatch on tool guide: Pin 1 image asset preserved');
+    check(resMismatch[0].typographyOverlay?.ctaBadgeText.includes('ROW COUNTER'), 'Semantic CTA mismatch on tool guide: Pin 1 CTA corrected in metadata');
     check(resMismatch[1].stableAssetPath === fixturePin2Path, 'Valid CTA on tool guide: Pin 2 preserved');
 
-    // 7. Job-level contentType === 'tool_guide' independently triggers semantic validation even when topic is non-tool and has no toolSlug
+    // 7. Job-level contentType === 'tool_guide' independently triggers semantic validation and corrects CTA in metadata
     generatorCallCount = 0;
     const nonToolTopicWithoutSlug: DiscoveredTopic = {
       id: 'topic_non_tool',
@@ -442,7 +443,8 @@ export async function runBoardResolutionTests(): Promise<boolean> {
       status: 'discovered',
     };
     const resJobLevelContentType = resolveOrPreservePinterestPins(existingMismatchCta, nonToolTopicWithoutSlug, testArticle, testPacket, testBoard, 'tool_guide', trackedGenerator);
-    check(resJobLevelContentType[0].publishStatus === 'pending', 'Job-level contentType === "tool_guide" independently triggers CTA validation and replaces invalid CTA');
+    check(resJobLevelContentType[0].stableAssetPath === fixturePin1Path, 'Job-level contentType === "tool_guide" preserves image asset');
+    check(resJobLevelContentType[0].typographyOverlay?.ctaBadgeText.includes('ROW COUNTER') || resJobLevelContentType[0].typographyOverlay?.ctaBadgeText.includes('TOOL'), 'Job-level contentType === "tool_guide" independently triggers CTA correction in metadata');
 
     // 8. Published Pin with CTA mismatch is NEVER regenerated or altered
     generatorCallCount = 0;

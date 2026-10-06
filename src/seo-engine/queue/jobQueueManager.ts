@@ -17,13 +17,14 @@ import { readEngineState, writeEngineState, addJobToState, updateJobInState, get
 import { conductTopicResearch } from '../research/topicResearcher';
 import { validateFactualResearchPacket } from '../research/factualPacketValidator';
 import { generateOpenAiArticle, GeneratedArticle } from '../generation/openAiArticleGenerator';
-import { generatePinterestCreativeConcepts, resolveRealPinterestBoard, buildHiggsfieldHeroPrompt, validateToolCtaSemanticMatch } from '../generation/pinterestCreativeDirector';
+import { generatePinterestCreativeConcepts, resolveRealPinterestBoard, buildHiggsfieldHeroPrompt, validateToolCtaSemanticMatch, deriveToolSpecificCta } from '../generation/pinterestCreativeDirector';
 import { NormalizedPinterestBoard } from '../../pinterest/pinterestApi';
 import { evaluateProductionQualityGates } from '../validation/productionQualityGates';
 import { getJobCostBreakdown, isBudgetPermitted, releaseBudgetReservation } from '../cost/costTracker';
 import { generateHiggsfieldImage, isHiggsfieldConfigured } from '../generation/higgsfieldClient';
-import { discoverDailyTwoSlotTopics } from '../discovery/topicDiscovery';
+import { discoverDailyTwoSlotTopics, discoverTrendingCrochetTopic, discoverToolGuideTopic } from '../discovery/topicDiscovery';
 import { publishArticleToLiveSite } from '../publishing/articlePublisher';
+import { recoverJobLocalAssets } from './assetRecovery';
 
 let isProcessingQueue = false;
 
@@ -45,6 +46,9 @@ export function recoverInterruptedJobs(): void {
   let recoveredCount = 0;
 
   for (const job of state.activeJobs) {
+    // 1. Attempt deterministic local asset recovery first ($0 cost)
+    recoverJobLocalAssets(job);
+
     if (job.stage === 'researching' || job.stage === 'writing' || job.stage === 'generating_images') {
       console.warn(`[JobQueueManager] Detected interrupted job "${job.id}" in stage "${job.stage}". Resetting to "selected" for clean recovery.`);
       job.stage = 'selected';
@@ -67,12 +71,12 @@ export function recoverInterruptedJobs(): void {
 /**
  * Creates and queues a new article job for a discovered topic.
  */
-export function queueJobForTopic(topic: DiscoveredTopic, config: SeoEngineConfig): SeoEngineArticleJob {
+export function queueJobForTopic(topic: DiscoveredTopic, config: SeoEngineConfig, scheduledDate?: string): SeoEngineArticleJob {
   const state = readEngineState();
-  const todayStr = new Date().toISOString().split('T')[0];
+  const todayStr = scheduledDate || new Date().toISOString().split('T')[0];
   const jobId = `job_${todayStr}_${Math.random().toString(36).substring(2, 8)}`;
   const contentType: ArticleContentType = topic.contentType || (topic.category === 'tools' ? 'tool_guide' : 'trending_crochet');
-  const category: 'crochet' | 'tools' = topic.category || (contentType === 'tool_guide' ? 'tools' : 'crochet');
+  const category: 'crochet' | 'tools' = (topic.category === 'tools' ? 'tools' : 'crochet');
 
   const newJob: SeoEngineArticleJob = {
     id: jobId,
@@ -104,15 +108,56 @@ export function queueJobForTopic(topic: DiscoveredTopic, config: SeoEngineConfig
 }
 
 /**
+ * Creates and queues a single production article job for a specific slot (Slot 1 or Slot 2).
+ * Slot 1: 1 x Trending Crochet article (Category: 'crochet', Type: 'trending_crochet', Slot Time: '08:00', Pinterest: '09:00' & '13:00')
+ * Slot 2: 1 x Tool Guide article (Category: 'tools', Type: 'tool_guide', Slot Time: '16:00', Pinterest: '17:00' & '21:00')
+ */
+export async function createSingleSlotProductionJob(
+  slotNumber: 1 | 2,
+  options?: { useRealDataForSeo?: boolean; scheduledDate?: string; slotTime?: string }
+): Promise<SeoEngineArticleJob> {
+  const state = readEngineState();
+  const config = state.config;
+  const targetDate = options?.scheduledDate || new Date().toISOString().split('T')[0];
+  const targetSlotTime = options?.slotTime || (slotNumber === 1 ? '08:00' : '16:00');
+
+  let topic: DiscoveredTopic;
+  if (slotNumber === 1) {
+    topic = await discoverTrendingCrochetTopic({ useRealDataForSeo: options?.useRealDataForSeo });
+    if (topic.contentType !== 'trending_crochet' || topic.category !== 'crochet') {
+      throw new Error(`Slot 1 topic invalid: Expected contentType 'trending_crochet' and category 'crochet', got '${topic.contentType}' / '${topic.category}'.`);
+    }
+  } else {
+    topic = await discoverToolGuideTopic({ useRealDataForSeo: options?.useRealDataForSeo });
+    if (topic.contentType !== 'tool_guide' || topic.category !== 'tools' || !topic.toolSlug) {
+      throw new Error(`Slot 2 topic invalid: Expected contentType 'tool_guide', category 'tools', and real toolSlug, got '${topic.contentType}' / '${topic.category}' / '${topic.toolSlug}'.`);
+    }
+  }
+
+  const job = queueJobForTopic(topic, config, targetDate);
+
+  // Set explicit slot assignments
+  updateJobInState(job.id, j => {
+    j.assignedPublishDate = targetDate;
+    j.assignedSlotTime = targetSlotTime;
+    j.publicationScheduledAt = targetSlotTime;
+    return j;
+  });
+
+  return getJobById(job.id)!;
+}
+
+/**
  * Creates and queues the strict daily 2-slot production batch:
  * Slot 1: 1 x Trending Crochet article (Category: 'crochet', Type: 'trending_crochet')
  * Slot 2: 1 x Tool Guide article (Category: 'tools', Type: 'tool_guide')
  */
 export async function createDailyProductionBatch(
-  options?: { useRealDataForSeo?: boolean }
+  options?: { useRealDataForSeo?: boolean; scheduledDate?: string }
 ): Promise<[SeoEngineArticleJob, SeoEngineArticleJob]> {
   const state = readEngineState();
   const config = state.config;
+  const targetDate = options?.scheduledDate || new Date().toISOString().split('T')[0];
 
   // 1. Discover the two topics
   const [topicSlot1, topicSlot2] = await discoverDailyTwoSlotTopics({
@@ -127,11 +172,25 @@ export async function createDailyProductionBatch(
     throw new Error(`Slot 2 topic invalid: Expected contentType 'tool_guide', category 'tools', and real toolSlug, got '${topicSlot2.contentType}' / '${topicSlot2.category}' / '${topicSlot2.toolSlug}'.`);
   }
 
-  // 2. Queue both jobs atomically
-  const job1 = queueJobForTopic(topicSlot1, config);
-  const job2 = queueJobForTopic(topicSlot2, config);
+  // 2. Queue both jobs atomically with explicit slot times
+  const job1 = queueJobForTopic(topicSlot1, config, targetDate);
+  const job2 = queueJobForTopic(topicSlot2, config, targetDate);
 
-  return [job1, job2];
+  updateJobInState(job1.id, j => {
+    j.assignedPublishDate = targetDate;
+    j.assignedSlotTime = '08:00';
+    j.publicationScheduledAt = '08:00';
+    return j;
+  });
+
+  updateJobInState(job2.id, j => {
+    j.assignedPublishDate = targetDate;
+    j.assignedSlotTime = '16:00';
+    j.publicationScheduledAt = '16:00';
+    return j;
+  });
+
+  return [getJobById(job1.id)!, getJobById(job2.id)!];
 }
 
 export interface JobLifecycleOptions {
@@ -178,13 +237,12 @@ export function resolveOrPreservePinterestPins(
     // 2. Validate existing unpublished pin asset on disk
     const hasValidAsset = Boolean(
       existingPin &&
-      existingPin.publishStatus === 'image_ready' &&
       existingPin.stableAssetPath &&
       fs.existsSync(existingPin.stableAssetPath) &&
       fs.statSync(existingPin.stableAssetPath).size > 100
     );
 
-    // 3. Exact original semantic validation condition: contentType === 'tool_guide' || Boolean(topic.toolSlug)
+    // 3. CTA semantic check for tool topics
     const isToolContext = contentType === 'tool_guide' || Boolean(topic.toolSlug);
     const hasCtaMismatch = Boolean(
       existingPin &&
@@ -196,23 +254,34 @@ export function resolveOrPreservePinterestPins(
       ).valid
     );
 
-    // 4. Preserve existing valid pin without in-place mutation
-    if (hasValidAsset && !hasCtaMismatch && existingPin) {
-      if (
-        resolvedBoard.id &&
-        (!existingPin.targetBoardId || existingPin.targetBoardId !== resolvedBoard.id)
-      ) {
-        return {
-          ...existingPin,
-          targetBoardId: resolvedBoard.id,
-          targetBoardName: resolvedBoard.name,
-          boardName: resolvedBoard.name,
-        };
-      }
-      return { ...existingPin };
+    // 4. Preserve existing pin if it exists (valid asset, in-flight task ID, or established concept)
+    const hasExistingConcept = Boolean(
+      existingPin &&
+      (hasValidAsset || existingPin.higgsfieldRequestId || existingPin.compactHiggsfieldPrompt || existingPin.conceptAngle)
+    );
+
+    if (hasExistingConcept && existingPin) {
+      const correctedCta = hasCtaMismatch
+        ? deriveToolSpecificCta(topic.toolSlug, topic.keyword)
+        : (existingPin.typographyOverlay?.ctaBadgeText || '');
+
+      const targetBoardId = resolvedBoard.id || existingPin.targetBoardId || '';
+      const targetBoardName = resolvedBoard.name || existingPin.targetBoardName || '';
+
+      return {
+        ...existingPin,
+        targetBoardId,
+        targetBoardName,
+        boardName: targetBoardName,
+        typographyOverlay: {
+          ...existingPin.typographyOverlay,
+          ctaBadgeText: correctedCta,
+        },
+        publishStatus: hasValidAsset ? 'image_ready' : (existingPin.publishStatus || 'pending'),
+      };
     }
 
-    // 5. Lazy-generate fresh creative concepts only when at least one pin requires replacement
+    // 5. Lazy-generate fresh creative concepts only when no concept exists for this slot
     if (!generatedConcepts) {
       generatedConcepts = conceptGenerator(
         topic,
@@ -251,9 +320,17 @@ export async function executeJobLifecycle(
 
   try {
 
+  // 1. Attempt deterministic local asset recovery first ($0 cost)
+  updateJobInState(jobId, j => {
+    recoverJobLocalAssets(j);
+    return j;
+  });
+
+  const freshJob = getJobById(jobId) || job;
+
   // Idempotency check: If already completed or awaiting approval, do not duplicate
-  if (job.stage === 'completed' || job.stage === 'awaiting_approval') {
-    return job;
+  if (freshJob.stage === 'completed' || freshJob.stage === 'awaiting_approval') {
+    return freshJob;
   }
 
   const state = readEngineState();

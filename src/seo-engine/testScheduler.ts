@@ -87,9 +87,9 @@ async function runSchedulerTests() {
     writeEngineState(testState);
 
     // -----------------------------------------------------------------
-    // TEST 3: Article slot triggers createDailyProductionBatch
+    // TEST 3: Article Slot 1 (08:00) and Slot 2 (16:00) Production
     // -----------------------------------------------------------------
-    // Date corresponds to 08:00 EDT in NY
+    // Slot 1: 08:00 EDT in NY (12:00 UTC)
     const slot0800Utc = new Date('2026-09-27T12:00:00.000Z');
     const tickResult1 = await evaluateSchedulerTick(slot0800Utc, { useRealDataForSeo: false, skipQueueWorkerExecution: true });
 
@@ -99,15 +99,22 @@ async function runSchedulerTests() {
 
     const stateAfterTick1 = readEngineState();
     assert(stateAfterTick1.lastExecutedArticleSlot === '2026-09-27_08:00', '3d. State recorded lastExecutedArticleSlot');
-    assert(stateAfterTick1.activeJobs.length === 2, `3e. Exactly 2 active jobs created (Got: ${stateAfterTick1.activeJobs.length})`);
-    assert(stateAfterTick1.activeJobs[0].contentType === 'trending_crochet', '3f. Job 1 is trending_crochet');
-    assert(stateAfterTick1.activeJobs[1].contentType === 'tool_guide', '3g. Job 2 is tool_guide');
+    assert(stateAfterTick1.activeJobs.length === 1, `3e. Exactly 1 active job created for Slot 1 (Got: ${stateAfterTick1.activeJobs.length})`);
+    assert(stateAfterTick1.activeJobs[0].contentType === 'trending_crochet', '3f. Slot 1 job is trending_crochet');
+
+    // Slot 2: 16:00 EDT in NY (20:00 UTC)
+    const slot1600Utc = new Date('2026-09-27T20:00:00.000Z');
+    const tickResultSlot2 = await evaluateSchedulerTick(slot1600Utc, { useRealDataForSeo: false, skipQueueWorkerExecution: true });
+    assert(tickResultSlot2.triggered === true, '3g. Article slot 16:00 triggered execution');
+    const stateAfterTickSlot2 = readEngineState();
+    assert(stateAfterTickSlot2.activeJobs.length === 2, `3h. Exactly 2 active jobs created across both slots (Got: ${stateAfterTickSlot2.activeJobs.length})`);
+    assert(stateAfterTickSlot2.activeJobs[1].contentType === 'tool_guide', '3i. Slot 2 job is tool_guide');
 
     // -----------------------------------------------------------------
     // TEST 4: Duplicate execution prevention for the same date + slot
     // -----------------------------------------------------------------
-    // Same slot called immediately again (e.g. 1 minute later during the same 08:00 window)
-    const tickResult2 = await evaluateSchedulerTick(slot0800Utc, { useRealDataForSeo: false, skipQueueWorkerExecution: true });
+    // Same slot called immediately again (e.g. 1 minute later during the same 16:00 window)
+    const tickResult2 = await evaluateSchedulerTick(slot1600Utc, { useRealDataForSeo: false, skipQueueWorkerExecution: true });
     assert(tickResult2.triggered === false, '4a. Duplicate slot execution was prevented');
     assert(tickResult2.action === 'skipped_already_executed', '4b. Skipped reason is skipped_already_executed');
 
@@ -120,8 +127,8 @@ async function runSchedulerTests() {
     stateAfterTick2.config.engineActive = false;
     writeEngineState(stateAfterTick2);
 
-    const slot1200Utc = new Date('2026-09-27T16:00:00.000Z'); // 12:00 EDT
-    const tickResultDisabled = await evaluateSchedulerTick(slot1200Utc, { useRealDataForSeo: false, skipQueueWorkerExecution: true });
+    const slotExtraUtc = new Date('2026-09-27T23:00:00.000Z'); // Non-standard time
+    const tickResultDisabled = await evaluateSchedulerTick(slotExtraUtc, { useRealDataForSeo: false, skipQueueWorkerExecution: true });
     assert(tickResultDisabled.triggered === false, '5a. Inactive engine prevents execution');
     assert(tickResultDisabled.action === 'skipped_disabled', '5b. Action is skipped_disabled');
 
@@ -135,15 +142,17 @@ async function runSchedulerTests() {
     // -----------------------------------------------------------------
     // Simulate process restart by reloading from disk with recorded slot
     const freshStateFromDisk = readEngineState();
-    assert(freshStateFromDisk.lastExecutedArticleSlot === '2026-09-27_08:00', '6a. State persistence survives restart');
-    const restartTick = await evaluateSchedulerTick(slot0800Utc, { useRealDataForSeo: false, skipQueueWorkerExecution: true });
+    assert(freshStateFromDisk.lastExecutedArticleSlot === '2026-09-27_16:00', '6a. State persistence survives restart');
+    const restartTick = await evaluateSchedulerTick(slot1600Utc, { useRealDataForSeo: false, skipQueueWorkerExecution: true });
     assert(restartTick.triggered === false, '6b. Post-restart tick for same slot is skipped');
 
     // -----------------------------------------------------------------
     // TEST 7: Daily quota (articlesPerDay = 2) prevents 3rd article batch
     // -----------------------------------------------------------------
-    // Slot 12:00 EDT is reached on the same day, but 2 jobs already exist for today
-    const tickResultQuota = await evaluateSchedulerTick(slot1200Utc, { useRealDataForSeo: false, skipQueueWorkerExecution: true });
+    // If an extra slot or manual trigger runs on the same day when 2 jobs already exist
+    freshStateFromDisk.lastExecutedArticleSlot = undefined; // clear slot key to test quota guard specifically
+    writeEngineState(freshStateFromDisk);
+    const tickResultQuota = await evaluateSchedulerTick(slot0800Utc, { useRealDataForSeo: false, skipQueueWorkerExecution: true });
     assert(tickResultQuota.triggered === false, '7a. Daily quota prevented 3rd article creation');
     assert(tickResultQuota.action === 'skipped_quota_reached', '7b. Action is skipped_quota_reached');
 

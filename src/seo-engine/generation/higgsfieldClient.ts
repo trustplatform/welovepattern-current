@@ -19,7 +19,7 @@
 import fs from 'fs';
 import path from 'path';
 import crypto from 'crypto';
-import { recordCostTransaction } from '../cost/costTracker';
+import { recordCostTransaction, getDailyHiggsfieldGenerationsCount } from '../cost/costTracker';
 import { SEO_ENGINE_STORAGE_PATHS } from '../config';
 
 export interface HiggsfieldGenerationOptions {
@@ -27,7 +27,7 @@ export interface HiggsfieldGenerationOptions {
   aspectRatio: '1:1' | '2:3' | '3:4' | '16:9';
   resolution?: '1k' | string;
   slug: string;
-  targetFolder?: 'blog' | 'pinterest';
+  targetFolder?: 'blog' | 'pinterest' | 'pins' | string;
   jobId?: string;
   timeoutMs?: number;
   existingTaskId?: string;
@@ -329,6 +329,17 @@ export async function generateHiggsfieldImage(
       }
       cdnUrl = pollResult.imageUrl;
     } else {
+      // Hard Daily Paid POST Invariant Circuit Breaker:
+      // Invariant: 2 articles/day * 3 images/article = 6 paid POSTs max per calendar day
+      const dailyPaidCount = getDailyHiggsfieldGenerationsCount();
+      const maxDailyPaidGenerations = 6;
+      if (dailyPaidCount >= maxDailyPaidGenerations) {
+        return {
+          success: false,
+          error: `Daily Higgsfield generation limit reached (${dailyPaidCount}/${maxDailyPaidGenerations} paid generations today). Hard circuit breaker activated to prevent runaway spend.`,
+        };
+      }
+
       const controller = new AbortController();
       const timeout = setTimeout(() => controller.abort(), timeoutMs);
 
@@ -381,7 +392,26 @@ export async function generateHiggsfieldImage(
       const data: any = await response.json();
       currentTaskId = data?.id || data?.request_id || data?.requestId || currentTaskId;
 
-      // Immediately notify caller of remote task ID so it can be saved before polling
+      // 1. Immediately persist accepted generation to cost ledger BEFORE polling or download
+      if (currentTaskId) {
+        recordCostTransaction({
+          jobId,
+          provider: 'higgsfield',
+          operation: 'image_generation',
+          unitsConsumed: 1,
+          costUsd: estimatedCost,
+          meta: {
+            taskId: currentTaskId,
+            providerRequestId: currentTaskId,
+            prompt: prompt.slice(0, 100),
+            targetFolder,
+            slug,
+            status: 'accepted',
+          },
+        });
+      }
+
+      // 2. Immediately notify caller of remote task ID so it can be saved to job state before polling
       if (currentTaskId && typeof onTaskIdReceived === 'function') {
         try {
           onTaskIdReceived(currentTaskId);
@@ -440,14 +470,23 @@ export async function generateHiggsfieldImage(
 
     fs.writeFileSync(localFilePath, buffer);
 
-    recordCostTransaction({
-      jobId,
-      provider: 'higgsfield',
-      operation: 'image_generation',
-      unitsConsumed: 1,
-      costUsd: estimatedCost,
-      meta: { prompt: prompt.slice(0, 100), targetFolder },
-    });
+    if (currentTaskId) {
+      recordCostTransaction({
+        jobId,
+        provider: 'higgsfield',
+        operation: 'image_generation',
+        unitsConsumed: 1,
+        costUsd: estimatedCost,
+        meta: {
+          taskId: currentTaskId,
+          providerRequestId: currentTaskId,
+          prompt: prompt.slice(0, 100),
+          targetFolder,
+          slug,
+          status: 'completed',
+        },
+      });
+    }
 
     return {
       success: true,

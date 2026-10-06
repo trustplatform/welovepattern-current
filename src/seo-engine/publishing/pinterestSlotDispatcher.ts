@@ -67,10 +67,15 @@ export async function dispatchScheduledPinterestSlot(
     return { triggered: false, pinPublished: false, reason: `Time ${slotTime} is not a configured Pinterest slot.` };
   }
 
-  // Filter today's completed or published jobs
+  // Filter today's jobs (matching assignedPublishDate or fallback dateScheduled)
   const todaysJobs = state.activeJobs
-    .filter(j => j.dateScheduled === targetDateStr)
-    .sort((a, b) => (a.createdAt || '').localeCompare(b.createdAt || ''));
+    .filter(j => (j.assignedPublishDate === targetDateStr) || (!j.assignedPublishDate && j.dateScheduled === targetDateStr))
+    .sort((a, b) => {
+      const timeA = a.assignedSlotTime || (a.publicationScheduledAt === '16:00' ? '16:00' : '08:00');
+      const timeB = b.assignedSlotTime || (b.publicationScheduledAt === '16:00' ? '16:00' : '08:00');
+      if (timeA !== timeB) return timeA.localeCompare(timeB);
+      return (a.createdAt || '').localeCompare(b.createdAt || '');
+    });
 
   if (todaysJobs.length === 0) {
     return {
@@ -81,31 +86,53 @@ export async function dispatchScheduledPinterestSlot(
     };
   }
 
-  // Flatten all pins in deterministic order (Article 1 Pin 1, Article 1 Pin 2, Article 2 Pin 1, Article 2 Pin 2...)
-  const allDailyPins: { job: SeoEngineArticleJob; pin: PinterestCreativeConcept; index: number }[] = [];
-  let pinCounter = 0;
-
-  for (const job of todaysJobs) {
-    for (const pin of (job.pinterestPins || [])) {
-      allDailyPins.push({
-        job,
-        pin,
-        index: pinCounter++,
-      });
+  // Enforce HARD daily Pinterest cap: max 4 published pins per calendar day
+  let publishedPinsToday = 0;
+  for (const j of todaysJobs) {
+    for (const p of (j.pinterestPins || [])) {
+      if (p.publishStatus === 'published' && p.pinterestPinId) {
+        publishedPinsToday++;
+      }
     }
   }
 
-  if (slotIndex >= allDailyPins.length) {
+  if (publishedPinsToday >= 4) {
     return {
       triggered: true,
       pinPublished: false,
       slotIndex,
-      reason: `No Pin configured for slot index ${slotIndex} (Total pins: ${allDailyPins.length}).`,
+      reason: `Daily Pinterest publishing limit reached (${publishedPinsToday}/4 pins published) for date ${targetDateStr}.`,
     };
   }
 
-  const target = allDailyPins[slotIndex];
-  const { job, pin } = target;
+  // Exact 1-to-1 slot mapping:
+  // Slot 0 (09:00) -> Article 1 (08:00 slot), Pin 1
+  // Slot 1 (13:00) -> Article 1 (08:00 slot), Pin 2
+  // Slot 2 (17:00) -> Article 2 (16:00 slot), Pin 1
+  // Slot 3 (21:00) -> Article 2 (16:00 slot), Pin 2
+  const targetArticleIndex = slotIndex < 2 ? 0 : 1;
+  const targetPinIndex = slotIndex % 2;
+
+  const job = todaysJobs[targetArticleIndex];
+  if (!job) {
+    return {
+      triggered: true,
+      pinPublished: false,
+      slotIndex,
+      reason: `Article ${targetArticleIndex + 1} does not exist for Pinterest Slot ${slotIndex + 1} (${slotTime}).`,
+    };
+  }
+
+  const pin = job.pinterestPins?.[targetPinIndex];
+  if (!pin) {
+    return {
+      triggered: true,
+      pinPublished: false,
+      slotIndex,
+      jobId: job.id,
+      reason: `Pin ${targetPinIndex + 1} not configured on article "${job.articleContent?.title || job.id}".`,
+    };
+  }
 
   // 1. Verify Article is Strictly Published
   if (job.stage !== 'completed' || !job.publishedBlogPostId || Boolean(job.publicationError)) {
@@ -119,7 +146,19 @@ export async function dispatchScheduledPinterestSlot(
     };
   }
 
-  // 2. Idempotency Check
+  // 2. Local asset check
+  if (!pin.stableAssetPath || !fs.existsSync(pin.stableAssetPath) || fs.statSync(pin.stableAssetPath).size < 100) {
+    return {
+      triggered: true,
+      pinPublished: false,
+      slotIndex,
+      jobId: job.id,
+      pinNumber: pin.pinNumber,
+      reason: `Pin ${pin.pinNumber} local image asset is missing or invalid on disk.`,
+    };
+  }
+
+  // 3. Idempotency Check
   if (pin.publishStatus === 'published' && pin.pinterestPinId) {
     return {
       triggered: true,
@@ -217,89 +256,14 @@ export async function dispatchScheduledPinterestSlot(
 }
 
 /**
- * Detects and dispatches the next eligible overdue Pinterest Pin in strict chronological slot order.
- * Safe catch-up mechanism for missed slots or articles published after their scheduled pin slot.
- * 
- * Invariants:
- * 1. Parent article must be genuinely published to live blog storage.
- * 2. Pin has not already been published (no pinterestPinId and publishStatus !== 'published').
- * 3. Pin image asset exists on disk.
- * 4. Assigned slot time has passed (currentTimeStr >= assignedSlotTime).
- * 5. Dispatches at most ONE Pin per tick in chronological slot order.
+ * In strict 1-to-1 slot architecture, catch-up bundling is disabled to prevent
+ * multi-pin bursts and ensure exactly 1 pin is dispatched per slot.
  */
 export async function dispatchNextOverduePinterestPin(
-  currentTimeStr: string,
-  targetDateStr: string
+  _currentTimeStr: string,
+  _targetDateStr: string
 ): Promise<DispatchPinterestSlotResult | null> {
-  const state = readEngineState();
-  const config = state.config;
-
-  if (!config.engineActive || config.autoPublishPinterest === false || !isPinterestConnected()) {
-    return null;
-  }
-
-  const pinterestPublishTimes = config.pinterestPublishTimes || ['09:00', '13:00', '17:00', '21:00'];
-
-  // Filter today's jobs in chronological order of creation
-  const todaysJobs = (state.activeJobs || [])
-    .filter(j => j.dateScheduled === targetDateStr)
-    .sort((a, b) => (a.createdAt || '').localeCompare(b.createdAt || ''));
-
-  if (todaysJobs.length === 0) {
-    return null;
-  }
-
-  // Flatten all daily pins into deterministic slot order (Slot 1 -> Art 1 Pin 1, Slot 2 -> Art 1 Pin 2, Slot 3 -> Art 2 Pin 1, Slot 4 -> Art 2 Pin 2)
-  const allDailyPins: { job: SeoEngineArticleJob; pin: PinterestCreativeConcept; slotIndex: number; assignedSlotTime: string }[] = [];
-  let pinCounter = 0;
-
-  for (const job of todaysJobs) {
-    for (const pin of (job.pinterestPins || [])) {
-      const slotIndex = pinCounter++;
-      const assignedSlotTime = pinterestPublishTimes[slotIndex] || '09:00';
-      allDailyPins.push({
-        job,
-        pin,
-        slotIndex,
-        assignedSlotTime,
-      });
-    }
-  }
-
-  // Find the FIRST pin in chronological slot order that is overdue and ready to dispatch
-  for (const item of allDailyPins) {
-    const { job, pin, slotIndex, assignedSlotTime } = item;
-
-    // Check 1: Has this slot time arrived yet? (Never publish before assigned slot time)
-    if (currentTimeStr < assignedSlotTime) {
-      continue;
-    }
-
-    // Check 2: Has this pin already been published?
-    if (pin.publishStatus === 'published' && pin.pinterestPinId) {
-      continue;
-    }
-
-    // Check 3: Is parent article strictly published?
-    if (job.stage !== 'completed' || !job.publishedBlogPostId || Boolean(job.publicationError)) {
-      continue;
-    }
-
-    // Check 4: Does local image asset exist?
-    if (!pin.stableAssetPath || !fs.existsSync(pin.stableAssetPath)) {
-      continue;
-    }
-
-    // Check 5: Is target board assigned?
-    if (!pin.targetBoardId) {
-      continue;
-    }
-
-    // Found the earliest eligible overdue Pin!
-    console.log(`[PinterestSlotDispatcher] 🔄 Catch-up dispatching overdue Pin (Slot ${slotIndex + 1} / ${assignedSlotTime}, current clock: ${currentTimeStr}) -> Job ${job.id}, Pin ${pin.pinNumber}...`);
-    return await dispatchScheduledPinterestSlot(assignedSlotTime, targetDateStr);
-  }
-
+  // Strict invariant: Never use catch-up to create a second publication or bundle multiple pins.
   return null;
 }
 

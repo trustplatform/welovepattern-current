@@ -67,24 +67,169 @@
     "estimatedImageCostUsd": 0.03
   },
   "lastRunDate": "2026-10-05",
-  "lastExecutedArticleSlot": "2026-10-05_08:00",
+  "lastExecutedArticleSlot": "2026-10-05_20:00",
   "lastExecutedPinterestSlot": "2026-10-05_13:00",
   "todayDiscoveredTopics": [
     {
       "id": "topic_crochet_686f7720746f",
-      "keyword": "how to fix crochet gaps in amigurumi",
+      "keyword": "how to resize a crochet pattern for different yarn weight",
       "contentType": "trending_crochet",
       "category": "crochet",
       "source": "problem_trend",
       "trendScore": 0,
       "combinedTrendScore": 0,
       "trendDirection": "stable",
-      "opportunityScore": 88,
+      "opportunityScore": 78,
       "targetContentFormat": "tutorial",
-      "targetCategoryUrl": "/category/amigurumi",
+      "targetCategoryUrl": "/categories/tutorials",
       "targetAudienceLevel": "all_levels",
-      "searchIntentNotes": "Preventing stuffing show-through using yarn under and invisible decrease.",
-      "discoveredAt": "2026-10-05T00:00:47.857Z",
+      "searchIntentNotes": "Adjusting stitch repeats and gauge swatches when substituting yarn.",
+      "discoveredAt": "2026-10-06T11:43:13.161Z",
+      "status": "discovered"
+    },
+    {
+      "id": "topic_tool_row_counter_6f6e6c69",
+      "keyword": "online row counter",
+      "contentType": "tool_guide",
+      "category": "tools",
+      "source": "internal_catalog",
+      "trendScore": 85,
+      "trendDirection": "stable",
+      "opportunityScore": 95,
+      "targetContentFormat": "tool_focus",
+      "toolSlug": "row-counter",
+      "targetToolUrl": "/tools/row-counter",
+      "targetCategoryUrl": "/categories/tools",
+      "targetAudienceLevel": "all_levels",
+      "searchIntentNotes": "Tool Guide for real WeLovePattern interactive tool: Row Counter. Problem: Tracking active row repeats and pattern sections without losing count mid-session.",
+      "discoveredAt": "2026-10-06T11:43:13.169Z",
+      "status": "discovered"
+    },
+    {
+      "id": "topic_crochet_63726f636865",
+      "keyword": "crochet ghost pattern free",
+      "contentType": "trending_crochet",
+      "category": "crochet",
+      "source": "gsc_seed",
+      "trendScore": 0,
+      "combinedTrendScore": 0,
+      "trendDirection": "stable",
+      "opportunityScore": 79,
+      "targetContentFormat": "pattern_roundup",
+      "targetCategoryUrl": "/categories/tutorials",
+      "targetAudienceLevel": "all_levels",
+      "searchIntentNotes": "Viral fall and Halloween crochet plushie search intent.",
+      "discoveredAt": "2026-10-06T00:50:04.885Z",
+      "status": "discovered"
+    },
+    {
+      "id": "topic_tool_pattern_library_63726f63",
+      "keyword": "crochet pattern library organizer",
+      "contentType": "tool_guide",
+      "category": "tools",
+      "source": "internal_catalog",
+      "trendScore": 75,
+      "trendDirection": "stable",
+      "opportunityScore": 93,
+      "targetContentFormat": "tool_focus",
+      "toolSlug": "pattern-library",
+      "targetToolUrl": "/tools/pattern-library",
+      "targetCategoryUrl": "/categories/tools",
+      "targetAudienceLevel": "all_levels",
+      "searchIntentNotes": "Tool Guide for real WeLovePattern interactive tool: Pattern Library / Collections. Problem: Grouping saved patterns into custom seasonal project folders.",
+      "discoveredAt": "2026-10-06T00:50:04.899Z",
+      "status": "discovered"
+    },
+    {
+      "id": "topic_crochet_656173792063",
+      "keyword": "easy crochet pumpkin pattern free",
+      "contentType": "trending_crochet",
+      "category": "crochet",
+      "source": "gsc_seed",
+      "trendScore": 0,
+      "combinedTrendScore": 0,
+      "trendDirection": "stable",
+      "opportunityScore": 79,
+      "targetContentFormat": "pattern_roundup",
+      "targetCategoryUrl": "/categories/tutorials",
+      "targetPatternUrls": [
+        "/pattern/spooky-pumpkin-jack-o-lantern"
+      ],
+      "targetAudienceLevel": "all_levels",
+      "searchIntentNotes": "Seasonal high-volume search for beginner-friendly plush ribbed pumpkins.",
+      "discoveredAt": "2026-10-05T21:58:24.267Z",
+      "status": "discovered"
+    },
+    {
+      "id": "topic_tool_crochet_timer_63726f63",
+      "keyword": "crochet project timer",
+      "contentType": "tool_guide",
+      "category": "tools",
+      "source": "internal_catalog",
+      "trendScore": 75,
+      "trendDirection": "stable",
+      "opportunityScore": 93,
+      "targetContentFormat": "tool_focus",
+      "toolSlug": "crochet-timer",
+      "targetToolUrl": "/tools/crochet-timer",
+      "targetCategoryUrl": "/categories/tools",
+      "targetAudienceLevel": "all_levels",
+      "searchIntentNotes": "Tool Guide for real WeLovePattern interactive tool: Crochet Timer. Problem: Logging total stitching time and calculating stitching speed (rows per hour).",
+      "discoveredAt": "2026-10-05T21:58:24.278Z",
+      "status": "discovered"
+    },
+    {
+      "id": "topic_tool_pattern_pdf_organizer_6f726761",
+      "keyword": "organize crochet patterns pdf",
+      "contentType": "tool_guide",
+      "category": "tools",
+      "source": "internal_catalog",
+      "trendScore": 75,
+      "trendDirection": "stable",
+      "opportunityScore": 93,
+      "targetContentFormat": "tool_focus",
+      "toolSlug": "pattern-pdf-organizer",
+      "targetToolUrl": "/tools/pattern-pdf-organizer",
+      "targetCategoryUrl": "/categories/tools",
+      "targetAudienceLevel": "all_levels",
+      "searchIntentNotes": "Tool Guide for real WeLovePattern interactive tool: Pattern PDF Organizer. Problem: Managing and tagging digital PDF craft files for quick offline reference.",
+      "discoveredAt": "2026-10-05T21:55:48.440Z",
+      "status": "discovered"
+    },
+    {
+      "id": "topic_tool_pattern_difficulty_checker_63726f63",
+      "keyword": "crochet pattern difficulty checker",
+      "contentType": "tool_guide",
+      "category": "tools",
+      "source": "internal_catalog",
+      "trendScore": 75,
+      "trendDirection": "stable",
+      "opportunityScore": 93,
+      "targetContentFormat": "tool_focus",
+      "toolSlug": "pattern-difficulty-checker",
+      "targetToolUrl": "/tools/pattern-difficulty-checker",
+      "targetCategoryUrl": "/categories/tools",
+      "targetAudienceLevel": "all_levels",
+      "searchIntentNotes": "Tool Guide for real WeLovePattern interactive tool: Pattern Difficulty Checker. Problem: Assessing skill levels (Beginner, Easy, Intermediate, Advanced) based on stitch complexity.",
+      "discoveredAt": "2026-10-05T21:42:52.767Z",
+      "status": "discovered"
+    },
+    {
+      "id": "topic_tool_yarn_substitute_finder_7961726e",
+      "keyword": "yarn substitute finder",
+      "contentType": "tool_guide",
+      "category": "tools",
+      "source": "internal_catalog",
+      "trendScore": 75,
+      "trendDirection": "stable",
+      "opportunityScore": 93,
+      "targetContentFormat": "tool_focus",
+      "toolSlug": "yarn-substitute-finder",
+      "targetToolUrl": "/tools/yarn-substitute-finder",
+      "targetCategoryUrl": "/categories/tools",
+      "targetAudienceLevel": "all_levels",
+      "searchIntentNotes": "Tool Guide for real WeLovePattern interactive tool: Yarn Substitute Finder. Problem: Finding alternative yarns with identical gauge, fiber content, and yardage per 100 grams.",
+      "discoveredAt": "2026-10-05T21:42:29.788Z",
       "status": "discovered"
     },
     {
@@ -321,27 +466,6 @@
       "status": "discovered"
     },
     {
-      "id": "topic_crochet_63726f636865",
-      "keyword": "crochet bucket hat pattern easy",
-      "contentType": "trending_crochet",
-      "category": "crochet",
-      "source": "gsc_seed",
-      "trendScore": 0,
-      "combinedTrendScore": 0,
-      "trendDirection": "stable",
-      "opportunityScore": 79,
-      "targetContentFormat": "pattern_roundup",
-      "targetCategoryUrl": "/categories/tutorials",
-      "targetPatternUrls": [
-        "/pattern/cozy-ribbed-slouchy-beanie",
-        "/pattern/boho-flower-bucket-hat"
-      ],
-      "targetAudienceLevel": "all_levels",
-      "searchIntentNotes": "Popular stylish beginner wearable project.",
-      "discoveredAt": "2026-09-30T00:01:05.467Z",
-      "status": "discovered"
-    },
-    {
       "id": "topic_tool_hook_size_converter_63726f63",
       "keyword": "crochet hook size chart mm",
       "contentType": "tool_guide",
@@ -467,24 +591,6 @@
       "targetAudienceLevel": "all_levels",
       "searchIntentNotes": "Tool Guide for real WeLovePattern interactive tool: Project Tracker. Problem: Keep track of active WIPs, completion status, yarn stash used, hook sizes, and photo logs.",
       "discoveredAt": "2026-09-27T13:03:22.757Z",
-      "status": "discovered"
-    },
-    {
-      "id": "topic_tool_row_counter_6f6e6c69",
-      "keyword": "online row counter",
-      "contentType": "tool_guide",
-      "category": "tools",
-      "source": "internal_catalog",
-      "trendScore": 85,
-      "trendDirection": "stable",
-      "opportunityScore": 95,
-      "targetContentFormat": "tool_focus",
-      "toolSlug": "row-counter",
-      "targetToolUrl": "/tools/row-counter",
-      "targetCategoryUrl": "/categories/tools",
-      "targetAudienceLevel": "all_levels",
-      "searchIntentNotes": "Tool Guide for real WeLovePattern interactive tool: Row Counter. Problem: Tracking active row repeats and pattern sections without losing count mid-session.",
-      "discoveredAt": "2026-09-27T12:00:34.361Z",
       "status": "discovered"
     }
   ],
@@ -8678,8 +8784,1633 @@
       "publishedSlug": "mastering-yarn-costs-with-our-yarn-cost-calculator-tool",
       "publishedUrl": "https://welovepattern.com/blog/mastering-yarn-costs-with-our-yarn-cost-calculator-tool",
       "publishedAt": "2026-10-05T00:04:55.796Z"
+    },
+    {
+      "id": "job_2026-10-05_4b301m",
+      "dateScheduled": "2026-10-05",
+      "contentType": "trending_crochet",
+      "category": "crochet",
+      "topic": {
+        "id": "topic_crochet_63726f636865",
+        "keyword": "crochet christmas tree ornament pattern",
+        "contentType": "trending_crochet",
+        "category": "crochet",
+        "source": "gsc_seed",
+        "trendScore": 0,
+        "combinedTrendScore": 0,
+        "trendDirection": "stable",
+        "opportunityScore": 89,
+        "targetContentFormat": "pattern_roundup",
+        "targetCategoryUrl": "/category/christmas",
+        "targetAudienceLevel": "all_levels",
+        "searchIntentNotes": "High holiday seasonal search for handmade holiday tree decor.",
+        "discoveredAt": "2026-10-05T21:42:29.780Z",
+        "status": "discovered"
+      },
+      "pinterestPins": [],
+      "stage": "failed",
+      "requiresApproval": false,
+      "indexNowNotified": false,
+      "createdAt": "2026-10-05T21:42:29.813Z",
+      "updatedAt": "2026-10-05T21:43:08.832Z",
+      "logs": [
+        {
+          "timestamp": "2026-10-05T21:42:29.813Z",
+          "level": "info",
+          "message": "Job created for TRENDING_CROCHET (Category: CROCHET): \"crochet christmas tree ornament pattern\" with opportunity score 89."
+        },
+        {
+          "timestamp": "2026-10-05T21:43:08.701Z",
+          "level": "info",
+          "message": "Starting technical craft research..."
+        },
+        {
+          "timestamp": "2026-10-05T21:43:08.796Z",
+          "level": "info",
+          "message": "Factual research packet validated successfully."
+        },
+        {
+          "timestamp": "2026-10-05T21:43:08.816Z",
+          "level": "info",
+          "message": "Generating article with OpenAI..."
+        },
+        {
+          "timestamp": "2026-10-05T21:43:08.832Z",
+          "level": "error",
+          "message": "OpenAI Generation Error: OPENAI_API_KEY is not configured on the server. Cannot generate article."
+        }
+      ],
+      "factualResearch": {
+        "topicId": "topic_crochet_63726f636865",
+        "topic": "crochet christmas tree ornament pattern",
+        "searchIntent": "Maker search query focused on crochet christmas tree ornament pattern",
+        "craftType": "crochet",
+        "sourceAuthority": "Craft Yarn Council Technical Standards & WeLovePattern Craft Library",
+        "cycStandardVersion": "CYC 2024 Guidelines",
+        "generatedAt": "2026-10-05T21:43:08.730Z",
+        "verifiedTerminology": [
+          "Gauge Swatch (4x4 inches / 10x10 cm)",
+          "Single Crochet (US sc / UK dc)",
+          "Double Crochet (US dc / UK tr)",
+          "Half Double Crochet (US hdc / UK htr)",
+          "Slip Stitch (sl st)",
+          "Turning Chain (ch)"
+        ],
+        "verifiedMaterials": {
+          "yarnWeights": [
+            "Medium / Worsted (#4)",
+            "Light / DK (#3)"
+          ],
+          "hookSizes": [
+            "5.0 mm (H-8)",
+            "5.5 mm (I-9)",
+            "4.0 mm (G-6)"
+          ],
+          "standardYardages": "Standard projects require 800 - 1,400 meters depending on dimension"
+        },
+        "authorizedPercentages": [
+          10,
+          15,
+          20
+        ],
+        "prohibitedMetrics": [
+          "stitches per skein",
+          "divide stitches by stitches per skein",
+          "arbitrary yards per stitch",
+          "invented mattress or bed sizes",
+          "commercial sales pricing or revenue claims"
+        ],
+        "verifiedFormulas": [
+          {
+            "name": "Area Ratio Swatch Scaling Method",
+            "description": "Calculates total project yardage by scaling the measured yardage consumed by a 4x4 inch blocked swatch to the total project surface area.",
+            "formulaText": "Total Yardage = (Total Project Surface Area / Swatch Surface Area) * Swatch Yardage * 1.10 (safety buffer)",
+            "steps": [
+              "Crochet a 4x4 inch (16 sq in / 100 sq cm) gauge swatch using the project hook and yarn.",
+              "Measure the exact yardage used in the swatch (either by weighing with a gram scale or measuring the yarn before swatching).",
+              "Calculate total project area in square inches (width in inches multiplied by length in inches).",
+              "Divide total project area by swatch area to find the scale multiplier, multiply by swatch yardage, and add 10% to 15% safety buffer for borders, ends, and tension variance."
+            ]
+          }
+        ],
+        "supportedClaims": [
+          "Textured stitches like bobbles, puff stitches, and cables consume substantially more yarn per square inch than flat stitches like single crochet and double crochet.",
+          "A 10% to 15% yardage buffer is essential to prevent running out of yarn before border completion.",
+          "Yarn skeins are sold and measured by weight and yardage/meters, never by a fixed stitch count.",
+          "Dye lot consistency is critical across large surface items to avoid noticeable color demarcation lines."
+        ],
+        "techniqueKeyPoints": [
+          "Always crochet and block a 4x4 inch (10x10 cm) gauge swatch before starting garments or fitted items.",
+          "Yarn requirements increase significantly with textured stitches like waffle stitch or bobbles compared to basic double crochet.",
+          "Tension consistency between rows determines finished project drape and dimensional accuracy."
+        ],
+        "makerPainPoints": [
+          "Running out of yarn on the final border row due to approximate estimation.",
+          "Blanket borders ruffling or curling because stitch count pick-ups along edges are uneven.",
+          "Finished item sizing significantly larger or smaller than pattern specs due to skipped gauge swatching."
+        ],
+        "faqItems": [
+          {
+            "question": "Why is checking your gauge essential for crochet christmas tree ornament pattern?",
+            "factualAnswer": "Individual crafter tension varies widely. Even with the identical hook and yarn weight, one maker may crochet 12 stitches per 4 inches while another crochets 15 stitches, altering finished dimensions by up to 25%."
+          },
+          {
+            "question": "What is the most common mistake when calculating yarn yardage?",
+            "factualAnswer": "Failing to include a 10% to 15% safety buffer for swatch testing, color changes, and border edging, which often results in running out of dye lot before completion."
+          },
+          {
+            "question": "How do US and UK stitch terms differ for this technique?",
+            "factualAnswer": "US terms name stitches by yarn overs, whereas UK terms name them by loops on the hook. For example, a US single crochet is identical in height and technique to a UK double crochet."
+          }
+        ],
+        "verifiedInternalLinks": [
+          {
+            "anchorText": "christmas",
+            "url": "/category/christmas",
+            "entityType": "category"
+          }
+        ]
+      }
+    },
+    {
+      "id": "job_2026-10-05_j4nxpr",
+      "dateScheduled": "2026-10-05",
+      "contentType": "tool_guide",
+      "category": "tools",
+      "topic": {
+        "id": "topic_tool_yarn_substitute_finder_7961726e",
+        "keyword": "yarn substitute finder",
+        "contentType": "tool_guide",
+        "category": "tools",
+        "source": "internal_catalog",
+        "trendScore": 75,
+        "trendDirection": "stable",
+        "opportunityScore": 93,
+        "targetContentFormat": "tool_focus",
+        "toolSlug": "yarn-substitute-finder",
+        "targetToolUrl": "/tools/yarn-substitute-finder",
+        "targetCategoryUrl": "/categories/tools",
+        "targetAudienceLevel": "all_levels",
+        "searchIntentNotes": "Tool Guide for real WeLovePattern interactive tool: Yarn Substitute Finder. Problem: Finding alternative yarns with identical gauge, fiber content, and yardage per 100 grams.",
+        "discoveredAt": "2026-10-05T21:42:29.788Z",
+        "status": "discovered"
+      },
+      "pinterestPins": [],
+      "stage": "failed",
+      "requiresApproval": false,
+      "indexNowNotified": false,
+      "createdAt": "2026-10-05T21:42:29.837Z",
+      "updatedAt": "2026-10-05T21:43:09.021Z",
+      "logs": [
+        {
+          "timestamp": "2026-10-05T21:42:29.837Z",
+          "level": "info",
+          "message": "Job created for TOOL_GUIDE (Category: TOOLS): \"yarn substitute finder\" with opportunity score 93."
+        },
+        {
+          "timestamp": "2026-10-05T21:43:08.933Z",
+          "level": "info",
+          "message": "Starting technical craft research..."
+        },
+        {
+          "timestamp": "2026-10-05T21:43:08.965Z",
+          "level": "info",
+          "message": "Factual research packet validated successfully."
+        },
+        {
+          "timestamp": "2026-10-05T21:43:09.005Z",
+          "level": "info",
+          "message": "Generating article with OpenAI..."
+        },
+        {
+          "timestamp": "2026-10-05T21:43:09.021Z",
+          "level": "error",
+          "message": "OpenAI Generation Error: OPENAI_API_KEY is not configured on the server. Cannot generate article."
+        }
+      ],
+      "factualResearch": {
+        "topicId": "topic_tool_yarn_substitute_finder_7961726e",
+        "topic": "yarn substitute finder",
+        "searchIntent": "Maker search query focused on yarn substitute finder",
+        "craftType": "crochet",
+        "sourceAuthority": "Craft Yarn Council Technical Standards & WeLovePattern Craft Library",
+        "cycStandardVersion": "CYC 2024 Guidelines",
+        "generatedAt": "2026-10-05T21:43:08.953Z",
+        "verifiedTerminology": [
+          "Gauge Swatch (4x4 inches / 10x10 cm)",
+          "Single Crochet (US sc / UK dc)",
+          "Double Crochet (US dc / UK tr)",
+          "Half Double Crochet (US hdc / UK htr)",
+          "Slip Stitch (sl st)",
+          "Turning Chain (ch)"
+        ],
+        "verifiedMaterials": {
+          "yarnWeights": [
+            "Medium / Worsted (#4)",
+            "Light / DK (#3)"
+          ],
+          "hookSizes": [
+            "5.0 mm (H-8)",
+            "5.5 mm (I-9)",
+            "4.0 mm (G-6)"
+          ],
+          "standardYardages": "Standard projects require 800 - 1,400 meters depending on dimension"
+        },
+        "authorizedPercentages": [
+          10,
+          15,
+          20
+        ],
+        "prohibitedMetrics": [
+          "stitches per skein",
+          "divide stitches by stitches per skein",
+          "arbitrary yards per stitch",
+          "invented mattress or bed sizes",
+          "commercial sales pricing or revenue claims"
+        ],
+        "verifiedFormulas": [
+          {
+            "name": "Area Ratio Swatch Scaling Method",
+            "description": "Calculates total project yardage by scaling the measured yardage consumed by a 4x4 inch blocked swatch to the total project surface area.",
+            "formulaText": "Total Yardage = (Total Project Surface Area / Swatch Surface Area) * Swatch Yardage * 1.10 (safety buffer)",
+            "steps": [
+              "Crochet a 4x4 inch (16 sq in / 100 sq cm) gauge swatch using the project hook and yarn.",
+              "Measure the exact yardage used in the swatch (either by weighing with a gram scale or measuring the yarn before swatching).",
+              "Calculate total project area in square inches (width in inches multiplied by length in inches).",
+              "Divide total project area by swatch area to find the scale multiplier, multiply by swatch yardage, and add 10% to 15% safety buffer for borders, ends, and tension variance."
+            ]
+          }
+        ],
+        "supportedClaims": [
+          "Textured stitches like bobbles, puff stitches, and cables consume substantially more yarn per square inch than flat stitches like single crochet and double crochet.",
+          "A 10% to 15% yardage buffer is essential to prevent running out of yarn before border completion.",
+          "Yarn skeins are sold and measured by weight and yardage/meters, never by a fixed stitch count.",
+          "Dye lot consistency is critical across large surface items to avoid noticeable color demarcation lines."
+        ],
+        "techniqueKeyPoints": [
+          "Always crochet and block a 4x4 inch (10x10 cm) gauge swatch before starting garments or fitted items.",
+          "Yarn requirements increase significantly with textured stitches like waffle stitch or bobbles compared to basic double crochet.",
+          "Tension consistency between rows determines finished project drape and dimensional accuracy."
+        ],
+        "makerPainPoints": [
+          "Running out of yarn on the final border row due to approximate estimation.",
+          "Blanket borders ruffling or curling because stitch count pick-ups along edges are uneven.",
+          "Finished item sizing significantly larger or smaller than pattern specs due to skipped gauge swatching."
+        ],
+        "faqItems": [
+          {
+            "question": "Why is checking your gauge essential for yarn substitute finder?",
+            "factualAnswer": "Individual crafter tension varies widely. Even with the identical hook and yarn weight, one maker may crochet 12 stitches per 4 inches while another crochets 15 stitches, altering finished dimensions by up to 25%."
+          },
+          {
+            "question": "What is the most common mistake when calculating yarn yardage?",
+            "factualAnswer": "Failing to include a 10% to 15% safety buffer for swatch testing, color changes, and border edging, which often results in running out of dye lot before completion."
+          },
+          {
+            "question": "How do US and UK stitch terms differ for this technique?",
+            "factualAnswer": "US terms name stitches by yarn overs, whereas UK terms name them by loops on the hook. For example, a US single crochet is identical in height and technique to a UK double crochet."
+          }
+        ],
+        "verifiedInternalLinks": [
+          {
+            "anchorText": "yarn substitute finder",
+            "url": "/tools/yarn-substitute-finder",
+            "entityType": "tool"
+          }
+        ]
+      }
+    },
+    {
+      "id": "job_2026-10-05_9w4mso",
+      "dateScheduled": "2026-10-05",
+      "contentType": "trending_crochet",
+      "category": "crochet",
+      "topic": {
+        "id": "topic_crochet_63726f636865",
+        "keyword": "crochet autumn leaf pattern",
+        "contentType": "trending_crochet",
+        "category": "crochet",
+        "source": "gsc_seed",
+        "trendScore": 0,
+        "combinedTrendScore": 0,
+        "trendDirection": "stable",
+        "opportunityScore": 83,
+        "targetContentFormat": "pattern_roundup",
+        "targetCategoryUrl": "/categories/tutorials",
+        "targetAudienceLevel": "all_levels",
+        "searchIntentNotes": "Seasonal motif pattern search for garlands and home decor.",
+        "discoveredAt": "2026-10-05T21:42:52.758Z",
+        "status": "discovered"
+      },
+      "pinterestPins": [],
+      "stage": "failed",
+      "requiresApproval": false,
+      "indexNowNotified": false,
+      "createdAt": "2026-10-05T21:42:52.793Z",
+      "updatedAt": "2026-10-05T21:43:09.207Z",
+      "logs": [
+        {
+          "timestamp": "2026-10-05T21:42:52.793Z",
+          "level": "info",
+          "message": "Job created for TRENDING_CROCHET (Category: CROCHET): \"crochet autumn leaf pattern\" with opportunity score 83."
+        },
+        {
+          "timestamp": "2026-10-05T21:43:09.098Z",
+          "level": "info",
+          "message": "Starting technical craft research..."
+        },
+        {
+          "timestamp": "2026-10-05T21:43:09.121Z",
+          "level": "info",
+          "message": "Factual research packet validated successfully."
+        },
+        {
+          "timestamp": "2026-10-05T21:43:09.140Z",
+          "level": "info",
+          "message": "Generating article with OpenAI..."
+        },
+        {
+          "timestamp": "2026-10-05T21:43:09.207Z",
+          "level": "error",
+          "message": "OpenAI Generation Error: OPENAI_API_KEY is not configured on the server. Cannot generate article."
+        }
+      ],
+      "factualResearch": {
+        "topicId": "topic_crochet_63726f636865",
+        "topic": "crochet autumn leaf pattern",
+        "searchIntent": "Maker search query focused on crochet autumn leaf pattern",
+        "craftType": "crochet",
+        "sourceAuthority": "Craft Yarn Council Technical Standards & WeLovePattern Craft Library",
+        "cycStandardVersion": "CYC 2024 Guidelines",
+        "generatedAt": "2026-10-05T21:43:09.108Z",
+        "verifiedTerminology": [
+          "Gauge Swatch (4x4 inches / 10x10 cm)",
+          "Single Crochet (US sc / UK dc)",
+          "Double Crochet (US dc / UK tr)",
+          "Half Double Crochet (US hdc / UK htr)",
+          "Slip Stitch (sl st)",
+          "Turning Chain (ch)"
+        ],
+        "verifiedMaterials": {
+          "yarnWeights": [
+            "Medium / Worsted (#4)",
+            "Light / DK (#3)"
+          ],
+          "hookSizes": [
+            "5.0 mm (H-8)",
+            "5.5 mm (I-9)",
+            "4.0 mm (G-6)"
+          ],
+          "standardYardages": "Standard projects require 800 - 1,400 meters depending on dimension"
+        },
+        "authorizedPercentages": [
+          10,
+          15,
+          20
+        ],
+        "prohibitedMetrics": [
+          "stitches per skein",
+          "divide stitches by stitches per skein",
+          "arbitrary yards per stitch",
+          "invented mattress or bed sizes",
+          "commercial sales pricing or revenue claims"
+        ],
+        "verifiedFormulas": [
+          {
+            "name": "Area Ratio Swatch Scaling Method",
+            "description": "Calculates total project yardage by scaling the measured yardage consumed by a 4x4 inch blocked swatch to the total project surface area.",
+            "formulaText": "Total Yardage = (Total Project Surface Area / Swatch Surface Area) * Swatch Yardage * 1.10 (safety buffer)",
+            "steps": [
+              "Crochet a 4x4 inch (16 sq in / 100 sq cm) gauge swatch using the project hook and yarn.",
+              "Measure the exact yardage used in the swatch (either by weighing with a gram scale or measuring the yarn before swatching).",
+              "Calculate total project area in square inches (width in inches multiplied by length in inches).",
+              "Divide total project area by swatch area to find the scale multiplier, multiply by swatch yardage, and add 10% to 15% safety buffer for borders, ends, and tension variance."
+            ]
+          }
+        ],
+        "supportedClaims": [
+          "Textured stitches like bobbles, puff stitches, and cables consume substantially more yarn per square inch than flat stitches like single crochet and double crochet.",
+          "A 10% to 15% yardage buffer is essential to prevent running out of yarn before border completion.",
+          "Yarn skeins are sold and measured by weight and yardage/meters, never by a fixed stitch count.",
+          "Dye lot consistency is critical across large surface items to avoid noticeable color demarcation lines."
+        ],
+        "techniqueKeyPoints": [
+          "Always crochet and block a 4x4 inch (10x10 cm) gauge swatch before starting garments or fitted items.",
+          "Yarn requirements increase significantly with textured stitches like waffle stitch or bobbles compared to basic double crochet.",
+          "Tension consistency between rows determines finished project drape and dimensional accuracy."
+        ],
+        "makerPainPoints": [
+          "Running out of yarn on the final border row due to approximate estimation.",
+          "Blanket borders ruffling or curling because stitch count pick-ups along edges are uneven.",
+          "Finished item sizing significantly larger or smaller than pattern specs due to skipped gauge swatching."
+        ],
+        "faqItems": [
+          {
+            "question": "Why is checking your gauge essential for crochet autumn leaf pattern?",
+            "factualAnswer": "Individual crafter tension varies widely. Even with the identical hook and yarn weight, one maker may crochet 12 stitches per 4 inches while another crochets 15 stitches, altering finished dimensions by up to 25%."
+          },
+          {
+            "question": "What is the most common mistake when calculating yarn yardage?",
+            "factualAnswer": "Failing to include a 10% to 15% safety buffer for swatch testing, color changes, and border edging, which often results in running out of dye lot before completion."
+          },
+          {
+            "question": "How do US and UK stitch terms differ for this technique?",
+            "factualAnswer": "US terms name stitches by yarn overs, whereas UK terms name them by loops on the hook. For example, a US single crochet is identical in height and technique to a UK double crochet."
+          }
+        ],
+        "verifiedInternalLinks": []
+      }
+    },
+    {
+      "id": "job_2026-10-05_vk5dnn",
+      "dateScheduled": "2026-10-05",
+      "contentType": "tool_guide",
+      "category": "tools",
+      "topic": {
+        "id": "topic_tool_pattern_difficulty_checker_63726f63",
+        "keyword": "crochet pattern difficulty checker",
+        "contentType": "tool_guide",
+        "category": "tools",
+        "source": "internal_catalog",
+        "trendScore": 75,
+        "trendDirection": "stable",
+        "opportunityScore": 93,
+        "targetContentFormat": "tool_focus",
+        "toolSlug": "pattern-difficulty-checker",
+        "targetToolUrl": "/tools/pattern-difficulty-checker",
+        "targetCategoryUrl": "/categories/tools",
+        "targetAudienceLevel": "all_levels",
+        "searchIntentNotes": "Tool Guide for real WeLovePattern interactive tool: Pattern Difficulty Checker. Problem: Assessing skill levels (Beginner, Easy, Intermediate, Advanced) based on stitch complexity.",
+        "discoveredAt": "2026-10-05T21:42:52.767Z",
+        "status": "discovered"
+      },
+      "pinterestPins": [],
+      "stage": "failed",
+      "requiresApproval": false,
+      "indexNowNotified": false,
+      "createdAt": "2026-10-05T21:42:52.816Z",
+      "updatedAt": "2026-10-05T21:43:09.335Z",
+      "logs": [
+        {
+          "timestamp": "2026-10-05T21:42:52.816Z",
+          "level": "info",
+          "message": "Job created for TOOL_GUIDE (Category: TOOLS): \"crochet pattern difficulty checker\" with opportunity score 93."
+        },
+        {
+          "timestamp": "2026-10-05T21:43:09.263Z",
+          "level": "info",
+          "message": "Starting technical craft research..."
+        },
+        {
+          "timestamp": "2026-10-05T21:43:09.299Z",
+          "level": "info",
+          "message": "Factual research packet validated successfully."
+        },
+        {
+          "timestamp": "2026-10-05T21:43:09.318Z",
+          "level": "info",
+          "message": "Generating article with OpenAI..."
+        },
+        {
+          "timestamp": "2026-10-05T21:43:09.335Z",
+          "level": "error",
+          "message": "OpenAI Generation Error: OPENAI_API_KEY is not configured on the server. Cannot generate article."
+        }
+      ],
+      "factualResearch": {
+        "topicId": "topic_tool_pattern_difficulty_checker_63726f63",
+        "topic": "crochet pattern difficulty checker",
+        "searchIntent": "Maker search query focused on crochet pattern difficulty checker",
+        "craftType": "crochet",
+        "sourceAuthority": "Craft Yarn Council Technical Standards & WeLovePattern Craft Library",
+        "cycStandardVersion": "CYC 2024 Guidelines",
+        "generatedAt": "2026-10-05T21:43:09.273Z",
+        "verifiedTerminology": [
+          "Gauge Swatch (4x4 inches / 10x10 cm)",
+          "Single Crochet (US sc / UK dc)",
+          "Double Crochet (US dc / UK tr)",
+          "Half Double Crochet (US hdc / UK htr)",
+          "Slip Stitch (sl st)",
+          "Turning Chain (ch)"
+        ],
+        "verifiedMaterials": {
+          "yarnWeights": [
+            "Medium / Worsted (#4)",
+            "Light / DK (#3)"
+          ],
+          "hookSizes": [
+            "5.0 mm (H-8)",
+            "5.5 mm (I-9)",
+            "4.0 mm (G-6)"
+          ],
+          "standardYardages": "Standard projects require 800 - 1,400 meters depending on dimension"
+        },
+        "authorizedPercentages": [
+          10,
+          15,
+          20
+        ],
+        "prohibitedMetrics": [
+          "stitches per skein",
+          "divide stitches by stitches per skein",
+          "arbitrary yards per stitch",
+          "invented mattress or bed sizes",
+          "commercial sales pricing or revenue claims"
+        ],
+        "verifiedFormulas": [
+          {
+            "name": "Area Ratio Swatch Scaling Method",
+            "description": "Calculates total project yardage by scaling the measured yardage consumed by a 4x4 inch blocked swatch to the total project surface area.",
+            "formulaText": "Total Yardage = (Total Project Surface Area / Swatch Surface Area) * Swatch Yardage * 1.10 (safety buffer)",
+            "steps": [
+              "Crochet a 4x4 inch (16 sq in / 100 sq cm) gauge swatch using the project hook and yarn.",
+              "Measure the exact yardage used in the swatch (either by weighing with a gram scale or measuring the yarn before swatching).",
+              "Calculate total project area in square inches (width in inches multiplied by length in inches).",
+              "Divide total project area by swatch area to find the scale multiplier, multiply by swatch yardage, and add 10% to 15% safety buffer for borders, ends, and tension variance."
+            ]
+          }
+        ],
+        "supportedClaims": [
+          "Textured stitches like bobbles, puff stitches, and cables consume substantially more yarn per square inch than flat stitches like single crochet and double crochet.",
+          "A 10% to 15% yardage buffer is essential to prevent running out of yarn before border completion.",
+          "Yarn skeins are sold and measured by weight and yardage/meters, never by a fixed stitch count.",
+          "Dye lot consistency is critical across large surface items to avoid noticeable color demarcation lines."
+        ],
+        "techniqueKeyPoints": [
+          "Always crochet and block a 4x4 inch (10x10 cm) gauge swatch before starting garments or fitted items.",
+          "Yarn requirements increase significantly with textured stitches like waffle stitch or bobbles compared to basic double crochet.",
+          "Tension consistency between rows determines finished project drape and dimensional accuracy."
+        ],
+        "makerPainPoints": [
+          "Running out of yarn on the final border row due to approximate estimation.",
+          "Blanket borders ruffling or curling because stitch count pick-ups along edges are uneven.",
+          "Finished item sizing significantly larger or smaller than pattern specs due to skipped gauge swatching."
+        ],
+        "faqItems": [
+          {
+            "question": "Why is checking your gauge essential for crochet pattern difficulty checker?",
+            "factualAnswer": "Individual crafter tension varies widely. Even with the identical hook and yarn weight, one maker may crochet 12 stitches per 4 inches while another crochets 15 stitches, altering finished dimensions by up to 25%."
+          },
+          {
+            "question": "What is the most common mistake when calculating yarn yardage?",
+            "factualAnswer": "Failing to include a 10% to 15% safety buffer for swatch testing, color changes, and border edging, which often results in running out of dye lot before completion."
+          },
+          {
+            "question": "How do US and UK stitch terms differ for this technique?",
+            "factualAnswer": "US terms name stitches by yarn overs, whereas UK terms name them by loops on the hook. For example, a US single crochet is identical in height and technique to a UK double crochet."
+          }
+        ],
+        "verifiedInternalLinks": [
+          {
+            "anchorText": "pattern difficulty checker",
+            "url": "/tools/pattern-difficulty-checker",
+            "entityType": "tool"
+          }
+        ]
+      }
+    },
+    {
+      "id": "job_2026-10-05_3m98wk",
+      "dateScheduled": "2026-10-05",
+      "contentType": "trending_crochet",
+      "category": "crochet",
+      "topic": {
+        "id": "topic_crochet_686f7720746f",
+        "keyword": "how to fix leaning crochet stitches in the round",
+        "contentType": "trending_crochet",
+        "category": "crochet",
+        "source": "problem_trend",
+        "trendScore": 0,
+        "combinedTrendScore": 0,
+        "trendDirection": "stable",
+        "opportunityScore": 82,
+        "targetContentFormat": "tutorial",
+        "targetCategoryUrl": "/categories/tutorials",
+        "targetAudienceLevel": "all_levels",
+        "searchIntentNotes": "Correcting spiral seam diagonal drift in baskets and hats.",
+        "discoveredAt": "2026-10-05T21:55:48.431Z",
+        "status": "discovered"
+      },
+      "pinterestPins": [],
+      "stage": "failed",
+      "requiresApproval": false,
+      "indexNowNotified": false,
+      "createdAt": "2026-10-05T21:55:48.466Z",
+      "updatedAt": "2026-10-05T21:56:44.661Z",
+      "logs": [
+        {
+          "timestamp": "2026-10-05T21:55:48.466Z",
+          "level": "info",
+          "message": "Job created for TRENDING_CROCHET (Category: CROCHET): \"how to fix leaning crochet stitches in the round\" with opportunity score 82."
+        },
+        {
+          "timestamp": "2026-10-05T21:56:44.573Z",
+          "level": "info",
+          "message": "Starting technical craft research..."
+        },
+        {
+          "timestamp": "2026-10-05T21:56:44.624Z",
+          "level": "info",
+          "message": "Factual research packet validated successfully."
+        },
+        {
+          "timestamp": "2026-10-05T21:56:44.643Z",
+          "level": "info",
+          "message": "Generating article with OpenAI..."
+        },
+        {
+          "timestamp": "2026-10-05T21:56:44.661Z",
+          "level": "error",
+          "message": "OpenAI Generation Error: OPENAI_API_KEY is not configured on the server. Cannot generate article."
+        }
+      ],
+      "factualResearch": {
+        "topicId": "topic_crochet_686f7720746f",
+        "topic": "how to fix leaning crochet stitches in the round",
+        "searchIntent": "Maker search query focused on how to fix leaning crochet stitches in the round",
+        "craftType": "crochet",
+        "sourceAuthority": "Craft Yarn Council Technical Standards & WeLovePattern Craft Library",
+        "cycStandardVersion": "CYC 2024 Guidelines",
+        "generatedAt": "2026-10-05T21:56:44.611Z",
+        "verifiedTerminology": [
+          "Gauge Swatch (4x4 inches / 10x10 cm)",
+          "Single Crochet (US sc / UK dc)",
+          "Double Crochet (US dc / UK tr)",
+          "Half Double Crochet (US hdc / UK htr)",
+          "Slip Stitch (sl st)",
+          "Turning Chain (ch)"
+        ],
+        "verifiedMaterials": {
+          "yarnWeights": [
+            "Medium / Worsted (#4)",
+            "Light / DK (#3)"
+          ],
+          "hookSizes": [
+            "5.0 mm (H-8)",
+            "5.5 mm (I-9)",
+            "4.0 mm (G-6)"
+          ],
+          "standardYardages": "Standard projects require 800 - 1,400 meters depending on dimension"
+        },
+        "authorizedPercentages": [
+          10,
+          15,
+          20
+        ],
+        "prohibitedMetrics": [
+          "stitches per skein",
+          "divide stitches by stitches per skein",
+          "arbitrary yards per stitch",
+          "invented mattress or bed sizes",
+          "commercial sales pricing or revenue claims"
+        ],
+        "verifiedFormulas": [
+          {
+            "name": "Area Ratio Swatch Scaling Method",
+            "description": "Calculates total project yardage by scaling the measured yardage consumed by a 4x4 inch blocked swatch to the total project surface area.",
+            "formulaText": "Total Yardage = (Total Project Surface Area / Swatch Surface Area) * Swatch Yardage * 1.10 (safety buffer)",
+            "steps": [
+              "Crochet a 4x4 inch (16 sq in / 100 sq cm) gauge swatch using the project hook and yarn.",
+              "Measure the exact yardage used in the swatch (either by weighing with a gram scale or measuring the yarn before swatching).",
+              "Calculate total project area in square inches (width in inches multiplied by length in inches).",
+              "Divide total project area by swatch area to find the scale multiplier, multiply by swatch yardage, and add 10% to 15% safety buffer for borders, ends, and tension variance."
+            ]
+          }
+        ],
+        "supportedClaims": [
+          "Textured stitches like bobbles, puff stitches, and cables consume substantially more yarn per square inch than flat stitches like single crochet and double crochet.",
+          "A 10% to 15% yardage buffer is essential to prevent running out of yarn before border completion.",
+          "Yarn skeins are sold and measured by weight and yardage/meters, never by a fixed stitch count.",
+          "Dye lot consistency is critical across large surface items to avoid noticeable color demarcation lines."
+        ],
+        "techniqueKeyPoints": [
+          "Always crochet and block a 4x4 inch (10x10 cm) gauge swatch before starting garments or fitted items.",
+          "Yarn requirements increase significantly with textured stitches like waffle stitch or bobbles compared to basic double crochet.",
+          "Tension consistency between rows determines finished project drape and dimensional accuracy."
+        ],
+        "makerPainPoints": [
+          "Running out of yarn on the final border row due to approximate estimation.",
+          "Blanket borders ruffling or curling because stitch count pick-ups along edges are uneven.",
+          "Finished item sizing significantly larger or smaller than pattern specs due to skipped gauge swatching."
+        ],
+        "faqItems": [
+          {
+            "question": "Why is checking your gauge essential for how to fix leaning crochet stitches in the round?",
+            "factualAnswer": "Individual crafter tension varies widely. Even with the identical hook and yarn weight, one maker may crochet 12 stitches per 4 inches while another crochets 15 stitches, altering finished dimensions by up to 25%."
+          },
+          {
+            "question": "What is the most common mistake when calculating yarn yardage?",
+            "factualAnswer": "Failing to include a 10% to 15% safety buffer for swatch testing, color changes, and border edging, which often results in running out of dye lot before completion."
+          },
+          {
+            "question": "How do US and UK stitch terms differ for this technique?",
+            "factualAnswer": "US terms name stitches by yarn overs, whereas UK terms name them by loops on the hook. For example, a US single crochet is identical in height and technique to a UK double crochet."
+          }
+        ],
+        "verifiedInternalLinks": [
+          {
+            "anchorText": "stitches",
+            "url": "/blog/10-essential-crochet-stitches-for-beginners",
+            "entityType": "blog"
+          }
+        ]
+      }
+    },
+    {
+      "id": "job_2026-10-05_blaffv",
+      "dateScheduled": "2026-10-05",
+      "contentType": "tool_guide",
+      "category": "tools",
+      "topic": {
+        "id": "topic_tool_pattern_pdf_organizer_6f726761",
+        "keyword": "organize crochet patterns pdf",
+        "contentType": "tool_guide",
+        "category": "tools",
+        "source": "internal_catalog",
+        "trendScore": 75,
+        "trendDirection": "stable",
+        "opportunityScore": 93,
+        "targetContentFormat": "tool_focus",
+        "toolSlug": "pattern-pdf-organizer",
+        "targetToolUrl": "/tools/pattern-pdf-organizer",
+        "targetCategoryUrl": "/categories/tools",
+        "targetAudienceLevel": "all_levels",
+        "searchIntentNotes": "Tool Guide for real WeLovePattern interactive tool: Pattern PDF Organizer. Problem: Managing and tagging digital PDF craft files for quick offline reference.",
+        "discoveredAt": "2026-10-05T21:55:48.440Z",
+        "status": "discovered"
+      },
+      "pinterestPins": [],
+      "stage": "failed",
+      "requiresApproval": false,
+      "indexNowNotified": false,
+      "createdAt": "2026-10-05T21:55:48.494Z",
+      "updatedAt": "2026-10-05T21:56:44.836Z",
+      "logs": [
+        {
+          "timestamp": "2026-10-05T21:55:48.494Z",
+          "level": "info",
+          "message": "Job created for TOOL_GUIDE (Category: TOOLS): \"organize crochet patterns pdf\" with opportunity score 93."
+        },
+        {
+          "timestamp": "2026-10-05T21:56:44.727Z",
+          "level": "info",
+          "message": "Starting technical craft research..."
+        },
+        {
+          "timestamp": "2026-10-05T21:56:44.776Z",
+          "level": "info",
+          "message": "Factual research packet validated successfully."
+        },
+        {
+          "timestamp": "2026-10-05T21:56:44.818Z",
+          "level": "info",
+          "message": "Generating article with OpenAI..."
+        },
+        {
+          "timestamp": "2026-10-05T21:56:44.836Z",
+          "level": "error",
+          "message": "OpenAI Generation Error: OPENAI_API_KEY is not configured on the server. Cannot generate article."
+        }
+      ],
+      "factualResearch": {
+        "topicId": "topic_tool_pattern_pdf_organizer_6f726761",
+        "topic": "organize crochet patterns pdf",
+        "searchIntent": "Maker search query focused on organize crochet patterns pdf",
+        "craftType": "crochet",
+        "sourceAuthority": "Craft Yarn Council Technical Standards & WeLovePattern Craft Library",
+        "cycStandardVersion": "CYC 2024 Guidelines",
+        "generatedAt": "2026-10-05T21:56:44.754Z",
+        "verifiedTerminology": [
+          "Gauge Swatch (4x4 inches / 10x10 cm)",
+          "Single Crochet (US sc / UK dc)",
+          "Double Crochet (US dc / UK tr)",
+          "Half Double Crochet (US hdc / UK htr)",
+          "Slip Stitch (sl st)",
+          "Turning Chain (ch)"
+        ],
+        "verifiedMaterials": {
+          "yarnWeights": [
+            "Medium / Worsted (#4)",
+            "Light / DK (#3)"
+          ],
+          "hookSizes": [
+            "5.0 mm (H-8)",
+            "5.5 mm (I-9)",
+            "4.0 mm (G-6)"
+          ],
+          "standardYardages": "Standard projects require 800 - 1,400 meters depending on dimension"
+        },
+        "authorizedPercentages": [
+          10,
+          15,
+          20
+        ],
+        "prohibitedMetrics": [
+          "stitches per skein",
+          "divide stitches by stitches per skein",
+          "arbitrary yards per stitch",
+          "invented mattress or bed sizes",
+          "commercial sales pricing or revenue claims"
+        ],
+        "verifiedFormulas": [
+          {
+            "name": "Area Ratio Swatch Scaling Method",
+            "description": "Calculates total project yardage by scaling the measured yardage consumed by a 4x4 inch blocked swatch to the total project surface area.",
+            "formulaText": "Total Yardage = (Total Project Surface Area / Swatch Surface Area) * Swatch Yardage * 1.10 (safety buffer)",
+            "steps": [
+              "Crochet a 4x4 inch (16 sq in / 100 sq cm) gauge swatch using the project hook and yarn.",
+              "Measure the exact yardage used in the swatch (either by weighing with a gram scale or measuring the yarn before swatching).",
+              "Calculate total project area in square inches (width in inches multiplied by length in inches).",
+              "Divide total project area by swatch area to find the scale multiplier, multiply by swatch yardage, and add 10% to 15% safety buffer for borders, ends, and tension variance."
+            ]
+          }
+        ],
+        "supportedClaims": [
+          "Textured stitches like bobbles, puff stitches, and cables consume substantially more yarn per square inch than flat stitches like single crochet and double crochet.",
+          "A 10% to 15% yardage buffer is essential to prevent running out of yarn before border completion.",
+          "Yarn skeins are sold and measured by weight and yardage/meters, never by a fixed stitch count.",
+          "Dye lot consistency is critical across large surface items to avoid noticeable color demarcation lines."
+        ],
+        "techniqueKeyPoints": [
+          "Always crochet and block a 4x4 inch (10x10 cm) gauge swatch before starting garments or fitted items.",
+          "Yarn requirements increase significantly with textured stitches like waffle stitch or bobbles compared to basic double crochet.",
+          "Tension consistency between rows determines finished project drape and dimensional accuracy."
+        ],
+        "makerPainPoints": [
+          "Running out of yarn on the final border row due to approximate estimation.",
+          "Blanket borders ruffling or curling because stitch count pick-ups along edges are uneven.",
+          "Finished item sizing significantly larger or smaller than pattern specs due to skipped gauge swatching."
+        ],
+        "faqItems": [
+          {
+            "question": "Why is checking your gauge essential for organize crochet patterns pdf?",
+            "factualAnswer": "Individual crafter tension varies widely. Even with the identical hook and yarn weight, one maker may crochet 12 stitches per 4 inches while another crochets 15 stitches, altering finished dimensions by up to 25%."
+          },
+          {
+            "question": "What is the most common mistake when calculating yarn yardage?",
+            "factualAnswer": "Failing to include a 10% to 15% safety buffer for swatch testing, color changes, and border edging, which often results in running out of dye lot before completion."
+          },
+          {
+            "question": "How do US and UK stitch terms differ for this technique?",
+            "factualAnswer": "US terms name stitches by yarn overs, whereas UK terms name them by loops on the hook. For example, a US single crochet is identical in height and technique to a UK double crochet."
+          }
+        ],
+        "verifiedInternalLinks": [
+          {
+            "anchorText": "Pattern PDF Organizer",
+            "url": "/tools/pattern-pdf-organizer",
+            "entityType": "tool"
+          }
+        ]
+      }
+    },
+    {
+      "id": "job_2026-10-05_8iv5g1",
+      "dateScheduled": "2026-10-05",
+      "contentType": "trending_crochet",
+      "category": "crochet",
+      "topic": {
+        "id": "topic_crochet_656173792063",
+        "keyword": "easy crochet pumpkin pattern free",
+        "contentType": "trending_crochet",
+        "category": "crochet",
+        "source": "gsc_seed",
+        "trendScore": 0,
+        "combinedTrendScore": 0,
+        "trendDirection": "stable",
+        "opportunityScore": 79,
+        "targetContentFormat": "pattern_roundup",
+        "targetCategoryUrl": "/categories/tutorials",
+        "targetPatternUrls": [
+          "/pattern/spooky-pumpkin-jack-o-lantern"
+        ],
+        "targetAudienceLevel": "all_levels",
+        "searchIntentNotes": "Seasonal high-volume search for beginner-friendly plush ribbed pumpkins.",
+        "discoveredAt": "2026-10-05T21:58:24.267Z",
+        "status": "discovered"
+      },
+      "pinterestPins": [],
+      "stage": "failed",
+      "requiresApproval": false,
+      "indexNowNotified": false,
+      "createdAt": "2026-10-05T21:58:24.307Z",
+      "updatedAt": "2026-10-05T21:58:44.713Z",
+      "logs": [
+        {
+          "timestamp": "2026-10-05T21:58:24.307Z",
+          "level": "info",
+          "message": "Job created for TRENDING_CROCHET (Category: CROCHET): \"easy crochet pumpkin pattern free\" with opportunity score 79."
+        },
+        {
+          "timestamp": "2026-10-05T21:58:44.617Z",
+          "level": "info",
+          "message": "Starting technical craft research..."
+        },
+        {
+          "timestamp": "2026-10-05T21:58:44.647Z",
+          "level": "info",
+          "message": "Factual research packet validated successfully."
+        },
+        {
+          "timestamp": "2026-10-05T21:58:44.666Z",
+          "level": "info",
+          "message": "Generating article with OpenAI..."
+        },
+        {
+          "timestamp": "2026-10-05T21:58:44.713Z",
+          "level": "error",
+          "message": "OpenAI Generation Error: OPENAI_API_KEY is not configured on the server. Cannot generate article."
+        }
+      ],
+      "factualResearch": {
+        "topicId": "topic_crochet_656173792063",
+        "topic": "easy crochet pumpkin pattern free",
+        "searchIntent": "Maker search query focused on easy crochet pumpkin pattern free",
+        "craftType": "crochet",
+        "sourceAuthority": "Craft Yarn Council Technical Standards & WeLovePattern Craft Library",
+        "cycStandardVersion": "CYC 2024 Guidelines",
+        "generatedAt": "2026-10-05T21:58:44.631Z",
+        "verifiedTerminology": [
+          "Gauge Swatch (4x4 inches / 10x10 cm)",
+          "Single Crochet (US sc / UK dc)",
+          "Double Crochet (US dc / UK tr)",
+          "Half Double Crochet (US hdc / UK htr)",
+          "Slip Stitch (sl st)",
+          "Turning Chain (ch)"
+        ],
+        "verifiedMaterials": {
+          "yarnWeights": [
+            "Medium / Worsted (#4)",
+            "Light / DK (#3)"
+          ],
+          "hookSizes": [
+            "5.0 mm (H-8)",
+            "5.5 mm (I-9)",
+            "4.0 mm (G-6)"
+          ],
+          "standardYardages": "Standard projects require 800 - 1,400 meters depending on dimension"
+        },
+        "authorizedPercentages": [
+          10,
+          15,
+          20
+        ],
+        "prohibitedMetrics": [
+          "stitches per skein",
+          "divide stitches by stitches per skein",
+          "arbitrary yards per stitch",
+          "invented mattress or bed sizes",
+          "commercial sales pricing or revenue claims"
+        ],
+        "verifiedFormulas": [
+          {
+            "name": "Area Ratio Swatch Scaling Method",
+            "description": "Calculates total project yardage by scaling the measured yardage consumed by a 4x4 inch blocked swatch to the total project surface area.",
+            "formulaText": "Total Yardage = (Total Project Surface Area / Swatch Surface Area) * Swatch Yardage * 1.10 (safety buffer)",
+            "steps": [
+              "Crochet a 4x4 inch (16 sq in / 100 sq cm) gauge swatch using the project hook and yarn.",
+              "Measure the exact yardage used in the swatch (either by weighing with a gram scale or measuring the yarn before swatching).",
+              "Calculate total project area in square inches (width in inches multiplied by length in inches).",
+              "Divide total project area by swatch area to find the scale multiplier, multiply by swatch yardage, and add 10% to 15% safety buffer for borders, ends, and tension variance."
+            ]
+          }
+        ],
+        "supportedClaims": [
+          "Textured stitches like bobbles, puff stitches, and cables consume substantially more yarn per square inch than flat stitches like single crochet and double crochet.",
+          "A 10% to 15% yardage buffer is essential to prevent running out of yarn before border completion.",
+          "Yarn skeins are sold and measured by weight and yardage/meters, never by a fixed stitch count.",
+          "Dye lot consistency is critical across large surface items to avoid noticeable color demarcation lines."
+        ],
+        "techniqueKeyPoints": [
+          "Always crochet and block a 4x4 inch (10x10 cm) gauge swatch before starting garments or fitted items.",
+          "Yarn requirements increase significantly with textured stitches like waffle stitch or bobbles compared to basic double crochet.",
+          "Tension consistency between rows determines finished project drape and dimensional accuracy."
+        ],
+        "makerPainPoints": [
+          "Running out of yarn on the final border row due to approximate estimation.",
+          "Blanket borders ruffling or curling because stitch count pick-ups along edges are uneven.",
+          "Finished item sizing significantly larger or smaller than pattern specs due to skipped gauge swatching."
+        ],
+        "faqItems": [
+          {
+            "question": "Why is checking your gauge essential for easy crochet pumpkin pattern free?",
+            "factualAnswer": "Individual crafter tension varies widely. Even with the identical hook and yarn weight, one maker may crochet 12 stitches per 4 inches while another crochets 15 stitches, altering finished dimensions by up to 25%."
+          },
+          {
+            "question": "What is the most common mistake when calculating yarn yardage?",
+            "factualAnswer": "Failing to include a 10% to 15% safety buffer for swatch testing, color changes, and border edging, which often results in running out of dye lot before completion."
+          },
+          {
+            "question": "How do US and UK stitch terms differ for this technique?",
+            "factualAnswer": "US terms name stitches by yarn overs, whereas UK terms name them by loops on the hook. For example, a US single crochet is identical in height and technique to a UK double crochet."
+          }
+        ],
+        "verifiedInternalLinks": [
+          {
+            "anchorText": "pumpkin pattern",
+            "url": "/pattern/spooky-pumpkin-jack-o-lantern",
+            "entityType": "pattern"
+          }
+        ]
+      }
+    },
+    {
+      "id": "job_2026-10-05_y5q33b",
+      "dateScheduled": "2026-10-05",
+      "contentType": "tool_guide",
+      "category": "tools",
+      "topic": {
+        "id": "topic_tool_crochet_timer_63726f63",
+        "keyword": "crochet project timer",
+        "contentType": "tool_guide",
+        "category": "tools",
+        "source": "internal_catalog",
+        "trendScore": 75,
+        "trendDirection": "stable",
+        "opportunityScore": 93,
+        "targetContentFormat": "tool_focus",
+        "toolSlug": "crochet-timer",
+        "targetToolUrl": "/tools/crochet-timer",
+        "targetCategoryUrl": "/categories/tools",
+        "targetAudienceLevel": "all_levels",
+        "searchIntentNotes": "Tool Guide for real WeLovePattern interactive tool: Crochet Timer. Problem: Logging total stitching time and calculating stitching speed (rows per hour).",
+        "discoveredAt": "2026-10-05T21:58:24.278Z",
+        "status": "discovered"
+      },
+      "pinterestPins": [],
+      "stage": "failed",
+      "requiresApproval": false,
+      "indexNowNotified": false,
+      "createdAt": "2026-10-05T21:58:24.334Z",
+      "updatedAt": "2026-10-05T21:58:44.907Z",
+      "logs": [
+        {
+          "timestamp": "2026-10-05T21:58:24.334Z",
+          "level": "info",
+          "message": "Job created for TOOL_GUIDE (Category: TOOLS): \"crochet project timer\" with opportunity score 93."
+        },
+        {
+          "timestamp": "2026-10-05T21:58:44.798Z",
+          "level": "info",
+          "message": "Starting technical craft research..."
+        },
+        {
+          "timestamp": "2026-10-05T21:58:44.819Z",
+          "level": "info",
+          "message": "Factual research packet validated successfully."
+        },
+        {
+          "timestamp": "2026-10-05T21:58:44.843Z",
+          "level": "info",
+          "message": "Generating article with OpenAI..."
+        },
+        {
+          "timestamp": "2026-10-05T21:58:44.907Z",
+          "level": "error",
+          "message": "OpenAI Generation Error: OPENAI_API_KEY is not configured on the server. Cannot generate article."
+        }
+      ],
+      "factualResearch": {
+        "topicId": "topic_tool_crochet_timer_63726f63",
+        "topic": "crochet project timer",
+        "searchIntent": "Maker search query focused on crochet project timer",
+        "craftType": "crochet",
+        "sourceAuthority": "Craft Yarn Council Technical Standards & WeLovePattern Craft Library",
+        "cycStandardVersion": "CYC 2024 Guidelines",
+        "generatedAt": "2026-10-05T21:58:44.807Z",
+        "verifiedTerminology": [
+          "Gauge Swatch (4x4 inches / 10x10 cm)",
+          "Single Crochet (US sc / UK dc)",
+          "Double Crochet (US dc / UK tr)",
+          "Half Double Crochet (US hdc / UK htr)",
+          "Slip Stitch (sl st)",
+          "Turning Chain (ch)"
+        ],
+        "verifiedMaterials": {
+          "yarnWeights": [
+            "Medium / Worsted (#4)",
+            "Light / DK (#3)"
+          ],
+          "hookSizes": [
+            "5.0 mm (H-8)",
+            "5.5 mm (I-9)",
+            "4.0 mm (G-6)"
+          ],
+          "standardYardages": "Standard projects require 800 - 1,400 meters depending on dimension"
+        },
+        "authorizedPercentages": [
+          10,
+          15,
+          20
+        ],
+        "prohibitedMetrics": [
+          "stitches per skein",
+          "divide stitches by stitches per skein",
+          "arbitrary yards per stitch",
+          "invented mattress or bed sizes",
+          "commercial sales pricing or revenue claims"
+        ],
+        "verifiedFormulas": [
+          {
+            "name": "Area Ratio Swatch Scaling Method",
+            "description": "Calculates total project yardage by scaling the measured yardage consumed by a 4x4 inch blocked swatch to the total project surface area.",
+            "formulaText": "Total Yardage = (Total Project Surface Area / Swatch Surface Area) * Swatch Yardage * 1.10 (safety buffer)",
+            "steps": [
+              "Crochet a 4x4 inch (16 sq in / 100 sq cm) gauge swatch using the project hook and yarn.",
+              "Measure the exact yardage used in the swatch (either by weighing with a gram scale or measuring the yarn before swatching).",
+              "Calculate total project area in square inches (width in inches multiplied by length in inches).",
+              "Divide total project area by swatch area to find the scale multiplier, multiply by swatch yardage, and add 10% to 15% safety buffer for borders, ends, and tension variance."
+            ]
+          }
+        ],
+        "supportedClaims": [
+          "Textured stitches like bobbles, puff stitches, and cables consume substantially more yarn per square inch than flat stitches like single crochet and double crochet.",
+          "A 10% to 15% yardage buffer is essential to prevent running out of yarn before border completion.",
+          "Yarn skeins are sold and measured by weight and yardage/meters, never by a fixed stitch count.",
+          "Dye lot consistency is critical across large surface items to avoid noticeable color demarcation lines."
+        ],
+        "techniqueKeyPoints": [
+          "Always crochet and block a 4x4 inch (10x10 cm) gauge swatch before starting garments or fitted items.",
+          "Yarn requirements increase significantly with textured stitches like waffle stitch or bobbles compared to basic double crochet.",
+          "Tension consistency between rows determines finished project drape and dimensional accuracy."
+        ],
+        "makerPainPoints": [
+          "Running out of yarn on the final border row due to approximate estimation.",
+          "Blanket borders ruffling or curling because stitch count pick-ups along edges are uneven.",
+          "Finished item sizing significantly larger or smaller than pattern specs due to skipped gauge swatching."
+        ],
+        "faqItems": [
+          {
+            "question": "Why is checking your gauge essential for crochet project timer?",
+            "factualAnswer": "Individual crafter tension varies widely. Even with the identical hook and yarn weight, one maker may crochet 12 stitches per 4 inches while another crochets 15 stitches, altering finished dimensions by up to 25%."
+          },
+          {
+            "question": "What is the most common mistake when calculating yarn yardage?",
+            "factualAnswer": "Failing to include a 10% to 15% safety buffer for swatch testing, color changes, and border edging, which often results in running out of dye lot before completion."
+          },
+          {
+            "question": "How do US and UK stitch terms differ for this technique?",
+            "factualAnswer": "US terms name stitches by yarn overs, whereas UK terms name them by loops on the hook. For example, a US single crochet is identical in height and technique to a UK double crochet."
+          }
+        ],
+        "verifiedInternalLinks": [
+          {
+            "anchorText": "Crochet Timer",
+            "url": "/tools/crochet-timer",
+            "entityType": "tool"
+          }
+        ]
+      }
+    },
+    {
+      "id": "job_2026-10-06_b6qn9p",
+      "dateScheduled": "2026-10-06",
+      "contentType": "trending_crochet",
+      "category": "crochet",
+      "topic": {
+        "id": "topic_crochet_63726f636865",
+        "keyword": "crochet ghost pattern free",
+        "contentType": "trending_crochet",
+        "category": "crochet",
+        "source": "gsc_seed",
+        "trendScore": 0,
+        "combinedTrendScore": 0,
+        "trendDirection": "stable",
+        "opportunityScore": 79,
+        "targetContentFormat": "pattern_roundup",
+        "targetCategoryUrl": "/categories/tutorials",
+        "targetAudienceLevel": "all_levels",
+        "searchIntentNotes": "Viral fall and Halloween crochet plushie search intent.",
+        "discoveredAt": "2026-10-06T00:50:04.885Z",
+        "status": "discovered"
+      },
+      "pinterestPins": [
+        {
+          "pinNumber": 1,
+          "conceptAngle": "Primary Craft Concept",
+          "visualStyle": {
+            "imageCount": 1,
+            "compositionType": "single_hero",
+            "subjectDescription": "Craft tool",
+            "colorPalette": "natural",
+            "humanElement": "none"
+          },
+          "compactHiggsfieldPrompt": "Craft tool in action",
+          "typographyOverlay": {
+            "primaryHeadline": "crochet ghost pattern free",
+            "ctaBadgeText": "EXPLORE GUIDE →"
+          },
+          "destinationUrl": "https://welovepattern.com/blog/",
+          "publishStatus": "pending"
+        },
+        {
+          "pinNumber": 2,
+          "conceptAngle": "Technical Layflat Concept",
+          "visualStyle": {
+            "imageCount": 1,
+            "compositionType": "flatlay_materials",
+            "subjectDescription": "Craft tool flatlay",
+            "colorPalette": "warm",
+            "humanElement": "hands_only"
+          },
+          "compactHiggsfieldPrompt": "Craft tool flatlay",
+          "typographyOverlay": {
+            "primaryHeadline": "crochet ghost pattern free",
+            "ctaBadgeText": "EXPLORE GUIDE →"
+          },
+          "destinationUrl": "https://welovepattern.com/blog/",
+          "publishStatus": "pending"
+        }
+      ],
+      "stage": "failed",
+      "requiresApproval": false,
+      "indexNowNotified": false,
+      "createdAt": "2026-10-06T00:50:04.932Z",
+      "updatedAt": "2026-10-06T00:50:19.205Z",
+      "logs": [
+        {
+          "timestamp": "2026-10-06T00:50:04.932Z",
+          "level": "info",
+          "message": "Job created for TRENDING_CROCHET (Category: CROCHET): \"crochet ghost pattern free\" with opportunity score 79."
+        },
+        {
+          "timestamp": "2026-10-06T00:50:19.123Z",
+          "level": "info",
+          "message": "Starting technical craft research..."
+        },
+        {
+          "timestamp": "2026-10-06T00:50:19.168Z",
+          "level": "info",
+          "message": "Factual research packet validated successfully."
+        },
+        {
+          "timestamp": "2026-10-06T00:50:19.187Z",
+          "level": "info",
+          "message": "Generating article with OpenAI..."
+        },
+        {
+          "timestamp": "2026-10-06T00:50:19.205Z",
+          "level": "error",
+          "message": "OpenAI Generation Error: OPENAI_API_KEY is not configured on the server. Cannot generate article."
+        }
+      ],
+      "assignedPublishDate": "2026-10-06",
+      "assignedSlotTime": "08:00",
+      "publicationScheduledAt": "08:00",
+      "factualResearch": {
+        "topicId": "topic_crochet_63726f636865",
+        "topic": "crochet ghost pattern free",
+        "searchIntent": "Maker search query focused on crochet ghost pattern free",
+        "craftType": "crochet",
+        "sourceAuthority": "Craft Yarn Council Technical Standards & WeLovePattern Craft Library",
+        "cycStandardVersion": "CYC 2024 Guidelines",
+        "generatedAt": "2026-10-06T00:50:19.155Z",
+        "verifiedTerminology": [
+          "Gauge Swatch (4x4 inches / 10x10 cm)",
+          "Single Crochet (US sc / UK dc)",
+          "Double Crochet (US dc / UK tr)",
+          "Half Double Crochet (US hdc / UK htr)",
+          "Slip Stitch (sl st)",
+          "Turning Chain (ch)"
+        ],
+        "verifiedMaterials": {
+          "yarnWeights": [
+            "Medium / Worsted (#4)",
+            "Light / DK (#3)"
+          ],
+          "hookSizes": [
+            "5.0 mm (H-8)",
+            "5.5 mm (I-9)",
+            "4.0 mm (G-6)"
+          ],
+          "standardYardages": "Standard projects require 800 - 1,400 meters depending on dimension"
+        },
+        "authorizedPercentages": [
+          10,
+          15,
+          20
+        ],
+        "prohibitedMetrics": [
+          "stitches per skein",
+          "divide stitches by stitches per skein",
+          "arbitrary yards per stitch",
+          "invented mattress or bed sizes",
+          "commercial sales pricing or revenue claims"
+        ],
+        "verifiedFormulas": [
+          {
+            "name": "Area Ratio Swatch Scaling Method",
+            "description": "Calculates total project yardage by scaling the measured yardage consumed by a 4x4 inch blocked swatch to the total project surface area.",
+            "formulaText": "Total Yardage = (Total Project Surface Area / Swatch Surface Area) * Swatch Yardage * 1.10 (safety buffer)",
+            "steps": [
+              "Crochet a 4x4 inch (16 sq in / 100 sq cm) gauge swatch using the project hook and yarn.",
+              "Measure the exact yardage used in the swatch (either by weighing with a gram scale or measuring the yarn before swatching).",
+              "Calculate total project area in square inches (width in inches multiplied by length in inches).",
+              "Divide total project area by swatch area to find the scale multiplier, multiply by swatch yardage, and add 10% to 15% safety buffer for borders, ends, and tension variance."
+            ]
+          }
+        ],
+        "supportedClaims": [
+          "Textured stitches like bobbles, puff stitches, and cables consume substantially more yarn per square inch than flat stitches like single crochet and double crochet.",
+          "A 10% to 15% yardage buffer is essential to prevent running out of yarn before border completion.",
+          "Yarn skeins are sold and measured by weight and yardage/meters, never by a fixed stitch count.",
+          "Dye lot consistency is critical across large surface items to avoid noticeable color demarcation lines."
+        ],
+        "techniqueKeyPoints": [
+          "Always crochet and block a 4x4 inch (10x10 cm) gauge swatch before starting garments or fitted items.",
+          "Yarn requirements increase significantly with textured stitches like waffle stitch or bobbles compared to basic double crochet.",
+          "Tension consistency between rows determines finished project drape and dimensional accuracy."
+        ],
+        "makerPainPoints": [
+          "Running out of yarn on the final border row due to approximate estimation.",
+          "Blanket borders ruffling or curling because stitch count pick-ups along edges are uneven.",
+          "Finished item sizing significantly larger or smaller than pattern specs due to skipped gauge swatching."
+        ],
+        "faqItems": [
+          {
+            "question": "Why is checking your gauge essential for crochet ghost pattern free?",
+            "factualAnswer": "Individual crafter tension varies widely. Even with the identical hook and yarn weight, one maker may crochet 12 stitches per 4 inches while another crochets 15 stitches, altering finished dimensions by up to 25%."
+          },
+          {
+            "question": "What is the most common mistake when calculating yarn yardage?",
+            "factualAnswer": "Failing to include a 10% to 15% safety buffer for swatch testing, color changes, and border edging, which often results in running out of dye lot before completion."
+          },
+          {
+            "question": "How do US and UK stitch terms differ for this technique?",
+            "factualAnswer": "US terms name stitches by yarn overs, whereas UK terms name them by loops on the hook. For example, a US single crochet is identical in height and technique to a UK double crochet."
+          }
+        ],
+        "verifiedInternalLinks": []
+      }
+    },
+    {
+      "id": "job_2026-10-06_rjecmc",
+      "dateScheduled": "2026-10-06",
+      "contentType": "tool_guide",
+      "category": "tools",
+      "topic": {
+        "id": "topic_tool_pattern_library_63726f63",
+        "keyword": "crochet pattern library organizer",
+        "contentType": "tool_guide",
+        "category": "tools",
+        "source": "internal_catalog",
+        "trendScore": 75,
+        "trendDirection": "stable",
+        "opportunityScore": 93,
+        "targetContentFormat": "tool_focus",
+        "toolSlug": "pattern-library",
+        "targetToolUrl": "/tools/pattern-library",
+        "targetCategoryUrl": "/categories/tools",
+        "targetAudienceLevel": "all_levels",
+        "searchIntentNotes": "Tool Guide for real WeLovePattern interactive tool: Pattern Library / Collections. Problem: Grouping saved patterns into custom seasonal project folders.",
+        "discoveredAt": "2026-10-06T00:50:04.899Z",
+        "status": "discovered"
+      },
+      "pinterestPins": [
+        {
+          "pinNumber": 1,
+          "conceptAngle": "Primary Craft Concept",
+          "visualStyle": {
+            "imageCount": 1,
+            "compositionType": "single_hero",
+            "subjectDescription": "Craft tool",
+            "colorPalette": "natural",
+            "humanElement": "none"
+          },
+          "compactHiggsfieldPrompt": "Craft tool in action",
+          "typographyOverlay": {
+            "primaryHeadline": "crochet pattern library organizer",
+            "ctaBadgeText": "EXPLORE GUIDE →"
+          },
+          "destinationUrl": "https://welovepattern.com/blog/",
+          "publishStatus": "pending"
+        },
+        {
+          "pinNumber": 2,
+          "conceptAngle": "Technical Layflat Concept",
+          "visualStyle": {
+            "imageCount": 1,
+            "compositionType": "flatlay_materials",
+            "subjectDescription": "Craft tool flatlay",
+            "colorPalette": "warm",
+            "humanElement": "hands_only"
+          },
+          "compactHiggsfieldPrompt": "Craft tool flatlay",
+          "typographyOverlay": {
+            "primaryHeadline": "crochet pattern library organizer",
+            "ctaBadgeText": "EXPLORE GUIDE →"
+          },
+          "destinationUrl": "https://welovepattern.com/blog/",
+          "publishStatus": "pending"
+        }
+      ],
+      "stage": "failed",
+      "requiresApproval": false,
+      "indexNowNotified": false,
+      "createdAt": "2026-10-06T00:50:04.957Z",
+      "updatedAt": "2026-10-06T00:50:19.364Z",
+      "logs": [
+        {
+          "timestamp": "2026-10-06T00:50:04.957Z",
+          "level": "info",
+          "message": "Job created for TOOL_GUIDE (Category: TOOLS): \"crochet pattern library organizer\" with opportunity score 93."
+        },
+        {
+          "timestamp": "2026-10-06T00:50:19.294Z",
+          "level": "info",
+          "message": "Starting technical craft research..."
+        },
+        {
+          "timestamp": "2026-10-06T00:50:19.327Z",
+          "level": "info",
+          "message": "Factual research packet validated successfully."
+        },
+        {
+          "timestamp": "2026-10-06T00:50:19.346Z",
+          "level": "info",
+          "message": "Generating article with OpenAI..."
+        },
+        {
+          "timestamp": "2026-10-06T00:50:19.364Z",
+          "level": "error",
+          "message": "OpenAI Generation Error: OPENAI_API_KEY is not configured on the server. Cannot generate article."
+        }
+      ],
+      "assignedPublishDate": "2026-10-06",
+      "assignedSlotTime": "16:00",
+      "publicationScheduledAt": "16:00",
+      "factualResearch": {
+        "topicId": "topic_tool_pattern_library_63726f63",
+        "topic": "crochet pattern library organizer",
+        "searchIntent": "Maker search query focused on crochet pattern library organizer",
+        "craftType": "crochet",
+        "sourceAuthority": "Craft Yarn Council Technical Standards & WeLovePattern Craft Library",
+        "cycStandardVersion": "CYC 2024 Guidelines",
+        "generatedAt": "2026-10-06T00:50:19.315Z",
+        "verifiedTerminology": [
+          "Gauge Swatch (4x4 inches / 10x10 cm)",
+          "Single Crochet (US sc / UK dc)",
+          "Double Crochet (US dc / UK tr)",
+          "Half Double Crochet (US hdc / UK htr)",
+          "Slip Stitch (sl st)",
+          "Turning Chain (ch)"
+        ],
+        "verifiedMaterials": {
+          "yarnWeights": [
+            "Medium / Worsted (#4)",
+            "Light / DK (#3)"
+          ],
+          "hookSizes": [
+            "5.0 mm (H-8)",
+            "5.5 mm (I-9)",
+            "4.0 mm (G-6)"
+          ],
+          "standardYardages": "Standard projects require 800 - 1,400 meters depending on dimension"
+        },
+        "authorizedPercentages": [
+          10,
+          15,
+          20
+        ],
+        "prohibitedMetrics": [
+          "stitches per skein",
+          "divide stitches by stitches per skein",
+          "arbitrary yards per stitch",
+          "invented mattress or bed sizes",
+          "commercial sales pricing or revenue claims"
+        ],
+        "verifiedFormulas": [
+          {
+            "name": "Area Ratio Swatch Scaling Method",
+            "description": "Calculates total project yardage by scaling the measured yardage consumed by a 4x4 inch blocked swatch to the total project surface area.",
+            "formulaText": "Total Yardage = (Total Project Surface Area / Swatch Surface Area) * Swatch Yardage * 1.10 (safety buffer)",
+            "steps": [
+              "Crochet a 4x4 inch (16 sq in / 100 sq cm) gauge swatch using the project hook and yarn.",
+              "Measure the exact yardage used in the swatch (either by weighing with a gram scale or measuring the yarn before swatching).",
+              "Calculate total project area in square inches (width in inches multiplied by length in inches).",
+              "Divide total project area by swatch area to find the scale multiplier, multiply by swatch yardage, and add 10% to 15% safety buffer for borders, ends, and tension variance."
+            ]
+          }
+        ],
+        "supportedClaims": [
+          "Textured stitches like bobbles, puff stitches, and cables consume substantially more yarn per square inch than flat stitches like single crochet and double crochet.",
+          "A 10% to 15% yardage buffer is essential to prevent running out of yarn before border completion.",
+          "Yarn skeins are sold and measured by weight and yardage/meters, never by a fixed stitch count.",
+          "Dye lot consistency is critical across large surface items to avoid noticeable color demarcation lines."
+        ],
+        "techniqueKeyPoints": [
+          "Always crochet and block a 4x4 inch (10x10 cm) gauge swatch before starting garments or fitted items.",
+          "Yarn requirements increase significantly with textured stitches like waffle stitch or bobbles compared to basic double crochet.",
+          "Tension consistency between rows determines finished project drape and dimensional accuracy."
+        ],
+        "makerPainPoints": [
+          "Running out of yarn on the final border row due to approximate estimation.",
+          "Blanket borders ruffling or curling because stitch count pick-ups along edges are uneven.",
+          "Finished item sizing significantly larger or smaller than pattern specs due to skipped gauge swatching."
+        ],
+        "faqItems": [
+          {
+            "question": "Why is checking your gauge essential for crochet pattern library organizer?",
+            "factualAnswer": "Individual crafter tension varies widely. Even with the identical hook and yarn weight, one maker may crochet 12 stitches per 4 inches while another crochets 15 stitches, altering finished dimensions by up to 25%."
+          },
+          {
+            "question": "What is the most common mistake when calculating yarn yardage?",
+            "factualAnswer": "Failing to include a 10% to 15% safety buffer for swatch testing, color changes, and border edging, which often results in running out of dye lot before completion."
+          },
+          {
+            "question": "How do US and UK stitch terms differ for this technique?",
+            "factualAnswer": "US terms name stitches by yarn overs, whereas UK terms name them by loops on the hook. For example, a US single crochet is identical in height and technique to a UK double crochet."
+          }
+        ],
+        "verifiedInternalLinks": [
+          {
+            "anchorText": "Pattern Library / Collections",
+            "url": "/tools/pattern-library",
+            "entityType": "tool"
+          }
+        ]
+      }
+    },
+    {
+      "id": "job_2026-10-06_s53za7",
+      "dateScheduled": "2026-10-06",
+      "contentType": "trending_crochet",
+      "category": "crochet",
+      "topic": {
+        "id": "topic_crochet_686f7720746f",
+        "keyword": "how to resize a crochet pattern for different yarn weight",
+        "contentType": "trending_crochet",
+        "category": "crochet",
+        "source": "problem_trend",
+        "trendScore": 0,
+        "combinedTrendScore": 0,
+        "trendDirection": "stable",
+        "opportunityScore": 78,
+        "targetContentFormat": "tutorial",
+        "targetCategoryUrl": "/categories/tutorials",
+        "targetAudienceLevel": "all_levels",
+        "searchIntentNotes": "Adjusting stitch repeats and gauge swatches when substituting yarn.",
+        "discoveredAt": "2026-10-06T11:43:13.161Z",
+        "status": "discovered"
+      },
+      "pinterestPins": [],
+      "stage": "selected",
+      "requiresApproval": false,
+      "indexNowNotified": false,
+      "createdAt": "2026-10-06T11:43:13.199Z",
+      "updatedAt": "2026-10-06T11:43:13.256Z",
+      "logs": [
+        {
+          "timestamp": "2026-10-06T11:43:13.199Z",
+          "level": "info",
+          "message": "Job created for TRENDING_CROCHET (Category: CROCHET): \"how to resize a crochet pattern for different yarn weight\" with opportunity score 78."
+        }
+      ],
+      "assignedPublishDate": "2026-10-06",
+      "assignedSlotTime": "08:00",
+      "publicationScheduledAt": "08:00"
+    },
+    {
+      "id": "job_2026-10-06_kjmxwe",
+      "dateScheduled": "2026-10-06",
+      "contentType": "tool_guide",
+      "category": "tools",
+      "topic": {
+        "id": "topic_tool_row_counter_6f6e6c69",
+        "keyword": "online row counter",
+        "contentType": "tool_guide",
+        "category": "tools",
+        "source": "internal_catalog",
+        "trendScore": 85,
+        "trendDirection": "stable",
+        "opportunityScore": 95,
+        "targetContentFormat": "tool_focus",
+        "toolSlug": "row-counter",
+        "targetToolUrl": "/tools/row-counter",
+        "targetCategoryUrl": "/categories/tools",
+        "targetAudienceLevel": "all_levels",
+        "searchIntentNotes": "Tool Guide for real WeLovePattern interactive tool: Row Counter. Problem: Tracking active row repeats and pattern sections without losing count mid-session.",
+        "discoveredAt": "2026-10-06T11:43:13.169Z",
+        "status": "discovered"
+      },
+      "pinterestPins": [],
+      "stage": "selected",
+      "requiresApproval": false,
+      "indexNowNotified": false,
+      "createdAt": "2026-10-06T11:43:13.226Z",
+      "updatedAt": "2026-10-06T11:43:13.273Z",
+      "logs": [
+        {
+          "timestamp": "2026-10-06T11:43:13.226Z",
+          "level": "info",
+          "message": "Job created for TOOL_GUIDE (Category: TOOLS): \"online row counter\" with opportunity score 95."
+        }
+      ],
+      "assignedPublishDate": "2026-10-06",
+      "assignedSlotTime": "16:00",
+      "publicationScheduledAt": "16:00"
     }
   ],
   "completedJobsHistory": [],
-  "updatedAt": "2026-10-05T17:00:13.957Z"
+  "updatedAt": "2026-10-06T11:43:13.273Z"
 }

@@ -227,7 +227,7 @@ export async function discoverTrendingCrochetTopic(options: RunDiscoveryOptions 
       recentTrendScore: trendItem?.recentTrendScore,
       historicalTrendScore: trendItem?.historicalTrendScore,
       combinedTrendScore: trendItem?.combinedTrendScore,
-      trendDirection: trendItem?.trendDirection
+      trendDirection: trendItem?.trendDirection as any
     });
 
     if (!breakdown.isFilteredOut) {
@@ -237,7 +237,7 @@ export async function discoverTrendingCrochetTopic(options: RunDiscoveryOptions 
         keyword: kw,
         contentType: 'trending_crochet',
         category: 'crochet',
-        source: trendItem ? 'dataforseo_trends' : (seed.source || 'gsc_seed'),
+        source: trendItem ? 'dataforseo_trends' : ((seed as any).source || 'gsc_seed'),
         trendScore: breakdown.combinedTrendScore ?? trendItem?.trendScore ?? 80,
         freshTrendScore: breakdown.freshTrendScore ?? trendItem?.freshTrendScore,
         recentTrendScore: breakdown.recentTrendScore ?? trendItem?.recentTrendScore,
@@ -249,7 +249,7 @@ export async function discoverTrendingCrochetTopic(options: RunDiscoveryOptions 
         targetCategoryUrl: breakdown.targetCategoryUrl || '/categories/crochet',
         targetPatternUrls: breakdown.targetPatternUrls,
         targetAudienceLevel: 'all_levels',
-        searchIntentNotes: seed.notes || 'Current Trending Crochet search opportunity (Slot 1)',
+        searchIntentNotes: (seed as any).notes || 'Current Trending Crochet search opportunity (Slot 1)',
         discoveredAt: new Date().toISOString(),
         status: 'discovered',
       });

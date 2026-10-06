@@ -12,6 +12,7 @@ export type TopicStatus =
   | 'generating_images' 
   | 'awaiting_approval' 
   | 'publishing' 
+  | 'published'
   | 'completed' 
   | 'failed';
 
@@ -20,15 +21,17 @@ export type ContentFormat =
   | 'guide' 
   | 'tool_focus' 
   | 'pattern_roundup' 
-  | 'explainer_comparison';
+  | 'explainer_comparison'
+  | 'ideas_roundup'
+  | string;
 
 /** Two strict daily production content slots */
-export type ArticleContentType = 'trending_crochet' | 'tool_guide';
+export type ArticleContentType = 'trending_crochet' | 'tool_guide' | string;
 
 export interface DataForSeoTrendItem {
   keyword: string;
   trendScore: number;                         // Combined 0-100 normalized trend score
-  trendDirection: 'rising' | 'stable' | 'breakout';
+  trendDirection: 'rising' | 'stable' | 'breakout' | 'steady' | string;
   freshTrendScore?: number;                   // 7-day window momentum (40% weight)
   recentTrendScore?: number;                  // 30-day window momentum (35% weight)
   historicalTrendScore?: number;              // 90-day window baseline (25% weight)
@@ -44,7 +47,7 @@ export interface DiscoveredTopic {
   id: string;                                 // sha256 or unique slug of normalized keyword
   keyword: string;
   contentType: ArticleContentType;            // 'trending_crochet' (Slot 1) or 'tool_guide' (Slot 2)
-  category: 'crochet' | 'tools';              // Strictly 'crochet' or 'tools'
+  category: 'crochet' | 'tools' | 'accessories' | string; // Category classification
   source?: 'dataforseo_trends' | 'gsc_seed' | 'internal_catalog' | 'problem_trend' | 'fresh_trend' | 'seasonal_trend';
   dataForSeoTaskId?: string;
   searchTrendSignal?: number;                 // 0-100 normalized trend score
@@ -53,26 +56,29 @@ export interface DiscoveredTopic {
   recentTrendScore?: number;                  // 30-day trend signal
   historicalTrendScore?: number;              // 90-day trend signal
   combinedTrendScore?: number;                // Weighted combined trend score
-  trendDirection?: 'rising' | 'stable' | 'breakout';
+  trendDirection?: 'rising' | 'stable' | 'breakout' | 'steady' | string;
   relevanceScore?: number;                    // 0-100 crochet/fiber craft relevance
   siteFitScore?: number;                      // 0-100 fit to tools/patterns/categories
   opportunityScore: number;                   // 0-100 weighted final score
-  targetContentFormat: ContentFormat;
+  targetContentFormat?: ContentFormat;
   toolSlug?: string;                          // When contentType is 'tool_guide', maps to real tool slug in toolsData.ts
   targetToolUrl?: string;                     // e.g. "/tools/blanket-yarn-estimator"
   targetCategoryUrl?: string;                 // e.g. "/category/blankets"
   targetPatternUrls?: string[];               // e.g. ["/pattern/cozy-granny-square-blanket"]
   targetAudienceLevel?: 'beginner' | 'intermediate' | 'advanced' | 'all_levels';
   searchIntentNotes?: string;
-  discoveredAt: string;
+  discoveredAt?: string;
   status: TopicStatus;
   statusReason?: string;
 }
 
 export interface VerifiedInternalLink {
-  anchorText: string;
+  anchorText?: string;
+  text?: string;
   url: string;
-  entityType: 'tool' | 'pattern' | 'category' | 'blog';
+  entityType?: 'tool' | 'pattern' | 'category' | 'blog' | string;
+  routeExists?: boolean;
+  targetCategory?: string;
 }
 
 export interface LinkCatalogItem {
@@ -96,20 +102,23 @@ export interface GscSeedKeyword {
 
 export interface FactualResearchPacket {
   topicId?: string;                           // Immutable binding to topic id to prevent cross-topic fact leakage
-  topic: string;
-  searchIntent: string;
-  craftType: 'crochet' | 'knitting' | 'sewing';
+  topic?: string;
+  searchIntent?: string;
+  craftType?: 'crochet' | 'knitting' | 'sewing' | string;
   sourceAuthority?: string;                   // e.g. "Craft Yarn Council Technical Standards"
   cycStandardVersion?: string;                // e.g. "CYC Standard Guidelines 2024"
   generatedAt?: string;                       // ISO date for freshness / anti-stale verification
-  verifiedTerminology: string[];              // e.g. ["double crochet", "magic ring", "gauge swatch"]
-  verifiedMaterials: {
-    yarnWeights: string[];                    // e.g. ["Medium / Worsted (#4)"]
-    hookSizes: string[];                      // e.g. ["5.0 mm (H-8)"]
+  verifiedTerminology?: string[];             // e.g. ["double crochet", "magic ring", "gauge swatch"]
+  verifiedMaterials?: {
+    yarnWeights?: string[];                   // e.g. ["Medium / Worsted (#4)"]
+    hookSizes?: string[];                     // e.g. ["5.0 mm (H-8)"]
     standardYardages?: string;                // Baseline descriptive summary
     verifiedYardageRanges?: Record<string, { minMeters: number; maxMeters: number; notes: string }>; // Explicit numerical boundaries
     verifiedDimensions?: Record<string, string>; // e.g. {"Baby Blanket": "30 x 36 inches (76 x 91 cm)"}
+    stitchTermsStandard?: string;
+    safetyBufferPercent?: number;
   };
+  stitchTermsStandard?: string;
   authorizedPercentages?: number[];           // Explicit allowed percentage claims (e.g. [10, 15, 25])
   prohibitedMetrics?: string[];               // Explicit forbidden claims (e.g. ["stitches per skein"])
   verifiedFormulas?: {
@@ -119,10 +128,14 @@ export interface FactualResearchPacket {
     steps: string[];
   }[];
   supportedClaims?: string[];                 // Explicit allowed technical/craft assertions
-  techniqueKeyPoints: string[];
-  makerPainPoints: string[];
-  faqItems: { question: string; factualAnswer: string }[];
-  verifiedInternalLinks: VerifiedInternalLink[];
+  techniqueKeyPoints?: string[];
+  makerPainPoints?: string[];
+  coreUserProblem?: string;
+  practicalSolutions?: string[];
+  suggestedInternalTools?: string[];
+  suggestedInternalCategories?: string[];
+  faqItems?: { question: string; factualAnswer: string }[];
+  verifiedInternalLinks?: VerifiedInternalLink[];
 }
 
 export interface PinterestTypographyOverlay {
@@ -138,7 +151,7 @@ export interface PinterestCreativeConcept {
   conceptAngle: string;                       // Distinct concept angle (e.g. "Lifestyle / Cozy Home" vs "Technical Layflat / Yarn Swatch")
   visualStyle: {
     imageCount: number;                       // Dynamically decided: 1, 2, 3, or 4+ images
-    compositionType: 'single_hero' | 'split_2_image' | '3_image_grid' | '4_plus_image_grid' | 'flatlay_materials' | 'lifestyle_scene' | 'collage_macro';
+    compositionType: 'single_hero' | 'split_2_image' | '3_image_grid' | '4_plus_image_grid' | '4_image_grid' | 'flatlay_materials' | 'lifestyle_scene' | 'collage_macro' | string;
     subjectDescription: string;               // e.g. "Close up of hands crocheting with textured wool"
     colorPalette: string;                     // e.g. "Warm honey, cream, and rustic sage"
     humanElement: 'hands_only' | 'person_wearing' | 'lifestyle_background' | 'none';
@@ -155,6 +168,7 @@ export interface PinterestCreativeConcept {
   pinterestPinId?: string;
   publishStatus: 'pending' | 'generating_image' | 'image_ready' | 'publishing' | 'published' | 'failed';
   scheduledTime?: string;                     // e.g. "09:00", "13:00", "17:00", "21:00"
+  assignedSlotTime?: string;                  // Explicit Pinterest slot time ("09:00" | "13:00" | "17:00" | "21:00")
   publishedAt?: string;                       // ISO timestamp of successful Pinterest publication
   errorMessage?: string;
 }
@@ -181,13 +195,14 @@ export interface SeoEngineArticleJob {
   articleContent?: {
     title: string;
     slug: string;
-    excerpt: string;
+    excerpt?: string;
     contentHtml: string;
     wordCount: number;
     category: string;
     contentType?: ArticleContentType;
     tags: string[];
-    seoMeta: { title: string; description: string; keywords: string };
+    seoMeta?: { title: string; description: string; keywords: string };
+    internalLinks?: VerifiedInternalLink[];
     heroImage?: ArticleHeroImage;
   };
   pinterestPins: PinterestCreativeConcept[];  // Dynamically sized array (default 2, configurable)
@@ -196,6 +211,8 @@ export interface SeoEngineArticleJob {
   generatedAt?: string;                       // ISO timestamp when content was generated
   validatedAt?: string;                       // ISO timestamp when quality gates passed
   publicationScheduledAt?: string;           // ISO timestamp or target slot time (e.g. "08:00")
+  assignedPublishDate?: string;               // Active calendar date (YYYY-MM-DD in America/New_York) for scheduled publication
+  assignedSlotTime?: string;                  // Explicit article slot time ("08:00" | "16:00")
   publishedAt?: string;                       // ISO timestamp of live website blog publication
   publishedBlogPostId?: string;
   publishedSlug?: string;                     // Live website URL slug
@@ -300,6 +317,9 @@ export interface HistoricalJobSummary {
   wordCount: number;
   pinIds: string[];
   status: 'completed' | 'failed';
+  publishedBlogPostId?: string;
+  slug?: string;
+  id?: string;
 }
 
 export interface SeoEngineDailyState {

@@ -21,24 +21,33 @@ import { validateArticleFactualGrounding, FactualValidationOutput } from '../val
 export interface GeneratedArticle {
   title: string;
   slug: string;
-  excerpt: string;
-  contentHtml: string;
+  excerpt?: string;
+  contentHtml?: string;
   wordCount: number;
-  category: 'crochet' | 'tools' | string;
-  contentType: 'trending_crochet' | 'tool_guide';
-  tags: string[];
-  seoMeta: {
+  category?: 'crochet' | 'tools' | string;
+  contentType?: 'trending_crochet' | 'tool_guide' | string;
+  tags?: string[];
+  seoMeta?: {
     title: string;
     description: string;
     keywords: string;
   };
-  internalLinks: VerifiedInternalLink[];
+  metaTitle?: string;
+  metaDescription?: string;
+  primaryKeyword?: string;
+  secondaryKeywords?: string[];
+  readingTimeMinutes?: number;
+  sections?: any[];
+  faq?: any[];
+  summaryBulletPoints?: string[];
+  htmlContent?: string;
+  internalLinks?: VerifiedInternalLink[];
   heroImage?: {
     prompt?: string;
     assetPath?: string;
     publicUrl?: string;
   };
-  tokensUsed: {
+  tokensUsed?: {
     promptTokens: number;
     completionTokens: number;
     totalTokens: number;

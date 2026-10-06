@@ -206,6 +206,7 @@ export type PinterestCtaPosition =
   | 'bottom_right'
   | 'bottom_left'
   | 'bottom_center'
+  | 'top_left'
   | 'top_right'
   | 'mid_right_side'
   | 'lower_third_offset';

@@ -14,11 +14,13 @@
  * - Pinterest slot separation: Pinterest slots NEVER create new article jobs.
  */
 
-import { readEngineState, writeEngineState } from './queue/engineStorage';
-import { createDailyProductionBatch, processQueueWorker } from './queue/jobQueueManager';
+import { readEngineState, writeEngineState, updateJobInState } from './queue/engineStorage';
+import { createDailyProductionBatch, createSingleSlotProductionJob, processQueueWorker } from './queue/jobQueueManager';
 import { dispatchScheduledPinterestSlot, dispatchNextOverduePinterestPin } from './publishing/pinterestSlotDispatcher';
-import { getLiveBlogPosts } from './publishing/articlePublisher';
+import { getLiveBlogPosts, publishArticleToLiveSite } from './publishing/articlePublisher';
 import { SeoEngineArticleJob, PinterestCreativeConcept } from './types';
+import { getEligibleRecoveredJobs, assignRecoveredJobToSlot } from './queue/assetRecovery';
+import { evaluateProductionQualityGates } from './validation/productionQualityGates';
 
 let schedulerIntervalTimer: NodeJS.Timeout | null = null;
 let isTickRunning = false;
@@ -200,7 +202,7 @@ export async function evaluateSchedulerTick(
     return { triggered: false, reason: `Day of week ${dayOfWeek} is not in activeDays` };
   }
 
-  const articlePublishTimes = config.articlePublishTimes || ['08:00', '12:00', '16:00', '20:00'];
+  const articlePublishTimes = config.articlePublishTimes || ['08:00', '16:00'];
   const pinterestPublishTimes = config.pinterestPublishTimes || ['09:00', '13:00', '17:00', '21:00'];
 
   const isArticleSlot = articlePublishTimes.includes(timeStr);
@@ -222,25 +224,29 @@ export async function evaluateSchedulerTick(
       };
     }
 
-    // Daily quota check: Count ONLY articles that were actually successfully published to the live blog data for this date
+    // Daily quota check: Count all active, awaiting approval, or published articles for today
     const livePosts = getLiveBlogPosts();
-    const publishedArticleKeys = new Set<string>();
+    const todaysArticleKeys = new Set<string>();
 
-    // 1. Count published jobs from activeJobs
+    // 1. Count valid in-flight, awaiting_approval, ready_to_publish, or completed jobs from activeJobs
     for (const job of state.activeJobs || []) {
-      if (job.dateScheduled === dateStr && isArticleJobPublished(job, livePosts)) {
-        publishedArticleKeys.add(job.publishedBlogPostId || job.publishedSlug || job.id);
+      const isForToday = (job.assignedPublishDate === dateStr) || (!job.assignedPublishDate && job.dateScheduled === dateStr);
+      if (isForToday) {
+        const isNotFailed = job.stage !== 'failed' && (job.stage as string) !== 'filtered_out';
+        if (isNotFailed) {
+          todaysArticleKeys.add(job.publishedBlogPostId || job.publishedSlug || job.id);
+        }
       }
     }
 
     // 2. Count published jobs from completedJobsHistory
     for (const historyItem of state.completedJobsHistory || []) {
       if (historyItem.date === dateStr && isHistoricalJobPublished(historyItem, livePosts)) {
-        publishedArticleKeys.add(historyItem.publishedBlogPostId || historyItem.slug || historyItem.jobId || historyItem.id);
+        todaysArticleKeys.add(historyItem.publishedBlogPostId || historyItem.slug || historyItem.jobId || historyItem.id);
       }
     }
 
-    const todaysArticlesCount = publishedArticleKeys.size;
+    const todaysArticlesCount = todaysArticleKeys.size;
 
     const articlesPerDayLimit = config.articlesPerDay || 2;
     if (todaysArticlesCount >= articlesPerDayLimit) {
@@ -253,7 +259,7 @@ export async function evaluateSchedulerTick(
         triggered: false,
         action: 'skipped_quota_reached',
         slotKey,
-        reason: `Daily articles limit reached (${todaysArticlesCount}/${articlesPerDayLimit} published articles) for date ${dateStr}.`,
+        reason: `Daily articles limit reached (${todaysArticlesCount}/${articlesPerDayLimit} active or published articles) for date ${dateStr}.`,
       };
     }
 
@@ -264,13 +270,117 @@ export async function evaluateSchedulerTick(
     state.lastRunDate = dateStr;
     writeEngineState(state);
 
-    // Trigger REAL 2-slot production batch (Trend Discovery -> Slot 1 + Slot 2 -> Queue)
+    const slotNumber: 1 | 2 = timeStr === articlePublishTimes[0] ? 1 : 2;
+
+    // 1. RECOVERED-FIRST PRIORITY: Check for an eligible recovered job
+    const eligibleRecovered = getEligibleRecoveredJobs(1);
+
+    if (eligibleRecovered.length > 0) {
+      const recoveredJob = eligibleRecovered[0];
+      console.log(`[SeoEngineScheduler] ♻️ Assigning recovered job "${recoveredJob.articleContent?.title || recoveredJob.id}" to Slot ${slotNumber} (${slotKey}). Zero Higgsfield POSTs ($0.00).`);
+
+      // Assign slot and Pinterest times
+      assignRecoveredJobToSlot(recoveredJob.id, dateStr, timeStr, slotNumber);
+
+      // Run production quality gates
+      const articlePayload: any = {
+        title: recoveredJob.articleContent?.title || '',
+        slug: recoveredJob.articleContent?.slug || '',
+        excerpt: recoveredJob.articleContent?.excerpt || '',
+        contentHtml: recoveredJob.articleContent?.contentHtml || '',
+        wordCount: recoveredJob.articleContent?.wordCount || 0,
+        category: recoveredJob.articleContent?.category || recoveredJob.category,
+        contentType: recoveredJob.articleContent?.contentType || recoveredJob.contentType,
+        tags: recoveredJob.articleContent?.tags || [],
+        seoMeta: recoveredJob.articleContent?.seoMeta || {
+          title: recoveredJob.articleContent?.title || '',
+          description: recoveredJob.articleContent?.excerpt || recoveredJob.articleContent?.title || '',
+          keywords: recoveredJob.topic?.keyword || '',
+        },
+        internalLinks: recoveredJob.articleContent?.internalLinks || [],
+        tokensUsed: { promptTokens: 0, completionTokens: 0, totalTokens: 0 },
+      };
+
+      const factualPacket: any = recoveredJob.factualResearch || {
+        topicId: recoveredJob.id,
+        topic: recoveredJob.topic?.keyword || '',
+        supportedClaims: [],
+      };
+
+      const qualityAudit = evaluateProductionQualityGates(
+        recoveredJob.id,
+        articlePayload,
+        recoveredJob.topic,
+        factualPacket,
+        config
+      );
+
+      if (qualityAudit.passedAllGates) {
+        if (config.autoPublish !== false && config.requiresApproval !== true) {
+          const pubResult = await publishArticleToLiveSite(recoveredJob);
+          if (pubResult.success && pubResult.blogPostId) {
+            updateJobInState(recoveredJob.id, j => {
+              j.stage = 'completed';
+              j.publishedBlogPostId = pubResult.blogPostId;
+              j.publishedSlug = pubResult.slug;
+              j.publishedUrl = pubResult.publicUrl;
+              j.publishedAt = new Date().toISOString();
+              j.indexNowNotified = true;
+              j.logs.push({
+                timestamp: new Date().toISOString(),
+                level: 'info',
+                message: `[Scheduler] Recovered article successfully published to live website: ${pubResult.publicUrl} (Blog Post ID: ${pubResult.blogPostId}) for slot ${slotKey}`,
+              });
+              return j;
+            });
+          } else {
+            updateJobInState(recoveredJob.id, j => {
+              j.stage = 'failed';
+              j.publicationError = pubResult.error || 'Failed to publish article to live website.';
+              return j;
+            });
+          }
+        } else {
+          updateJobInState(recoveredJob.id, j => {
+            j.stage = 'awaiting_approval';
+            j.logs.push({
+              timestamp: new Date().toISOString(),
+              level: 'info',
+              message: `[Scheduler] Recovered article passed quality gates and is assigned to slot ${slotKey} awaiting human approval.`,
+            });
+            return j;
+          });
+        }
+
+        return {
+          triggered: true,
+          action: 'article_batch',
+          slotKey,
+          reason: `Successfully assigned and published recovered article for slot ${slotKey} ($0 cost, 0 Higgsfield POSTs)`,
+        };
+      } else {
+        updateJobInState(recoveredJob.id, j => {
+          j.stage = 'failed';
+          j.logs.push({
+            timestamp: new Date().toISOString(),
+            level: 'error',
+            message: `Quality Gate Failures for recovered job:\n- ${qualityAudit.rejectionReasons.join('\n- ')}`,
+          });
+          return j;
+        });
+        // Continue down to create a new slot job if recovered job failed quality gates
+      }
+    }
+
+    // 2. NEW ARTICLE PRODUCTION: Create single slot job for this slot
     try {
-      await createDailyProductionBatch({
-        useRealDataForSeo: options?.useRealDataForSeo
+      await createSingleSlotProductionJob(slotNumber, {
+        useRealDataForSeo: options?.useRealDataForSeo,
+        scheduledDate: dateStr,
+        slotTime: timeStr,
       });
 
-      // Run queue worker to process newly queued jobs (maxConcurrentJobs = 1) unless explicitly skipped for test mode
+      // Run queue worker to process newly queued job (maxConcurrentJobs = 1) unless explicitly skipped for test mode
       if (!options?.skipQueueWorkerExecution) {
         await processQueueWorker();
       }
@@ -279,15 +389,15 @@ export async function evaluateSchedulerTick(
         triggered: true,
         action: 'article_batch',
         slotKey,
-        reason: `Successfully triggered and processed 2-slot article batch for slot ${slotKey}`,
+        reason: `Successfully triggered and processed single-slot article production for slot ${slotKey}`,
       };
     } catch (err: any) {
-      console.error(`[SeoEngineScheduler] Error running article batch for slot ${slotKey}:`, err);
+      console.error(`[SeoEngineScheduler] Error running article production for slot ${slotKey}:`, err);
       return {
         triggered: false,
         action: 'article_batch',
         slotKey,
-        reason: `Article batch execution encountered error: ${err?.message || err}`,
+        reason: `Article production execution encountered error: ${err?.message || err}`,
       };
     }
   }
