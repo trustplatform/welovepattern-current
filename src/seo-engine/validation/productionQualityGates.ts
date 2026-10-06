@@ -17,12 +17,111 @@
  */
 
 import fs from 'fs';
-import { DiscoveredTopic, FactualResearchPacket, ProductionQualityGateResult, SeoEngineConfig } from '../types';
+import { DiscoveredTopic, FactualResearchPacket, ProductionQualityGateResult, SeoEngineConfig, ToolItem } from '../types';
 import { GeneratedArticle } from '../generation/openAiArticleGenerator';
 import { validateArticleFactualGrounding } from './articleFactualValidator';
 import { validateSeoMetadata } from './seoMetadataValidator';
 import { isRouteValid } from '../generation/internalLinkCatalog';
+import { getToolBySlug, getToolByUrl, TOOLS_DATA } from '../../data/toolsData';
 import { BLOG_DATA } from '../../data/blogData';
+
+function escapeRegex(str: string): string {
+  return str.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
+}
+
+export interface ToolGuideValidationResult {
+  isValid: boolean;
+  tool?: ToolItem;
+  errors: string[];
+}
+
+/**
+ * Validates strict production quality requirements for Tool Guide (Slot 2) articles.
+ * Enforces correct tool slug, canonical URL, explicit tool identity, CTA existence,
+ * and semantic action alignment without brittle literal-string locking.
+ */
+export function validateToolGuideRequirements(
+  html: string,
+  topic: DiscoveredTopic,
+  packet?: FactualResearchPacket
+): ToolGuideValidationResult {
+  const errors: string[] = [];
+  const rawSlug = topic.toolSlug || packet?.targetTool?.slug;
+  const tool = getToolBySlug(rawSlug) || (topic.targetToolUrl ? getToolByUrl(topic.targetToolUrl) : undefined);
+
+  // 1. Valid toolSlug & exists in canonical registry
+  if (!tool) {
+    errors.push(`Tool Guide Validation Error: Tool slug "${rawSlug || topic.targetToolUrl || 'unspecified'}" is not a valid registered tool in WeLovePattern.`);
+    return { isValid: false, errors };
+  }
+
+  // 2. Valid targetToolUrl
+  const expectedUrl = `/tools/${tool.slug}`;
+  if (!isRouteValid(expectedUrl)) {
+    errors.push(`Tool Guide Validation Error: Target tool route "${expectedUrl}" is invalid.`);
+  }
+  if (topic.targetToolUrl && topic.targetToolUrl.toLowerCase() !== expectedUrl.toLowerCase()) {
+    errors.push(`Tool Guide Validation Error: Topic targetToolUrl "${topic.targetToolUrl}" does not match canonical tool route "${expectedUrl}".`);
+  }
+
+  // 3. Correct tool URL exists in article content
+  const normHtml = html || '';
+  const urlRegex = new RegExp(`href=["']\\s*${escapeRegex(expectedUrl)}\\s*["']`, 'i');
+  if (!urlRegex.test(normHtml)) {
+    errors.push(`Tool Guide Validation Error: Missing required tool link "${expectedUrl}" in article HTML.`);
+  }
+
+  // 4. Correct tool identity exists (title or slug)
+  const normHtmlLower = normHtml.toLowerCase();
+  const toolTitleLower = tool.title.toLowerCase();
+  const toolSlugClean = tool.slug.replace(/-/g, ' ').toLowerCase();
+  const hasToolIdentity = normHtmlLower.includes(toolTitleLower) || normHtmlLower.includes(toolSlugClean);
+  if (!hasToolIdentity) {
+    errors.push(`Tool Guide Validation Error: Article content must explicitly mention the tool identity ("${tool.title}").`);
+  }
+
+  // 5. Tool CTA exists
+  const hasCta = /welovepattern-tool-cta|data-tool-cta/i.test(normHtml);
+  if (!hasCta) {
+    errors.push(`Tool Guide Validation Error: Missing required WeLovePattern Tool CTA component for "${tool.title}".`);
+  }
+
+  // 6. Semantic action validation
+  // Verifies that article / CTA communicates the action type/semantics of this tool
+  const actionKeywords = [
+    tool.actionType.toLowerCase(),
+    tool.actionVerb.toLowerCase(),
+    tool.actionLabel.toLowerCase().replace(/[→\->\s]+/g, ' ').trim(),
+    ...tool.actionVerb.toLowerCase().split(/\s+/),
+    ...tool.actionType.toLowerCase().split(/\s+/)
+  ].filter(w => w.length > 2);
+
+  const semanticActionMap: Record<string, string[]> = {
+    calculator: ['calculate', 'calculation', 'calculator', 'estimator', 'estimate', 'yardage', 'gauge', 'formula', 'swatch', 'cost', 'price', 'squares'],
+    converter: ['convert', 'conversion', 'converter', 'equivalent', 'chart', 'terms', 'weights', 'sizes', 'mm'],
+    counter: ['count', 'counting', 'counter', 'tracking', 'rows', 'stitches', 'timer', 'repeat'],
+    organizer: ['organize', 'organizer', 'tracker', 'track', 'library', 'pdf', 'collection', 'wip', 'project'],
+    finder: ['find', 'finder', 'substitute', 'substitution', 'compatible', 'match', 'alternative'],
+    checker: ['check', 'checker', 'difficulty', 'assess', 'level', 'quiz', 'skill'],
+    timer: ['time', 'timer', 'speed', 'pace', 'track', 'hour', 'break'],
+    library: ['library', 'collection', 'folder', 'organize', 'pattern', 'saved'],
+    dictionary: ['dictionary', 'abbreviation', 'glossary', 'terms', 'symbol', 'reference', 'stitch']
+  };
+
+  const categoryActions = semanticActionMap[tool.actionType.toLowerCase()] || [];
+  const allAcceptableActions = [...new Set([...actionKeywords, ...categoryActions])];
+
+  const hasSemanticAction = allAcceptableActions.some(action => normHtmlLower.includes(action.toLowerCase()));
+  if (!hasSemanticAction) {
+    errors.push(`Tool Guide Validation Error: Article lacks semantic action alignment for tool action "${tool.actionType}" (${tool.actionVerb}).`);
+  }
+
+  return {
+    isValid: errors.length === 0,
+    tool,
+    errors
+  };
+}
 
 /**
  * Computes simple word token overlap (Jaccard-like) between two strings.
@@ -144,9 +243,10 @@ export function evaluateProductionQualityGates(
       slotAlignmentPassed = false;
       rejectionReasons.push(`Slot 2 Category Error: Expected category 'tools', got '${article.category}'.`);
     }
-    if (!topic.toolSlug || !topic.targetToolUrl || !isRouteValid(topic.targetToolUrl)) {
+    const toolGuideValidation = validateToolGuideRequirements(article.contentHtml, topic, packet);
+    if (!toolGuideValidation.isValid) {
       slotAlignmentPassed = false;
-      rejectionReasons.push(`Slot 2 Tool Route Error: Invalid or missing target tool URL "${topic.targetToolUrl}".`);
+      rejectionReasons.push(...toolGuideValidation.errors);
     }
   }
 

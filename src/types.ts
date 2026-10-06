@@ -176,6 +176,9 @@ export interface ToolItem {
   description: string;
   icon: string;
   category: 'Counter' | 'Calculator' | 'Converter' | 'Organizer' | 'Reference';
+  actionType: string;
+  actionLabel: string;
+  actionVerb: string;
   isPopular?: boolean;
   isOfflineCapable?: boolean;
 }

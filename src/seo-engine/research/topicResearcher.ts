@@ -11,6 +11,7 @@
 import { DiscoveredTopic, FactualResearchPacket, VerifiedInternalLink } from '../types';
 import { findRelevantInternalLinks, getVerifiedInternalLinkCatalog } from '../generation/internalLinkCatalog';
 import { isOpenAiConfigured, executeOpenAiChat } from '../generation/openAiClient';
+import { getToolBySlug, getToolByUrl } from '../../data/toolsData';
 
 /** Standard Craft Yarn Council (CYC) Yarn Weight Reference */
 export const CYC_YARN_STANDARDS: Record<string, { weightName: string; number: number; recommendedHooks: string; typicalGauge: string }> = {
@@ -126,6 +127,10 @@ function generateDeterministicCraftPacket(
 
   const authorizedPercentages = [10, 15, 20];
 
+  const targetTool = topic.toolSlug
+    ? getToolBySlug(topic.toolSlug)
+    : (topic.targetToolUrl ? getToolByUrl(topic.targetToolUrl) : undefined);
+
   return {
     topicId: topic.id,
     topic: topic.keyword,
@@ -148,7 +153,8 @@ function generateDeterministicCraftPacket(
     techniqueKeyPoints,
     makerPainPoints,
     faqItems,
-    verifiedInternalLinks: verifiedLinks
+    verifiedInternalLinks: verifiedLinks,
+    targetTool
   };
 }
 
@@ -285,7 +291,10 @@ STRICT FACTUAL GROUNDING RULES:
       techniqueKeyPoints: Array.isArray(parsed.techniqueKeyPoints) ? parsed.techniqueKeyPoints : [],
       makerPainPoints: Array.isArray(parsed.makerPainPoints) ? parsed.makerPainPoints : [],
       faqItems: Array.isArray(parsed.faqItems) ? parsed.faqItems : [],
-      verifiedInternalLinks: verifiedLinks
+      verifiedInternalLinks: verifiedLinks,
+      targetTool: topic.toolSlug
+        ? getToolBySlug(topic.toolSlug)
+        : (topic.targetToolUrl ? getToolByUrl(topic.targetToolUrl) : undefined)
     };
   } catch (err: any) {
     console.warn(`[TopicResearcher] OpenAI research synthesis unavailable for "${topic.keyword}", using verified CYC domain packet:`, err?.message || err);
