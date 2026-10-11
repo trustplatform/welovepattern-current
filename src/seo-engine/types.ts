@@ -3,6 +3,9 @@
  * Strict types for Discovery, Research, Production, Pinterest Creative Director & State Queue.
  */
 
+import { ToolItem } from '../types';
+export type { ToolItem };
+
 export type TopicStatus = 
   | 'discovered' 
   | 'filtered_out' 
@@ -136,6 +139,7 @@ export interface FactualResearchPacket {
   suggestedInternalCategories?: string[];
   faqItems?: { question: string; factualAnswer: string }[];
   verifiedInternalLinks?: VerifiedInternalLink[];
+  targetTool?: ToolItem;
 }
 
 export interface PinterestTypographyOverlay {
@@ -179,6 +183,8 @@ export interface ArticleHeroImage {
   higgsfieldRequestId?: string;
   stableAssetPath?: string;
   stablePublicUrl?: string;
+  assetPath?: string;
+  publicUrl?: string;
   status: 'pending' | 'ready' | 'failed';
   errorMessage?: string;
 }

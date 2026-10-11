@@ -149,9 +149,21 @@ function buildGenerationPrompt(
 ): { systemPrompt: string; userPrompt: string } {
   const factualContext = formatFactualContext(packet);
   const isToolGuide = topic.contentType === 'tool_guide' || topic.category === 'tools';
+  const targetTool = packet.targetTool;
+  const toolUrl = targetTool ? `/tools/${targetTool.slug}` : (topic.targetToolUrl || '/tools');
+
   const slotRoleInstruction = isToolGuide
     ? `CONTENT SLOT: DAILY WE-LOVE-PATTERN TOOL GUIDE (Category: TOOLS).
-Your goal is to thoroughly explain the practical craft problem/intent ("${topic.keyword}"), provide clear manual calculation or technique steps, and guide makers on how the real interactive WeLovePattern tool at "${topic.targetToolUrl || '/tools'}" helps them achieve perfect results effortlessly.`
+TARGET TOOL METADATA & EDITORIAL OBJECTIVES:
+- Associated Tool: "${targetTool?.title || 'Interactive Craft Tool'}" (${toolUrl})
+- Tool Purpose: ${targetTool?.description || 'Interactive craft calculator and reference tool'}
+- Action Category: ${targetTool?.actionType || 'calculator'} | Verb: "${targetTool?.actionVerb || 'Calculate'}" | Action CTA: "${targetTool?.actionLabel || "Let's Calculate →"}"
+- EDITORIAL GUIDELINES FOR TOOL ARTICLES:
+  1. Thoroughly explain the practical craft problem or calculation ("${topic.keyword}").
+  2. Provide clear manual calculation or technique steps so makers learn the foundational principles.
+  3. Naturally introduce the WeLovePattern ${targetTool?.title || 'tool'} as the dedicated, interactive solution that eliminates manual math errors.
+  4. Explain practical usage in context (e.g. what inputs to enter and how to interpret outputs).
+  5. Maintain a natural, engaging tone — do NOT use repetitive robotic formulas or identical article structures across tools.`
     : `CONTENT SLOT: DAILY TRENDING CROCHET ARTICLE (Category: CROCHET).
 Your goal is to deliver an in-depth, deeply useful and engaging crochet guide for the current search trend ("${topic.keyword}"). Cover the project overview, materials, hook sizes, yarn weights, stitch technique, construction steps, sizing, helpful tips, and variations.`;
 
@@ -313,10 +325,15 @@ EXPANSION INSTRUCTIONS:
     }
   }
 
-  // 3. Inject verified internal links
+  const resolvedCategory = (topic.contentType === 'tool_guide' || topic.category === 'tools') ? 'tools' : 'crochet';
+  const resolvedContentType = (topic.contentType === 'tool_guide' || topic.category === 'tools') ? 'tool_guide' : 'trending_crochet';
+
+  // 3. Inject verified internal links & deterministic Tool CTA
   let injection = injectInternalLinks(cleanHtml, packet.verifiedInternalLinks, {
     maxLinks: config.maxInternalLinks || 8,
     currentArticleSlug: slug,
+    targetTool: packet.targetTool,
+    contentType: resolvedContentType,
   });
 
   // 4. Validate Factual Grounding & SEO Constraints
@@ -378,6 +395,8 @@ REVISION INSTRUCTIONS:
         injection = injectInternalLinks(cleanHtml, packet.verifiedInternalLinks, {
           maxLinks: config.maxInternalLinks || 8,
           currentArticleSlug: slug,
+          targetTool: packet.targetTool,
+          contentType: resolvedContentType,
         });
 
         completion.promptTokens += revisionCompletion.promptTokens;
@@ -397,9 +416,6 @@ REVISION INSTRUCTIONS:
       console.warn(`[OpenAI Article Generator] Revision attempt ${regensAttempted} failed:`, revErr?.message);
     }
   }
-
-  const resolvedCategory = (topic.contentType === 'tool_guide' || topic.category === 'tools') ? 'tools' : 'crochet';
-  const resolvedContentType = (topic.contentType === 'tool_guide' || topic.category === 'tools') ? 'tool_guide' : 'trending_crochet';
 
   return {
     title,
