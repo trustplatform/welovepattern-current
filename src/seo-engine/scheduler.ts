@@ -233,7 +233,8 @@ export async function evaluateSchedulerTick(
       const isForToday = (job.assignedPublishDate === dateStr) || (!job.assignedPublishDate && job.dateScheduled === dateStr);
       if (isForToday) {
         const isNotFailed = job.stage !== 'failed' && (job.stage as string) !== 'filtered_out';
-        if (isNotFailed) {
+        const isActuallyPublished = Boolean(job.publishedBlogPostId || job.publishedSlug);
+        if (isNotFailed && isActuallyPublished) {
           todaysArticleKeys.add(job.publishedBlogPostId || job.publishedSlug || job.id);
         }
       }

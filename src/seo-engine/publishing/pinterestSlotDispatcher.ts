@@ -96,7 +96,7 @@ export async function dispatchScheduledPinterestSlot(
     }
   }
 
-  if (publishedPinsToday >= 4) {
+  if (publishedPinsToday >= pinterestPublishTimes.length) {
     return {
       triggered: true,
       pinPublished: false,
@@ -110,7 +110,7 @@ export async function dispatchScheduledPinterestSlot(
   // Slot 1 (13:00) -> Article 1 (08:00 slot), Pin 2
   // Slot 2 (17:00) -> Article 2 (16:00 slot), Pin 1
   // Slot 3 (21:00) -> Article 2 (16:00 slot), Pin 2
-  const targetArticleIndex = slotIndex < 2 ? 0 : 1;
+  const targetArticleIndex = Math.floor(slotIndex / 2);
   const targetPinIndex = slotIndex % 2;
 
   const job = todaysJobs[targetArticleIndex];
@@ -260,10 +260,31 @@ export async function dispatchScheduledPinterestSlot(
  * multi-pin bursts and ensure exactly 1 pin is dispatched per slot.
  */
 export async function dispatchNextOverduePinterestPin(
-  _currentTimeStr: string,
-  _targetDateStr: string
+  currentTimeStr: string,
+  targetDateStr: string
 ): Promise<DispatchPinterestSlotResult | null> {
-  // Strict invariant: Never use catch-up to create a second publication or bundle multiple pins.
+  const state = readEngineState();
+  const config = state.config;
+  if (!config.engineActive || config.autoPublishPinterest === false) return null;
+
+  const slots = config.pinterestPublishTimes || [];
+  const currentIndex = slots.indexOf(currentTimeStr);
+  if (currentIndex < 0) return null;
+
+  const jobs = state.activeJobs
+    .filter(j => j.assignedPublishDate === targetDateStr || (!j.assignedPublishDate && j.dateScheduled === targetDateStr))
+    .sort((a, b) => (a.assignedPublishTime || '').localeCompare(b.assignedPublishTime || ''));
+
+  for (const slot of slots.slice(0, currentIndex + 1)) {
+    const idx = slots.indexOf(slot);
+    const articleIndex = Math.floor(idx / 2);
+    const pinIndex = idx % 2;
+    const job = jobs[articleIndex];
+    const pin = job?.pinterestPins?.[pinIndex];
+    if (!job || !pin || pin.publishStatus === 'published' || pin.pinterestPinId) continue;
+    if (job.stage !== 'completed' || !job.publishedBlogPostId || job.publicationError) continue;
+    const result = await dispatchScheduledPinterestSlot(slot, targetDateStr);
+    if (result.pinPublished) return result;
+  }
   return null;
 }
-

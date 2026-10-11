@@ -489,7 +489,16 @@ export async function executeJobLifecycle(
   });
 
   // 1. Higgsfield configuration check: Block and require operator action if not configured
-  if (!isHiggsfieldConfigured()) {
+  const hasAllExistingImageAssets = Boolean(
+    job.articleContent?.heroImage?.stableAssetPath &&
+    fs.existsSync(job.articleContent.heroImage.stableAssetPath) &&
+    job.pinterestPins?.length >= 2 &&
+    job.pinterestPins.slice(0, 2).every(pin =>
+      Boolean(pin?.stableAssetPath && fs.existsSync(pin.stableAssetPath))
+    )
+  );
+
+  if (!isHiggsfieldConfigured() && !hasAllExistingImageAssets) {
     updateJobInState(jobId, j => {
       j.stage = 'failed';
       if (j.articleContent) {

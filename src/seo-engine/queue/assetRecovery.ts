@@ -523,12 +523,12 @@ export function getEligibleRecoveredJobs(limit: number = 1): SeoEngineArticleJob
 
   for (const job of state.activeJobs || []) {
     // 1. Must not already be published
-    if (job.stage === 'completed' || job.publishedBlogPostId || job.publishedSlug) {
+    if (job.stage === 'completed' || job.stage === 'failed' || job.publishedBlogPostId || job.publishedSlug) {
       continue;
     }
 
     // 2. Must not already be assigned to a publish date
-    if (job.assignedPublishDate) {
+    if (job.assignedPublishDate && job.assignedPublishDate >= new Date().toISOString().slice(0, 10)) {
       continue;
     }
 
