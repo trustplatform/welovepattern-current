@@ -1,8 +1,8 @@
 {
   "version": 1,
   "config": {
-    "articlesPerDay": 2,
-    "pinsPerDay": 4,
+    "articlesPerDay": 3,
+    "pinsPerDay": 6,
     "pinsPerArticle": 2,
     "trendTasksPerDay": 20,
     "autoPublish": true,
@@ -21,13 +21,16 @@
     ],
     "articlePublishTimes": [
       "08:00",
-      "20:00"
+      "12:00",
+      "16:00"
     ],
     "pinterestPublishTimes": [
+      "08:30",
       "09:00",
+      "12:30",
       "13:00",
-      "17:00",
-      "21:00"
+      "16:30",
+      "17:00"
     ],
     "maxConcurrentJobs": 1,
     "fallbackBoardId": "",
@@ -63,28 +66,28 @@
     "openAiTemperature": 0.7,
     "dailyCostLimitUsd": 5,
     "perJobCostLimitUsd": 1.5,
-    "higgsfieldEnabled": true,
+    "higgsfieldEnabled": false,
     "estimatedImageCostUsd": 0.03
   },
-  "lastRunDate": "2026-10-05",
-  "lastExecutedArticleSlot": "2026-10-05_20:00",
+  "lastRunDate": "2026-10-12",
+  "lastExecutedArticleSlot": "2026-10-12_08:00",
   "lastExecutedPinterestSlot": "2026-10-05_13:00",
   "todayDiscoveredTopics": [
     {
       "id": "topic_crochet_686f7720746f",
-      "keyword": "how to resize a crochet pattern for different yarn weight",
+      "keyword": "how to weave in crochet ends so they never unravel",
       "contentType": "trending_crochet",
       "category": "crochet",
       "source": "problem_trend",
       "trendScore": 0,
       "combinedTrendScore": 0,
       "trendDirection": "stable",
-      "opportunityScore": 78,
+      "opportunityScore": 74,
       "targetContentFormat": "tutorial",
       "targetCategoryUrl": "/categories/tutorials",
       "targetAudienceLevel": "all_levels",
-      "searchIntentNotes": "Adjusting stitch repeats and gauge swatches when substituting yarn.",
-      "discoveredAt": "2026-10-06T11:43:13.161Z",
+      "searchIntentNotes": "Secure 3-way direction weaving technique for slippery yarns and garments.",
+      "discoveredAt": "2026-10-12T20:36:46.765Z",
       "status": "discovered"
     },
     {
@@ -102,7 +105,7 @@
       "targetCategoryUrl": "/categories/tools",
       "targetAudienceLevel": "all_levels",
       "searchIntentNotes": "Tool Guide for real WeLovePattern interactive tool: Row Counter. Problem: Tracking active row repeats and pattern sections without losing count mid-session.",
-      "discoveredAt": "2026-10-06T11:43:13.169Z",
+      "discoveredAt": "2026-10-12T20:36:46.774Z",
       "status": "discovered"
     },
     {
@@ -1199,7 +1202,44 @@
         "discoveredAt": "2026-09-24T12:56:34.787Z",
         "status": "selected"
       },
-      "pinterestPins": [],
+      "pinterestPins": [
+        {
+          "pinNumber": 1,
+          "conceptAngle": "Primary Craft Concept",
+          "visualStyle": {
+            "imageCount": 1,
+            "compositionType": "single_hero",
+            "subjectDescription": "Craft tool",
+            "colorPalette": "natural",
+            "humanElement": "none"
+          },
+          "compactHiggsfieldPrompt": "Craft tool in action",
+          "typographyOverlay": {
+            "primaryHeadline": "Accurate Gauge Swatch Calculator for Crochet Projects",
+            "ctaBadgeText": "EXPLORE GUIDE →"
+          },
+          "destinationUrl": "https://welovepattern.com/blog/accurate-gauge-swatch-calculator-for-crochet-projects",
+          "publishStatus": "pending"
+        },
+        {
+          "pinNumber": 2,
+          "conceptAngle": "Technical Layflat Concept",
+          "visualStyle": {
+            "imageCount": 1,
+            "compositionType": "flatlay_materials",
+            "subjectDescription": "Craft tool flatlay",
+            "colorPalette": "warm",
+            "humanElement": "hands_only"
+          },
+          "compactHiggsfieldPrompt": "Craft tool flatlay",
+          "typographyOverlay": {
+            "primaryHeadline": "Accurate Gauge Swatch Calculator for Crochet Projects",
+            "ctaBadgeText": "EXPLORE GUIDE →"
+          },
+          "destinationUrl": "https://welovepattern.com/blog/accurate-gauge-swatch-calculator-for-crochet-projects",
+          "publishStatus": "pending"
+        }
+      ],
       "stage": "failed",
       "requiresApproval": true,
       "indexNowNotified": false,
@@ -1397,8 +1437,10 @@
           "boardName": "Crochet Tools & Yarn Calculators",
           "publishStatus": "image_ready",
           "higgsfieldRequestId": "b2cfb730-1668-4db2-b3e8-b8286c9c470b",
-          "stableAssetPath": "/www/wwwroot/welovepattern.com/public/generated/pinterest/seo-pins/mastering-your-crochet-project-with-a-ya-d54e364e43.jpg",
-          "stablePublicUrl": "/public/generated/pinterest/seo-pins/mastering-your-crochet-project-with-a-ya-d54e364e43.jpg"
+          "stableAssetPath": "/app/applet/public/generated/pinterest/seo-pins/mastering-your-crochet-project-with-a-ya-d54e364e43.jpg",
+          "stablePublicUrl": "/generated/pinterest/seo-pins/mastering-your-crochet-project-with-a-ya-d54e364e43.jpg",
+          "assignedSlotTime": "08:30",
+          "scheduledTime": "08:30"
         },
         {
           "pinNumber": 2,
@@ -1422,15 +1464,17 @@
           "boardName": "Crochet Tools & Yarn Calculators",
           "publishStatus": "image_ready",
           "higgsfieldRequestId": "7034f757-363a-4a59-a7a3-0dd1517c7a3a",
-          "stableAssetPath": "/www/wwwroot/welovepattern.com/public/generated/pinterest/seo-pins/mastering-your-crochet-project-with-a-ya-2819fac1d4.jpg",
-          "stablePublicUrl": "/public/generated/pinterest/seo-pins/mastering-your-crochet-project-with-a-ya-2819fac1d4.jpg"
+          "stableAssetPath": "/app/applet/public/generated/pinterest/seo-pins/mastering-your-crochet-project-with-a-ya-2819fac1d4.jpg",
+          "stablePublicUrl": "/generated/pinterest/seo-pins/mastering-your-crochet-project-with-a-ya-2819fac1d4.jpg",
+          "assignedSlotTime": "09:00",
+          "scheduledTime": "09:00"
         }
       ],
-      "stage": "failed",
+      "stage": "completed",
       "requiresApproval": true,
-      "indexNowNotified": false,
+      "indexNowNotified": true,
       "createdAt": "2026-09-24T12:57:11.500Z",
-      "updatedAt": "2026-09-27T09:49:41.171Z",
+      "updatedAt": "2026-10-12T20:29:52.585Z",
       "logs": [
         {
           "timestamp": "2026-09-24T12:57:11.500Z",
@@ -1526,6 +1570,21 @@
           "timestamp": "2026-09-27T09:49:41.171Z",
           "level": "error",
           "message": "Quality Gate Failures:\n- Publication Safety Failure: Direct auto-publishing without human approval wall is forbidden."
+        },
+        {
+          "timestamp": "2026-10-11T17:40:26.832Z",
+          "level": "info",
+          "message": "[AssetRecovery] All 3 visual assets recovered locally ($0 cost). Job transitioned from failed to awaiting_approval."
+        },
+        {
+          "timestamp": "2026-10-12T20:29:52.540Z",
+          "level": "info",
+          "message": "[AssetRecovery] Assigned recovered job to Article Slot 1 (08:00 on 2026-10-12). Pinterest Pins assigned to 08:30 & 09:00."
+        },
+        {
+          "timestamp": "2026-10-12T20:29:52.585Z",
+          "level": "info",
+          "message": "[Scheduler] Recovered article successfully published to live website: https://welovepattern.com/blog/mastering-your-crochet-project-with-a-yarn-calculator (Blog Post ID: blog_1791836992562_xsqom50) for slot 2026-10-12_08:00"
         }
       ],
       "factualResearch": {
@@ -1645,12 +1704,18 @@
         "heroImage": {
           "prompt": "Editorial craft flatlay photography for crochet article \"Mastering Your Crochet Project with a Yarn Calculator\". Neatly arranged natural wool yarn skeins, smooth birch wooden crochet hooks, a flexible cloth measuring tape, and a crisp textured gauge swatch on a clean warm linen background. Soft diffused natural window light, warm neutral tones, organic cozy maker workspace, 8k resolution, authentic artisan photography, zero digital noise.",
           "compactPrompt": "Editorial craft flatlay photography for crochet article \"Mastering Your Crochet Project with a Yarn Calculator\". Neatly arranged natural wool yarn skeins, smooth birch wooden crochet hooks, a flexible cloth measuring tape, and a crisp textured gauge swatch on a clean warm linen background. Soft diffused natural window light, warm neutral tones, organic cozy maker workspace, 8k resolution, authentic artisan photography, zero digital noise.",
-          "higgsfieldRequestId": "3af35fe1-f495-4689-bba0-4462d9cab328",
-          "stableAssetPath": "/www/wwwroot/welovepattern.com/public/generated/blog/mastering-your-crochet-project-with-a-ya-486eea0a09.jpg",
-          "stablePublicUrl": "/public/generated/blog/mastering-your-crochet-project-with-a-ya-486eea0a09.jpg",
+          "stableAssetPath": "/app/applet/public/generated/blog/mastering-your-crochet-project-with-a-ya-486eea0a09.jpg",
+          "stablePublicUrl": "/generated/blog/mastering-your-crochet-project-with-a-ya-486eea0a09.jpg",
           "status": "ready"
         }
-      }
+      },
+      "assignedPublishDate": "2026-10-12",
+      "assignedSlotTime": "08:00",
+      "publicationScheduledAt": "08:00",
+      "publishedBlogPostId": "blog_1791836992562_xsqom50",
+      "publishedSlug": "mastering-your-crochet-project-with-a-yarn-calculator",
+      "publishedUrl": "https://welovepattern.com/blog/mastering-your-crochet-project-with-a-yarn-calculator",
+      "publishedAt": "2026-10-12T20:29:52.585Z"
     },
     {
       "id": "job_2026-09-27_kpuud2",
@@ -1674,7 +1739,44 @@
         "discoveredAt": "2026-09-27T12:00:34.358Z",
         "status": "discovered"
       },
-      "pinterestPins": [],
+      "pinterestPins": [
+        {
+          "pinNumber": 1,
+          "conceptAngle": "Primary Craft Concept",
+          "visualStyle": {
+            "imageCount": 1,
+            "compositionType": "single_hero",
+            "subjectDescription": "Craft tool",
+            "colorPalette": "natural",
+            "humanElement": "none"
+          },
+          "compactHiggsfieldPrompt": "Craft tool in action",
+          "typographyOverlay": {
+            "primaryHeadline": "crochet halloween granny square",
+            "ctaBadgeText": "EXPLORE GUIDE →"
+          },
+          "destinationUrl": "https://welovepattern.com/blog/",
+          "publishStatus": "pending"
+        },
+        {
+          "pinNumber": 2,
+          "conceptAngle": "Technical Layflat Concept",
+          "visualStyle": {
+            "imageCount": 1,
+            "compositionType": "flatlay_materials",
+            "subjectDescription": "Craft tool flatlay",
+            "colorPalette": "warm",
+            "humanElement": "hands_only"
+          },
+          "compactHiggsfieldPrompt": "Craft tool flatlay",
+          "typographyOverlay": {
+            "primaryHeadline": "crochet halloween granny square",
+            "ctaBadgeText": "EXPLORE GUIDE →"
+          },
+          "destinationUrl": "https://welovepattern.com/blog/",
+          "publishStatus": "pending"
+        }
+      ],
       "stage": "failed",
       "requiresApproval": false,
       "indexNowNotified": false,
@@ -1827,7 +1929,44 @@
         "discoveredAt": "2026-09-27T12:00:34.361Z",
         "status": "discovered"
       },
-      "pinterestPins": [],
+      "pinterestPins": [
+        {
+          "pinNumber": 1,
+          "conceptAngle": "Primary Craft Concept",
+          "visualStyle": {
+            "imageCount": 1,
+            "compositionType": "single_hero",
+            "subjectDescription": "Craft tool",
+            "colorPalette": "natural",
+            "humanElement": "none"
+          },
+          "compactHiggsfieldPrompt": "Craft tool in action",
+          "typographyOverlay": {
+            "primaryHeadline": "online row counter",
+            "ctaBadgeText": "EXPLORE GUIDE →"
+          },
+          "destinationUrl": "https://welovepattern.com/blog/",
+          "publishStatus": "pending"
+        },
+        {
+          "pinNumber": 2,
+          "conceptAngle": "Technical Layflat Concept",
+          "visualStyle": {
+            "imageCount": 1,
+            "compositionType": "flatlay_materials",
+            "subjectDescription": "Craft tool flatlay",
+            "colorPalette": "warm",
+            "humanElement": "hands_only"
+          },
+          "compactHiggsfieldPrompt": "Craft tool flatlay",
+          "typographyOverlay": {
+            "primaryHeadline": "online row counter",
+            "ctaBadgeText": "EXPLORE GUIDE →"
+          },
+          "destinationUrl": "https://welovepattern.com/blog/",
+          "publishStatus": "pending"
+        }
+      ],
       "stage": "failed",
       "requiresApproval": false,
       "indexNowNotified": false,
@@ -1999,10 +2138,10 @@
           "targetBoardId": "board_blankets",
           "targetBoardName": "Crochet Blankets & Afghans",
           "boardName": "Crochet Blankets & Afghans",
-          "publishStatus": "failed",
+          "publishStatus": "image_ready",
           "higgsfieldRequestId": "50dd304f-9354-4a77-b023-4ccba547356c",
-          "stableAssetPath": "/www/wwwroot/welovepattern.com/public/generated/pinterest/seo-pins/master-the-classic-granny-square-blanket-afdf4a5c5b.jpg",
-          "stablePublicUrl": "/public/generated/pinterest/seo-pins/master-the-classic-granny-square-blanket-afdf4a5c5b.jpg",
+          "stableAssetPath": "/app/applet/public/generated/pinterest/seo-pins/master-the-classic-granny-square-blanket-afdf4a5c5b.jpg",
+          "stablePublicUrl": "/generated/pinterest/seo-pins/master-the-classic-granny-square-blanket-afdf4a5c5b.jpg",
           "errorMessage": "Higgsfield Generation Error: EACCES: permission denied, open '/www/wwwroot/welovepattern.com/public/generated/pinterest/seo-pins/mastering-the-classic-granny-square-blan-afdf4a5c5b.jpg'"
         },
         {
@@ -2025,9 +2164,9 @@
           "targetBoardId": "1148488411165284945",
           "targetBoardName": "Blankets Crochet",
           "boardName": "Blankets Crochet",
-          "publishStatus": "published",
+          "publishStatus": "image_ready",
           "higgsfieldRequestId": "8d112494-f884-4b48-b43a-81e30d78ea3d",
-          "stableAssetPath": "/www/wwwroot/welovepattern.com/public/generated/pinterest/seo-pins/master-the-classic-granny-square-blanket-aafdeda2f2.jpg",
+          "stableAssetPath": "/app/applet/public/generated/pinterest/seo-pins/master-the-classic-granny-square-blanket-aafdeda2f2.jpg",
           "stablePublicUrl": "/generated/pinterest/seo-pins/master-the-classic-granny-square-blanket-aafdeda2f2.jpg",
           "pinterestPinId": "1148488342518272068",
           "scheduledTime": "13:00",
@@ -2296,9 +2435,8 @@
         "heroImage": {
           "prompt": "Warm lifestyle interior photography for \"Master the Classic Granny Square Blanket Pattern\". A finished hand-crafted crochet blanket draped gracefully over a comfortable wooden armchair beside a woven basket of cozy yarn cakes, warm sunlight streaming through window, elegant rustic home decor, authentic high-resolution craft photography.",
           "compactPrompt": "Warm lifestyle interior photography for \"Master the Classic Granny Square Blanket Pattern\". A finished hand-crafted crochet blanket draped gracefully over a comfortable wooden armchair beside a woven basket of cozy yarn cakes, warm sunlight streaming through window, elegant rustic home decor, authentic high-resolution craft photography.",
-          "higgsfieldRequestId": "a6557f68-9d53-4171-b9cb-4340a8dd49df",
-          "stableAssetPath": "/www/wwwroot/welovepattern.com/public/generated/blog/master-the-classic-granny-square-blanket-80e668d264.jpg",
-          "stablePublicUrl": "/public/generated/blog/master-the-classic-granny-square-blanket-80e668d264.jpg",
+          "stableAssetPath": "/app/applet/public/generated/blog/master-the-classic-granny-square-blanket-80e668d264.jpg",
+          "stablePublicUrl": "/generated/blog/master-the-classic-granny-square-blanket-80e668d264.jpg",
           "status": "ready"
         }
       },
@@ -2560,9 +2698,8 @@
         "heroImage": {
           "prompt": "Editorial craft flatlay photography for crochet article \"Master Your Crochet Projects with Our Project Tracker Tool\". Neatly arranged natural wool yarn skeins, smooth birch wooden crochet hooks, a flexible cloth measuring tape, and a crisp textured gauge swatch on a clean warm linen background. Soft diffused natural window light, warm neutral tones, organic cozy maker workspace, 8k resolution, authentic artisan photography, zero digital noise.",
           "compactPrompt": "Editorial craft flatlay photography for crochet article \"Master Your Crochet Projects with Our Project Tracker Tool\". Neatly arranged natural wool yarn skeins, smooth birch wooden crochet hooks, a flexible cloth measuring tape, and a crisp textured gauge swatch on a clean warm linen background. Soft diffused natural window light, warm neutral tones, organic cozy maker workspace, 8k resolution, authentic artisan photography, zero digital noise.",
-          "higgsfieldRequestId": "2146d720-c266-4328-b1bc-43d3d8d8280b",
-          "stableAssetPath": "/www/wwwroot/welovepattern.com/public/generated/blog/master-your-crochet-projects-with-our-pr-d76a2ab48f.jpg",
-          "stablePublicUrl": "/public/generated/blog/master-your-crochet-projects-with-our-pr-d76a2ab48f.jpg",
+          "stableAssetPath": "/app/applet/public/generated/blog/master-your-crochet-projects-with-our-pr-d76a2ab48f.jpg",
+          "stablePublicUrl": "/generated/blog/master-your-crochet-projects-with-our-pr-d76a2ab48f.jpg",
           "status": "ready"
         }
       }
@@ -2610,9 +2747,9 @@
           "targetBoardId": "1148488411165286186",
           "targetBoardName": "Bags Crochet",
           "boardName": "Bags Crochet",
-          "publishStatus": "published",
+          "publishStatus": "image_ready",
           "higgsfieldRequestId": "abd7705b-b732-40fc-a148-7bff98ab0ca5",
-          "stableAssetPath": "/www/wwwroot/welovepattern.com/public/generated/pinterest/seo-pins/how-to-crochet-a-chunky-ribbed-beanie-co-75b82f7a2c.jpg",
+          "stableAssetPath": "/app/applet/public/generated/pinterest/seo-pins/how-to-crochet-a-chunky-ribbed-beanie-co-75b82f7a2c.jpg",
           "stablePublicUrl": "/generated/pinterest/seo-pins/how-to-crochet-a-chunky-ribbed-beanie-co-75b82f7a2c.jpg",
           "pinterestPinId": "1148488342518338996",
           "scheduledTime": "09:00",
@@ -2638,9 +2775,9 @@
           "targetBoardId": "1148488411165286186",
           "targetBoardName": "Bags Crochet",
           "boardName": "Bags Crochet",
-          "publishStatus": "published",
+          "publishStatus": "image_ready",
           "higgsfieldRequestId": "d97db612-7d0e-4a55-a53f-6e5e1102dfc6",
-          "stableAssetPath": "/www/wwwroot/welovepattern.com/public/generated/pinterest/seo-pins/how-to-crochet-a-chunky-ribbed-beanie-co-0014232f10.jpg",
+          "stableAssetPath": "/app/applet/public/generated/pinterest/seo-pins/how-to-crochet-a-chunky-ribbed-beanie-co-0014232f10.jpg",
           "stablePublicUrl": "/generated/pinterest/seo-pins/how-to-crochet-a-chunky-ribbed-beanie-co-0014232f10.jpg",
           "pinterestPinId": "1148488342518356601",
           "scheduledTime": "13:00",
@@ -2832,8 +2969,7 @@
         "heroImage": {
           "prompt": "Authentic close-up artisan craft photography for \"How to Crochet a Chunky Ribbed Beanie: Complete Guide\". Maker hands gently working intricate crochet stitches with premium textured yarn, natural wooden hook, soft morning studio light, shallow depth of field, warm cozy maker vibe, immaculate stitch definition, high resolution, organic craft publication aesthetic.",
           "compactPrompt": "Authentic close-up artisan craft photography for \"How to Crochet a Chunky Ribbed Beanie: Complete Guide\". Maker hands gently working intricate crochet stitches with premium textured yarn, natural wooden hook, soft morning studio light, shallow depth of field, warm cozy maker vibe, immaculate stitch definition, high resolution, organic craft publication aesthetic.",
-          "higgsfieldRequestId": "a1c2d834-ecfb-426d-908f-cf0a91623b81",
-          "stableAssetPath": "/www/wwwroot/welovepattern.com/public/generated/blog/how-to-crochet-a-chunky-ribbed-beanie-co-2662eb353a.jpg",
+          "stableAssetPath": "/app/applet/public/generated/blog/how-to-crochet-a-chunky-ribbed-beanie-co-2662eb353a.jpg",
           "stablePublicUrl": "/generated/blog/how-to-crochet-a-chunky-ribbed-beanie-co-2662eb353a.jpg",
           "status": "ready"
         }
@@ -2875,8 +3011,61 @@
         "discoveredAt": "2026-09-28T00:00:27.277Z",
         "status": "discovered"
       },
-      "pinterestPins": [],
-      "stage": "failed",
+      "pinterestPins": [
+        {
+          "pinNumber": 1,
+          "conceptAngle": "Primary Craft Concept",
+          "visualStyle": {
+            "imageCount": 1,
+            "compositionType": "single_hero",
+            "subjectDescription": "Craft tool",
+            "colorPalette": "natural",
+            "humanElement": "none"
+          },
+          "compactHiggsfieldPrompt": "Craft tool in action",
+          "typographyOverlay": {
+            "primaryHeadline": "Mastering Your Crochet Gauge with Our Calculator Tool",
+            "ctaBadgeText": "EXPLORE GUIDE →"
+          },
+          "destinationUrl": "https://welovepattern.com/blog/mastering-your-crochet-gauge-with-our-calculator-tool",
+          "publishStatus": "image_ready",
+          "stableAssetPath": "/app/applet/public/generated/pinterest/seo-pins/mastering-crochet-gauge-your-ultimate-ca-e1844b9974.jpg",
+          "stablePublicUrl": "/generated/pinterest/seo-pins/mastering-crochet-gauge-your-ultimate-ca-e1844b9974.jpg",
+          "assignedSlotTime": "08:30",
+          "scheduledTime": "08:30",
+          "targetBoardId": "board_tools",
+          "targetBoardName": "Crochet Tools & Yarn Calculators",
+          "boardName": "Crochet Tools & Yarn Calculators",
+          "pinTitle": "Mastering Crochet Gauge: Your Ultimate Swatch Guide"
+        },
+        {
+          "pinNumber": 2,
+          "conceptAngle": "Technical Layflat Concept",
+          "visualStyle": {
+            "imageCount": 1,
+            "compositionType": "flatlay_materials",
+            "subjectDescription": "Craft tool flatlay",
+            "colorPalette": "warm",
+            "humanElement": "hands_only"
+          },
+          "compactHiggsfieldPrompt": "Craft tool flatlay",
+          "typographyOverlay": {
+            "primaryHeadline": "Mastering Your Crochet Gauge with Our Calculator Tool",
+            "ctaBadgeText": "EXPLORE GUIDE →"
+          },
+          "destinationUrl": "https://welovepattern.com/blog/mastering-your-crochet-gauge-with-our-calculator-tool",
+          "publishStatus": "image_ready",
+          "stableAssetPath": "/app/applet/public/generated/pinterest/seo-pins/mastering-crochet-gauge-your-ultimate-ca-f3ea9cf368.jpg",
+          "stablePublicUrl": "/generated/pinterest/seo-pins/mastering-crochet-gauge-your-ultimate-ca-f3ea9cf368.jpg",
+          "assignedSlotTime": "09:00",
+          "scheduledTime": "09:00",
+          "targetBoardId": "board_tools",
+          "targetBoardName": "Crochet Tools & Yarn Calculators",
+          "boardName": "Crochet Tools & Yarn Calculators",
+          "pinTitle": "Crochet Gauge Calculator Tool for Perfect Project Sizing"
+        }
+      ],
+      "stage": "awaiting_approval",
       "requiresApproval": false,
       "indexNowNotified": false,
       "createdAt": "2026-09-28T00:00:32.987Z",
@@ -2916,6 +3105,16 @@
           "timestamp": "2026-09-28T00:03:19.317Z",
           "level": "error",
           "message": "Pinterest Board Selection Paused: Low confidence semantic match (10/100) for topic \"crochet gauge calculator\" with board \"Accessories Crochet\". Operator decision required."
+        },
+        {
+          "timestamp": "2026-10-11T17:40:26.835Z",
+          "level": "info",
+          "message": "[AssetRecovery] All 3 visual assets recovered locally ($0 cost). Job transitioned from failed to awaiting_approval."
+        },
+        {
+          "timestamp": "2026-10-12T20:37:27.206Z",
+          "level": "info",
+          "message": "[SchedulerPreparation] Pre-assigned to Article Slot 1 (08:00 EDT) on 2026-10-13. Pins assigned to 08:30 & 09:00 EDT."
         }
       ],
       "factualResearch": {
@@ -3040,8 +3239,18 @@
           "title": "Crochet Gauge Calculator Guide",
           "description": "Learn to calculate crochet gauge precisely for accurate project sizing with our interactive tool.",
           "keywords": "crochet gauge calculator, yarn gauge, crochet tools"
+        },
+        "heroImage": {
+          "prompt": "Recovered craft photography hero image",
+          "compactPrompt": "Recovered craft photography hero image",
+          "stableAssetPath": "/app/applet/public/generated/blog/mastering-crochet-gauge-your-ultimate-ca-abd915e19f.jpg",
+          "stablePublicUrl": "/generated/blog/mastering-crochet-gauge-your-ultimate-ca-abd915e19f.jpg",
+          "status": "ready"
         }
-      }
+      },
+      "assignedPublishDate": "2026-10-13",
+      "assignedSlotTime": "08:00",
+      "publicationScheduledAt": "08:00"
     },
     {
       "id": "job_2026-09-28_1op8wt",
@@ -3090,9 +3299,9 @@
           "targetBoardId": "1148488411165286186",
           "targetBoardName": "Bags Crochet",
           "boardName": "Bags Crochet",
-          "publishStatus": "published",
+          "publishStatus": "image_ready",
           "higgsfieldRequestId": "7abc86ad-f1fd-41ff-bfbf-1af5b2f31ea8",
-          "stableAssetPath": "/www/wwwroot/welovepattern.com/public/generated/pinterest/seo-pins/crochet-market-tote-bag-pattern-your-ult-08498d609d.jpg",
+          "stableAssetPath": "/app/applet/public/generated/pinterest/seo-pins/crochet-market-tote-bag-pattern-your-ult-08498d609d.jpg",
           "stablePublicUrl": "/generated/pinterest/seo-pins/crochet-market-tote-bag-pattern-your-ult-08498d609d.jpg",
           "pinterestPinId": "1148488342518374354",
           "scheduledTime": "17:00",
@@ -3118,9 +3327,9 @@
           "targetBoardId": "1148488411165286186",
           "targetBoardName": "Bags Crochet",
           "boardName": "Bags Crochet",
-          "publishStatus": "published",
+          "publishStatus": "image_ready",
           "higgsfieldRequestId": "57046a42-9303-4810-8b41-c64b822236d9",
-          "stableAssetPath": "/www/wwwroot/welovepattern.com/public/generated/pinterest/seo-pins/crochet-market-tote-bag-pattern-your-ult-0ed03d5972.jpg",
+          "stableAssetPath": "/app/applet/public/generated/pinterest/seo-pins/crochet-market-tote-bag-pattern-your-ult-0ed03d5972.jpg",
           "stablePublicUrl": "/generated/pinterest/seo-pins/crochet-market-tote-bag-pattern-your-ult-0ed03d5972.jpg",
           "pinterestPinId": "1148488342518387814",
           "scheduledTime": "21:00",
@@ -3349,8 +3558,7 @@
         "heroImage": {
           "prompt": "Warm lifestyle interior photography for \"Crochet Market Tote Bag Pattern: Your Ultimate Guide\". A finished hand-crafted crochet blanket draped gracefully over a comfortable wooden armchair beside a woven basket of cozy yarn cakes, warm sunlight streaming through window, elegant rustic home decor, authentic high-resolution craft photography.",
           "compactPrompt": "Warm lifestyle interior photography for \"Crochet Market Tote Bag Pattern: Your Ultimate Guide\". A finished hand-crafted crochet blanket draped gracefully over a comfortable wooden armchair beside a woven basket of cozy yarn cakes, warm sunlight streaming through window, elegant rustic home decor, authentic high-resolution craft photography.",
-          "higgsfieldRequestId": "a0b27fb4-cfc6-44e7-9bf2-4eddd706fcc9",
-          "stableAssetPath": "/www/wwwroot/welovepattern.com/public/generated/blog/crochet-market-tote-bag-pattern-your-ult-213b9c15cc.jpg",
+          "stableAssetPath": "/app/applet/public/generated/blog/crochet-market-tote-bag-pattern-your-ult-213b9c15cc.jpg",
           "stablePublicUrl": "/generated/blog/crochet-market-tote-bag-pattern-your-ult-213b9c15cc.jpg",
           "status": "ready"
         }
@@ -3392,7 +3600,44 @@
         "discoveredAt": "2026-09-28T12:00:42.136Z",
         "status": "discovered"
       },
-      "pinterestPins": [],
+      "pinterestPins": [
+        {
+          "pinNumber": 1,
+          "conceptAngle": "Primary Craft Concept",
+          "visualStyle": {
+            "imageCount": 1,
+            "compositionType": "single_hero",
+            "subjectDescription": "Craft tool",
+            "colorPalette": "natural",
+            "humanElement": "none"
+          },
+          "compactHiggsfieldPrompt": "Craft tool in action",
+          "typographyOverlay": {
+            "primaryHeadline": "Mastering Yarn Estimation with Our Yarn Calculator",
+            "ctaBadgeText": "EXPLORE GUIDE →"
+          },
+          "destinationUrl": "https://welovepattern.com/blog/mastering-yarn-estimation-with-our-yarn-calculator",
+          "publishStatus": "pending"
+        },
+        {
+          "pinNumber": 2,
+          "conceptAngle": "Technical Layflat Concept",
+          "visualStyle": {
+            "imageCount": 1,
+            "compositionType": "flatlay_materials",
+            "subjectDescription": "Craft tool flatlay",
+            "colorPalette": "warm",
+            "humanElement": "hands_only"
+          },
+          "compactHiggsfieldPrompt": "Craft tool flatlay",
+          "typographyOverlay": {
+            "primaryHeadline": "Mastering Yarn Estimation with Our Yarn Calculator",
+            "ctaBadgeText": "EXPLORE GUIDE →"
+          },
+          "destinationUrl": "https://welovepattern.com/blog/mastering-yarn-estimation-with-our-yarn-calculator",
+          "publishStatus": "pending"
+        }
+      ],
       "stage": "failed",
       "requiresApproval": false,
       "indexNowNotified": false,
@@ -3595,9 +3840,9 @@
           "targetBoardId": "1148488411165284945",
           "targetBoardName": "Blankets Crochet",
           "boardName": "Blankets Crochet",
-          "publishStatus": "published",
+          "publishStatus": "image_ready",
           "higgsfieldRequestId": "5312a4bf-d464-4a33-a06a-7d5009d8d3ec",
-          "stableAssetPath": "/www/wwwroot/welovepattern.com/public/generated/pinterest/seo-pins/waffle-stitch-crochet-blanket-tutorial-p-75b82f7a2c.jpg",
+          "stableAssetPath": "/app/applet/public/generated/pinterest/seo-pins/waffle-stitch-crochet-blanket-tutorial-p-75b82f7a2c.jpg",
           "stablePublicUrl": "/generated/pinterest/seo-pins/waffle-stitch-crochet-blanket-tutorial-p-75b82f7a2c.jpg",
           "pinterestPinId": "1148488342518419932",
           "scheduledTime": "09:00",
@@ -3623,9 +3868,9 @@
           "targetBoardId": "1148488411165284945",
           "targetBoardName": "Blankets Crochet",
           "boardName": "Blankets Crochet",
-          "publishStatus": "published",
+          "publishStatus": "image_ready",
           "higgsfieldRequestId": "a375029f-e4b6-4cd2-a339-da0dfc58c818",
-          "stableAssetPath": "/www/wwwroot/welovepattern.com/public/generated/pinterest/seo-pins/waffle-stitch-crochet-blanket-tutorial-p-0014232f10.jpg",
+          "stableAssetPath": "/app/applet/public/generated/pinterest/seo-pins/waffle-stitch-crochet-blanket-tutorial-p-0014232f10.jpg",
           "stablePublicUrl": "/generated/pinterest/seo-pins/waffle-stitch-crochet-blanket-tutorial-p-0014232f10.jpg",
           "pinterestPinId": "1148488342518438960",
           "scheduledTime": "13:00",
@@ -3843,8 +4088,7 @@
         "heroImage": {
           "prompt": "Authentic close-up artisan craft photography for \"Waffle Stitch Crochet Blanket Tutorial\". Maker hands gently working intricate crochet stitches with premium textured yarn, natural wooden hook, soft morning studio light, shallow depth of field, warm cozy maker vibe, immaculate stitch definition, high resolution, organic craft publication aesthetic.",
           "compactPrompt": "Authentic close-up artisan craft photography for \"Waffle Stitch Crochet Blanket Tutorial\". Maker hands gently working intricate crochet stitches with premium textured yarn, natural wooden hook, soft morning studio light, shallow depth of field, warm cozy maker vibe, immaculate stitch definition, high resolution, organic craft publication aesthetic.",
-          "higgsfieldRequestId": "b1440d77-602d-4477-b5d0-d9e9bcfc61b3",
-          "stableAssetPath": "/www/wwwroot/welovepattern.com/public/generated/blog/waffle-stitch-crochet-blanket-tutorial-087967e201.jpg",
+          "stableAssetPath": "/app/applet/public/generated/blog/waffle-stitch-crochet-blanket-tutorial-087967e201.jpg",
           "stablePublicUrl": "/generated/blog/waffle-stitch-crochet-blanket-tutorial-087967e201.jpg",
           "status": "ready"
         }
@@ -3886,7 +4130,44 @@
         "discoveredAt": "2026-09-29T12:00:47.770Z",
         "status": "discovered"
       },
-      "pinterestPins": [],
+      "pinterestPins": [
+        {
+          "pinNumber": 1,
+          "conceptAngle": "Primary Craft Concept",
+          "visualStyle": {
+            "imageCount": 1,
+            "compositionType": "single_hero",
+            "subjectDescription": "Craft tool",
+            "colorPalette": "natural",
+            "humanElement": "none"
+          },
+          "compactHiggsfieldPrompt": "Craft tool in action",
+          "typographyOverlay": {
+            "primaryHeadline": "Mastering the US vs UK Crochet Terms Converter",
+            "ctaBadgeText": "EXPLORE GUIDE →"
+          },
+          "destinationUrl": "https://welovepattern.com/blog/mastering-the-us-vs-uk-crochet-terms-converter",
+          "publishStatus": "pending"
+        },
+        {
+          "pinNumber": 2,
+          "conceptAngle": "Technical Layflat Concept",
+          "visualStyle": {
+            "imageCount": 1,
+            "compositionType": "flatlay_materials",
+            "subjectDescription": "Craft tool flatlay",
+            "colorPalette": "warm",
+            "humanElement": "hands_only"
+          },
+          "compactHiggsfieldPrompt": "Craft tool flatlay",
+          "typographyOverlay": {
+            "primaryHeadline": "Mastering the US vs UK Crochet Terms Converter",
+            "ctaBadgeText": "EXPLORE GUIDE →"
+          },
+          "destinationUrl": "https://welovepattern.com/blog/mastering-the-us-vs-uk-crochet-terms-converter",
+          "publishStatus": "pending"
+        }
+      ],
       "stage": "failed",
       "requiresApproval": false,
       "indexNowNotified": false,
@@ -4106,9 +4387,9 @@
           "targetBoardId": "1148488411165286186",
           "targetBoardName": "Bags Crochet",
           "boardName": "Bags Crochet",
-          "publishStatus": "published",
+          "publishStatus": "image_ready",
           "higgsfieldRequestId": "61dc0112-cb10-41af-bf3e-565090f12eea",
-          "stableAssetPath": "/www/wwwroot/welovepattern.com/public/generated/pinterest/seo-pins/easy-crochet-bucket-hat-pattern-for-begi-0c74031ec7.jpg",
+          "stableAssetPath": "/app/applet/public/generated/pinterest/seo-pins/easy-crochet-bucket-hat-pattern-for-begi-0c74031ec7.jpg",
           "stablePublicUrl": "/generated/pinterest/seo-pins/easy-crochet-bucket-hat-pattern-for-begi-0c74031ec7.jpg",
           "pinterestPinId": "1148488342518501568",
           "scheduledTime": "09:00",
@@ -4134,9 +4415,9 @@
           "targetBoardId": "1148488411165286186",
           "targetBoardName": "Bags Crochet",
           "boardName": "Bags Crochet",
-          "publishStatus": "published",
+          "publishStatus": "image_ready",
           "higgsfieldRequestId": "a8b70398-6dbf-43fc-9506-630ec4e915b1",
-          "stableAssetPath": "/www/wwwroot/welovepattern.com/public/generated/pinterest/seo-pins/easy-crochet-bucket-hat-pattern-for-begi-782108dbd9.jpg",
+          "stableAssetPath": "/app/applet/public/generated/pinterest/seo-pins/easy-crochet-bucket-hat-pattern-for-begi-782108dbd9.jpg",
           "stablePublicUrl": "/generated/pinterest/seo-pins/easy-crochet-bucket-hat-pattern-for-begi-782108dbd9.jpg",
           "pinterestPinId": "1148488342518518501",
           "scheduledTime": "13:00",
@@ -4348,8 +4629,7 @@
         "heroImage": {
           "prompt": "Warm lifestyle interior photography for \"Easy Crochet Bucket Hat Pattern for Beginners\". A finished hand-crafted crochet blanket draped gracefully over a comfortable wooden armchair beside a woven basket of cozy yarn cakes, warm sunlight streaming through window, elegant rustic home decor, authentic high-resolution craft photography.",
           "compactPrompt": "Warm lifestyle interior photography for \"Easy Crochet Bucket Hat Pattern for Beginners\". A finished hand-crafted crochet blanket draped gracefully over a comfortable wooden armchair beside a woven basket of cozy yarn cakes, warm sunlight streaming through window, elegant rustic home decor, authentic high-resolution craft photography.",
-          "higgsfieldRequestId": "85771dba-a434-4b6f-81a8-f7949ac9e4aa",
-          "stableAssetPath": "/www/wwwroot/welovepattern.com/public/generated/blog/easy-crochet-bucket-hat-pattern-for-begi-be5be9cb94.jpg",
+          "stableAssetPath": "/app/applet/public/generated/blog/easy-crochet-bucket-hat-pattern-for-begi-be5be9cb94.jpg",
           "stablePublicUrl": "/generated/blog/easy-crochet-bucket-hat-pattern-for-begi-be5be9cb94.jpg",
           "status": "ready"
         }
@@ -4391,7 +4671,44 @@
         "discoveredAt": "2026-09-30T00:00:59.889Z",
         "status": "discovered"
       },
-      "pinterestPins": [],
+      "pinterestPins": [
+        {
+          "pinNumber": 1,
+          "conceptAngle": "Primary Craft Concept",
+          "visualStyle": {
+            "imageCount": 1,
+            "compositionType": "single_hero",
+            "subjectDescription": "Craft tool",
+            "colorPalette": "natural",
+            "humanElement": "none"
+          },
+          "compactHiggsfieldPrompt": "Craft tool in action",
+          "typographyOverlay": {
+            "primaryHeadline": "Comprehensive Crochet Hook Size Chart in MM",
+            "ctaBadgeText": "EXPLORE GUIDE →"
+          },
+          "destinationUrl": "https://welovepattern.com/blog/comprehensive-crochet-hook-size-chart-in-mm",
+          "publishStatus": "pending"
+        },
+        {
+          "pinNumber": 2,
+          "conceptAngle": "Technical Layflat Concept",
+          "visualStyle": {
+            "imageCount": 1,
+            "compositionType": "flatlay_materials",
+            "subjectDescription": "Craft tool flatlay",
+            "colorPalette": "warm",
+            "humanElement": "hands_only"
+          },
+          "compactHiggsfieldPrompt": "Craft tool flatlay",
+          "typographyOverlay": {
+            "primaryHeadline": "Comprehensive Crochet Hook Size Chart in MM",
+            "ctaBadgeText": "EXPLORE GUIDE →"
+          },
+          "destinationUrl": "https://welovepattern.com/blog/comprehensive-crochet-hook-size-chart-in-mm",
+          "publishStatus": "pending"
+        }
+      ],
       "stage": "failed",
       "requiresApproval": false,
       "indexNowNotified": false,
@@ -4623,9 +4940,9 @@
           "targetBoardId": "1148488411165284945",
           "targetBoardName": "Blankets Crochet",
           "boardName": "Blankets Crochet",
-          "publishStatus": "published",
+          "publishStatus": "image_ready",
           "higgsfieldRequestId": "283653bd-08c6-4f01-adf2-e43018477c8f",
-          "stableAssetPath": "/www/wwwroot/welovepattern.com/public/generated/pinterest/seo-pins/master-seamless-joins-how-to-join-granny-06f73f60b7.jpg",
+          "stableAssetPath": "/app/applet/public/generated/pinterest/seo-pins/master-seamless-joins-how-to-join-granny-06f73f60b7.jpg",
           "stablePublicUrl": "/generated/pinterest/seo-pins/master-seamless-joins-how-to-join-granny-06f73f60b7.jpg",
           "pinterestPinId": "1148488342518536630",
           "scheduledTime": "17:00",
@@ -4651,9 +4968,9 @@
           "targetBoardId": "1148488411165284945",
           "targetBoardName": "Blankets Crochet",
           "boardName": "Blankets Crochet",
-          "publishStatus": "published",
+          "publishStatus": "image_ready",
           "higgsfieldRequestId": "4a581da1-34d2-4a8c-a7ea-63d8f65bb077",
-          "stableAssetPath": "/www/wwwroot/welovepattern.com/public/generated/pinterest/seo-pins/master-seamless-joins-how-to-join-granny-1f3705a305.jpg",
+          "stableAssetPath": "/app/applet/public/generated/pinterest/seo-pins/master-seamless-joins-how-to-join-granny-1f3705a305.jpg",
           "stablePublicUrl": "/generated/pinterest/seo-pins/master-seamless-joins-how-to-join-granny-1f3705a305.jpg",
           "pinterestPinId": "1148488342518549608",
           "scheduledTime": "21:00",
@@ -4861,8 +5178,7 @@
         "heroImage": {
           "prompt": "Authentic close-up artisan craft photography for \"Master Seamless Joins: How to Join Granny Squares\". Maker hands gently working intricate crochet stitches with premium textured yarn, natural wooden hook, soft morning studio light, shallow depth of field, warm cozy maker vibe, immaculate stitch definition, high resolution, organic craft publication aesthetic.",
           "compactPrompt": "Authentic close-up artisan craft photography for \"Master Seamless Joins: How to Join Granny Squares\". Maker hands gently working intricate crochet stitches with premium textured yarn, natural wooden hook, soft morning studio light, shallow depth of field, warm cozy maker vibe, immaculate stitch definition, high resolution, organic craft publication aesthetic.",
-          "higgsfieldRequestId": "8588c886-9811-4d1b-9493-e755a724aeb9",
-          "stableAssetPath": "/www/wwwroot/welovepattern.com/public/generated/blog/master-seamless-joins-how-to-join-granny-e4bad1252a.jpg",
+          "stableAssetPath": "/app/applet/public/generated/blog/master-seamless-joins-how-to-join-granny-e4bad1252a.jpg",
           "stablePublicUrl": "/generated/blog/master-seamless-joins-how-to-join-granny-e4bad1252a.jpg",
           "status": "ready"
         }
@@ -4904,7 +5220,44 @@
         "discoveredAt": "2026-09-30T12:00:17.602Z",
         "status": "discovered"
       },
-      "pinterestPins": [],
+      "pinterestPins": [
+        {
+          "pinNumber": 1,
+          "conceptAngle": "Primary Craft Concept",
+          "visualStyle": {
+            "imageCount": 1,
+            "compositionType": "single_hero",
+            "subjectDescription": "Craft tool",
+            "colorPalette": "natural",
+            "humanElement": "none"
+          },
+          "compactHiggsfieldPrompt": "Craft tool in action",
+          "typographyOverlay": {
+            "primaryHeadline": "Effortlessly Calculate Yarn Needs with Our Granny Square Calculator",
+            "ctaBadgeText": "EXPLORE GUIDE →"
+          },
+          "destinationUrl": "https://welovepattern.com/blog/effortlessly-calculate-yarn-needs-with-our-granny-square-calculator",
+          "publishStatus": "pending"
+        },
+        {
+          "pinNumber": 2,
+          "conceptAngle": "Technical Layflat Concept",
+          "visualStyle": {
+            "imageCount": 1,
+            "compositionType": "flatlay_materials",
+            "subjectDescription": "Craft tool flatlay",
+            "colorPalette": "warm",
+            "humanElement": "hands_only"
+          },
+          "compactHiggsfieldPrompt": "Craft tool flatlay",
+          "typographyOverlay": {
+            "primaryHeadline": "Effortlessly Calculate Yarn Needs with Our Granny Square Calculator",
+            "ctaBadgeText": "EXPLORE GUIDE →"
+          },
+          "destinationUrl": "https://welovepattern.com/blog/effortlessly-calculate-yarn-needs-with-our-granny-square-calculator",
+          "publishStatus": "pending"
+        }
+      ],
       "stage": "failed",
       "requiresApproval": false,
       "indexNowNotified": false,
@@ -5092,7 +5445,44 @@
         "discoveredAt": "2026-10-01T12:00:53.323Z",
         "status": "discovered"
       },
-      "pinterestPins": [],
+      "pinterestPins": [
+        {
+          "pinNumber": 1,
+          "conceptAngle": "Primary Craft Concept",
+          "visualStyle": {
+            "imageCount": 1,
+            "compositionType": "single_hero",
+            "subjectDescription": "Craft tool",
+            "colorPalette": "natural",
+            "humanElement": "none"
+          },
+          "compactHiggsfieldPrompt": "Craft tool in action",
+          "typographyOverlay": {
+            "primaryHeadline": "Magic Ring Crochet Tutorial: Step by Step Guide",
+            "ctaBadgeText": "EXPLORE GUIDE →"
+          },
+          "destinationUrl": "https://welovepattern.com/blog/magic-ring-crochet-tutorial-step-by-step-guide",
+          "publishStatus": "pending"
+        },
+        {
+          "pinNumber": 2,
+          "conceptAngle": "Technical Layflat Concept",
+          "visualStyle": {
+            "imageCount": 1,
+            "compositionType": "flatlay_materials",
+            "subjectDescription": "Craft tool flatlay",
+            "colorPalette": "warm",
+            "humanElement": "hands_only"
+          },
+          "compactHiggsfieldPrompt": "Craft tool flatlay",
+          "typographyOverlay": {
+            "primaryHeadline": "Magic Ring Crochet Tutorial: Step by Step Guide",
+            "ctaBadgeText": "EXPLORE GUIDE →"
+          },
+          "destinationUrl": "https://welovepattern.com/blog/magic-ring-crochet-tutorial-step-by-step-guide",
+          "publishStatus": "pending"
+        }
+      ],
       "stage": "failed",
       "requiresApproval": false,
       "indexNowNotified": false,
@@ -5286,8 +5676,61 @@
         "discoveredAt": "2026-10-01T12:00:47.377Z",
         "status": "discovered"
       },
-      "pinterestPins": [],
-      "stage": "failed",
+      "pinterestPins": [
+        {
+          "pinNumber": 1,
+          "conceptAngle": "Primary Craft Concept",
+          "visualStyle": {
+            "imageCount": 1,
+            "compositionType": "single_hero",
+            "subjectDescription": "Craft tool",
+            "colorPalette": "natural",
+            "humanElement": "none"
+          },
+          "compactHiggsfieldPrompt": "Craft tool in action",
+          "typographyOverlay": {
+            "primaryHeadline": "How to Use a Crochet Blanket Yarn Calculator for Perfect Projects",
+            "ctaBadgeText": "EXPLORE GUIDE →"
+          },
+          "destinationUrl": "https://welovepattern.com/blog/how-to-use-a-crochet-blanket-yarn-calculator-for-perfect-projects",
+          "publishStatus": "image_ready",
+          "stableAssetPath": "/app/applet/public/generated/pinterest/seo-pins/crochet-blanket-yarn-calculator-accurate-13ec052033.jpg",
+          "stablePublicUrl": "/generated/pinterest/seo-pins/crochet-blanket-yarn-calculator-accurate-13ec052033.jpg",
+          "assignedSlotTime": "12:30",
+          "scheduledTime": "12:30",
+          "targetBoardId": "board_tools",
+          "targetBoardName": "Crochet Tools & Yarn Calculators",
+          "boardName": "Crochet Tools & Yarn Calculators",
+          "pinTitle": "Crochet Blanket Yarn Calculator: Accurate Yardage Guide"
+        },
+        {
+          "pinNumber": 2,
+          "conceptAngle": "Technical Layflat Concept",
+          "visualStyle": {
+            "imageCount": 1,
+            "compositionType": "flatlay_materials",
+            "subjectDescription": "Craft tool flatlay",
+            "colorPalette": "warm",
+            "humanElement": "hands_only"
+          },
+          "compactHiggsfieldPrompt": "Craft tool flatlay",
+          "typographyOverlay": {
+            "primaryHeadline": "How to Use a Crochet Blanket Yarn Calculator for Perfect Projects",
+            "ctaBadgeText": "EXPLORE GUIDE →"
+          },
+          "destinationUrl": "https://welovepattern.com/blog/how-to-use-a-crochet-blanket-yarn-calculator-for-perfect-projects",
+          "publishStatus": "image_ready",
+          "stableAssetPath": "/app/applet/public/generated/pinterest/seo-pins/crochet-blanket-yarn-calculator-accurate-83ef1d8770.jpg",
+          "stablePublicUrl": "/generated/pinterest/seo-pins/crochet-blanket-yarn-calculator-accurate-83ef1d8770.jpg",
+          "assignedSlotTime": "13:00",
+          "scheduledTime": "13:00",
+          "targetBoardId": "board_tools",
+          "targetBoardName": "Crochet Tools & Yarn Calculators",
+          "boardName": "Crochet Tools & Yarn Calculators",
+          "pinTitle": "How to Use a Crochet Blanket Yarn Calculator for Perfect Projects"
+        }
+      ],
+      "stage": "awaiting_approval",
       "requiresApproval": false,
       "indexNowNotified": false,
       "createdAt": "2026-10-01T12:00:53.351Z",
@@ -5327,6 +5770,16 @@
           "timestamp": "2026-10-01T12:02:08.595Z",
           "level": "error",
           "message": "Pinterest Board Selection Paused: Low confidence semantic match (55/100) for topic \"crochet blanket yarn calculator\" with board \"Blankets Crochet\". Operator decision required."
+        },
+        {
+          "timestamp": "2026-10-11T17:40:26.839Z",
+          "level": "info",
+          "message": "[AssetRecovery] All 3 visual assets recovered locally ($0 cost). Job transitioned from failed to awaiting_approval."
+        },
+        {
+          "timestamp": "2026-10-12T20:37:27.218Z",
+          "level": "info",
+          "message": "[SchedulerPreparation] Pre-assigned to Article Slot 2 (12:00 EDT) on 2026-10-13. Pins assigned to 12:30 & 13:00 EDT."
         }
       ],
       "factualResearch": {
@@ -5463,8 +5916,18 @@
           "title": "Crochet Blanket Yarn Calculator Guide",
           "description": "Learn to calculate yarn for crochet blankets with size, stitch, weight factors effortlessly.",
           "keywords": "crochet blanket yarn calculator, yarn estimation, crochet tools"
+        },
+        "heroImage": {
+          "prompt": "Recovered craft photography hero image",
+          "compactPrompt": "Recovered craft photography hero image",
+          "stableAssetPath": "/app/applet/public/generated/blog/crochet-blanket-yarn-calculator-accurate-5f2ef4f0d5.jpg",
+          "stablePublicUrl": "/generated/blog/crochet-blanket-yarn-calculator-accurate-5f2ef4f0d5.jpg",
+          "status": "ready"
         }
-      }
+      },
+      "assignedPublishDate": "2026-10-13",
+      "assignedSlotTime": "12:00",
+      "publicationScheduledAt": "12:00"
     },
     {
       "id": "job_2026-10-02_it4uvc",
@@ -5509,9 +5972,9 @@
           "targetBoardId": "1148488411165286185",
           "targetBoardName": "Amigurumi Crochet",
           "boardName": "Amigurumi Crochet",
-          "publishStatus": "published",
+          "publishStatus": "image_ready",
           "higgsfieldRequestId": "5594aedd-ca97-466f-b0e1-148ef3cb75db",
-          "stableAssetPath": "/www/wwwroot/welovepattern.com/public/generated/pinterest/seo-pins/mastering-the-invisible-decrease-crochet-f1a6d42f12.jpg",
+          "stableAssetPath": "/app/applet/public/generated/pinterest/seo-pins/mastering-the-invisible-decrease-crochet-f1a6d42f12.jpg",
           "stablePublicUrl": "/generated/pinterest/seo-pins/mastering-the-invisible-decrease-crochet-f1a6d42f12.jpg",
           "pinterestPinId": "1148488342518672912",
           "scheduledTime": "09:00",
@@ -5537,9 +6000,9 @@
           "targetBoardId": "1148488411165286185",
           "targetBoardName": "Amigurumi Crochet",
           "boardName": "Amigurumi Crochet",
-          "publishStatus": "published",
+          "publishStatus": "image_ready",
           "higgsfieldRequestId": "20592215-7c3b-441a-95de-1d622513af44",
-          "stableAssetPath": "/www/wwwroot/welovepattern.com/public/generated/pinterest/seo-pins/mastering-the-invisible-decrease-crochet-c5d9178a9b.jpg",
+          "stableAssetPath": "/app/applet/public/generated/pinterest/seo-pins/mastering-the-invisible-decrease-crochet-c5d9178a9b.jpg",
           "stablePublicUrl": "/generated/pinterest/seo-pins/mastering-the-invisible-decrease-crochet-c5d9178a9b.jpg",
           "pinterestPinId": "1148488342518692272",
           "scheduledTime": "13:00",
@@ -5745,8 +6208,7 @@
         "heroImage": {
           "prompt": "Warm lifestyle interior photography for \"Mastering the Invisible Decrease Crochet for Amigurumi\". A finished hand-crafted crochet blanket draped gracefully over a comfortable wooden armchair beside a woven basket of cozy yarn cakes, warm sunlight streaming through window, elegant rustic home decor, authentic high-resolution craft photography.",
           "compactPrompt": "Warm lifestyle interior photography for \"Mastering the Invisible Decrease Crochet for Amigurumi\". A finished hand-crafted crochet blanket draped gracefully over a comfortable wooden armchair beside a woven basket of cozy yarn cakes, warm sunlight streaming through window, elegant rustic home decor, authentic high-resolution craft photography.",
-          "higgsfieldRequestId": "0e7e7051-70bb-4845-ab0c-b196325b9a7f",
-          "stableAssetPath": "/www/wwwroot/welovepattern.com/public/generated/blog/mastering-the-invisible-decrease-crochet-58eed28d77.jpg",
+          "stableAssetPath": "/app/applet/public/generated/blog/mastering-the-invisible-decrease-crochet-58eed28d77.jpg",
           "stablePublicUrl": "/generated/blog/mastering-the-invisible-decrease-crochet-58eed28d77.jpg",
           "status": "ready"
         }
@@ -5788,7 +6250,44 @@
         "discoveredAt": "2026-10-02T00:00:55.836Z",
         "status": "discovered"
       },
-      "pinterestPins": [],
+      "pinterestPins": [
+        {
+          "pinNumber": 1,
+          "conceptAngle": "Primary Craft Concept",
+          "visualStyle": {
+            "imageCount": 1,
+            "compositionType": "single_hero",
+            "subjectDescription": "Craft tool",
+            "colorPalette": "natural",
+            "humanElement": "none"
+          },
+          "compactHiggsfieldPrompt": "Craft tool in action",
+          "typographyOverlay": {
+            "primaryHeadline": "Mastering Crochet Pricing with Our Calculator Tool",
+            "ctaBadgeText": "EXPLORE GUIDE →"
+          },
+          "destinationUrl": "https://welovepattern.com/blog/mastering-crochet-pricing-with-our-calculator-tool",
+          "publishStatus": "pending"
+        },
+        {
+          "pinNumber": 2,
+          "conceptAngle": "Technical Layflat Concept",
+          "visualStyle": {
+            "imageCount": 1,
+            "compositionType": "flatlay_materials",
+            "subjectDescription": "Craft tool flatlay",
+            "colorPalette": "warm",
+            "humanElement": "hands_only"
+          },
+          "compactHiggsfieldPrompt": "Craft tool flatlay",
+          "typographyOverlay": {
+            "primaryHeadline": "Mastering Crochet Pricing with Our Calculator Tool",
+            "ctaBadgeText": "EXPLORE GUIDE →"
+          },
+          "destinationUrl": "https://welovepattern.com/blog/mastering-crochet-pricing-with-our-calculator-tool",
+          "publishStatus": "pending"
+        }
+      ],
       "stage": "failed",
       "requiresApproval": false,
       "indexNowNotified": false,
@@ -5984,7 +6483,44 @@
         "discoveredAt": "2026-10-02T12:01:12.354Z",
         "status": "discovered"
       },
-      "pinterestPins": [],
+      "pinterestPins": [
+        {
+          "pinNumber": 1,
+          "conceptAngle": "Primary Craft Concept",
+          "visualStyle": {
+            "imageCount": 1,
+            "compositionType": "single_hero",
+            "subjectDescription": "Craft tool",
+            "colorPalette": "natural",
+            "humanElement": "none"
+          },
+          "compactHiggsfieldPrompt": "Craft tool in action",
+          "typographyOverlay": {
+            "primaryHeadline": "Mastering Acrylic Yarn Blocking for Crisp Crochet Stitches",
+            "ctaBadgeText": "EXPLORE GUIDE →"
+          },
+          "destinationUrl": "https://welovepattern.com/blog/mastering-acrylic-yarn-blocking-for-crisp-crochet-stitches",
+          "publishStatus": "pending"
+        },
+        {
+          "pinNumber": 2,
+          "conceptAngle": "Technical Layflat Concept",
+          "visualStyle": {
+            "imageCount": 1,
+            "compositionType": "flatlay_materials",
+            "subjectDescription": "Craft tool flatlay",
+            "colorPalette": "warm",
+            "humanElement": "hands_only"
+          },
+          "compactHiggsfieldPrompt": "Craft tool flatlay",
+          "typographyOverlay": {
+            "primaryHeadline": "Mastering Acrylic Yarn Blocking for Crisp Crochet Stitches",
+            "ctaBadgeText": "EXPLORE GUIDE →"
+          },
+          "destinationUrl": "https://welovepattern.com/blog/mastering-acrylic-yarn-blocking-for-crisp-crochet-stitches",
+          "publishStatus": "pending"
+        }
+      ],
       "stage": "failed",
       "requiresApproval": false,
       "indexNowNotified": false,
@@ -6163,7 +6699,44 @@
         "discoveredAt": "2026-10-02T12:01:08.149Z",
         "status": "discovered"
       },
-      "pinterestPins": [],
+      "pinterestPins": [
+        {
+          "pinNumber": 1,
+          "conceptAngle": "Primary Craft Concept",
+          "visualStyle": {
+            "imageCount": 1,
+            "compositionType": "single_hero",
+            "subjectDescription": "Craft tool",
+            "colorPalette": "natural",
+            "humanElement": "none"
+          },
+          "compactHiggsfieldPrompt": "Craft tool in action",
+          "typographyOverlay": {
+            "primaryHeadline": "Mastering Crochet with Our Abbreviation Dictionary Tool",
+            "ctaBadgeText": "EXPLORE GUIDE →"
+          },
+          "destinationUrl": "https://welovepattern.com/blog/mastering-crochet-with-our-abbreviation-dictionary-tool",
+          "publishStatus": "pending"
+        },
+        {
+          "pinNumber": 2,
+          "conceptAngle": "Technical Layflat Concept",
+          "visualStyle": {
+            "imageCount": 1,
+            "compositionType": "flatlay_materials",
+            "subjectDescription": "Craft tool flatlay",
+            "colorPalette": "warm",
+            "humanElement": "hands_only"
+          },
+          "compactHiggsfieldPrompt": "Craft tool flatlay",
+          "typographyOverlay": {
+            "primaryHeadline": "Mastering Crochet with Our Abbreviation Dictionary Tool",
+            "ctaBadgeText": "EXPLORE GUIDE →"
+          },
+          "destinationUrl": "https://welovepattern.com/blog/mastering-crochet-with-our-abbreviation-dictionary-tool",
+          "publishStatus": "pending"
+        }
+      ],
       "stage": "failed",
       "requiresApproval": false,
       "indexNowNotified": false,
@@ -6369,7 +6942,44 @@
         "discoveredAt": "2026-10-03T00:00:32.360Z",
         "status": "discovered"
       },
-      "pinterestPins": [],
+      "pinterestPins": [
+        {
+          "pinNumber": 1,
+          "conceptAngle": "Primary Craft Concept",
+          "visualStyle": {
+            "imageCount": 1,
+            "compositionType": "single_hero",
+            "subjectDescription": "Craft tool",
+            "colorPalette": "natural",
+            "humanElement": "none"
+          },
+          "compactHiggsfieldPrompt": "Craft tool in action",
+          "typographyOverlay": {
+            "primaryHeadline": "Mastering Foundation Single Crochet: No Chain Needed",
+            "ctaBadgeText": "EXPLORE GUIDE →"
+          },
+          "destinationUrl": "https://welovepattern.com/blog/mastering-foundation-single-crochet-no-chain-needed",
+          "publishStatus": "pending"
+        },
+        {
+          "pinNumber": 2,
+          "conceptAngle": "Technical Layflat Concept",
+          "visualStyle": {
+            "imageCount": 1,
+            "compositionType": "flatlay_materials",
+            "subjectDescription": "Craft tool flatlay",
+            "colorPalette": "warm",
+            "humanElement": "hands_only"
+          },
+          "compactHiggsfieldPrompt": "Craft tool flatlay",
+          "typographyOverlay": {
+            "primaryHeadline": "Mastering Foundation Single Crochet: No Chain Needed",
+            "ctaBadgeText": "EXPLORE GUIDE →"
+          },
+          "destinationUrl": "https://welovepattern.com/blog/mastering-foundation-single-crochet-no-chain-needed",
+          "publishStatus": "pending"
+        }
+      ],
       "stage": "failed",
       "requiresApproval": false,
       "indexNowNotified": false,
@@ -6566,8 +7176,61 @@
         "discoveredAt": "2026-10-03T00:00:27.541Z",
         "status": "discovered"
       },
-      "pinterestPins": [],
-      "stage": "failed",
+      "pinterestPins": [
+        {
+          "pinNumber": 1,
+          "conceptAngle": "Primary Craft Concept",
+          "visualStyle": {
+            "imageCount": 1,
+            "compositionType": "single_hero",
+            "subjectDescription": "Craft tool",
+            "colorPalette": "natural",
+            "humanElement": "none"
+          },
+          "compactHiggsfieldPrompt": "Craft tool in action",
+          "typographyOverlay": {
+            "primaryHeadline": "Mastering Your Crochet Projects with an Online Stitch Counter",
+            "ctaBadgeText": "EXPLORE GUIDE →"
+          },
+          "destinationUrl": "https://welovepattern.com/blog/mastering-your-crochet-projects-with-an-online-stitch-counter",
+          "publishStatus": "image_ready",
+          "stableAssetPath": "/app/applet/public/generated/pinterest/seo-pins/mastering-crochet-with-our-online-stitch-5dec2bd6a6.jpg",
+          "stablePublicUrl": "/generated/pinterest/seo-pins/mastering-crochet-with-our-online-stitch-5dec2bd6a6.jpg",
+          "assignedSlotTime": "16:30",
+          "scheduledTime": "16:30",
+          "targetBoardId": "board_tools",
+          "targetBoardName": "Crochet Tools & Yarn Calculators",
+          "boardName": "Crochet Tools & Yarn Calculators",
+          "pinTitle": "Mastering Crochet with an Online Stitch Counter Tool"
+        },
+        {
+          "pinNumber": 2,
+          "conceptAngle": "Technical Layflat Concept",
+          "visualStyle": {
+            "imageCount": 1,
+            "compositionType": "flatlay_materials",
+            "subjectDescription": "Craft tool flatlay",
+            "colorPalette": "warm",
+            "humanElement": "hands_only"
+          },
+          "compactHiggsfieldPrompt": "Craft tool flatlay",
+          "typographyOverlay": {
+            "primaryHeadline": "Mastering Your Crochet Projects with an Online Stitch Counter",
+            "ctaBadgeText": "EXPLORE GUIDE →"
+          },
+          "destinationUrl": "https://welovepattern.com/blog/mastering-your-crochet-projects-with-an-online-stitch-counter",
+          "publishStatus": "image_ready",
+          "stableAssetPath": "/app/applet/public/generated/pinterest/seo-pins/mastering-crochet-with-our-online-stitch-9a57400e28.jpg",
+          "stablePublicUrl": "/generated/pinterest/seo-pins/mastering-crochet-with-our-online-stitch-9a57400e28.jpg",
+          "assignedSlotTime": "17:00",
+          "scheduledTime": "17:00",
+          "targetBoardId": "board_tools",
+          "targetBoardName": "Crochet Tools & Yarn Calculators",
+          "boardName": "Crochet Tools & Yarn Calculators",
+          "pinTitle": "Free Online Crochet Stitch Counter: Track Every Row Accurately"
+        }
+      ],
+      "stage": "awaiting_approval",
       "requiresApproval": false,
       "indexNowNotified": false,
       "createdAt": "2026-10-03T00:00:32.392Z",
@@ -6607,6 +7270,16 @@
           "timestamp": "2026-10-03T00:01:32.472Z",
           "level": "error",
           "message": "Pinterest Board Selection Paused: Low confidence semantic match (10/100) for topic \"stitch counter online\" with board \"Accessories Crochet\". Operator decision required."
+        },
+        {
+          "timestamp": "2026-10-11T17:40:26.841Z",
+          "level": "info",
+          "message": "[AssetRecovery] All 3 visual assets recovered locally ($0 cost). Job transitioned from failed to awaiting_approval."
+        },
+        {
+          "timestamp": "2026-10-12T20:37:27.218Z",
+          "level": "info",
+          "message": "[SchedulerPreparation] Pre-assigned to Article Slot 3 (16:00 EDT) on 2026-10-13. Pins assigned to 16:30 & 17:00 EDT."
         }
       ],
       "factualResearch": {
@@ -6718,8 +7391,18 @@
           "title": "Online Stitch Counter: Your Crochet Companion",
           "description": "Learn how an online stitch counter can improve accuracy in crochet projects effortlessly.",
           "keywords": "stitch counter online, crochet tool, crochet stitch tracking, online stitch counter"
+        },
+        "heroImage": {
+          "prompt": "Recovered craft photography hero image",
+          "compactPrompt": "Recovered craft photography hero image",
+          "stableAssetPath": "/app/applet/public/generated/blog/mastering-crochet-with-our-online-stitch-431a461a51.jpg",
+          "stablePublicUrl": "/generated/blog/mastering-crochet-with-our-online-stitch-431a461a51.jpg",
+          "status": "ready"
         }
-      }
+      },
+      "assignedPublishDate": "2026-10-13",
+      "assignedSlotTime": "16:00",
+      "publicationScheduledAt": "16:00"
     },
     {
       "id": "job_2026-10-03_rt5qj0",
@@ -6746,7 +7429,44 @@
         "discoveredAt": "2026-10-03T12:00:44.272Z",
         "status": "discovered"
       },
-      "pinterestPins": [],
+      "pinterestPins": [
+        {
+          "pinNumber": 1,
+          "conceptAngle": "Primary Craft Concept",
+          "visualStyle": {
+            "imageCount": 1,
+            "compositionType": "single_hero",
+            "subjectDescription": "Craft tool",
+            "colorPalette": "natural",
+            "humanElement": "none"
+          },
+          "compactHiggsfieldPrompt": "Craft tool in action",
+          "typographyOverlay": {
+            "primaryHeadline": "Beginner-Friendly Fall Crochet Projects to Try Now",
+            "ctaBadgeText": "EXPLORE GUIDE →"
+          },
+          "destinationUrl": "https://welovepattern.com/blog/beginner-friendly-fall-crochet-projects-to-try-now",
+          "publishStatus": "pending"
+        },
+        {
+          "pinNumber": 2,
+          "conceptAngle": "Technical Layflat Concept",
+          "visualStyle": {
+            "imageCount": 1,
+            "compositionType": "flatlay_materials",
+            "subjectDescription": "Craft tool flatlay",
+            "colorPalette": "warm",
+            "humanElement": "hands_only"
+          },
+          "compactHiggsfieldPrompt": "Craft tool flatlay",
+          "typographyOverlay": {
+            "primaryHeadline": "Beginner-Friendly Fall Crochet Projects to Try Now",
+            "ctaBadgeText": "EXPLORE GUIDE →"
+          },
+          "destinationUrl": "https://welovepattern.com/blog/beginner-friendly-fall-crochet-projects-to-try-now",
+          "publishStatus": "pending"
+        }
+      ],
       "stage": "failed",
       "requiresApproval": false,
       "indexNowNotified": false,
@@ -6945,7 +7665,44 @@
         "discoveredAt": "2026-10-03T12:00:40.110Z",
         "status": "discovered"
       },
-      "pinterestPins": [],
+      "pinterestPins": [
+        {
+          "pinNumber": 1,
+          "conceptAngle": "Primary Craft Concept",
+          "visualStyle": {
+            "imageCount": 1,
+            "compositionType": "single_hero",
+            "subjectDescription": "Craft tool",
+            "colorPalette": "natural",
+            "humanElement": "none"
+          },
+          "compactHiggsfieldPrompt": "Craft tool in action",
+          "typographyOverlay": {
+            "primaryHeadline": "Mastering Yarn Weight Conversion for Crochet Projects",
+            "ctaBadgeText": "EXPLORE GUIDE →"
+          },
+          "destinationUrl": "https://welovepattern.com/blog/mastering-yarn-weight-conversion-for-crochet-projects",
+          "publishStatus": "pending"
+        },
+        {
+          "pinNumber": 2,
+          "conceptAngle": "Technical Layflat Concept",
+          "visualStyle": {
+            "imageCount": 1,
+            "compositionType": "flatlay_materials",
+            "subjectDescription": "Craft tool flatlay",
+            "colorPalette": "warm",
+            "humanElement": "hands_only"
+          },
+          "compactHiggsfieldPrompt": "Craft tool flatlay",
+          "typographyOverlay": {
+            "primaryHeadline": "Mastering Yarn Weight Conversion for Crochet Projects",
+            "ctaBadgeText": "EXPLORE GUIDE →"
+          },
+          "destinationUrl": "https://welovepattern.com/blog/mastering-yarn-weight-conversion-for-crochet-projects",
+          "publishStatus": "pending"
+        }
+      ],
       "stage": "failed",
       "requiresApproval": false,
       "indexNowNotified": false,
@@ -7165,7 +7922,7 @@
           "boardName": "Unassigned (No Matching Board)",
           "publishStatus": "image_ready",
           "higgsfieldRequestId": "fcd9282a-be4f-4712-8a84-3956e93c2381",
-          "stableAssetPath": "/www/wwwroot/welovepattern.com/public/generated/pinterest/seo-pins/mastering-even-crochet-edges-for-perfect-d04bc6d6d1.jpg",
+          "stableAssetPath": "/app/applet/public/generated/pinterest/seo-pins/mastering-even-crochet-edges-for-perfect-d04bc6d6d1.jpg",
           "stablePublicUrl": "/generated/pinterest/seo-pins/mastering-even-crochet-edges-for-perfect-d04bc6d6d1.jpg"
         },
         {
@@ -7401,8 +8158,7 @@
         "heroImage": {
           "prompt": "Authentic close-up artisan craft photography for \"Mastering Even Crochet Edges for Perfect Projects\". Maker hands gently working intricate crochet stitches with premium textured yarn, natural wooden hook, soft morning studio light, shallow depth of field, warm cozy maker vibe, immaculate stitch definition, high resolution, organic craft publication aesthetic.",
           "compactPrompt": "Authentic close-up artisan craft photography for \"Mastering Even Crochet Edges for Perfect Projects\". Maker hands gently working intricate crochet stitches with premium textured yarn, natural wooden hook, soft morning studio light, shallow depth of field, warm cozy maker vibe, immaculate stitch definition, high resolution, organic craft publication aesthetic.",
-          "higgsfieldRequestId": "4d9f6fc0-de54-4af1-a6f2-9fff5a3b2585",
-          "stableAssetPath": "/www/wwwroot/welovepattern.com/public/generated/blog/mastering-even-crochet-edges-for-perfect-6dc2c4f877.jpg",
+          "stableAssetPath": "/app/applet/public/generated/blog/mastering-even-crochet-edges-for-perfect-6dc2c4f877.jpg",
           "stablePublicUrl": "/generated/blog/mastering-even-crochet-edges-for-perfect-6dc2c4f877.jpg",
           "status": "ready"
         }
@@ -7653,8 +8409,7 @@
         "heroImage": {
           "prompt": "Editorial craft flatlay photography for crochet article \"Convert Knitting Needle Sizes: MM to US Guide\". Neatly arranged natural wool yarn skeins, smooth birch wooden crochet hooks, a flexible cloth measuring tape, and a crisp textured gauge swatch on a clean warm linen background. Soft diffused natural window light, warm neutral tones, organic cozy maker workspace, 8k resolution, authentic artisan photography, zero digital noise.",
           "compactPrompt": "Editorial craft flatlay photography for crochet article \"Convert Knitting Needle Sizes: MM to US Guide\". Neatly arranged natural wool yarn skeins, smooth birch wooden crochet hooks, a flexible cloth measuring tape, and a crisp textured gauge swatch on a clean warm linen background. Soft diffused natural window light, warm neutral tones, organic cozy maker workspace, 8k resolution, authentic artisan photography, zero digital noise.",
-          "higgsfieldRequestId": "35d1ab98-8682-4b58-af22-ea55c59ce705",
-          "stableAssetPath": "/www/wwwroot/welovepattern.com/public/generated/blog/convert-knitting-needle-sizes-mm-to-us-g-89ff11b4a2.jpg",
+          "stableAssetPath": "/app/applet/public/generated/blog/convert-knitting-needle-sizes-mm-to-us-g-89ff11b4a2.jpg",
           "stablePublicUrl": "/generated/blog/convert-knitting-needle-sizes-mm-to-us-g-89ff11b4a2.jpg",
           "status": "ready"
         }
@@ -7956,10 +8711,12 @@
             "textContainerStyle": "none_direct_photo"
           },
           "destinationUrl": "https://welovepattern.com/blog/master-your-crochet-blanket-borders-with-our-calculator",
-          "targetBoardId": "",
-          "targetBoardName": "Unassigned (No Matching Board)",
-          "boardName": "Unassigned (No Matching Board)",
-          "publishStatus": "pending"
+          "targetBoardId": "board_tools",
+          "targetBoardName": "Crochet Tools & Yarn Calculators",
+          "boardName": "Crochet Tools & Yarn Calculators",
+          "publishStatus": "image_ready",
+          "stableAssetPath": "/app/applet/public/generated/pinterest/seo-pins/crochet-blanket-border-calculator-accura-d9574b01b9.jpg",
+          "stablePublicUrl": "/generated/pinterest/seo-pins/crochet-blanket-border-calculator-accura-d9574b01b9.jpg"
         },
         {
           "pinNumber": 2,
@@ -7978,13 +8735,15 @@
             "textContainerStyle": "environmental_negative_space"
           },
           "destinationUrl": "https://welovepattern.com/blog/master-your-crochet-blanket-borders-with-our-calculator",
-          "targetBoardId": "",
-          "targetBoardName": "Unassigned (No Matching Board)",
-          "boardName": "Unassigned (No Matching Board)",
-          "publishStatus": "pending"
+          "targetBoardId": "board_tools",
+          "targetBoardName": "Crochet Tools & Yarn Calculators",
+          "boardName": "Crochet Tools & Yarn Calculators",
+          "publishStatus": "image_ready",
+          "stableAssetPath": "/app/applet/public/generated/pinterest/seo-pins/crochet-blanket-border-calculator-accura-f2847c3b96.jpg",
+          "stablePublicUrl": "/generated/pinterest/seo-pins/crochet-blanket-border-calculator-accura-f2847c3b96.jpg"
         }
       ],
-      "stage": "failed",
+      "stage": "awaiting_approval",
       "requiresApproval": false,
       "indexNowNotified": false,
       "createdAt": "2026-10-04T12:00:35.875Z",
@@ -8034,6 +8793,11 @@
           "timestamp": "2026-10-04T12:01:38.854Z",
           "level": "error",
           "message": "Hero Image Generation Failed: Your credit balance is too low to complete this request. Please top up your balance and try again. (Request ID: fb00c9db-ea36-41dc-9b2c-f53869c30960)"
+        },
+        {
+          "timestamp": "2026-10-11T17:40:26.844Z",
+          "level": "info",
+          "message": "[AssetRecovery] All 3 visual assets recovered locally ($0 cost). Job transitioned from failed to awaiting_approval."
         }
       ],
       "factualResearch": {
@@ -8174,9 +8938,9 @@
         "heroImage": {
           "prompt": "Editorial craft flatlay photography for crochet article \"Master Your Crochet Blanket Borders with Our Calculator\". Neatly arranged natural wool yarn skeins, smooth birch wooden crochet hooks, a flexible cloth measuring tape, and a crisp textured gauge swatch on a clean warm linen background. Soft diffused natural window light, warm neutral tones, organic cozy maker workspace, 8k resolution, authentic artisan photography, zero digital noise.",
           "compactPrompt": "Editorial craft flatlay photography for crochet article \"Master Your Crochet Blanket Borders with Our Calculator\". Neatly arranged natural wool yarn skeins, smooth birch wooden crochet hooks, a flexible cloth measuring tape, and a crisp textured gauge swatch on a clean warm linen background. Soft diffused natural window light, warm neutral tones, organic cozy maker workspace, 8k resolution, authentic artisan photography, zero digital noise.",
-          "status": "failed",
-          "higgsfieldRequestId": "fb00c9db-ea36-41dc-9b2c-f53869c30960",
-          "errorMessage": "Your credit balance is too low to complete this request. Please top up your balance and try again."
+          "stableAssetPath": "/app/applet/public/generated/blog/crochet-blanket-border-calculator-accura-23758683d7.jpg",
+          "stablePublicUrl": "/generated/blog/crochet-blanket-border-calculator-accura-23758683d7.jpg",
+          "status": "ready"
         }
       }
     },
@@ -8223,9 +8987,9 @@
           "targetBoardId": "1148488411165286195",
           "targetBoardName": "Animals Crochet",
           "boardName": "Animals Crochet",
-          "publishStatus": "published",
+          "publishStatus": "image_ready",
           "higgsfieldRequestId": "0c9f624a-157b-4e4b-90f2-26847e9ec5b6",
-          "stableAssetPath": "/www/wwwroot/welovepattern.com/public/generated/pinterest/seo-pins/how-to-fix-crochet-gaps-in-amigurumi-a-c-06f73f60b7.jpg",
+          "stableAssetPath": "/app/applet/public/generated/pinterest/seo-pins/how-to-fix-crochet-gaps-in-amigurumi-a-c-06f73f60b7.jpg",
           "stablePublicUrl": "/generated/pinterest/seo-pins/how-to-fix-crochet-gaps-in-amigurumi-a-c-06f73f60b7.jpg",
           "pinterestPinId": "1148488342518941688",
           "scheduledTime": "09:00",
@@ -8251,9 +9015,9 @@
           "targetBoardId": "1148488411165286195",
           "targetBoardName": "Animals Crochet",
           "boardName": "Animals Crochet",
-          "publishStatus": "published",
+          "publishStatus": "image_ready",
           "higgsfieldRequestId": "ead32a08-7edb-4503-aea0-da270fef9eb6",
-          "stableAssetPath": "/www/wwwroot/welovepattern.com/public/generated/pinterest/seo-pins/how-to-fix-crochet-gaps-in-amigurumi-a-c-1f3705a305.jpg",
+          "stableAssetPath": "/app/applet/public/generated/pinterest/seo-pins/how-to-fix-crochet-gaps-in-amigurumi-a-c-1f3705a305.jpg",
           "stablePublicUrl": "/generated/pinterest/seo-pins/how-to-fix-crochet-gaps-in-amigurumi-a-c-1f3705a305.jpg",
           "pinterestPinId": "1148488342518960079",
           "scheduledTime": "13:00",
@@ -8469,8 +9233,7 @@
         "heroImage": {
           "prompt": "Authentic close-up artisan craft photography for \"How to Fix Crochet Gaps in Amigurumi: A Complete Guide\". Maker hands gently working intricate crochet stitches with premium textured yarn, natural wooden hook, soft morning studio light, shallow depth of field, warm cozy maker vibe, immaculate stitch definition, high resolution, organic craft publication aesthetic.",
           "compactPrompt": "Authentic close-up artisan craft photography for \"How to Fix Crochet Gaps in Amigurumi: A Complete Guide\". Maker hands gently working intricate crochet stitches with premium textured yarn, natural wooden hook, soft morning studio light, shallow depth of field, warm cozy maker vibe, immaculate stitch definition, high resolution, organic craft publication aesthetic.",
-          "higgsfieldRequestId": "1ef5445b-7d88-4ddd-a544-5bd5502f1e27",
-          "stableAssetPath": "/www/wwwroot/welovepattern.com/public/generated/blog/how-to-fix-crochet-gaps-in-amigurumi-a-c-317049ea7b.jpg",
+          "stableAssetPath": "/app/applet/public/generated/blog/how-to-fix-crochet-gaps-in-amigurumi-a-c-317049ea7b.jpg",
           "stablePublicUrl": "/generated/blog/how-to-fix-crochet-gaps-in-amigurumi-a-c-317049ea7b.jpg",
           "status": "ready"
         }
@@ -8535,7 +9298,7 @@
           "boardName": "Unassigned (No Matching Board)",
           "publishStatus": "image_ready",
           "higgsfieldRequestId": "75ba4b6f-e322-4ad0-ab22-74109d242e77",
-          "stableAssetPath": "/www/wwwroot/welovepattern.com/public/generated/pinterest/seo-pins/mastering-yarn-costs-with-our-yarn-cost--909d712a1f.jpg",
+          "stableAssetPath": "/app/applet/public/generated/pinterest/seo-pins/mastering-yarn-costs-with-our-yarn-cost--909d712a1f.jpg",
           "stablePublicUrl": "/generated/pinterest/seo-pins/mastering-yarn-costs-with-our-yarn-cost--909d712a1f.jpg"
         },
         {
@@ -8560,7 +9323,7 @@
           "boardName": "Unassigned (No Matching Board)",
           "publishStatus": "image_ready",
           "higgsfieldRequestId": "48f1ef25-99a9-4fcd-bde0-0bb5ae8e7914",
-          "stableAssetPath": "/www/wwwroot/welovepattern.com/public/generated/pinterest/seo-pins/mastering-yarn-costs-with-our-yarn-cost--4987f13310.jpg",
+          "stableAssetPath": "/app/applet/public/generated/pinterest/seo-pins/mastering-yarn-costs-with-our-yarn-cost--4987f13310.jpg",
           "stablePublicUrl": "/generated/pinterest/seo-pins/mastering-yarn-costs-with-our-yarn-cost--4987f13310.jpg"
         }
       ],
@@ -8765,8 +9528,7 @@
         "heroImage": {
           "prompt": "Editorial craft flatlay photography for crochet article \"Mastering Yarn Costs with Our Yarn Cost Calculator Tool\". Neatly arranged natural wool yarn skeins, smooth birch wooden crochet hooks, a flexible cloth measuring tape, and a crisp textured gauge swatch on a clean warm linen background. Soft diffused natural window light, warm neutral tones, organic cozy maker workspace, 8k resolution, authentic artisan photography, zero digital noise.",
           "compactPrompt": "Editorial craft flatlay photography for crochet article \"Mastering Yarn Costs with Our Yarn Cost Calculator Tool\". Neatly arranged natural wool yarn skeins, smooth birch wooden crochet hooks, a flexible cloth measuring tape, and a crisp textured gauge swatch on a clean warm linen background. Soft diffused natural window light, warm neutral tones, organic cozy maker workspace, 8k resolution, authentic artisan photography, zero digital noise.",
-          "higgsfieldRequestId": "2f1fac92-6f28-4461-8874-2bcef3f041f5",
-          "stableAssetPath": "/www/wwwroot/welovepattern.com/public/generated/blog/mastering-yarn-costs-with-our-yarn-cost--5bfb9c13ff.jpg",
+          "stableAssetPath": "/app/applet/public/generated/blog/mastering-yarn-costs-with-our-yarn-cost--5bfb9c13ff.jpg",
           "stablePublicUrl": "/generated/blog/mastering-yarn-costs-with-our-yarn-cost--5bfb9c13ff.jpg",
           "status": "ready"
         }
@@ -8807,7 +9569,44 @@
         "discoveredAt": "2026-10-05T21:42:29.780Z",
         "status": "discovered"
       },
-      "pinterestPins": [],
+      "pinterestPins": [
+        {
+          "pinNumber": 1,
+          "conceptAngle": "Primary Craft Concept",
+          "visualStyle": {
+            "imageCount": 1,
+            "compositionType": "single_hero",
+            "subjectDescription": "Craft tool",
+            "colorPalette": "natural",
+            "humanElement": "none"
+          },
+          "compactHiggsfieldPrompt": "Craft tool in action",
+          "typographyOverlay": {
+            "primaryHeadline": "crochet christmas tree ornament pattern",
+            "ctaBadgeText": "EXPLORE GUIDE →"
+          },
+          "destinationUrl": "https://welovepattern.com/blog/",
+          "publishStatus": "pending"
+        },
+        {
+          "pinNumber": 2,
+          "conceptAngle": "Technical Layflat Concept",
+          "visualStyle": {
+            "imageCount": 1,
+            "compositionType": "flatlay_materials",
+            "subjectDescription": "Craft tool flatlay",
+            "colorPalette": "warm",
+            "humanElement": "hands_only"
+          },
+          "compactHiggsfieldPrompt": "Craft tool flatlay",
+          "typographyOverlay": {
+            "primaryHeadline": "crochet christmas tree ornament pattern",
+            "ctaBadgeText": "EXPLORE GUIDE →"
+          },
+          "destinationUrl": "https://welovepattern.com/blog/",
+          "publishStatus": "pending"
+        }
+      ],
       "stage": "failed",
       "requiresApproval": false,
       "indexNowNotified": false,
@@ -8955,7 +9754,44 @@
         "discoveredAt": "2026-10-05T21:42:29.788Z",
         "status": "discovered"
       },
-      "pinterestPins": [],
+      "pinterestPins": [
+        {
+          "pinNumber": 1,
+          "conceptAngle": "Primary Craft Concept",
+          "visualStyle": {
+            "imageCount": 1,
+            "compositionType": "single_hero",
+            "subjectDescription": "Craft tool",
+            "colorPalette": "natural",
+            "humanElement": "none"
+          },
+          "compactHiggsfieldPrompt": "Craft tool in action",
+          "typographyOverlay": {
+            "primaryHeadline": "yarn substitute finder",
+            "ctaBadgeText": "EXPLORE GUIDE →"
+          },
+          "destinationUrl": "https://welovepattern.com/blog/",
+          "publishStatus": "pending"
+        },
+        {
+          "pinNumber": 2,
+          "conceptAngle": "Technical Layflat Concept",
+          "visualStyle": {
+            "imageCount": 1,
+            "compositionType": "flatlay_materials",
+            "subjectDescription": "Craft tool flatlay",
+            "colorPalette": "warm",
+            "humanElement": "hands_only"
+          },
+          "compactHiggsfieldPrompt": "Craft tool flatlay",
+          "typographyOverlay": {
+            "primaryHeadline": "yarn substitute finder",
+            "ctaBadgeText": "EXPLORE GUIDE →"
+          },
+          "destinationUrl": "https://welovepattern.com/blog/",
+          "publishStatus": "pending"
+        }
+      ],
       "stage": "failed",
       "requiresApproval": false,
       "indexNowNotified": false,
@@ -9102,7 +9938,44 @@
         "discoveredAt": "2026-10-05T21:42:52.758Z",
         "status": "discovered"
       },
-      "pinterestPins": [],
+      "pinterestPins": [
+        {
+          "pinNumber": 1,
+          "conceptAngle": "Primary Craft Concept",
+          "visualStyle": {
+            "imageCount": 1,
+            "compositionType": "single_hero",
+            "subjectDescription": "Craft tool",
+            "colorPalette": "natural",
+            "humanElement": "none"
+          },
+          "compactHiggsfieldPrompt": "Craft tool in action",
+          "typographyOverlay": {
+            "primaryHeadline": "crochet autumn leaf pattern",
+            "ctaBadgeText": "EXPLORE GUIDE →"
+          },
+          "destinationUrl": "https://welovepattern.com/blog/",
+          "publishStatus": "pending"
+        },
+        {
+          "pinNumber": 2,
+          "conceptAngle": "Technical Layflat Concept",
+          "visualStyle": {
+            "imageCount": 1,
+            "compositionType": "flatlay_materials",
+            "subjectDescription": "Craft tool flatlay",
+            "colorPalette": "warm",
+            "humanElement": "hands_only"
+          },
+          "compactHiggsfieldPrompt": "Craft tool flatlay",
+          "typographyOverlay": {
+            "primaryHeadline": "crochet autumn leaf pattern",
+            "ctaBadgeText": "EXPLORE GUIDE →"
+          },
+          "destinationUrl": "https://welovepattern.com/blog/",
+          "publishStatus": "pending"
+        }
+      ],
       "stage": "failed",
       "requiresApproval": false,
       "indexNowNotified": false,
@@ -9244,7 +10117,44 @@
         "discoveredAt": "2026-10-05T21:42:52.767Z",
         "status": "discovered"
       },
-      "pinterestPins": [],
+      "pinterestPins": [
+        {
+          "pinNumber": 1,
+          "conceptAngle": "Primary Craft Concept",
+          "visualStyle": {
+            "imageCount": 1,
+            "compositionType": "single_hero",
+            "subjectDescription": "Craft tool",
+            "colorPalette": "natural",
+            "humanElement": "none"
+          },
+          "compactHiggsfieldPrompt": "Craft tool in action",
+          "typographyOverlay": {
+            "primaryHeadline": "crochet pattern difficulty checker",
+            "ctaBadgeText": "EXPLORE GUIDE →"
+          },
+          "destinationUrl": "https://welovepattern.com/blog/",
+          "publishStatus": "pending"
+        },
+        {
+          "pinNumber": 2,
+          "conceptAngle": "Technical Layflat Concept",
+          "visualStyle": {
+            "imageCount": 1,
+            "compositionType": "flatlay_materials",
+            "subjectDescription": "Craft tool flatlay",
+            "colorPalette": "warm",
+            "humanElement": "hands_only"
+          },
+          "compactHiggsfieldPrompt": "Craft tool flatlay",
+          "typographyOverlay": {
+            "primaryHeadline": "crochet pattern difficulty checker",
+            "ctaBadgeText": "EXPLORE GUIDE →"
+          },
+          "destinationUrl": "https://welovepattern.com/blog/",
+          "publishStatus": "pending"
+        }
+      ],
       "stage": "failed",
       "requiresApproval": false,
       "indexNowNotified": false,
@@ -9391,7 +10301,44 @@
         "discoveredAt": "2026-10-05T21:55:48.431Z",
         "status": "discovered"
       },
-      "pinterestPins": [],
+      "pinterestPins": [
+        {
+          "pinNumber": 1,
+          "conceptAngle": "Primary Craft Concept",
+          "visualStyle": {
+            "imageCount": 1,
+            "compositionType": "single_hero",
+            "subjectDescription": "Craft tool",
+            "colorPalette": "natural",
+            "humanElement": "none"
+          },
+          "compactHiggsfieldPrompt": "Craft tool in action",
+          "typographyOverlay": {
+            "primaryHeadline": "how to fix leaning crochet stitches in the round",
+            "ctaBadgeText": "EXPLORE GUIDE →"
+          },
+          "destinationUrl": "https://welovepattern.com/blog/",
+          "publishStatus": "pending"
+        },
+        {
+          "pinNumber": 2,
+          "conceptAngle": "Technical Layflat Concept",
+          "visualStyle": {
+            "imageCount": 1,
+            "compositionType": "flatlay_materials",
+            "subjectDescription": "Craft tool flatlay",
+            "colorPalette": "warm",
+            "humanElement": "hands_only"
+          },
+          "compactHiggsfieldPrompt": "Craft tool flatlay",
+          "typographyOverlay": {
+            "primaryHeadline": "how to fix leaning crochet stitches in the round",
+            "ctaBadgeText": "EXPLORE GUIDE →"
+          },
+          "destinationUrl": "https://welovepattern.com/blog/",
+          "publishStatus": "pending"
+        }
+      ],
       "stage": "failed",
       "requiresApproval": false,
       "indexNowNotified": false,
@@ -9539,7 +10486,44 @@
         "discoveredAt": "2026-10-05T21:55:48.440Z",
         "status": "discovered"
       },
-      "pinterestPins": [],
+      "pinterestPins": [
+        {
+          "pinNumber": 1,
+          "conceptAngle": "Primary Craft Concept",
+          "visualStyle": {
+            "imageCount": 1,
+            "compositionType": "single_hero",
+            "subjectDescription": "Craft tool",
+            "colorPalette": "natural",
+            "humanElement": "none"
+          },
+          "compactHiggsfieldPrompt": "Craft tool in action",
+          "typographyOverlay": {
+            "primaryHeadline": "organize crochet patterns pdf",
+            "ctaBadgeText": "EXPLORE GUIDE →"
+          },
+          "destinationUrl": "https://welovepattern.com/blog/",
+          "publishStatus": "pending"
+        },
+        {
+          "pinNumber": 2,
+          "conceptAngle": "Technical Layflat Concept",
+          "visualStyle": {
+            "imageCount": 1,
+            "compositionType": "flatlay_materials",
+            "subjectDescription": "Craft tool flatlay",
+            "colorPalette": "warm",
+            "humanElement": "hands_only"
+          },
+          "compactHiggsfieldPrompt": "Craft tool flatlay",
+          "typographyOverlay": {
+            "primaryHeadline": "organize crochet patterns pdf",
+            "ctaBadgeText": "EXPLORE GUIDE →"
+          },
+          "destinationUrl": "https://welovepattern.com/blog/",
+          "publishStatus": "pending"
+        }
+      ],
       "stage": "failed",
       "requiresApproval": false,
       "indexNowNotified": false,
@@ -9689,7 +10673,44 @@
         "discoveredAt": "2026-10-05T21:58:24.267Z",
         "status": "discovered"
       },
-      "pinterestPins": [],
+      "pinterestPins": [
+        {
+          "pinNumber": 1,
+          "conceptAngle": "Primary Craft Concept",
+          "visualStyle": {
+            "imageCount": 1,
+            "compositionType": "single_hero",
+            "subjectDescription": "Craft tool",
+            "colorPalette": "natural",
+            "humanElement": "none"
+          },
+          "compactHiggsfieldPrompt": "Craft tool in action",
+          "typographyOverlay": {
+            "primaryHeadline": "easy crochet pumpkin pattern free",
+            "ctaBadgeText": "EXPLORE GUIDE →"
+          },
+          "destinationUrl": "https://welovepattern.com/blog/",
+          "publishStatus": "pending"
+        },
+        {
+          "pinNumber": 2,
+          "conceptAngle": "Technical Layflat Concept",
+          "visualStyle": {
+            "imageCount": 1,
+            "compositionType": "flatlay_materials",
+            "subjectDescription": "Craft tool flatlay",
+            "colorPalette": "warm",
+            "humanElement": "hands_only"
+          },
+          "compactHiggsfieldPrompt": "Craft tool flatlay",
+          "typographyOverlay": {
+            "primaryHeadline": "easy crochet pumpkin pattern free",
+            "ctaBadgeText": "EXPLORE GUIDE →"
+          },
+          "destinationUrl": "https://welovepattern.com/blog/",
+          "publishStatus": "pending"
+        }
+      ],
       "stage": "failed",
       "requiresApproval": false,
       "indexNowNotified": false,
@@ -9837,7 +10858,44 @@
         "discoveredAt": "2026-10-05T21:58:24.278Z",
         "status": "discovered"
       },
-      "pinterestPins": [],
+      "pinterestPins": [
+        {
+          "pinNumber": 1,
+          "conceptAngle": "Primary Craft Concept",
+          "visualStyle": {
+            "imageCount": 1,
+            "compositionType": "single_hero",
+            "subjectDescription": "Craft tool",
+            "colorPalette": "natural",
+            "humanElement": "none"
+          },
+          "compactHiggsfieldPrompt": "Craft tool in action",
+          "typographyOverlay": {
+            "primaryHeadline": "crochet project timer",
+            "ctaBadgeText": "EXPLORE GUIDE →"
+          },
+          "destinationUrl": "https://welovepattern.com/blog/",
+          "publishStatus": "pending"
+        },
+        {
+          "pinNumber": 2,
+          "conceptAngle": "Technical Layflat Concept",
+          "visualStyle": {
+            "imageCount": 1,
+            "compositionType": "flatlay_materials",
+            "subjectDescription": "Craft tool flatlay",
+            "colorPalette": "warm",
+            "humanElement": "hands_only"
+          },
+          "compactHiggsfieldPrompt": "Craft tool flatlay",
+          "typographyOverlay": {
+            "primaryHeadline": "crochet project timer",
+            "ctaBadgeText": "EXPLORE GUIDE →"
+          },
+          "destinationUrl": "https://welovepattern.com/blog/",
+          "publishStatus": "pending"
+        }
+      ],
       "stage": "failed",
       "requiresApproval": false,
       "indexNowNotified": false,
@@ -10353,22 +11411,164 @@
         "discoveredAt": "2026-10-06T11:43:13.161Z",
         "status": "discovered"
       },
-      "pinterestPins": [],
-      "stage": "selected",
+      "pinterestPins": [
+        {
+          "pinNumber": 1,
+          "conceptAngle": "Primary Craft Concept",
+          "visualStyle": {
+            "imageCount": 1,
+            "compositionType": "single_hero",
+            "subjectDescription": "Craft tool",
+            "colorPalette": "natural",
+            "humanElement": "none"
+          },
+          "compactHiggsfieldPrompt": "Craft tool in action",
+          "typographyOverlay": {
+            "primaryHeadline": "how to resize a crochet pattern for different yarn weight",
+            "ctaBadgeText": "EXPLORE GUIDE →"
+          },
+          "destinationUrl": "https://welovepattern.com/blog/",
+          "publishStatus": "pending"
+        },
+        {
+          "pinNumber": 2,
+          "conceptAngle": "Technical Layflat Concept",
+          "visualStyle": {
+            "imageCount": 1,
+            "compositionType": "flatlay_materials",
+            "subjectDescription": "Craft tool flatlay",
+            "colorPalette": "warm",
+            "humanElement": "hands_only"
+          },
+          "compactHiggsfieldPrompt": "Craft tool flatlay",
+          "typographyOverlay": {
+            "primaryHeadline": "how to resize a crochet pattern for different yarn weight",
+            "ctaBadgeText": "EXPLORE GUIDE →"
+          },
+          "destinationUrl": "https://welovepattern.com/blog/",
+          "publishStatus": "pending"
+        }
+      ],
+      "stage": "failed",
       "requiresApproval": false,
       "indexNowNotified": false,
       "createdAt": "2026-10-06T11:43:13.199Z",
-      "updatedAt": "2026-10-06T11:43:13.256Z",
+      "updatedAt": "2026-10-11T17:24:34.435Z",
       "logs": [
         {
           "timestamp": "2026-10-06T11:43:13.199Z",
           "level": "info",
           "message": "Job created for TRENDING_CROCHET (Category: CROCHET): \"how to resize a crochet pattern for different yarn weight\" with opportunity score 78."
+        },
+        {
+          "timestamp": "2026-10-11T17:24:34.384Z",
+          "level": "info",
+          "message": "Starting technical craft research..."
+        },
+        {
+          "timestamp": "2026-10-11T17:24:34.410Z",
+          "level": "info",
+          "message": "Factual research packet validated successfully."
+        },
+        {
+          "timestamp": "2026-10-11T17:24:34.422Z",
+          "level": "info",
+          "message": "Generating article with OpenAI..."
+        },
+        {
+          "timestamp": "2026-10-11T17:24:34.435Z",
+          "level": "error",
+          "message": "OpenAI Generation Error: OPENAI_API_KEY is not configured on the server. Cannot generate article."
         }
       ],
       "assignedPublishDate": "2026-10-06",
       "assignedSlotTime": "08:00",
-      "publicationScheduledAt": "08:00"
+      "publicationScheduledAt": "08:00",
+      "factualResearch": {
+        "topicId": "topic_crochet_686f7720746f",
+        "topic": "how to resize a crochet pattern for different yarn weight",
+        "searchIntent": "Maker search query focused on how to resize a crochet pattern for different yarn weight",
+        "craftType": "crochet",
+        "sourceAuthority": "Craft Yarn Council Technical Standards & WeLovePattern Craft Library",
+        "cycStandardVersion": "CYC 2024 Guidelines",
+        "generatedAt": "2026-10-11T17:24:34.402Z",
+        "verifiedTerminology": [
+          "Gauge Swatch (4x4 inches / 10x10 cm)",
+          "Single Crochet (US sc / UK dc)",
+          "Double Crochet (US dc / UK tr)",
+          "Half Double Crochet (US hdc / UK htr)",
+          "Slip Stitch (sl st)",
+          "Turning Chain (ch)"
+        ],
+        "verifiedMaterials": {
+          "yarnWeights": [
+            "Medium / Worsted (#4)",
+            "Light / DK (#3)"
+          ],
+          "hookSizes": [
+            "5.0 mm (H-8)",
+            "5.5 mm (I-9)",
+            "4.0 mm (G-6)"
+          ],
+          "standardYardages": "Standard projects require 800 - 1,400 meters depending on dimension"
+        },
+        "authorizedPercentages": [
+          10,
+          15,
+          20
+        ],
+        "prohibitedMetrics": [
+          "stitches per skein",
+          "divide stitches by stitches per skein",
+          "arbitrary yards per stitch",
+          "invented mattress or bed sizes",
+          "commercial sales pricing or revenue claims"
+        ],
+        "verifiedFormulas": [
+          {
+            "name": "Area Ratio Swatch Scaling Method",
+            "description": "Calculates total project yardage by scaling the measured yardage consumed by a 4x4 inch blocked swatch to the total project surface area.",
+            "formulaText": "Total Yardage = (Total Project Surface Area / Swatch Surface Area) * Swatch Yardage * 1.10 (safety buffer)",
+            "steps": [
+              "Crochet a 4x4 inch (16 sq in / 100 sq cm) gauge swatch using the project hook and yarn.",
+              "Measure the exact yardage used in the swatch (either by weighing with a gram scale or measuring the yarn before swatching).",
+              "Calculate total project area in square inches (width in inches multiplied by length in inches).",
+              "Divide total project area by swatch area to find the scale multiplier, multiply by swatch yardage, and add 10% to 15% safety buffer for borders, ends, and tension variance."
+            ]
+          }
+        ],
+        "supportedClaims": [
+          "Textured stitches like bobbles, puff stitches, and cables consume substantially more yarn per square inch than flat stitches like single crochet and double crochet.",
+          "A 10% to 15% yardage buffer is essential to prevent running out of yarn before border completion.",
+          "Yarn skeins are sold and measured by weight and yardage/meters, never by a fixed stitch count.",
+          "Dye lot consistency is critical across large surface items to avoid noticeable color demarcation lines."
+        ],
+        "techniqueKeyPoints": [
+          "Always crochet and block a 4x4 inch (10x10 cm) gauge swatch before starting garments or fitted items.",
+          "Yarn requirements increase significantly with textured stitches like waffle stitch or bobbles compared to basic double crochet.",
+          "Tension consistency between rows determines finished project drape and dimensional accuracy."
+        ],
+        "makerPainPoints": [
+          "Running out of yarn on the final border row due to approximate estimation.",
+          "Blanket borders ruffling or curling because stitch count pick-ups along edges are uneven.",
+          "Finished item sizing significantly larger or smaller than pattern specs due to skipped gauge swatching."
+        ],
+        "faqItems": [
+          {
+            "question": "Why is checking your gauge essential for how to resize a crochet pattern for different yarn weight?",
+            "factualAnswer": "Individual crafter tension varies widely. Even with the identical hook and yarn weight, one maker may crochet 12 stitches per 4 inches while another crochets 15 stitches, altering finished dimensions by up to 25%."
+          },
+          {
+            "question": "What is the most common mistake when calculating yarn yardage?",
+            "factualAnswer": "Failing to include a 10% to 15% safety buffer for swatch testing, color changes, and border edging, which often results in running out of dye lot before completion."
+          },
+          {
+            "question": "How do US and UK stitch terms differ for this technique?",
+            "factualAnswer": "US terms name stitches by yarn overs, whereas UK terms name them by loops on the hook. For example, a US single crochet is identical in height and technique to a UK double crochet."
+          }
+        ],
+        "verifiedInternalLinks": []
+      }
     },
     {
       "id": "job_2026-10-06_kjmxwe",
@@ -10393,24 +11593,567 @@
         "discoveredAt": "2026-10-06T11:43:13.169Z",
         "status": "discovered"
       },
-      "pinterestPins": [],
-      "stage": "selected",
+      "pinterestPins": [
+        {
+          "pinNumber": 1,
+          "conceptAngle": "Primary Craft Concept",
+          "visualStyle": {
+            "imageCount": 1,
+            "compositionType": "single_hero",
+            "subjectDescription": "Craft tool",
+            "colorPalette": "natural",
+            "humanElement": "none"
+          },
+          "compactHiggsfieldPrompt": "Craft tool in action",
+          "typographyOverlay": {
+            "primaryHeadline": "online row counter",
+            "ctaBadgeText": "EXPLORE GUIDE →"
+          },
+          "destinationUrl": "https://welovepattern.com/blog/",
+          "publishStatus": "pending"
+        },
+        {
+          "pinNumber": 2,
+          "conceptAngle": "Technical Layflat Concept",
+          "visualStyle": {
+            "imageCount": 1,
+            "compositionType": "flatlay_materials",
+            "subjectDescription": "Craft tool flatlay",
+            "colorPalette": "warm",
+            "humanElement": "hands_only"
+          },
+          "compactHiggsfieldPrompt": "Craft tool flatlay",
+          "typographyOverlay": {
+            "primaryHeadline": "online row counter",
+            "ctaBadgeText": "EXPLORE GUIDE →"
+          },
+          "destinationUrl": "https://welovepattern.com/blog/",
+          "publishStatus": "pending"
+        }
+      ],
+      "stage": "failed",
       "requiresApproval": false,
       "indexNowNotified": false,
       "createdAt": "2026-10-06T11:43:13.226Z",
-      "updatedAt": "2026-10-06T11:43:13.273Z",
+      "updatedAt": "2026-10-11T17:24:34.559Z",
       "logs": [
         {
           "timestamp": "2026-10-06T11:43:13.226Z",
           "level": "info",
           "message": "Job created for TOOL_GUIDE (Category: TOOLS): \"online row counter\" with opportunity score 95."
+        },
+        {
+          "timestamp": "2026-10-11T17:24:34.497Z",
+          "level": "info",
+          "message": "Starting technical craft research..."
+        },
+        {
+          "timestamp": "2026-10-11T17:24:34.526Z",
+          "level": "info",
+          "message": "Factual research packet validated successfully."
+        },
+        {
+          "timestamp": "2026-10-11T17:24:34.541Z",
+          "level": "info",
+          "message": "Generating article with OpenAI..."
+        },
+        {
+          "timestamp": "2026-10-11T17:24:34.559Z",
+          "level": "error",
+          "message": "OpenAI Generation Error: OPENAI_API_KEY is not configured on the server. Cannot generate article."
         }
       ],
       "assignedPublishDate": "2026-10-06",
       "assignedSlotTime": "16:00",
-      "publicationScheduledAt": "16:00"
+      "publicationScheduledAt": "16:00",
+      "factualResearch": {
+        "topicId": "topic_tool_row_counter_6f6e6c69",
+        "topic": "online row counter",
+        "searchIntent": "Maker search query focused on online row counter",
+        "craftType": "crochet",
+        "sourceAuthority": "Craft Yarn Council Technical Standards & WeLovePattern Craft Library",
+        "cycStandardVersion": "CYC 2024 Guidelines",
+        "generatedAt": "2026-10-11T17:24:34.516Z",
+        "verifiedTerminology": [
+          "Gauge Swatch (4x4 inches / 10x10 cm)",
+          "Single Crochet (US sc / UK dc)",
+          "Double Crochet (US dc / UK tr)",
+          "Half Double Crochet (US hdc / UK htr)",
+          "Slip Stitch (sl st)",
+          "Turning Chain (ch)"
+        ],
+        "verifiedMaterials": {
+          "yarnWeights": [
+            "Medium / Worsted (#4)",
+            "Light / DK (#3)"
+          ],
+          "hookSizes": [
+            "5.0 mm (H-8)",
+            "5.5 mm (I-9)",
+            "4.0 mm (G-6)"
+          ],
+          "standardYardages": "Standard projects require 800 - 1,400 meters depending on dimension"
+        },
+        "authorizedPercentages": [
+          10,
+          15,
+          20
+        ],
+        "prohibitedMetrics": [
+          "stitches per skein",
+          "divide stitches by stitches per skein",
+          "arbitrary yards per stitch",
+          "invented mattress or bed sizes",
+          "commercial sales pricing or revenue claims"
+        ],
+        "verifiedFormulas": [
+          {
+            "name": "Area Ratio Swatch Scaling Method",
+            "description": "Calculates total project yardage by scaling the measured yardage consumed by a 4x4 inch blocked swatch to the total project surface area.",
+            "formulaText": "Total Yardage = (Total Project Surface Area / Swatch Surface Area) * Swatch Yardage * 1.10 (safety buffer)",
+            "steps": [
+              "Crochet a 4x4 inch (16 sq in / 100 sq cm) gauge swatch using the project hook and yarn.",
+              "Measure the exact yardage used in the swatch (either by weighing with a gram scale or measuring the yarn before swatching).",
+              "Calculate total project area in square inches (width in inches multiplied by length in inches).",
+              "Divide total project area by swatch area to find the scale multiplier, multiply by swatch yardage, and add 10% to 15% safety buffer for borders, ends, and tension variance."
+            ]
+          }
+        ],
+        "supportedClaims": [
+          "Textured stitches like bobbles, puff stitches, and cables consume substantially more yarn per square inch than flat stitches like single crochet and double crochet.",
+          "A 10% to 15% yardage buffer is essential to prevent running out of yarn before border completion.",
+          "Yarn skeins are sold and measured by weight and yardage/meters, never by a fixed stitch count.",
+          "Dye lot consistency is critical across large surface items to avoid noticeable color demarcation lines."
+        ],
+        "techniqueKeyPoints": [
+          "Always crochet and block a 4x4 inch (10x10 cm) gauge swatch before starting garments or fitted items.",
+          "Yarn requirements increase significantly with textured stitches like waffle stitch or bobbles compared to basic double crochet.",
+          "Tension consistency between rows determines finished project drape and dimensional accuracy."
+        ],
+        "makerPainPoints": [
+          "Running out of yarn on the final border row due to approximate estimation.",
+          "Blanket borders ruffling or curling because stitch count pick-ups along edges are uneven.",
+          "Finished item sizing significantly larger or smaller than pattern specs due to skipped gauge swatching."
+        ],
+        "faqItems": [
+          {
+            "question": "Why is checking your gauge essential for online row counter?",
+            "factualAnswer": "Individual crafter tension varies widely. Even with the identical hook and yarn weight, one maker may crochet 12 stitches per 4 inches while another crochets 15 stitches, altering finished dimensions by up to 25%."
+          },
+          {
+            "question": "What is the most common mistake when calculating yarn yardage?",
+            "factualAnswer": "Failing to include a 10% to 15% safety buffer for swatch testing, color changes, and border edging, which often results in running out of dye lot before completion."
+          },
+          {
+            "question": "How do US and UK stitch terms differ for this technique?",
+            "factualAnswer": "US terms name stitches by yarn overs, whereas UK terms name them by loops on the hook. For example, a US single crochet is identical in height and technique to a UK double crochet."
+          }
+        ],
+        "verifiedInternalLinks": [
+          {
+            "anchorText": "online row counter",
+            "url": "/tools/row-counter",
+            "entityType": "tool"
+          }
+        ],
+        "targetTool": {
+          "id": "row-counter",
+          "slug": "row-counter",
+          "title": "Row Counter",
+          "description": "Offline-ready interactive row counter with audio chime, haptic vibration, reset, and log history.",
+          "icon": "Hash",
+          "category": "Counter",
+          "actionType": "counter",
+          "actionLabel": "Start Counting Rows →",
+          "actionVerb": "Count Rows",
+          "isPopular": true,
+          "isOfflineCapable": true
+        }
+      }
+    },
+    {
+      "id": "job_2026-10-12_npu3g9",
+      "dateScheduled": "2026-10-12",
+      "contentType": "trending_crochet",
+      "category": "crochet",
+      "topic": {
+        "id": "topic_crochet_686f7720746f",
+        "keyword": "how to weave in crochet ends so they never unravel",
+        "contentType": "trending_crochet",
+        "category": "crochet",
+        "source": "problem_trend",
+        "trendScore": 0,
+        "combinedTrendScore": 0,
+        "trendDirection": "stable",
+        "opportunityScore": 74,
+        "targetContentFormat": "tutorial",
+        "targetCategoryUrl": "/categories/tutorials",
+        "targetAudienceLevel": "all_levels",
+        "searchIntentNotes": "Secure 3-way direction weaving technique for slippery yarns and garments.",
+        "discoveredAt": "2026-10-12T20:36:46.765Z",
+        "status": "discovered"
+      },
+      "pinterestPins": [
+        {
+          "pinNumber": 1,
+          "conceptAngle": "Primary Craft Concept",
+          "visualStyle": {
+            "imageCount": 1,
+            "compositionType": "single_hero",
+            "subjectDescription": "Craft tool",
+            "colorPalette": "natural",
+            "humanElement": "none"
+          },
+          "compactHiggsfieldPrompt": "Craft tool in action",
+          "typographyOverlay": {
+            "primaryHeadline": "how to weave in crochet ends so they never unravel",
+            "ctaBadgeText": "EXPLORE GUIDE →"
+          },
+          "destinationUrl": "https://welovepattern.com/blog/",
+          "publishStatus": "pending"
+        },
+        {
+          "pinNumber": 2,
+          "conceptAngle": "Technical Layflat Concept",
+          "visualStyle": {
+            "imageCount": 1,
+            "compositionType": "flatlay_materials",
+            "subjectDescription": "Craft tool flatlay",
+            "colorPalette": "warm",
+            "humanElement": "hands_only"
+          },
+          "compactHiggsfieldPrompt": "Craft tool flatlay",
+          "typographyOverlay": {
+            "primaryHeadline": "how to weave in crochet ends so they never unravel",
+            "ctaBadgeText": "EXPLORE GUIDE →"
+          },
+          "destinationUrl": "https://welovepattern.com/blog/",
+          "publishStatus": "pending"
+        }
+      ],
+      "stage": "failed",
+      "requiresApproval": false,
+      "indexNowNotified": false,
+      "createdAt": "2026-10-12T20:36:46.797Z",
+      "updatedAt": "2026-10-12T20:36:53.063Z",
+      "logs": [
+        {
+          "timestamp": "2026-10-12T20:36:46.797Z",
+          "level": "info",
+          "message": "Job created for TRENDING_CROCHET (Category: CROCHET): \"how to weave in crochet ends so they never unravel\" with opportunity score 74."
+        },
+        {
+          "timestamp": "2026-10-12T20:36:52.874Z",
+          "level": "info",
+          "message": "Starting technical craft research..."
+        },
+        {
+          "timestamp": "2026-10-12T20:36:52.957Z",
+          "level": "info",
+          "message": "Factual research packet validated successfully."
+        },
+        {
+          "timestamp": "2026-10-12T20:36:52.976Z",
+          "level": "info",
+          "message": "Generating article with OpenAI..."
+        },
+        {
+          "timestamp": "2026-10-12T20:36:53.063Z",
+          "level": "error",
+          "message": "OpenAI Generation Error: OPENAI_API_KEY is not configured on the server. Cannot generate article."
+        }
+      ],
+      "assignedPublishDate": "2026-10-12",
+      "assignedSlotTime": "08:00",
+      "publicationScheduledAt": "08:00",
+      "factualResearch": {
+        "topicId": "topic_crochet_686f7720746f",
+        "topic": "how to weave in crochet ends so they never unravel",
+        "searchIntent": "Maker search query focused on how to weave in crochet ends so they never unravel",
+        "craftType": "crochet",
+        "sourceAuthority": "Craft Yarn Council Technical Standards & WeLovePattern Craft Library",
+        "cycStandardVersion": "CYC 2024 Guidelines",
+        "generatedAt": "2026-10-12T20:36:52.914Z",
+        "verifiedTerminology": [
+          "Gauge Swatch (4x4 inches / 10x10 cm)",
+          "Single Crochet (US sc / UK dc)",
+          "Double Crochet (US dc / UK tr)",
+          "Half Double Crochet (US hdc / UK htr)",
+          "Slip Stitch (sl st)",
+          "Turning Chain (ch)"
+        ],
+        "verifiedMaterials": {
+          "yarnWeights": [
+            "Medium / Worsted (#4)",
+            "Light / DK (#3)"
+          ],
+          "hookSizes": [
+            "5.0 mm (H-8)",
+            "5.5 mm (I-9)",
+            "4.0 mm (G-6)"
+          ],
+          "standardYardages": "Standard projects require 800 - 1,400 meters depending on dimension"
+        },
+        "authorizedPercentages": [
+          10,
+          15,
+          20
+        ],
+        "prohibitedMetrics": [
+          "stitches per skein",
+          "divide stitches by stitches per skein",
+          "arbitrary yards per stitch",
+          "invented mattress or bed sizes",
+          "commercial sales pricing or revenue claims"
+        ],
+        "verifiedFormulas": [
+          {
+            "name": "Area Ratio Swatch Scaling Method",
+            "description": "Calculates total project yardage by scaling the measured yardage consumed by a 4x4 inch blocked swatch to the total project surface area.",
+            "formulaText": "Total Yardage = (Total Project Surface Area / Swatch Surface Area) * Swatch Yardage * 1.10 (safety buffer)",
+            "steps": [
+              "Crochet a 4x4 inch (16 sq in / 100 sq cm) gauge swatch using the project hook and yarn.",
+              "Measure the exact yardage used in the swatch (either by weighing with a gram scale or measuring the yarn before swatching).",
+              "Calculate total project area in square inches (width in inches multiplied by length in inches).",
+              "Divide total project area by swatch area to find the scale multiplier, multiply by swatch yardage, and add 10% to 15% safety buffer for borders, ends, and tension variance."
+            ]
+          }
+        ],
+        "supportedClaims": [
+          "Textured stitches like bobbles, puff stitches, and cables consume substantially more yarn per square inch than flat stitches like single crochet and double crochet.",
+          "A 10% to 15% yardage buffer is essential to prevent running out of yarn before border completion.",
+          "Yarn skeins are sold and measured by weight and yardage/meters, never by a fixed stitch count.",
+          "Dye lot consistency is critical across large surface items to avoid noticeable color demarcation lines."
+        ],
+        "techniqueKeyPoints": [
+          "Always crochet and block a 4x4 inch (10x10 cm) gauge swatch before starting garments or fitted items.",
+          "Yarn requirements increase significantly with textured stitches like waffle stitch or bobbles compared to basic double crochet.",
+          "Tension consistency between rows determines finished project drape and dimensional accuracy."
+        ],
+        "makerPainPoints": [
+          "Running out of yarn on the final border row due to approximate estimation.",
+          "Blanket borders ruffling or curling because stitch count pick-ups along edges are uneven.",
+          "Finished item sizing significantly larger or smaller than pattern specs due to skipped gauge swatching."
+        ],
+        "faqItems": [
+          {
+            "question": "Why is checking your gauge essential for how to weave in crochet ends so they never unravel?",
+            "factualAnswer": "Individual crafter tension varies widely. Even with the identical hook and yarn weight, one maker may crochet 12 stitches per 4 inches while another crochets 15 stitches, altering finished dimensions by up to 25%."
+          },
+          {
+            "question": "What is the most common mistake when calculating yarn yardage?",
+            "factualAnswer": "Failing to include a 10% to 15% safety buffer for swatch testing, color changes, and border edging, which often results in running out of dye lot before completion."
+          },
+          {
+            "question": "How do US and UK stitch terms differ for this technique?",
+            "factualAnswer": "US terms name stitches by yarn overs, whereas UK terms name them by loops on the hook. For example, a US single crochet is identical in height and technique to a UK double crochet."
+          }
+        ],
+        "verifiedInternalLinks": []
+      }
+    },
+    {
+      "id": "job_2026-10-12_137apt",
+      "dateScheduled": "2026-10-12",
+      "contentType": "tool_guide",
+      "category": "tools",
+      "topic": {
+        "id": "topic_tool_row_counter_6f6e6c69",
+        "keyword": "online row counter",
+        "contentType": "tool_guide",
+        "category": "tools",
+        "source": "internal_catalog",
+        "trendScore": 85,
+        "trendDirection": "stable",
+        "opportunityScore": 95,
+        "targetContentFormat": "tool_focus",
+        "toolSlug": "row-counter",
+        "targetToolUrl": "/tools/row-counter",
+        "targetCategoryUrl": "/categories/tools",
+        "targetAudienceLevel": "all_levels",
+        "searchIntentNotes": "Tool Guide for real WeLovePattern interactive tool: Row Counter. Problem: Tracking active row repeats and pattern sections without losing count mid-session.",
+        "discoveredAt": "2026-10-12T20:36:46.774Z",
+        "status": "discovered"
+      },
+      "pinterestPins": [
+        {
+          "pinNumber": 1,
+          "conceptAngle": "Primary Craft Concept",
+          "visualStyle": {
+            "imageCount": 1,
+            "compositionType": "single_hero",
+            "subjectDescription": "Craft tool",
+            "colorPalette": "natural",
+            "humanElement": "none"
+          },
+          "compactHiggsfieldPrompt": "Craft tool in action",
+          "typographyOverlay": {
+            "primaryHeadline": "online row counter",
+            "ctaBadgeText": "EXPLORE GUIDE →"
+          },
+          "destinationUrl": "https://welovepattern.com/blog/",
+          "publishStatus": "pending"
+        },
+        {
+          "pinNumber": 2,
+          "conceptAngle": "Technical Layflat Concept",
+          "visualStyle": {
+            "imageCount": 1,
+            "compositionType": "flatlay_materials",
+            "subjectDescription": "Craft tool flatlay",
+            "colorPalette": "warm",
+            "humanElement": "hands_only"
+          },
+          "compactHiggsfieldPrompt": "Craft tool flatlay",
+          "typographyOverlay": {
+            "primaryHeadline": "online row counter",
+            "ctaBadgeText": "EXPLORE GUIDE →"
+          },
+          "destinationUrl": "https://welovepattern.com/blog/",
+          "publishStatus": "pending"
+        }
+      ],
+      "stage": "failed",
+      "requiresApproval": false,
+      "indexNowNotified": false,
+      "createdAt": "2026-10-12T20:36:46.822Z",
+      "updatedAt": "2026-10-12T20:36:53.355Z",
+      "logs": [
+        {
+          "timestamp": "2026-10-12T20:36:46.822Z",
+          "level": "info",
+          "message": "Job created for TOOL_GUIDE (Category: TOOLS): \"online row counter\" with opportunity score 95."
+        },
+        {
+          "timestamp": "2026-10-12T20:36:53.267Z",
+          "level": "info",
+          "message": "Starting technical craft research..."
+        },
+        {
+          "timestamp": "2026-10-12T20:36:53.293Z",
+          "level": "info",
+          "message": "Factual research packet validated successfully."
+        },
+        {
+          "timestamp": "2026-10-12T20:36:53.310Z",
+          "level": "info",
+          "message": "Generating article with OpenAI..."
+        },
+        {
+          "timestamp": "2026-10-12T20:36:53.355Z",
+          "level": "error",
+          "message": "OpenAI Generation Error: OPENAI_API_KEY is not configured on the server. Cannot generate article."
+        }
+      ],
+      "assignedPublishDate": "2026-10-12",
+      "assignedSlotTime": "16:00",
+      "publicationScheduledAt": "16:00",
+      "factualResearch": {
+        "topicId": "topic_tool_row_counter_6f6e6c69",
+        "topic": "online row counter",
+        "searchIntent": "Maker search query focused on online row counter",
+        "craftType": "crochet",
+        "sourceAuthority": "Craft Yarn Council Technical Standards & WeLovePattern Craft Library",
+        "cycStandardVersion": "CYC 2024 Guidelines",
+        "generatedAt": "2026-10-12T20:36:53.284Z",
+        "verifiedTerminology": [
+          "Gauge Swatch (4x4 inches / 10x10 cm)",
+          "Single Crochet (US sc / UK dc)",
+          "Double Crochet (US dc / UK tr)",
+          "Half Double Crochet (US hdc / UK htr)",
+          "Slip Stitch (sl st)",
+          "Turning Chain (ch)"
+        ],
+        "verifiedMaterials": {
+          "yarnWeights": [
+            "Medium / Worsted (#4)",
+            "Light / DK (#3)"
+          ],
+          "hookSizes": [
+            "5.0 mm (H-8)",
+            "5.5 mm (I-9)",
+            "4.0 mm (G-6)"
+          ],
+          "standardYardages": "Standard projects require 800 - 1,400 meters depending on dimension"
+        },
+        "authorizedPercentages": [
+          10,
+          15,
+          20
+        ],
+        "prohibitedMetrics": [
+          "stitches per skein",
+          "divide stitches by stitches per skein",
+          "arbitrary yards per stitch",
+          "invented mattress or bed sizes",
+          "commercial sales pricing or revenue claims"
+        ],
+        "verifiedFormulas": [
+          {
+            "name": "Area Ratio Swatch Scaling Method",
+            "description": "Calculates total project yardage by scaling the measured yardage consumed by a 4x4 inch blocked swatch to the total project surface area.",
+            "formulaText": "Total Yardage = (Total Project Surface Area / Swatch Surface Area) * Swatch Yardage * 1.10 (safety buffer)",
+            "steps": [
+              "Crochet a 4x4 inch (16 sq in / 100 sq cm) gauge swatch using the project hook and yarn.",
+              "Measure the exact yardage used in the swatch (either by weighing with a gram scale or measuring the yarn before swatching).",
+              "Calculate total project area in square inches (width in inches multiplied by length in inches).",
+              "Divide total project area by swatch area to find the scale multiplier, multiply by swatch yardage, and add 10% to 15% safety buffer for borders, ends, and tension variance."
+            ]
+          }
+        ],
+        "supportedClaims": [
+          "Textured stitches like bobbles, puff stitches, and cables consume substantially more yarn per square inch than flat stitches like single crochet and double crochet.",
+          "A 10% to 15% yardage buffer is essential to prevent running out of yarn before border completion.",
+          "Yarn skeins are sold and measured by weight and yardage/meters, never by a fixed stitch count.",
+          "Dye lot consistency is critical across large surface items to avoid noticeable color demarcation lines."
+        ],
+        "techniqueKeyPoints": [
+          "Always crochet and block a 4x4 inch (10x10 cm) gauge swatch before starting garments or fitted items.",
+          "Yarn requirements increase significantly with textured stitches like waffle stitch or bobbles compared to basic double crochet.",
+          "Tension consistency between rows determines finished project drape and dimensional accuracy."
+        ],
+        "makerPainPoints": [
+          "Running out of yarn on the final border row due to approximate estimation.",
+          "Blanket borders ruffling or curling because stitch count pick-ups along edges are uneven.",
+          "Finished item sizing significantly larger or smaller than pattern specs due to skipped gauge swatching."
+        ],
+        "faqItems": [
+          {
+            "question": "Why is checking your gauge essential for online row counter?",
+            "factualAnswer": "Individual crafter tension varies widely. Even with the identical hook and yarn weight, one maker may crochet 12 stitches per 4 inches while another crochets 15 stitches, altering finished dimensions by up to 25%."
+          },
+          {
+            "question": "What is the most common mistake when calculating yarn yardage?",
+            "factualAnswer": "Failing to include a 10% to 15% safety buffer for swatch testing, color changes, and border edging, which often results in running out of dye lot before completion."
+          },
+          {
+            "question": "How do US and UK stitch terms differ for this technique?",
+            "factualAnswer": "US terms name stitches by yarn overs, whereas UK terms name them by loops on the hook. For example, a US single crochet is identical in height and technique to a UK double crochet."
+          }
+        ],
+        "verifiedInternalLinks": [
+          {
+            "anchorText": "online row counter",
+            "url": "/tools/row-counter",
+            "entityType": "tool"
+          }
+        ],
+        "targetTool": {
+          "id": "row-counter",
+          "slug": "row-counter",
+          "title": "Row Counter",
+          "description": "Offline-ready interactive row counter with audio chime, haptic vibration, reset, and log history.",
+          "icon": "Hash",
+          "category": "Counter",
+          "actionType": "counter",
+          "actionLabel": "Start Counting Rows →",
+          "actionVerb": "Count Rows",
+          "isPopular": true,
+          "isOfflineCapable": true
+        }
+      }
     }
   ],
   "completedJobsHistory": [],
-  "updatedAt": "2026-10-06T11:43:13.273Z"
+  "updatedAt": "2026-10-12T20:36:53.356Z"
 }

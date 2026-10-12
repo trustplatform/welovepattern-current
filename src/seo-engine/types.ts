@@ -171,8 +171,8 @@ export interface PinterestCreativeConcept {
   stablePublicUrl?: string;                   // Public URL served by Express
   pinterestPinId?: string;
   publishStatus: 'pending' | 'generating_image' | 'image_ready' | 'publishing' | 'published' | 'failed';
-  scheduledTime?: string;                     // e.g. "09:00", "13:00", "17:00", "21:00"
-  assignedSlotTime?: string;                  // Explicit Pinterest slot time ("09:00" | "13:00" | "17:00" | "21:00")
+  scheduledTime?: string;                     // e.g. "08:30", "09:00", "12:30", "13:00", "16:30", "17:00"
+  assignedSlotTime?: string;                  // Explicit Pinterest slot time ("08:30" | "09:00" | "12:30" | "13:00" | "16:30" | "17:00")
   publishedAt?: string;                       // ISO timestamp of successful Pinterest publication
   errorMessage?: string;
 }
@@ -218,7 +218,7 @@ export interface SeoEngineArticleJob {
   validatedAt?: string;                       // ISO timestamp when quality gates passed
   publicationScheduledAt?: string;           // ISO timestamp or target slot time (e.g. "08:00")
   assignedPublishDate?: string;               // Active calendar date (YYYY-MM-DD in America/New_York) for scheduled publication
-  assignedSlotTime?: string;                  // Explicit article slot time ("08:00" | "16:00")
+  assignedSlotTime?: string;                  // Explicit article slot time ("08:00" | "12:00" | "16:00")
   publishedAt?: string;                       // ISO timestamp of live website blog publication
   publishedBlogPostId?: string;
   publishedSlug?: string;                     // Live website URL slug
@@ -266,8 +266,8 @@ export interface ProductionQualityGateResult {
 }
 
 export interface SeoEngineConfig {
-  articlesPerDay: number;                     // Default: 2 (1 Trending Crochet + 1 Tool Guide)
-  pinsPerDay: number;                         // Default: 4
+  articlesPerDay: number;                     // Default: 3
+  pinsPerDay: number;                         // Default: 6
   pinsPerArticle: number;                     // Default: 2 (configurable)
   trendTasksPerDay: number;                   // Default: 20
   autoPublish: boolean;                       // Default: false
@@ -276,8 +276,8 @@ export interface SeoEngineConfig {
   engineActive: boolean;                      // Default: true
   timezone: string;                           // Default: "America/New_York"
   activeDays: number[];                       // [1..7] Monday through Sunday
-  articlePublishTimes: string[];              // e.g. ["08:00", "12:00", "16:00", "20:00"]
-  pinterestPublishTimes: string[];            // e.g. ["09:00", "13:00", "17:00", "21:00"]
+  articlePublishTimes: string[];              // e.g. ["08:00", "12:00", "16:00"]
+  pinterestPublishTimes: string[];            // e.g. ["08:30", "09:00", "12:30", "13:00", "16:30", "17:00"]
   maxConcurrentJobs: number;                  // Default: 1
   fallbackBoardId: string;
   fallbackBoardName: string;

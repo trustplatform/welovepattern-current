@@ -44,6 +44,7 @@ export interface JobRecoveryResult {
   newStage: string;
   reasons: string[];
   recoveredAssets: RecoveredSlotAsset[];
+  stateMutated?: boolean;
 }
 
 /**
@@ -374,6 +375,9 @@ export function resolvePinAsset(
  */
 export function recoverJobLocalAssets(job: SeoEngineArticleJob): JobRecoveryResult {
   const previousStage = job.stage;
+  const oldHeroPath = job.articleContent?.heroImage?.stableAssetPath;
+  const oldPin1Path = job.pinterestPins?.[0]?.stableAssetPath;
+  const oldPin2Path = job.pinterestPins?.[1]?.stableAssetPath;
   const recoveredAssets: RecoveredSlotAsset[] = [];
   const reasons: string[] = [];
 
@@ -476,6 +480,13 @@ export function recoverJobLocalAssets(job: SeoEngineArticleJob): JobRecoveryResu
     }
   }
 
+  const stateMutated = Boolean(
+    (heroAsset && oldHeroPath !== heroAsset.stableAssetPath) ||
+    (pin1Asset && oldPin1Path !== pin1Asset.stableAssetPath) ||
+    (pin2Asset && oldPin2Path !== pin2Asset.stableAssetPath) ||
+    (newStage !== previousStage)
+  );
+
   return {
     jobId: job.id,
     recovered: recoveredAssets.length > 0,
@@ -487,11 +498,13 @@ export function recoverJobLocalAssets(job: SeoEngineArticleJob): JobRecoveryResu
     newStage,
     reasons,
     recoveredAssets,
+    stateMutated,
   };
 }
 
 /**
  * Runs asset recovery across all active jobs in state.
+ * Only writes to disk when state fields are genuinely mutated, preventing unnecessary writes on recurring ticks.
  */
 export function recoverAllActiveJobAssets(): JobRecoveryResult[] {
   const state = readEngineState();
@@ -502,7 +515,9 @@ export function recoverAllActiveJobAssets(): JobRecoveryResult[] {
     const res = recoverJobLocalAssets(job);
     if (res.recovered) {
       results.push(res);
-      modified = true;
+      if (res.stateMutated) {
+        modified = true;
+      }
     }
   }
 
@@ -518,16 +533,19 @@ export function recoverAllActiveJobAssets(): JobRecoveryResult[] {
  * Sorted chronologically (oldest first).
  */
 export function getEligibleRecoveredJobs(limit: number = 1): SeoEngineArticleJob[] {
+  // First ensure recovery has run on all jobs to bind/normalize any local disk assets
+  recoverAllActiveJobAssets();
+
   const state = readEngineState();
   const candidates: SeoEngineArticleJob[] = [];
 
   for (const job of state.activeJobs || []) {
     // 1. Must not already be published
-    if (job.stage === 'completed' || job.stage === 'failed' || job.publishedBlogPostId || job.publishedSlug) {
+    if (job.stage === 'completed' || (job.stage as string) === 'published' || job.publishedBlogPostId || job.publishedSlug) {
       continue;
     }
 
-    // 2. Must not already be assigned to a publish date
+    // 2. Must not already be assigned to a publish date in future/present
     if (job.assignedPublishDate && job.assignedPublishDate >= new Date().toISOString().slice(0, 10)) {
       continue;
     }
@@ -572,7 +590,7 @@ export function assignRecoveredJobToSlot(
   jobId: string,
   dateStr: string,
   slotTime: string,
-  slotNumber: 1 | 2
+  slotNumber: 1 | 2 | 3
 ): SeoEngineArticleJob | null {
   const state = readEngineState();
   const job = state.activeJobs?.find(j => j.id === jobId);
@@ -584,22 +602,29 @@ export function assignRecoveredJobToSlot(
 
   if (job.pinterestPins && job.pinterestPins.length >= 2) {
     if (slotNumber === 1) {
-      job.pinterestPins[0].assignedSlotTime = '09:00';
-      job.pinterestPins[0].scheduledTime = '09:00';
+      job.pinterestPins[0].assignedSlotTime = '08:30';
+      job.pinterestPins[0].scheduledTime = '08:30';
+      job.pinterestPins[1].assignedSlotTime = '09:00';
+      job.pinterestPins[1].scheduledTime = '09:00';
+    } else if (slotNumber === 2) {
+      job.pinterestPins[0].assignedSlotTime = '12:30';
+      job.pinterestPins[0].scheduledTime = '12:30';
       job.pinterestPins[1].assignedSlotTime = '13:00';
       job.pinterestPins[1].scheduledTime = '13:00';
     } else {
-      job.pinterestPins[0].assignedSlotTime = '17:00';
-      job.pinterestPins[0].scheduledTime = '17:00';
-      job.pinterestPins[1].assignedSlotTime = '21:00';
-      job.pinterestPins[1].scheduledTime = '21:00';
+      job.pinterestPins[0].assignedSlotTime = '16:30';
+      job.pinterestPins[0].scheduledTime = '16:30';
+      job.pinterestPins[1].assignedSlotTime = '17:00';
+      job.pinterestPins[1].scheduledTime = '17:00';
     }
   }
 
   job.logs.push({
     timestamp: new Date().toISOString(),
     level: 'info',
-    message: `[AssetRecovery] Assigned recovered job to Article Slot ${slotNumber} (${slotTime} on ${dateStr}). Pinterest Pins assigned to ${slotNumber === 1 ? '09:00 & 13:00' : '17:00 & 21:00'}.`,
+    message: `[AssetRecovery] Assigned recovered job to Article Slot ${slotNumber} (${slotTime} on ${dateStr}). Pinterest Pins assigned to ${
+      slotNumber === 1 ? '08:30 & 09:00' : slotNumber === 2 ? '12:30 & 13:00' : '16:30 & 17:00'
+    }.`,
   });
 
   writeEngineState(state);

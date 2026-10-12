@@ -2,14 +2,14 @@
  * SEO Content Engine - Production Scheduler & Cron Daemon
  * 
  * Provides production-grade deterministic scheduling for:
- * 1. Daily Article Production Slots (e.g. 08:00, 12:00, 16:00, 20:00 in config.timezone)
- * 2. Pinterest Publishing Slots (e.g. 09:00, 13:00, 17:00, 21:00 in config.timezone)
+ * 1. Daily Article Production Slots (08:00, 12:00, 16:00 in config.timezone)
+ * 2. Pinterest Publishing Slots (08:30, 09:00, 12:30, 13:00, 16:30, 17:00 in config.timezone)
  * 
  * SAFETY & RESILIENCE INVARIANTS:
  * - Timezone-aware: Uses Intl.DateTimeFormat with configured IANA timezone (e.g. 'America/New_York').
  * - Deduplication: Records exact date + slot tokens (`YYYY-MM-DD_HH:mm`) in atomic state to prevent duplicate runs across server restarts.
  * - engineActive guard: Skips execution if engineActive === false.
- * - Quota guard: Strictly respects articlesPerDay (2) limit per daily state.
+ * - Quota guard: Strictly respects articlesPerDay (3) limit per daily state.
  * - Concurrency guard: Uses single-flight lock during tick processing.
  * - Pinterest slot separation: Pinterest slots NEVER create new article jobs.
  */
@@ -202,17 +202,42 @@ export async function evaluateSchedulerTick(
     return { triggered: false, reason: `Day of week ${dayOfWeek} is not in activeDays` };
   }
 
-  const articlePublishTimes = config.articlePublishTimes || ['08:00', '16:00'];
-  const pinterestPublishTimes = config.pinterestPublishTimes || ['09:00', '13:00', '17:00', '21:00'];
+  const articlePublishTimes = config.articlePublishTimes || ['08:00', '12:00', '16:00'];
+  const pinterestPublishTimes = config.pinterestPublishTimes || ['08:30', '09:00', '12:30', '13:00', '16:30', '17:00'];
 
   const isArticleSlot = articlePublishTimes.includes(timeStr);
   const isPinterestSlot = pinterestPublishTimes.includes(timeStr);
 
+  // Check for missed past article slots today (e.g. server outage / reboot catch-up)
+  let missedArticleSlot: string | null = null;
+  let missedSlotNumber: 1 | 2 | 3 = 1;
+  if (!isArticleSlot) {
+    for (let i = 0; i < articlePublishTimes.length; i++) {
+      const s = articlePublishTimes[i];
+      if (s <= timeStr) {
+        const sKey = `${dateStr}_${s}`;
+        if (state.lastExecutedArticleSlot !== sKey) {
+          const hasArticleForSlot = (state.activeJobs || []).some(j =>
+            ((j.assignedPublishDate === dateStr && (j.assignedSlotTime === s || j.publicationScheduledAt === s)) ||
+             (j.publishedAt && j.publishedAt.startsWith(dateStr) && (j.assignedSlotTime === s || j.publicationScheduledAt === s))) &&
+            (j.stage === 'completed' || Boolean(j.publishedBlogPostId))
+          );
+          if (!hasArticleForSlot) {
+            missedArticleSlot = s;
+            missedSlotNumber = (i + 1) as 1 | 2 | 3;
+            break;
+          }
+        }
+      }
+    }
+  }
+
   // -----------------------------------------------------------------
-  // A. ARTICLE PRODUCTION SLOT
+  // A. ARTICLE PRODUCTION SLOT (Scheduled or Missed Catch-up)
   // -----------------------------------------------------------------
-  if (isArticleSlot) {
-    const slotKey = `${dateStr}_${timeStr}`;
+  if (isArticleSlot || missedArticleSlot) {
+    const activeSlotTime = isArticleSlot ? timeStr : missedArticleSlot!;
+    const slotKey = `${dateStr}_${activeSlotTime}`;
 
     // Deduplication check: Has this exact slot already executed for this date?
     if (state.lastExecutedArticleSlot === slotKey) {
@@ -249,7 +274,7 @@ export async function evaluateSchedulerTick(
 
     const todaysArticlesCount = todaysArticleKeys.size;
 
-    const articlesPerDayLimit = config.articlesPerDay || 2;
+    const articlesPerDayLimit = config.articlesPerDay || 3;
     if (todaysArticlesCount >= articlesPerDayLimit) {
       // Mark slot as acknowledged so we don't repeat the check every minute in this slot
       state.lastExecutedArticleSlot = slotKey;
@@ -264,14 +289,15 @@ export async function evaluateSchedulerTick(
       };
     }
 
-    console.log(`[SeoEngineScheduler] 🚀 Article production slot triggered: ${slotKey} (${tz})`);
+    console.log(`[SeoEngineScheduler] 🚀 Article production slot triggered: ${slotKey} (${tz})${missedArticleSlot ? ' [Missed-slot recovery]' : ''}`);
 
     // Record slot execution atomically in state
     state.lastExecutedArticleSlot = slotKey;
     state.lastRunDate = dateStr;
     writeEngineState(state);
 
-    const slotNumber: 1 | 2 = timeStr === articlePublishTimes[0] ? 1 : 2;
+    const slotIdx = articlePublishTimes.indexOf(activeSlotTime);
+    const slotNumber: 1 | 2 | 3 = (slotIdx >= 0 ? slotIdx + 1 : missedSlotNumber) as 1 | 2 | 3;
 
     // 1. RECOVERED-FIRST PRIORITY: Check for an eligible recovered job
     const eligibleRecovered = getEligibleRecoveredJobs(1);
@@ -281,7 +307,7 @@ export async function evaluateSchedulerTick(
       console.log(`[SeoEngineScheduler] ♻️ Assigning recovered job "${recoveredJob.articleContent?.title || recoveredJob.id}" to Slot ${slotNumber} (${slotKey}). Zero Higgsfield POSTs ($0.00).`);
 
       // Assign slot and Pinterest times
-      assignRecoveredJobToSlot(recoveredJob.id, dateStr, timeStr, slotNumber);
+      assignRecoveredJobToSlot(recoveredJob.id, dateStr, activeSlotTime, slotNumber);
 
       // Run production quality gates
       const articlePayload: any = {
@@ -378,7 +404,7 @@ export async function evaluateSchedulerTick(
       await createSingleSlotProductionJob(slotNumber, {
         useRealDataForSeo: options?.useRealDataForSeo,
         scheduledDate: dateStr,
-        slotTime: timeStr,
+        slotTime: activeSlotTime,
       });
 
       // Run queue worker to process newly queued job (maxConcurrentJobs = 1) unless explicitly skipped for test mode
@@ -424,7 +450,10 @@ export async function evaluateSchedulerTick(
     state.lastExecutedPinterestSlot = slotKey;
     writeEngineState(state);
 
-    // 1. Dispatch the specific Pin mapped to this slot (09:00 -> Pin 1, 13:00 -> Pin 2, 17:00 -> Pin 3, 21:00 -> Pin 4)
+    // 1. Dispatch the specific Pin mapped to this slot:
+    // Slot 1 (08:30) -> Art 1 Pin 1, Slot 2 (09:00) -> Art 1 Pin 2
+    // Slot 3 (12:30) -> Art 2 Pin 1, Slot 4 (13:00) -> Art 2 Pin 2
+    // Slot 5 (16:30) -> Art 3 Pin 1, Slot 6 (17:00) -> Art 3 Pin 2
     let pinDispatchResult = await dispatchScheduledPinterestSlot(timeStr, dateStr);
 
     // If the exact slot pin was deferred/skipped (e.g. earlier slot was missed), attempt the earliest overdue eligible Pin

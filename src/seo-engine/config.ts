@@ -6,8 +6,8 @@
 import { SeoEngineConfig } from './types';
 
 export const DEFAULT_SEO_ENGINE_CONFIG: SeoEngineConfig = {
-  articlesPerDay: 2,
-  pinsPerDay: 4,
+  articlesPerDay: 3,
+  pinsPerDay: 6,
   pinsPerArticle: 2,
   trendTasksPerDay: 20,
   autoPublish: true,
@@ -16,8 +16,8 @@ export const DEFAULT_SEO_ENGINE_CONFIG: SeoEngineConfig = {
   engineActive: true,
   timezone: 'America/New_York',
   activeDays: [1, 2, 3, 4, 5, 6, 7],
-  articlePublishTimes: ['08:00', '16:00'],
-  pinterestPublishTimes: ['09:00', '13:00', '17:00', '21:00'],
+  articlePublishTimes: ['08:00', '12:00', '16:00'],
+  pinterestPublishTimes: ['08:30', '09:00', '12:30', '13:00', '16:30', '17:00'],
   maxConcurrentJobs: 1,
   fallbackBoardId: '1148488411165286195',
   fallbackBoardName: 'Animals Crochet',
@@ -46,8 +46,8 @@ export const DEFAULT_SEO_ENGINE_CONFIG: SeoEngineConfig = {
   openAiTemperature: 0.7,
   dailyCostLimitUsd: 5.00,
   perJobCostLimitUsd: 1.50,
-  higgsfieldEnabled: true,
-  estimatedImageCostUsd: 0.03,
+  higgsfieldEnabled: false,
+  estimatedImageCostUsd: 0.00,
 };
 
 /** Limits and thresholds for article generation and internal linking */

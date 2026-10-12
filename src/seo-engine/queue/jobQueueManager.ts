@@ -24,7 +24,7 @@ import { getJobCostBreakdown, isBudgetPermitted, releaseBudgetReservation } from
 import { generateHiggsfieldImage, isHiggsfieldConfigured } from '../generation/higgsfieldClient';
 import { discoverDailyTwoSlotTopics, discoverTrendingCrochetTopic, discoverToolGuideTopic } from '../discovery/topicDiscovery';
 import { publishArticleToLiveSite } from '../publishing/articlePublisher';
-import { recoverJobLocalAssets } from './assetRecovery';
+import { recoverJobLocalAssets, isValidLocalAsset } from './assetRecovery';
 
 let isProcessingQueue = false;
 
@@ -108,18 +108,19 @@ export function queueJobForTopic(topic: DiscoveredTopic, config: SeoEngineConfig
 }
 
 /**
- * Creates and queues a single production article job for a specific slot (Slot 1 or Slot 2).
- * Slot 1: 1 x Trending Crochet article (Category: 'crochet', Type: 'trending_crochet', Slot Time: '08:00', Pinterest: '09:00' & '13:00')
- * Slot 2: 1 x Tool Guide article (Category: 'tools', Type: 'tool_guide', Slot Time: '16:00', Pinterest: '17:00' & '21:00')
+ * Creates and queues a single production article job for a specific slot (Slot 1, Slot 2, or Slot 3).
+ * Slot 1: 1 x Trending Crochet article (Category: 'crochet', Type: 'trending_crochet', Slot Time: '08:00', Pinterest: '08:30' & '09:00')
+ * Slot 2: 1 x Tool Guide article (Category: 'tools', Type: 'tool_guide', Slot Time: '12:00', Pinterest: '12:30' & '13:00')
+ * Slot 3: 1 x Craft Guide article (Category: 'crochet', Type: 'trending_crochet', Slot Time: '16:00', Pinterest: '16:30' & '17:00')
  */
 export async function createSingleSlotProductionJob(
-  slotNumber: 1 | 2,
+  slotNumber: 1 | 2 | 3,
   options?: { useRealDataForSeo?: boolean; scheduledDate?: string; slotTime?: string }
 ): Promise<SeoEngineArticleJob> {
   const state = readEngineState();
   const config = state.config;
   const targetDate = options?.scheduledDate || new Date().toISOString().split('T')[0];
-  const targetSlotTime = options?.slotTime || (slotNumber === 1 ? '08:00' : '16:00');
+  const targetSlotTime = options?.slotTime || (slotNumber === 1 ? '08:00' : slotNumber === 2 ? '12:00' : '16:00');
 
   let topic: DiscoveredTopic;
   if (slotNumber === 1) {
@@ -127,11 +128,13 @@ export async function createSingleSlotProductionJob(
     if (topic.contentType !== 'trending_crochet' || topic.category !== 'crochet') {
       throw new Error(`Slot 1 topic invalid: Expected contentType 'trending_crochet' and category 'crochet', got '${topic.contentType}' / '${topic.category}'.`);
     }
-  } else {
+  } else if (slotNumber === 2) {
     topic = await discoverToolGuideTopic({ useRealDataForSeo: options?.useRealDataForSeo });
     if (topic.contentType !== 'tool_guide' || topic.category !== 'tools' || !topic.toolSlug) {
       throw new Error(`Slot 2 topic invalid: Expected contentType 'tool_guide', category 'tools', and real toolSlug, got '${topic.contentType}' / '${topic.category}' / '${topic.toolSlug}'.`);
     }
+  } else {
+    topic = await discoverTrendingCrochetTopic({ useRealDataForSeo: options?.useRealDataForSeo });
   }
 
   const job = queueJobForTopic(topic, config, targetDate);
@@ -148,7 +151,7 @@ export async function createSingleSlotProductionJob(
 }
 
 /**
- * Creates and queues the strict daily 2-slot production batch:
+ * Legacy helper for daily 2-slot production batch (superseded by createSingleSlotProductionJob for 3 daily slots):
  * Slot 1: 1 x Trending Crochet article (Category: 'crochet', Type: 'trending_crochet')
  * Slot 2: 1 x Tool Guide article (Category: 'tools', Type: 'tool_guide')
  */
@@ -303,7 +306,7 @@ export async function executeJobLifecycle(
   jobId: string,
   options?: JobLifecycleOptions
 ): Promise<SeoEngineArticleJob> {
-  const job = getJobById(jobId);
+  let job = getJobById(jobId);
   if (!job) {
     throw new Error(`Job not found with id: ${jobId}`);
   }
@@ -480,44 +483,17 @@ export async function executeJobLifecycle(
   }
 
   // -----------------------------------------------------------------
-  // STAGE 3: PINTEREST CREATIVE CONCEPTS & HIGGSFIELD IMAGE GENERATION
+  // STAGE 3: PINTEREST CREATIVE CONCEPTS & EXISTING IMAGE REUSE
   // -----------------------------------------------------------------
   updateJobInState(jobId, j => {
     j.stage = 'generating_images';
-    j.logs.push({ timestamp: new Date().toISOString(), level: 'info', message: 'Starting Stage 3: Board resolution and visual asset generation...' });
+    j.logs.push({ timestamp: new Date().toISOString(), level: 'info', message: 'Starting Stage 3: Board resolution and local image asset binding ($0 cost)...' });
     return j;
   });
 
-  // 1. Higgsfield configuration check: Block and require operator action if not configured
-  const hasAllExistingImageAssets = Boolean(
-    job.articleContent?.heroImage?.stableAssetPath &&
-    fs.existsSync(job.articleContent.heroImage.stableAssetPath) &&
-    job.pinterestPins?.length >= 2 &&
-    job.pinterestPins.slice(0, 2).every(pin =>
-      Boolean(pin?.stableAssetPath && fs.existsSync(pin.stableAssetPath))
-    )
-  );
-
-  if (!isHiggsfieldConfigured() && !hasAllExistingImageAssets) {
-    updateJobInState(jobId, j => {
-      j.stage = 'failed';
-      if (j.articleContent) {
-        j.articleContent.heroImage = {
-          prompt: job.articleContent?.heroImage?.prompt || `Hero image for ${article.title}`,
-          compactPrompt: (job.articleContent?.heroImage?.prompt || `Hero image for ${article.title}`).slice(0, 480),
-          status: 'failed',
-          errorMessage: 'Higgsfield is not configured on the server (HF_KEY missing). Job paused and requires operator action.',
-        };
-      }
-      j.logs.push({
-        timestamp: new Date().toISOString(),
-        level: 'error',
-        message: 'Higgsfield is not configured on the server (HF_KEY missing). Job paused and requires operator action.',
-      });
-      return j;
-    });
-    return getJobById(jobId)!;
-  }
+  // Attempt local asset recovery and normalization first ($0 cost, 0 API calls)
+  recoverJobLocalAssets(job);
+  job = getJobById(jobId)!;
 
   // 2. Resolve real Pinterest board
   const isTestExecution = Boolean(
@@ -609,330 +585,72 @@ let pins = resolveOrPreservePinterestPins(
     return j;
   });
 
-  // 4. Sequential Image Generation: Hero (16:9) -> Pin 1 (2:3) -> Pin 2 (2:3)
-  const estimatedImageCost = (typeof config.estimatedImageCostUsd === 'number' && config.estimatedImageCostUsd > 0)
-    ? config.estimatedImageCostUsd
-    : 0.03;
-
-  // --- ASSET 1: HERO IMAGE (16:9, 1k, Marketing Studio Image 2.0 Alpha) ---
+  // 4. Verify & Bind Existing Disk Image Assets ($0 cost, 0 image-generation calls)
   const heroPrompt = job.articleContent?.heroImage?.prompt ||
     buildHiggsfieldHeroPrompt(job.topic, article, packet);
 
   let currentHeroImage = job.articleContent?.heroImage;
-  const isHeroAlreadyValid = Boolean(
-    currentHeroImage?.stableAssetPath &&
-    fs.existsSync(currentHeroImage.stableAssetPath) &&
-    fs.statSync(currentHeroImage.stableAssetPath).size > 100
-  );
+  const isHeroValid = isValidLocalAsset(currentHeroImage?.stableAssetPath);
+  const isPin1Valid = isValidLocalAsset(pins[0]?.stableAssetPath);
+  const isPin2Valid = isValidLocalAsset(pins[1]?.stableAssetPath);
 
-  if (!isHeroAlreadyValid) {
-    const heroBudget = isBudgetPermitted(estimatedImageCost, config, jobId, true);
-    if (!heroBudget.permitted) {
-      updateJobInState(jobId, j => {
-        j.stage = 'failed';
-        j.logs.push({
-          timestamp: new Date().toISOString(),
-          level: 'error',
-          message: `Hero Image Budget Exceeded: ${heroBudget.reason}`,
-        });
-        return j;
-      });
-      return getJobById(jobId)!;
-    }
+  if (!isHeroValid || !isPin1Valid || !isPin2Valid) {
+    const missingAssets: string[] = [];
+    if (!isHeroValid) missingAssets.push('Hero (16:9)');
+    if (!isPin1Valid) missingAssets.push('Pin 1 (2:3)');
+    if (!isPin2Valid) missingAssets.push('Pin 2 (2:3)');
 
     updateJobInState(jobId, j => {
-      if (j.articleContent) {
-        j.articleContent.heroImage = {
-          prompt: heroPrompt,
-          compactPrompt: heroPrompt.slice(0, 480),
-          higgsfieldRequestId: currentHeroImage?.higgsfieldRequestId,
-          status: 'pending',
-        };
+      j.stage = 'failed';
+      if (j.articleContent?.heroImage && !isHeroValid) {
+        j.articleContent.heroImage.status = 'failed';
+        j.articleContent.heroImage.errorMessage = 'Required existing Hero image missing from disk.';
       }
-      j.logs.push({ timestamp: new Date().toISOString(), level: 'info', message: 'Generating Hero image (Marketing Studio Image 2.0 Alpha, 1k, 16:9)...' });
-      return j;
-    });
-
-    const heroRes = await generateHiggsfieldImage({
-      prompt: heroPrompt,
-      aspectRatio: '16:9',
-      resolution: '1k',
-      slug: article.slug,
-      targetFolder: 'blog',
-      jobId,
-      estimatedCostUsd: estimatedImageCost,
-      existingTaskId: currentHeroImage?.higgsfieldRequestId,
-      onTaskIdReceived: (taskId: string) => {
-        updateJobInState(jobId, j => {
-          if (j.articleContent?.heroImage) {
-            j.articleContent.heroImage.higgsfieldRequestId = taskId;
-          }
-          return j;
-        });
-      },
-    });
-
-    if (!heroRes.success || !heroRes.stableAssetPath) {
-      releaseBudgetReservation(jobId);
-      updateJobInState(jobId, j => {
-        j.stage = 'failed';
-        if (j.articleContent?.heroImage) {
-          j.articleContent.heroImage.status = 'failed';
-          j.articleContent.heroImage.errorMessage = heroRes.error;
-          if (heroRes.providerRequestId) {
-            j.articleContent.heroImage.higgsfieldRequestId = heroRes.providerRequestId;
-          }
-        }
-        j.logs.push({
-          timestamp: new Date().toISOString(),
-          level: 'error',
-          message: `Hero Image Generation Failed: ${heroRes.error} (Request ID: ${heroRes.providerRequestId || 'N/A'})`,
-        });
-        return j;
-      });
-      return getJobById(jobId)!;
-    }
-
-    if (heroRes.costUsd === 0) {
-      releaseBudgetReservation(jobId);
-    }
-
-    updateJobInState(jobId, j => {
-      if (j.articleContent) {
-        j.articleContent.heroImage = {
-          prompt: heroPrompt,
-          compactPrompt: heroPrompt.slice(0, 480),
-          higgsfieldRequestId: heroRes.providerRequestId,
-          stableAssetPath: heroRes.stableAssetPath,
-          stablePublicUrl: heroRes.stablePublicUrl,
-          status: 'ready',
-        };
+      if (j.pinterestPins?.[0] && !isPin1Valid) {
+        j.pinterestPins[0].publishStatus = 'failed';
+        j.pinterestPins[0].errorMessage = 'Required existing Pin 1 image missing from disk.';
+      }
+      if (j.pinterestPins?.[1] && !isPin2Valid) {
+        j.pinterestPins[1].publishStatus = 'failed';
+        j.pinterestPins[1].errorMessage = 'Required existing Pin 2 image missing from disk.';
       }
       j.logs.push({
         timestamp: new Date().toISOString(),
-        level: 'info',
-        message: `Hero image generated and saved to ${heroRes.stablePublicUrl}`,
+        level: 'error',
+        message: `Missing or ambiguous image assets on disk: ${missingAssets.join(', ')}. Image generation is strictly disabled ($0 quota preservation). Skipping job.`,
       });
       return j;
     });
-    currentHeroImage = getJobById(jobId)?.articleContent?.heroImage;
-  } else {
-    updateJobInState(jobId, j => {
-      j.logs.push({
-        timestamp: new Date().toISOString(),
-        level: 'info',
-        message: `Reusing existing valid Hero asset at ${currentHeroImage!.stablePublicUrl}`,
-      });
-      return j;
-    });
+    return getJobById(jobId)!;
   }
 
-  // Bind hero asset to article object for downstream quality checks
+  // All 3 required assets exist on disk: bind them cleanly with zero image generation
+  updateJobInState(jobId, j => {
+    if (j.articleContent?.heroImage) {
+      j.articleContent.heroImage.status = 'ready';
+    }
+    if (j.pinterestPins?.[0]) {
+      j.pinterestPins[0].publishStatus = 'image_ready';
+    }
+    if (j.pinterestPins?.[1]) {
+      j.pinterestPins[1].publishStatus = 'image_ready';
+    }
+    j.logs.push({
+      timestamp: new Date().toISOString(),
+      level: 'info',
+      message: `All 3 visual assets confirmed on disk and bound successfully ($0 cost, 0 image-generation calls).`,
+    });
+    return j;
+  });
+
+  currentHeroImage = getJobById(jobId)?.articleContent?.heroImage;
+  pins = getJobById(jobId)?.pinterestPins || pins;
+
   article.heroImage = {
     prompt: currentHeroImage?.prompt || heroPrompt,
     assetPath: currentHeroImage?.stableAssetPath,
     publicUrl: currentHeroImage?.stablePublicUrl,
   };
-
-  // --- ASSET 2: PIN 1 IMAGE (2:3, 1k, Marketing Studio Image 2.0 Alpha) ---
-  const isPin1AlreadyValid = Boolean(
-    pins[0]?.stableAssetPath &&
-    fs.existsSync(pins[0].stableAssetPath) &&
-    fs.statSync(pins[0].stableAssetPath).size > 100
-  );
-
-  if (!isPin1AlreadyValid) {
-    const pin1Budget = isBudgetPermitted(estimatedImageCost, config, jobId, true);
-    if (!pin1Budget.permitted) {
-      updateJobInState(jobId, j => {
-        j.stage = 'failed';
-        j.logs.push({
-          timestamp: new Date().toISOString(),
-          level: 'error',
-          message: `Pin 1 Budget Exceeded: ${pin1Budget.reason}. Hero image preserved.`,
-        });
-        return j;
-      });
-      return getJobById(jobId)!;
-    }
-
-    updateJobInState(jobId, j => {
-      if (j.pinterestPins[0]) {
-        j.pinterestPins[0].publishStatus = 'generating_image';
-      }
-      j.logs.push({ timestamp: new Date().toISOString(), level: 'info', message: 'Generating Pin 1 image (Marketing Studio Image 2.0 Alpha, 1k, 2:3)...' });
-      return j;
-    });
-
-    const pin1Res = await generateHiggsfieldImage({
-      prompt: pins[0].compactHiggsfieldPrompt,
-      aspectRatio: '2:3',
-      resolution: '1k',
-      slug: `${article.slug}-pin-1`,
-      targetFolder: 'pinterest',
-      jobId,
-      estimatedCostUsd: estimatedImageCost,
-      existingTaskId: pins[0].higgsfieldRequestId,
-      onTaskIdReceived: (taskId: string) => {
-        updateJobInState(jobId, j => {
-          if (j.pinterestPins[0]) {
-            j.pinterestPins[0].higgsfieldRequestId = taskId;
-          }
-          return j;
-        });
-      },
-    });
-
-    if (!pin1Res.success || !pin1Res.stableAssetPath) {
-      releaseBudgetReservation(jobId);
-      updateJobInState(jobId, j => {
-        j.stage = 'failed';
-        if (j.pinterestPins[0]) {
-          j.pinterestPins[0].publishStatus = 'failed';
-          j.pinterestPins[0].errorMessage = pin1Res.error;
-          if (pin1Res.providerRequestId) {
-            j.pinterestPins[0].higgsfieldRequestId = pin1Res.providerRequestId;
-          }
-        }
-        j.logs.push({
-          timestamp: new Date().toISOString(),
-          level: 'error',
-          message: `Pin 1 Generation Failed: ${pin1Res.error} (Request ID: ${pin1Res.providerRequestId || 'N/A'}). Hero image preserved.`,
-        });
-        return j;
-      });
-      return getJobById(jobId)!;
-    }
-
-    if (pin1Res.costUsd === 0) {
-      releaseBudgetReservation(jobId);
-    }
-
-    updateJobInState(jobId, j => {
-      if (j.pinterestPins[0]) {
-        j.pinterestPins[0].stableAssetPath = pin1Res.stableAssetPath;
-        j.pinterestPins[0].stablePublicUrl = pin1Res.stablePublicUrl;
-        j.pinterestPins[0].higgsfieldRequestId = pin1Res.providerRequestId;
-        j.pinterestPins[0].publishStatus = 'image_ready';
-      }
-      j.logs.push({
-        timestamp: new Date().toISOString(),
-        level: 'info',
-        message: `Pin 1 generated and saved to ${pin1Res.stablePublicUrl}`,
-      });
-      return j;
-    });
-    pins = getJobById(jobId)?.pinterestPins || pins;
-  } else {
-    updateJobInState(jobId, j => {
-      j.logs.push({
-        timestamp: new Date().toISOString(),
-        level: 'info',
-        message: `Reusing existing valid Pin 1 asset at ${pins[0].stablePublicUrl}`,
-      });
-      return j;
-    });
-  }
-
-  // --- ASSET 3: PIN 2 IMAGE (2:3, 1k, Marketing Studio Image 2.0 Alpha) ---
-  const isPin2AlreadyValid = Boolean(
-    pins[1]?.stableAssetPath &&
-    fs.existsSync(pins[1].stableAssetPath) &&
-    fs.statSync(pins[1].stableAssetPath).size > 100
-  );
-
-  if (!isPin2AlreadyValid) {
-    const pin2Budget = isBudgetPermitted(estimatedImageCost, config, jobId, true);
-    if (!pin2Budget.permitted) {
-      updateJobInState(jobId, j => {
-        j.stage = 'failed';
-        j.logs.push({
-          timestamp: new Date().toISOString(),
-          level: 'error',
-          message: `Pin 2 Budget Exceeded: ${pin2Budget.reason}. Hero and Pin 1 preserved.`,
-        });
-        return j;
-      });
-      return getJobById(jobId)!;
-    }
-
-    updateJobInState(jobId, j => {
-      if (j.pinterestPins[1]) {
-        j.pinterestPins[1].publishStatus = 'generating_image';
-      }
-      j.logs.push({ timestamp: new Date().toISOString(), level: 'info', message: 'Generating Pin 2 image (Marketing Studio Image 2.0 Alpha, 1k, 2:3)...' });
-      return j;
-    });
-
-    const pin2Res = await generateHiggsfieldImage({
-      prompt: pins[1].compactHiggsfieldPrompt,
-      aspectRatio: '2:3',
-      resolution: '1k',
-      slug: `${article.slug}-pin-2`,
-      targetFolder: 'pinterest',
-      jobId,
-      estimatedCostUsd: estimatedImageCost,
-      existingTaskId: pins[1].higgsfieldRequestId,
-      onTaskIdReceived: (taskId: string) => {
-        updateJobInState(jobId, j => {
-          if (j.pinterestPins[1]) {
-            j.pinterestPins[1].higgsfieldRequestId = taskId;
-          }
-          return j;
-        });
-      },
-    });
-
-    if (!pin2Res.success || !pin2Res.stableAssetPath) {
-      releaseBudgetReservation(jobId);
-      updateJobInState(jobId, j => {
-        j.stage = 'failed';
-        if (j.pinterestPins[1]) {
-          j.pinterestPins[1].publishStatus = 'failed';
-          j.pinterestPins[1].errorMessage = pin2Res.error;
-          if (pin2Res.providerRequestId) {
-            j.pinterestPins[1].higgsfieldRequestId = pin2Res.providerRequestId;
-          }
-        }
-        j.logs.push({
-          timestamp: new Date().toISOString(),
-          level: 'error',
-          message: `Pin 2 Generation Failed: ${pin2Res.error} (Request ID: ${pin2Res.providerRequestId || 'N/A'}). Hero and Pin 1 are safely preserved.`,
-        });
-        return j;
-      });
-      return getJobById(jobId)!;
-    }
-
-    if (pin2Res.costUsd === 0) {
-      releaseBudgetReservation(jobId);
-    }
-
-    updateJobInState(jobId, j => {
-      if (j.pinterestPins[1]) {
-        j.pinterestPins[1].stableAssetPath = pin2Res.stableAssetPath;
-        j.pinterestPins[1].stablePublicUrl = pin2Res.stablePublicUrl;
-        j.pinterestPins[1].higgsfieldRequestId = pin2Res.providerRequestId;
-        j.pinterestPins[1].publishStatus = 'image_ready';
-      }
-      j.logs.push({
-        timestamp: new Date().toISOString(),
-        level: 'info',
-        message: `Pin 2 generated and saved to ${pin2Res.stablePublicUrl}`,
-      });
-      return j;
-    });
-    pins = getJobById(jobId)?.pinterestPins || pins;
-  } else {
-    updateJobInState(jobId, j => {
-      j.logs.push({
-        timestamp: new Date().toISOString(),
-        level: 'info',
-        message: `Reusing existing valid Pin 2 asset at ${pins[1].stablePublicUrl}`,
-      });
-      return j;
-    });
-  }
 
   // -----------------------------------------------------------------
   // STAGE 4: PRODUCTION QUALITY GATES AUDIT
