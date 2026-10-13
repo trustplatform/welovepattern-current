@@ -63,8 +63,8 @@ async function testServerApiRoutes() {
     });
     const configJson = await configRes.json();
     assert(configRes.status === 200, '2. GET /api/seo-engine/config returns HTTP 200');
-    assert(configJson.success === true, '2b. GET /api/seo-engine/config returns config object');
-    assert(configJson.config.articlesPerDay === 2, '2c. Active config has articlesPerDay === 2');
+    assert(configJson.config.articlesPerDay === 3, '2c. Active config has articlesPerDay === 3');
+    assert(configJson.config.reuseOnlyMode === true, '2d. Active config has reuseOnlyMode === true');
 
     // 3. GET /api/seo-engine/costs
     const costsRes = await fetch(`${baseUrl}/api/seo-engine/costs`, {

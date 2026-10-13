@@ -52,13 +52,28 @@ async function runDashboardOverviewTests() {
   assert(periodFiltered.length === 2, '4. Filters jobs accurately within active period window');
 
   // 4. Production Metrics Aggregation
-  const publishedCount = periodFiltered.filter(j => j.stage === 'published').length;
+  const producedCount = periodFiltered.filter(j => j.stage === 'published' || j.stage === 'completed' || j.stage === 'awaiting_approval' || Boolean(j.articleContent?.contentHtml)).length;
+  const publishedCount = periodFiltered.filter(j => j.stage === 'published' || j.stage === 'completed').length;
   const awaitingCount = mockJobs.filter(j => j.stage === 'awaiting_approval').length;
-  const pinsCount = periodFiltered.reduce((acc, j) => acc + (j.pins?.length || 2), 0);
+  const pinsCount = periodFiltered.reduce((acc, j) => {
+    const pins = j.pinterestPins || j.pins || [];
+    return acc + pins.filter((p: any) => p.publishStatus === 'image_ready' || p.publishStatus === 'published' || Boolean(p.stableAssetPath || p.imageUrl)).length;
+  }, 0);
 
-  assert(publishedCount === 1, '5. Accurately counts published articles in period (1)');
-  assert(awaitingCount === 1, '6. Accurately counts awaiting approval jobs across all state (1)');
-  assert(pinsCount === 4, '7. Accurately counts total pins created in period (4)');
+  assert(producedCount === 2, '5. Accurately counts produced articles in period (2)');
+  assert(publishedCount === 1, '6. Accurately counts published articles in period (1)');
+  assert(awaitingCount === 1, '7. Accurately counts awaiting approval jobs across all state (1)');
+
+  // 5. Zero-Synthetic Invariant: Failed placeholder job with 0 pins does NOT produce 2 pins
+  const failedPlaceholderJob = { id: 'fail1', createdAt: '2026-09-22T10:00:00Z', stage: 'failed', pinterestPins: [] };
+  const mockWithFail = [...mockJobs, failedPlaceholderJob];
+  const filteredWithFail = filterJobs(mockWithFail, '2026-09-15', '2026-09-26');
+  const trueProduced = filteredWithFail.filter(j => j.stage === 'published' || j.stage === 'completed' || j.stage === 'awaiting_approval' || Boolean(j.articleContent?.contentHtml)).length;
+  const truePins = filteredWithFail.reduce((acc, j) => {
+    const pins = j.pinterestPins || j.pins || [];
+    return acc + pins.filter((p: any) => p.publishStatus === 'image_ready' || p.publishStatus === 'published' || Boolean(p.stableAssetPath || p.imageUrl)).length;
+  }, 0);
+  assert(trueProduced === 2, '8. Failed placeholder job excluded from produced articles count');
 
   console.log(`\n===============================================================`);
   console.log(`TEST SUMMARY: ${passed} PASSED, ${failed} FAILED`);

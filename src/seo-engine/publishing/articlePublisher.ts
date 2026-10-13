@@ -11,7 +11,7 @@ import { SeoEngineArticleJob } from '../types';
 import { sanitizeBlogHtml } from '../../utils/sanitizeHtml';
 
 const DATA_DIR = path.join(process.cwd(), 'data');
-const BLOG_POSTS_FILE = path.join(DATA_DIR, 'blog-posts.json');
+const getBlogPostsFilePath = () => path.join(DATA_DIR, process.env.SEO_ENGINE_BLOG_POSTS_FILE || 'blog-posts.json');
 const SITE_URL = 'https://welovepattern.com';
 
 /**
@@ -56,10 +56,11 @@ export function getLiveBlogPosts(): any[] {
     if (!fs.existsSync(DATA_DIR)) {
       fs.mkdirSync(DATA_DIR, { recursive: true });
     }
-    if (!fs.existsSync(BLOG_POSTS_FILE)) {
+    const filePath = getBlogPostsFilePath();
+    if (!fs.existsSync(filePath)) {
       return [];
     }
-    const raw = fs.readFileSync(BLOG_POSTS_FILE, 'utf-8').trim();
+    const raw = fs.readFileSync(filePath, 'utf-8').trim();
     if (!raw) return [];
     const parsed = JSON.parse(raw);
     return Array.isArray(parsed) ? parsed : [];
@@ -77,9 +78,10 @@ export function saveLiveBlogPosts(posts: any[]): boolean {
     if (!fs.existsSync(DATA_DIR)) {
       fs.mkdirSync(DATA_DIR, { recursive: true });
     }
-    const tmpFile = `${BLOG_POSTS_FILE}.tmp.${Date.now()}`;
+    const filePath = getBlogPostsFilePath();
+    const tmpFile = `${filePath}.tmp.${Date.now()}`;
     fs.writeFileSync(tmpFile, JSON.stringify(posts, null, 2), 'utf-8');
-    fs.renameSync(tmpFile, BLOG_POSTS_FILE);
+    fs.renameSync(tmpFile, filePath);
     return true;
   } catch (err) {
     console.error('[ArticlePublisher] Error saving live blog posts file:', err);

@@ -241,8 +241,7 @@ export function resolveOrPreservePinterestPins(
     const hasValidAsset = Boolean(
       existingPin &&
       existingPin.stableAssetPath &&
-      fs.existsSync(existingPin.stableAssetPath) &&
-      fs.statSync(existingPin.stableAssetPath).size > 100
+      isValidLocalAsset(existingPin.stableAssetPath)
     );
 
     // 3. CTA semantic check for tool topics
@@ -338,6 +337,15 @@ export async function executeJobLifecycle(
 
   const state = readEngineState();
   const config = state.config;
+
+  // REUSE-ONLY MODE GUARD:
+  // Strictly prevent generating or regenerating content.
+  // In reuse-only mode, no job is permitted to enter the generation lifecycle ($0 cost, 0 AI calls).
+  const isReuseOnly = config.reuseOnlyMode !== false;
+  if (isReuseOnly) {
+    console.log(`[JobQueueManager] Reuse-only mode active: Generation lifecycle strictly disabled for job ${jobId} ($0 cost, 0 AI calls).`);
+    return freshJob;
+  }
 
   // Cost budget guardrail check
   const budgetCheck = isBudgetPermitted(0.10, config, jobId);
@@ -770,10 +778,18 @@ export async function processQueueWorker(): Promise<void> {
   try {
     recoverInterruptedJobs();
     
+    // In reuse-only publishing mode, prevent queue worker from generating or regenerating content.
+    // Existing selected jobs without complete assets must not enter the generation lifecycle.
+    const state = readEngineState();
+    if (state.config.reuseOnlyMode !== false) {
+      console.log('[JobQueueManager] Reuse-only mode active: Skipping queue worker generation lifecycle ($0 cost, 0 AI calls).');
+      return;
+    }
+
     // Process pending jobs one by one, freshly reading state on each iteration
     while (true) {
-      const state = readEngineState();
-      const nextPendingJob = state.activeJobs.find(j => j.stage === 'selected');
+      const currentState = readEngineState();
+      const nextPendingJob = currentState.activeJobs.find(j => j.stage === 'selected');
       if (!nextPendingJob) {
         break;
       }

@@ -10,6 +10,7 @@ import path from 'path';
 import { PinterestCreativeConcept, SeoEngineArticleJob } from '../types';
 import { createPinterestPin, getValidPinterestAccessToken } from '../../pinterest/pinterestApi';
 import { getPinterestAuthRecord } from '../../pinterest/pinterestOAuth';
+import { isValidLocalAsset } from '../queue/assetRecovery';
 
 const SITE_URL = 'https://welovepattern.com';
 
@@ -49,7 +50,7 @@ export async function publishPinToPinterest(
     const destinationUrl = pin.destinationUrl || `${SITE_URL}/blog/${job.articleContent.slug}`;
 
     // Verify local image file exists
-    if (!pin.stableAssetPath || !fs.existsSync(pin.stableAssetPath)) {
+    if (!isValidLocalAsset(pin.stableAssetPath)) {
       return {
         success: false,
         error: `Pin image asset does not exist on disk at "${pin.stableAssetPath}".`,

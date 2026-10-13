@@ -14,6 +14,7 @@ export const DEFAULT_SEO_ENGINE_CONFIG: SeoEngineConfig = {
   autoPublishPinterest: true,
   requiresApproval: false,
   engineActive: true,
+  reuseOnlyMode: true,
   timezone: 'America/New_York',
   activeDays: [1, 2, 3, 4, 5, 6, 7],
   articlePublishTimes: ['08:00', '12:00', '16:00'],

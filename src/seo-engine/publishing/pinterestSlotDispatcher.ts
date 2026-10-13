@@ -21,8 +21,9 @@
 import fs from 'fs';
 import { readEngineState, updateJobInState } from '../queue/engineStorage';
 import { publishPinToPinterest, PublishPinResult } from './pinterestPublisher';
-import { SeoEngineArticleJob, PinterestCreativeConcept } from '../types';
 import { getPinterestAuthRecord } from '../../pinterest/pinterestOAuth';
+import { getLiveBlogPosts } from './articlePublisher';
+import { isValidLocalAsset } from '../queue/assetRecovery';
 
 export function isPinterestConnected(): boolean {
   const useSandbox = process.env.PINTEREST_USE_SANDBOX === 'true';
@@ -162,20 +163,28 @@ export async function dispatchScheduledPinterestSlot(
     };
   }
 
-  // 1. Verify Article is Strictly Published
-  if (job.stage !== 'completed' || !job.publishedBlogPostId || Boolean(job.publicationError)) {
+  // 1. Verify Article is Strictly Published and Live on the Website
+  const livePosts = getLiveBlogPosts();
+  const isParentLive = livePosts.some(p =>
+    (job.publishedBlogPostId && p.id === job.publishedBlogPostId) ||
+    (p.seoEngineJobId && p.seoEngineJobId === job.id) ||
+    (job.articleContent?.slug && p.slug === job.articleContent.slug) ||
+    (job.publishedSlug && p.slug === job.publishedSlug)
+  );
+
+  if (job.stage !== 'completed' || !job.publishedBlogPostId || Boolean(job.publicationError) || !isParentLive) {
     return {
       triggered: true,
       pinPublished: false,
       slotIndex,
       jobId: job.id,
       pinNumber: pin.pinNumber,
-      reason: `Parent article "${job.articleContent?.title || job.id}" is not yet published to website. Pin publication deferred.`,
+      reason: `Parent article "${job.articleContent?.title || job.id}" is not yet confirmed live on website. Pin publication deferred.`,
     };
   }
 
   // 2. Local asset check
-  if (!pin.stableAssetPath || !fs.existsSync(pin.stableAssetPath) || fs.statSync(pin.stableAssetPath).size < 100) {
+  if (!isValidLocalAsset(pin.stableAssetPath)) {
     return {
       triggered: true,
       pinPublished: false,

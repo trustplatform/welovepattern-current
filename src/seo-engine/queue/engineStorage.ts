@@ -14,12 +14,14 @@ const STATE_FILE_TMP_RELATIVE = SEO_ENGINE_STORAGE_PATHS.STATE_FILE_TMP;
 
 /** Resolves absolute path to state file from current working directory */
 export function getEngineStateFilePath(): string {
-  return path.resolve(process.cwd(), STATE_FILE_RELATIVE);
+  const custom = process.env.SEO_ENGINE_STATE_FILE;
+  return path.resolve(process.cwd(), custom || STATE_FILE_RELATIVE);
 }
 
 /** Resolves absolute path to temporary atomic file */
 function getEngineStateTmpFilePath(): string {
-  return path.resolve(process.cwd(), STATE_FILE_TMP_RELATIVE);
+  const custom = process.env.SEO_ENGINE_STATE_FILE;
+  return path.resolve(process.cwd(), custom ? `${custom}.tmp` : STATE_FILE_TMP_RELATIVE);
 }
 
 /** Generates clean, pristine default daily state object */
@@ -56,6 +58,14 @@ function normalizeAndRepairState(raw: Partial<SeoEngineDailyState>): SeoEngineDa
     lastRunDate: typeof raw.lastRunDate === 'string' ? raw.lastRunDate : defaults.lastRunDate,
     lastExecutedArticleSlot: typeof raw.lastExecutedArticleSlot === 'string' ? raw.lastExecutedArticleSlot : undefined,
     lastExecutedPinterestSlot: typeof raw.lastExecutedPinterestSlot === 'string' ? raw.lastExecutedPinterestSlot : undefined,
+    executedArticleSlots: Array.isArray(raw.executedArticleSlots)
+      ? raw.executedArticleSlots
+      : (typeof raw.lastExecutedArticleSlot === 'string' ? [raw.lastExecutedArticleSlot] : []),
+    executedPinterestSlots: Array.isArray(raw.executedPinterestSlots)
+      ? raw.executedPinterestSlots
+      : (typeof raw.lastExecutedPinterestSlot === 'string' ? [raw.lastExecutedPinterestSlot] : []),
+    failedArticleSlots: Array.isArray(raw.failedArticleSlots) ? raw.failedArticleSlots : [],
+    slotAttemptCounts: raw.slotAttemptCounts && typeof raw.slotAttemptCounts === 'object' ? raw.slotAttemptCounts : {},
     todayDiscoveredTopics: Array.isArray(raw.todayDiscoveredTopics) ? raw.todayDiscoveredTopics : [],
     activeJobs: Array.isArray(raw.activeJobs) ? raw.activeJobs : [],
     completedJobsHistory: Array.isArray(raw.completedJobsHistory) ? raw.completedJobsHistory : [],

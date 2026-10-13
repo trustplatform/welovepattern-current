@@ -24,6 +24,7 @@ import { SeoEngineArticleJob, PinterestCreativeConcept } from '../types';
 import { SEO_ENGINE_STORAGE_PATHS } from '../config';
 import { generateStableImageFilename } from '../generation/higgsfieldClient';
 import { readEngineState, writeEngineState } from './engineStorage';
+import { getLiveBlogPosts } from '../publishing/articlePublisher';
 
 export interface RecoveredSlotAsset {
   slotType: 'hero' | 'pin_1' | 'pin_2';
@@ -106,28 +107,53 @@ const FORENSIC_EXACT_JOB_BINDINGS: {
 ];
 
 /**
- * Validates whether a file exists and meets minimum valid image criteria (> 100 bytes).
+ * Resolves a local physical asset disk path across both AI Studio (/app/applet) and VPS (/www/wwwroot/welovepattern.com) environments.
+ * Returns the resolved disk path if the file exists and is > 100 bytes, or null otherwise.
  */
-export function isValidLocalAsset(filePath?: string): boolean {
-  if (!filePath || typeof filePath !== 'string') return false;
+export function resolveLocalAssetDiskPath(filePath?: string): string | null {
+  if (!filePath || typeof filePath !== 'string') return null;
   try {
+    // 1. Direct check: does the path exist as-is on disk?
+    if (fs.existsSync(filePath)) {
+      const stat = fs.statSync(filePath);
+      if (stat.isFile() && stat.size > 100) return filePath;
+    }
+
+    // 2. Strip environment-specific root prefixes
     let clean = filePath;
     if (clean.startsWith('/www/wwwroot/welovepattern.com/')) {
       clean = clean.replace('/www/wwwroot/welovepattern.com/', '');
+    } else if (clean.startsWith('/app/applet/')) {
+      clean = clean.replace('/app/applet/', '');
+    } else if (clean.startsWith('/')) {
+      clean = clean.replace(/^\/+/, '');
     }
 
-    let resolved = path.isAbsolute(clean) ? clean : path.resolve(process.cwd(), clean);
-    if (!fs.existsSync(resolved)) {
-      resolved = path.resolve(process.cwd(), clean.replace(/^\/+/, ''));
-      if (!fs.existsSync(resolved)) {
-        return false;
-      }
+    // 3. Resolve relative to current working directory (e.g. /www/wwwroot/welovepattern.com on VPS, /app/applet in AI Studio)
+    const resolved = path.resolve(process.cwd(), clean);
+    if (fs.existsSync(resolved)) {
+      const stat = fs.statSync(resolved);
+      if (stat.isFile() && stat.size > 100) return resolved;
     }
-    const stat = fs.statSync(resolved);
-    return stat.isFile() && stat.size > 100;
+
+    // 4. Fallback: check /www/wwwroot/welovepattern.com explicitly
+    const vpsFallback = path.resolve('/www/wwwroot/welovepattern.com', clean);
+    if (fs.existsSync(vpsFallback)) {
+      const stat = fs.statSync(vpsFallback);
+      if (stat.isFile() && stat.size > 100) return vpsFallback;
+    }
+
+    return null;
   } catch {
-    return false;
+    return null;
   }
+}
+
+/**
+ * Validates whether a file exists and meets minimum valid image criteria (> 100 bytes).
+ */
+export function isValidLocalAsset(filePath?: string): boolean {
+  return resolveLocalAssetDiskPath(filePath) !== null;
 }
 
 /**
@@ -537,20 +563,35 @@ export function getEligibleRecoveredJobs(limit: number = 1): SeoEngineArticleJob
   recoverAllActiveJobAssets();
 
   const state = readEngineState();
+  const livePosts = getLiveBlogPosts();
   const candidates: SeoEngineArticleJob[] = [];
 
   for (const job of state.activeJobs || []) {
-    // 1. Must not already be published
-    if (job.stage === 'completed' || (job.stage as string) === 'published' || job.publishedBlogPostId || job.publishedSlug) {
+    // 1. Must not already be published (either in job state or live blog datastore)
+    if (
+      job.stage === 'completed' ||
+      (job.stage as string) === 'published' ||
+      Boolean(job.publishedBlogPostId) ||
+      Boolean(job.publishedSlug)
+    ) {
+      continue;
+    }
+    const isAlreadyLive = livePosts.some(p =>
+      (job.publishedBlogPostId && p.id === job.publishedBlogPostId) ||
+      (p.seoEngineJobId && p.seoEngineJobId === job.id) ||
+      (job.articleContent?.slug && p.slug === job.articleContent.slug) ||
+      (job.publishedSlug && p.slug === job.publishedSlug)
+    );
+    if (isAlreadyLive) {
       continue;
     }
 
-    // 2. Must not already be assigned to a publish date in future/present
-    if (job.assignedPublishDate && job.assignedPublishDate >= new Date().toISOString().slice(0, 10)) {
+    // 2. Must not have an active publication assignment (no duplicate active publication assignment)
+    if (job.assignedPublishDate && job.assignedSlotTime) {
       continue;
     }
 
-    // 3. Must have complete article content
+    // 3. Must have complete saved article content
     const hasCompleteArticle = Boolean(
       job.articleContent &&
       typeof job.articleContent.title === 'string' &&
@@ -567,7 +608,7 @@ export function getEligibleRecoveredJobs(limit: number = 1): SeoEngineArticleJob
       continue;
     }
 
-    // 4. Must have all 3 valid local assets on disk
+    // 4. Must have exactly one verified local Hero image and two verified local Pinterest Pin images
     const hasValidHero = isValidLocalAsset(job.articleContent?.heroImage?.stableAssetPath);
     const hasValidPin1 = isValidLocalAsset(job.pinterestPins?.[0]?.stableAssetPath);
     const hasValidPin2 = isValidLocalAsset(job.pinterestPins?.[1]?.stableAssetPath);
@@ -580,7 +621,7 @@ export function getEligibleRecoveredJobs(limit: number = 1): SeoEngineArticleJob
   // Sort deterministically: oldest first
   candidates.sort((a, b) => (a.createdAt || a.dateScheduled || a.id).localeCompare(b.createdAt || b.dateScheduled || b.id));
 
-  return candidates.slice(0, limit);
+  return limit ? candidates.slice(0, limit) : candidates;
 }
 
 /**

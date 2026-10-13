@@ -274,6 +274,7 @@ export interface SeoEngineConfig {
   autoPublishPinterest: boolean;              // Default: false
   requiresApproval: boolean;                  // Default: true
   engineActive: boolean;                      // Default: true
+  reuseOnlyMode?: boolean;                    // When true, strictly publishes existing complete packages and prevents content/image generation
   timezone: string;                           // Default: "America/New_York"
   activeDays: number[];                       // [1..7] Monday through Sunday
   articlePublishTimes: string[];              // e.g. ["08:00", "12:00", "16:00"]
@@ -334,6 +335,10 @@ export interface SeoEngineDailyState {
   lastRunDate: string;
   lastExecutedArticleSlot?: string;           // Tracks e.g. "2026-09-27_08:00" for exact slot deduplication
   lastExecutedPinterestSlot?: string;         // Tracks e.g. "2026-09-27_09:00" for exact slot deduplication
+  executedArticleSlots?: string[];            // Tracks all successfully executed article slots for the day
+  executedPinterestSlots?: string[];          // Tracks all executed Pinterest slots for the day
+  failedArticleSlots?: string[];              // Tracks failed article slots to prevent uncontrolled retry loops
+  slotAttemptCounts?: Record<string, number>; // Tracks execution attempts per slot key
   todayDiscoveredTopics: DiscoveredTopic[];
   discoveredTopics?: DiscoveredTopic[];       // Convenience alias
   activeJobs: SeoEngineArticleJob[];

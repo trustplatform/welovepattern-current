@@ -158,25 +158,28 @@ export const DashboardOverview: React.FC<DashboardOverviewProps> = ({
   const historyJobs = engineStatus?.recentHistory || [];
   const allJobs = [...activeJobs, ...historyJobs];
 
-  // Filter jobs within current active reporting window
+  // Filter jobs within current active reporting window using publishing/schedule dates when assigned
   const periodJobs = React.useMemo(() => {
     if (!activeDateRange.start || !activeDateRange.end) return allJobs;
     return allJobs.filter(j => {
-      const jobDate = (j.createdAt || j.updatedAt || '').split('T')[0];
+      const jobDate = (j.assignedPublishDate || (j.publishedAt ? j.publishedAt.split('T')[0] : '') || j.dateScheduled || j.createdAt || j.updatedAt || '').split('T')[0];
       return jobDate >= activeDateRange.start && jobDate <= activeDateRange.end;
     });
   }, [allJobs, activeDateRange]);
 
-  const totalArticlesProduced = periodJobs.length;
+  const totalArticlesProduced = periodJobs.filter(j => j.stage === 'completed' || j.stage === 'published' || j.stage === 'awaiting_approval' || Boolean(j.articleContent?.contentHtml)).length;
   const totalPublishedArticles = periodJobs.filter(j => j.stage === 'completed' || j.stage === 'published' || j.articlePublished || Boolean(j.publishedBlogPostId)).length;
-  const totalPinsGenerated = periodJobs.reduce((acc, j) => acc + (j.pins?.length || j.pinterestPins?.length || 2), 0);
+  const totalPinsGenerated = periodJobs.reduce((acc, j) => {
+    const pins = j.pinterestPins || j.pins || [];
+    return acc + pins.filter((p: any) => p.publishStatus === 'image_ready' || p.publishStatus === 'published' || Boolean(p.stableAssetPath || p.imageUrl)).length;
+  }, 0);
   const totalPinsPublished = periodJobs.reduce((acc, j) => {
     const pins = j.pinterestPins || j.pins || [];
     return acc + pins.filter((p: any) => p.publishStatus === 'published' || Boolean(p.pinterestPinId)).length;
   }, 0);
   const totalPinsScheduled = periodJobs.reduce((acc, j) => {
     const pins = j.pinterestPins || j.pins || [];
-    return acc + pins.filter((p: any) => p.publishStatus === 'image_ready').length;
+    return acc + pins.filter((p: any) => p.publishStatus === 'image_ready' || p.publishStatus === 'scheduled' || Boolean(p.assignedSlotTime || p.scheduledTime)).length;
   }, 0);
   const totalFailedJobs = periodJobs.filter(j => j.stage === 'failed').length;
   const awaitingApprovalJobs = allJobs.filter(j => j.stage === 'awaiting_approval');
