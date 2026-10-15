@@ -175,6 +175,9 @@ export interface PinterestCreativeConcept {
   assignedSlotTime?: string;                  // Explicit Pinterest slot time ("08:30" | "09:00" | "12:30" | "13:00" | "16:30" | "17:00")
   publishedAt?: string;                       // ISO timestamp of successful Pinterest publication
   errorMessage?: string;
+  retryCount?: number;                        // Number of dispatch attempts (bounded retry)
+  lastAttemptAt?: string;                     // Timestamp of last dispatch attempt (backoff calculation)
+  isPermanentFailure?: boolean;               // True if error was permanent (400, 401, 403, 404, missing asset)
 }
 
 export interface ArticleHeroImage {
@@ -338,6 +341,7 @@ export interface SeoEngineDailyState {
   executedArticleSlots?: string[];            // Tracks all successfully executed article slots for the day
   executedPinterestSlots?: string[];          // Tracks all executed Pinterest slots for the day
   failedArticleSlots?: string[];              // Tracks failed article slots to prevent uncontrolled retry loops
+  failedPinterestSlots?: string[];            // Tracks failed Pinterest slots to prevent uncontrolled retry loops
   slotAttemptCounts?: Record<string, number>; // Tracks execution attempts per slot key
   todayDiscoveredTopics: DiscoveredTopic[];
   discoveredTopics?: DiscoveredTopic[];       // Convenience alias

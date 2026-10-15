@@ -22,7 +22,7 @@ import { NormalizedPinterestBoard } from '../../pinterest/pinterestApi';
 import { evaluateProductionQualityGates } from '../validation/productionQualityGates';
 import { getJobCostBreakdown, isBudgetPermitted, releaseBudgetReservation } from '../cost/costTracker';
 import { generateHiggsfieldImage, isHiggsfieldConfigured } from '../generation/higgsfieldClient';
-import { discoverDailyTwoSlotTopics, discoverTrendingCrochetTopic, discoverToolGuideTopic } from '../discovery/topicDiscovery';
+import { discoverDailyTwoSlotTopics, discoverDailyThreeSlotTopics, discoverTrendingCrochetTopic, discoverToolGuideTopic } from '../discovery/topicDiscovery';
 import { publishArticleToLiveSite } from '../publishing/articlePublisher';
 import { recoverJobLocalAssets, isValidLocalAsset } from './assetRecovery';
 
@@ -134,7 +134,20 @@ export async function createSingleSlotProductionJob(
       throw new Error(`Slot 2 topic invalid: Expected contentType 'tool_guide', category 'tools', and real toolSlug, got '${topic.contentType}' / '${topic.category}' / '${topic.toolSlug}'.`);
     }
   } else {
-    topic = await discoverTrendingCrochetTopic({ useRealDataForSeo: options?.useRealDataForSeo });
+    // Slot 3: Second tool/calculator article (must be a distinct tool from Slot 2)
+    const todayToolSlugs: string[] = [];
+    for (const j of state.activeJobs || []) {
+      if ((j.assignedPublishDate === targetDate || j.dateScheduled === targetDate) && j.topic?.toolSlug) {
+        todayToolSlugs.push(j.topic.toolSlug.toLowerCase());
+      }
+    }
+    topic = await discoverToolGuideTopic({
+      useRealDataForSeo: options?.useRealDataForSeo,
+      excludeToolSlugs: todayToolSlugs
+    });
+    if (topic.contentType !== 'tool_guide' || topic.category !== 'tools' || !topic.toolSlug) {
+      throw new Error(`Slot 3 topic invalid: Expected contentType 'tool_guide', category 'tools', and real toolSlug, got '${topic.contentType}' / '${topic.category}' / '${topic.toolSlug}'.`);
+    }
   }
 
   const job = queueJobForTopic(topic, config, targetDate);
@@ -148,6 +161,53 @@ export async function createSingleSlotProductionJob(
   });
 
   return getJobById(job.id)!;
+}
+
+/**
+ * Creates and queues the complete daily 3-slot production batch:
+ * Slot 1 (08:00): 1 x Trending Crochet article (Category: 'crochet')
+ * Slot 2 (12:00): 1 x Tool Guide article (Category: 'tools', Tool 1)
+ * Slot 3 (16:00): 1 x Tool Guide article (Category: 'tools', Tool 2, distinct from Tool 1)
+ * 
+ * Fulfills the exact daily production requirement: 2 tools/calculators articles and 1 crochet article.
+ */
+export async function createDailyThreeSlotProductionBatch(
+  options?: { useRealDataForSeo?: boolean; scheduledDate?: string }
+): Promise<[SeoEngineArticleJob, SeoEngineArticleJob, SeoEngineArticleJob]> {
+  const state = readEngineState();
+  const config = state.config;
+  const targetDate = options?.scheduledDate || new Date().toISOString().split('T')[0];
+
+  const [topicSlot1, topicSlot2, topicSlot3] = await discoverDailyThreeSlotTopics({
+    useRealDataForSeo: options?.useRealDataForSeo
+  });
+
+  const job1 = queueJobForTopic(topicSlot1, config, targetDate);
+  const job2 = queueJobForTopic(topicSlot2, config, targetDate);
+  const job3 = queueJobForTopic(topicSlot3, config, targetDate);
+
+  updateJobInState(job1.id, j => {
+    j.assignedPublishDate = targetDate;
+    j.assignedSlotTime = '08:00';
+    j.publicationScheduledAt = '08:00';
+    return j;
+  });
+
+  updateJobInState(job2.id, j => {
+    j.assignedPublishDate = targetDate;
+    j.assignedSlotTime = '12:00';
+    j.publicationScheduledAt = '12:00';
+    return j;
+  });
+
+  updateJobInState(job3.id, j => {
+    j.assignedPublishDate = targetDate;
+    j.assignedSlotTime = '16:00';
+    j.publicationScheduledAt = '16:00';
+    return j;
+  });
+
+  return [getJobById(job1.id)!, getJobById(job2.id)!, getJobById(job3.id)!];
 }
 
 /**

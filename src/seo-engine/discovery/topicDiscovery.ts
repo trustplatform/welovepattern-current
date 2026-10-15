@@ -26,6 +26,7 @@ import { CONTENT_ENGINE_LIMITS } from '../config';
 export interface RunDiscoveryOptions {
   limit?: number;
   useRealDataForSeo?: boolean;
+  excludeToolSlugs?: string[];
 }
 
 /**
@@ -322,9 +323,15 @@ export async function discoverTrendingCrochetTopic(options: RunDiscoveryOptions 
 export async function discoverToolGuideTopic(options: RunDiscoveryOptions = {}): Promise<DiscoveredTopic> {
   const { recentToolSlugs, recentKeywords } = getRecentHistoricalData();
 
-  // 1. Select the least recently covered real tool from TOOLS_DATA
-  const availableTools = TOOLS_DATA.filter(t => !recentToolSlugs.has(t.slug.toLowerCase()));
-  const candidateTools = availableTools.length > 0 ? availableTools : TOOLS_DATA;
+  // 1. Select the least recently covered real tool from TOOLS_DATA, excluding any slugs requested
+  const excludedSlugs = new Set([
+    ...Array.from(recentToolSlugs),
+    ...(options.excludeToolSlugs || []).map(s => s.toLowerCase().trim()),
+  ]);
+  const availableTools = TOOLS_DATA.filter(t => !excludedSlugs.has(t.slug.toLowerCase()));
+  const candidateTools = availableTools.length > 0
+    ? availableTools
+    : TOOLS_DATA.filter(t => !(options.excludeToolSlugs || []).map(s => s.toLowerCase().trim()).includes(t.slug.toLowerCase()));
 
   // Prioritize popular tools first, then others
   const prioritizedTools = [...candidateTools].sort((a, b) => {
@@ -436,9 +443,63 @@ export async function discoverDailyTwoSlotTopics(options: RunDiscoveryOptions = 
 }
 
 /**
+ * Discovers exactly THREE daily production topics:
+ * Slot 1: 1 x TRENDING CROCHET (Category: CROCHET, Slot 1: 08:00)
+ * Slot 2: 1 x TOOL GUIDE (Category: TOOLS, Slot 2: 12:00)
+ * Slot 3: 1 x TOOL GUIDE (Category: TOOLS, Slot 3: 16:00, distinct tool from Slot 2)
+ * 
+ * Guarantees the daily production ratio: exactly 2 tools/calculators articles and 1 crochet article.
+ */
+export async function discoverDailyThreeSlotTopics(options: RunDiscoveryOptions = {}): Promise<[DiscoveredTopic, DiscoveredTopic, DiscoveredTopic]> {
+  const slot1Crochet = await discoverTrendingCrochetTopic(options);
+  const slot2Tool = await discoverToolGuideTopic(options);
+  const slot3Tool = await discoverToolGuideTopic({
+    ...options,
+    excludeToolSlugs: [slot2Tool.toolSlug!]
+  });
+
+  // Strict Contract Verification
+  if (slot1Crochet.contentType !== 'trending_crochet' || slot1Crochet.category !== 'crochet') {
+    throw new Error(`Slot 1 topic invalid: Expected contentType 'trending_crochet' and category 'crochet', got '${slot1Crochet.contentType}' / '${slot1Crochet.category}'.`);
+  }
+
+  if (slot2Tool.contentType !== 'tool_guide' || slot2Tool.category !== 'tools' || !slot2Tool.toolSlug) {
+    throw new Error(`Slot 2 topic invalid: Expected contentType 'tool_guide', category 'tools', and real toolSlug, got '${slot2Tool.contentType}' / '${slot2Tool.category}' / '${slot2Tool.toolSlug}'.`);
+  }
+
+  if (slot3Tool.contentType !== 'tool_guide' || slot3Tool.category !== 'tools' || !slot3Tool.toolSlug) {
+    throw new Error(`Slot 3 topic invalid: Expected contentType 'tool_guide', category 'tools', and real toolSlug, got '${slot3Tool.contentType}' / '${slot3Tool.category}' / '${slot3Tool.toolSlug}'.`);
+  }
+
+  if (slot2Tool.toolSlug === slot3Tool.toolSlug) {
+    throw new Error(`Slot 2 and Slot 3 cannot have duplicate toolSlug "${slot2Tool.toolSlug}".`);
+  }
+
+  if (isToolKeyword(slot1Crochet.keyword)) {
+    throw new Error(`Slot 1 topic "${slot1Crochet.keyword}" contains a prohibited tool term.`);
+  }
+
+  // Update atomic engine state with discovered topics
+  const state = readEngineState();
+  const existingTopics = state.todayDiscoveredTopics || [];
+  const updatedTopics = [
+    slot1Crochet,
+    slot2Tool,
+    slot3Tool,
+    ...existingTopics.filter(t => t.id !== slot1Crochet.id && t.id !== slot2Tool.id && t.id !== slot3Tool.id)
+  ].slice(0, 50);
+
+  state.todayDiscoveredTopics = updatedTopics;
+  writeEngineState(state);
+
+  return [slot1Crochet, slot2Tool, slot3Tool];
+}
+
+/**
  * Runs the topic discovery pipeline end-to-end and returns discovered topics.
  */
 export async function runTopicDiscoveryPipeline(options: RunDiscoveryOptions = {}): Promise<DiscoveredTopic[]> {
-  const [slot1, slot2] = await discoverDailyTwoSlotTopics(options);
-  return [slot1, slot2];
+  const [slot1, slot2, slot3] = await discoverDailyThreeSlotTopics(options);
+  return [slot1, slot2, slot3];
 }
+

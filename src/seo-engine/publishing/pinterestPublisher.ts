@@ -11,6 +11,7 @@ import { PinterestCreativeConcept, SeoEngineArticleJob } from '../types';
 import { createPinterestPin, getValidPinterestAccessToken } from '../../pinterest/pinterestApi';
 import { getPinterestAuthRecord } from '../../pinterest/pinterestOAuth';
 import { isValidLocalAsset } from '../queue/assetRecovery';
+import { isRealNumericPinterestBoardId, isPlaceholderBoardId } from './pinterestBoardSelector';
 
 const SITE_URL = 'https://welovepattern.com';
 
@@ -66,6 +67,13 @@ export async function publishPinToPinterest(
       return {
         success: false,
         error: 'Target Pinterest board ID is required.',
+      };
+    }
+
+    if (isPlaceholderBoardId(boardId)) {
+      return {
+        success: false,
+        error: `Target Pinterest board ID "${boardId}" is invalid. Pinterest API requires a genuine numeric board ID (e.g. 18-19 digits). Placeholder labels such as 'board_tools' cannot be sent to Pinterest.`,
       };
     }
 

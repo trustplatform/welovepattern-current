@@ -13,3 +13,9 @@ coverage/
 # OAuth tokens & secrets
 data/pinterest-auth.json
 *pinterest-auth.json
+
+# Temporary test state files & deployment package
+test-*-state.json
+data/*.tmp*
+data/*.corrupted.*
+deploy_package/

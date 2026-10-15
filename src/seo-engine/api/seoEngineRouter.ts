@@ -15,7 +15,8 @@ import { isDataForSeoConfigured } from '../discovery/dataForSeoClient';
 import { isOpenAiConfigured } from '../generation/openAiClient';
 import { isHiggsfieldConfigured } from '../generation/higgsfieldClient';
 import { runTopicDiscoveryPipeline } from '../discovery/topicDiscovery';
-import { queueJobForTopic, executeJobLifecycle, recoverInterruptedJobs, createDailyProductionBatch } from '../queue/jobQueueManager';
+import { queueJobForTopic, executeJobLifecycle, recoverInterruptedJobs, createDailyProductionBatch, createDailyThreeSlotProductionBatch } from '../queue/jobQueueManager';
+import { publishArticleToLiveSite } from '../publishing/articlePublisher';
 import { runCompleteQualityGateTestMatrix } from '../test/runQualityGateTestMatrix';
 import { getDailySpendUsd, getJobCostBreakdown, CostStorageData } from '../cost/costTracker';
 import { SEO_ENGINE_STORAGE_PATHS } from '../config';
@@ -261,15 +262,16 @@ export function createSeoEngineRouter(requireAdminAuth: express.RequestHandler):
   // -----------------------------------------------------------------
   router.post('/batch/daily', requireAdminAuth, async (req, res) => {
     try {
-      const [slot1Job, slot2Job] = await createDailyProductionBatch({
+      const [slot1Job, slot2Job, slot3Job] = await createDailyThreeSlotProductionBatch({
         useRealDataForSeo: req.body?.useRealDataForSeo !== false
       });
       return res.json({
         success: true,
-        message: 'Created daily 2-slot production batch (1 Trending Crochet + 1 Tool Guide)',
+        message: 'Created daily 3-slot production batch (1 Trending Crochet + 2 Tools/Calculators)',
         batch: {
           slot1_trending_crochet: slot1Job,
-          slot2_tool_guide: slot2Job,
+          slot2_tool_guide_1: slot2Job,
+          slot3_tool_guide_2: slot3Job,
         }
       });
     } catch (err: any) {
@@ -340,19 +342,50 @@ export function createSeoEngineRouter(requireAdminAuth: express.RequestHandler):
   // -----------------------------------------------------------------
   // 5. HUMAN APPROVAL & REJECTION
   // -----------------------------------------------------------------
-  router.post('/jobs/:id/approve', requireAdminAuth, (req, res) => {
+  router.post('/jobs/:id/approve', requireAdminAuth, async (req, res) => {
     try {
-      const updated = updateJobInState(req.params.id, j => {
-        if (j.stage !== 'awaiting_approval') {
-          throw new Error(`Job cannot be approved from current stage: ${j.stage}`);
-        }
+      const { publishImmediately } = req.body || {};
+      const job = getJobById(req.params.id);
+      if (!job) {
+        return res.status(404).json({ error: 'Job not found' });
+      }
+      if (job.stage !== 'awaiting_approval' && (job.stage as any) !== 'ready_to_publish') {
+        return res.status(400).json({ error: `Job cannot be approved from current stage: ${job.stage}` });
+      }
+
+      const state = readEngineState();
+      const shouldPublish = Boolean(publishImmediately || state.config.autoPublish);
+
+      let updated = updateJobInState(req.params.id, j => {
+        j.stage = shouldPublish ? 'ready_to_publish' : 'ready_to_publish';
         j.logs.push({
           timestamp: new Date().toISOString(),
           level: 'info',
           message: 'Article draft approved by human administrator.',
         });
         return j;
-      });
+      })!;
+
+      if (shouldPublish) {
+        const pubResult = await publishArticleToLiveSite(updated);
+        if (pubResult.success && pubResult.blogPostId) {
+          updated = updateJobInState(req.params.id, j => {
+            j.stage = 'completed';
+            j.publishedBlogPostId = pubResult.blogPostId;
+            j.publishedSlug = pubResult.slug;
+            j.publishedUrl = pubResult.publicUrl;
+            j.publishedAt = new Date().toISOString();
+            j.indexNowNotified = true;
+            j.logs.push({
+              timestamp: new Date().toISOString(),
+              level: 'info',
+              message: `Article published to live website: ${pubResult.publicUrl} (ID: ${pubResult.blogPostId})`,
+            });
+            return j;
+          })!;
+        }
+      }
+
       return res.json({ success: true, job: updated });
     } catch (err: any) {
       return res.status(400).json({ error: err?.message || 'Approval failed' });

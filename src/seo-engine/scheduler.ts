@@ -15,7 +15,7 @@
  */
 
 import { readEngineState, writeEngineState, updateJobInState } from './queue/engineStorage';
-import { createDailyProductionBatch, createSingleSlotProductionJob, processQueueWorker } from './queue/jobQueueManager';
+import { createDailyProductionBatch, createSingleSlotProductionJob, processQueueWorker, executeJobLifecycle } from './queue/jobQueueManager';
 import { dispatchScheduledPinterestSlot, dispatchNextOverduePinterestPin } from './publishing/pinterestSlotDispatcher';
 import { getLiveBlogPosts, publishArticleToLiveSite } from './publishing/articlePublisher';
 import { SeoEngineArticleJob, PinterestCreativeConcept } from './types';
@@ -325,11 +325,30 @@ export async function evaluateSchedulerTick(
     // If not already pre-assigned for this slot, pull next eligible unassigned complete package
     // Only during real scheduled article slots, never during missed catch-up ticks, preserving eligible reserves
     if (!targetJob && isArticleSlot) {
-      const eligibleRecovered = getEligibleRecoveredJobs(1);
-      if (eligibleRecovered.length > 0) {
-        targetJob = eligibleRecovered[0];
-        console.log(`[SeoEngineScheduler] ♻️ Assigning recovered job "${targetJob.articleContent?.title || targetJob.id}" to Slot ${slotNumber} (${slotKey}). Zero Higgsfield POSTs ($0.00).`);
-        assignRecoveredJobToSlot(targetJob.id, dateStr, activeSlotTime, slotNumber);
+      if (config.reuseOnlyMode !== false) {
+        const eligibleRecovered = getEligibleRecoveredJobs(1);
+        if (eligibleRecovered.length > 0) {
+          targetJob = eligibleRecovered[0];
+          console.log(`[SeoEngineScheduler] ♻️ Assigning recovered job "${targetJob.articleContent?.title || targetJob.id}" to Slot ${slotNumber} (${slotKey}). Zero Higgsfield POSTs ($0.00).`);
+          assignRecoveredJobToSlot(targetJob.id, dateStr, activeSlotTime, slotNumber);
+        }
+      } else {
+        // Generative mode: create and queue slot-specific production job
+        console.log(`[SeoEngineScheduler] Creating new production job for Slot ${slotNumber} (${slotKey})...`);
+        try {
+          targetJob = await createSingleSlotProductionJob(slotNumber, {
+            scheduledDate: dateStr,
+            slotTime: activeSlotTime,
+            useRealDataForSeo: options?.useRealDataForSeo
+          });
+          if (targetJob && targetJob.stage === 'selected') {
+            await executeJobLifecycle(targetJob.id);
+            const freshState = readEngineState();
+            targetJob = freshState.activeJobs.find(j => j.id === targetJob!.id) || targetJob;
+          }
+        } catch (err: any) {
+          console.error(`[SeoEngineScheduler] Error creating/executing production job for Slot ${slotNumber}:`, err);
+        }
       }
     }
 
@@ -433,18 +452,21 @@ export async function evaluateSchedulerTick(
               return j;
             });
 
-            // Record slot failure to prevent uncontrolled retry loop
-            if (!state.failedArticleSlots) state.failedArticleSlots = [];
-            if (!state.failedArticleSlots.includes(slotKey)) state.failedArticleSlots.push(slotKey);
+            // Record slot failure with bounded retries
             if (!state.slotAttemptCounts) state.slotAttemptCounts = {};
             state.slotAttemptCounts[slotKey] = (state.slotAttemptCounts[slotKey] || 0) + 1;
+            const attempts = state.slotAttemptCounts[slotKey];
+            if (attempts >= 3) {
+              if (!state.failedArticleSlots) state.failedArticleSlots = [];
+              if (!state.failedArticleSlots.includes(slotKey)) state.failedArticleSlots.push(slotKey);
+            }
             writeEngineState(state);
 
             return {
               triggered: false,
               action: 'article_batch',
               slotKey,
-              reason: `Failed to publish recovered article to live website for slot ${slotKey}: ${pubResult.error}`,
+              reason: `Failed to publish recovered article to live website for slot ${slotKey} (attempt ${attempts}/3): ${pubResult.error}`,
             };
           }
         } else {
@@ -482,7 +504,7 @@ export async function evaluateSchedulerTick(
           return j;
         });
 
-        // Record gate failure to prevent uncontrolled retry loop
+        // Record permanent gate failure to prevent uncontrolled retry loop
         if (!state.failedArticleSlots) state.failedArticleSlots = [];
         if (!state.failedArticleSlots.includes(slotKey)) state.failedArticleSlots.push(slotKey);
         if (!state.slotAttemptCounts) state.slotAttemptCounts = {};
@@ -498,18 +520,32 @@ export async function evaluateSchedulerTick(
       }
     }
 
-    // 2. INVENTORY EXHAUSTION GUARD: No unassigned or complete packages remain
-    console.log(`[SeoEngineScheduler] 🛑 Inventory exhausted: No unpublished complete article packages remain for slot ${slotKey}. Reuse-only policy enforced: zero AI/image generation.`);
-    if (!state.executedArticleSlots) state.executedArticleSlots = [];
-    if (!state.executedArticleSlots.includes(slotKey)) state.executedArticleSlots.push(slotKey);
-    writeEngineState(state);
+    // 2. INVENTORY EXHAUSTION GUARD (Reuse-only) or Missing Job Failure (Generative)
+    if (config.reuseOnlyMode !== false) {
+      console.log(`[SeoEngineScheduler] 🛑 Inventory exhausted: No unpublished complete article packages remain for slot ${slotKey}. Reuse-only policy enforced: zero AI/image generation.`);
+      if (!state.executedArticleSlots) state.executedArticleSlots = [];
+      if (!state.executedArticleSlots.includes(slotKey)) state.executedArticleSlots.push(slotKey);
+      writeEngineState(state);
 
-    return {
-      triggered: false,
-      action: 'inventory_exhausted',
-      slotKey,
-      reason: `Inventory exhausted: No unpublished complete article packages remain for slot ${slotKey}. Zero new AI or image generation policy enforced ($0 cost).`,
-    };
+      return {
+        triggered: false,
+        action: 'inventory_exhausted',
+        slotKey,
+        reason: `Inventory exhausted: No unpublished complete article packages remain for slot ${slotKey}. Zero new AI or image generation policy enforced ($0 cost).`,
+      };
+    } else {
+      console.warn(`[SeoEngineScheduler] ⚠️ No article job ready or generated for slot ${slotKey}.`);
+      if (!state.failedArticleSlots) state.failedArticleSlots = [];
+      if (!state.failedArticleSlots.includes(slotKey)) state.failedArticleSlots.push(slotKey);
+      writeEngineState(state);
+
+      return {
+        triggered: false,
+        action: 'article_batch',
+        slotKey,
+        reason: `No article job could be generated or scheduled for slot ${slotKey}.`,
+      };
+    }
   }
 
   // -----------------------------------------------------------------

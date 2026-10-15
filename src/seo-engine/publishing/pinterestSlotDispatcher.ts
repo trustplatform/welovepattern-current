@@ -24,6 +24,12 @@ import { publishPinToPinterest, PublishPinResult } from './pinterestPublisher';
 import { getPinterestAuthRecord } from '../../pinterest/pinterestOAuth';
 import { getLiveBlogPosts } from './articlePublisher';
 import { isValidLocalAsset } from '../queue/assetRecovery';
+import {
+  getConnectedPinterestBoards,
+  selectBestPinterestBoard,
+  isRealNumericPinterestBoardId,
+  isPlaceholderBoardId,
+} from './pinterestBoardSelector';
 
 export function isPinterestConnected(): boolean {
   const useSandbox = process.env.PINTEREST_USE_SANDBOX === 'true';
@@ -208,7 +214,19 @@ export async function dispatchScheduledPinterestSlot(
     };
   }
 
-  // 3. Pre-flight Check: Pinterest connection
+  // 4. Retry Bounding: Stop retrying if maximum attempts reached or error was permanent
+  if (pin.isPermanentFailure || (pin.retryCount && pin.retryCount >= 3)) {
+    return {
+      triggered: true,
+      pinPublished: false,
+      slotIndex,
+      jobId: job.id,
+      pinNumber: pin.pinNumber,
+      reason: `Pin ${pin.pinNumber} reached maximum retry limit (${pin.retryCount || 0} attempts) or permanent failure: ${pin.errorMessage || 'permanent error'}`,
+    };
+  }
+
+  // 5. Pre-flight Check: Pinterest connection
   if (!isPinterestConnected()) {
     console.log(`[PinterestSlotDispatcher] ℹ️ Pinterest account is not connected. Deferring live Pin dispatch for Slot ${slotIndex + 1} (${slotTime}) until connected in Admin Settings.`);
     return {
@@ -221,22 +239,82 @@ export async function dispatchScheduledPinterestSlot(
     };
   }
 
-  // 4. Pre-flight Check: Target Board ID assigned
-  if (!pin.targetBoardId) {
-    console.log(`[PinterestSlotDispatcher] ℹ️ Pin ${pin.pinNumber} for job ${job.id} has no target Pinterest board assigned. Deferring live Pin dispatch for Slot ${slotIndex + 1} (${slotTime}) until a board is assigned.`);
-    return {
-      triggered: true,
-      pinPublished: false,
-      slotIndex,
-      jobId: job.id,
-      pinNumber: pin.pinNumber,
-      reason: 'No suitable Pinterest board assigned. Pin publication safely deferred until board assignment.',
-    };
+  // 6. Dynamic Pinterest Board Resolution & Validation
+  // If pin has no targetBoardId or has an internal placeholder (e.g. 'board_tools'),
+  // dynamically resolve the best genuine numeric board ID from connected account
+  if (!pin.targetBoardId || isPlaceholderBoardId(pin.targetBoardId)) {
+    console.log(`[PinterestSlotDispatcher] 🔍 Dynamically selecting Pinterest board for Job ${job.id}, Pin ${pin.pinNumber} (Category: ${job.category || job.contentType})...`);
+    const availableBoards = await getConnectedPinterestBoards();
+    const fallbackBoard = (config.fallbackBoardId && config.fallbackBoardName)
+      ? { id: config.fallbackBoardId, name: config.fallbackBoardName }
+      : undefined;
+
+    const boardSelection = selectBestPinterestBoard({
+      topic: job.topic,
+      category: job.category || job.contentType,
+      availableBoards,
+      fallbackBoard,
+    });
+
+    if (boardSelection.success && boardSelection.board && isRealNumericPinterestBoardId(boardSelection.board.id)) {
+      pin.targetBoardId = boardSelection.board.id;
+      pin.targetBoardName = boardSelection.board.name;
+      pin.boardName = boardSelection.board.name;
+
+      updateJobInState(job.id, j => {
+        const p = j.pinterestPins?.find(item => item.pinNumber === pin.pinNumber);
+        if (p) {
+          p.targetBoardId = boardSelection.board!.id;
+          p.targetBoardName = boardSelection.board!.name;
+          p.boardName = boardSelection.board!.name;
+        }
+        j.logs.push({
+          timestamp: new Date().toISOString(),
+          level: 'info',
+          message: `Pinterest dynamic board selection for Pin ${pin.pinNumber}: ${boardSelection.reason}`,
+        });
+        return j;
+      });
+    } else {
+      // Board selection could not find a valid numeric board.
+      // CRITICAL INDEPENDENCE RULE:
+      // - Pinterest board selection failure MUST NOT fail or unpublish the website article.
+      // - The parent article remains published on the website.
+      // - Pin is retained in a retryable state with clear diagnostic logs.
+      const diagReason = boardSelection.reason || 'No valid Pinterest board found';
+      updateJobInState(job.id, j => {
+        const p = j.pinterestPins?.find(item => item.pinNumber === pin.pinNumber);
+        if (p) {
+          p.publishStatus = 'failed';
+          p.retryCount = (p.retryCount || 0) + 1;
+          p.lastAttemptAt = new Date().toISOString();
+          p.errorMessage = `Pinterest board resolution failed: ${diagReason}`;
+          if (p.retryCount >= 3) {
+            p.isPermanentFailure = true;
+          }
+        }
+        j.logs.push({
+          timestamp: new Date().toISOString(),
+          level: 'warn',
+          message: `Pinterest Slot ${slotIndex + 1} (${slotTime}) Pin ${pin.pinNumber}: ${diagReason}. Pin retained in retryable state (attempt ${p?.retryCount || 1}/3). Parent article remains safely live on website.`,
+        });
+        return j;
+      });
+
+      return {
+        triggered: true,
+        pinPublished: false,
+        slotIndex,
+        jobId: job.id,
+        pinNumber: pin.pinNumber,
+        reason: `No suitable Pinterest board found in connected account (${diagReason}). Pin retained in retryable state.`,
+      };
+    }
   }
 
   console.log(`[PinterestSlotDispatcher] 📌 Dispatching Slot ${slotIndex + 1} (${slotTime}) -> Job ${job.id}, Pin ${pin.pinNumber}...`);
 
-  // 5. Dispatch to Pinterest API
+  // 7. Dispatch to Pinterest API
   const pubResult: PublishPinResult = await publishPinToPinterest(job, pin);
 
   if (pubResult.success && pubResult.pinId) {
@@ -247,6 +325,7 @@ export async function dispatchScheduledPinterestSlot(
         p.pinterestPinId = pubResult.pinId;
         p.scheduledTime = slotTime;
         p.publishedAt = new Date().toISOString();
+        p.errorMessage = undefined;
       }
       j.logs.push({
         timestamp: new Date().toISOString(),
@@ -266,16 +345,25 @@ export async function dispatchScheduledPinterestSlot(
       reason: `Successfully published Pin ${pin.pinNumber} for job ${job.id}`,
     };
   } else {
+    const errorMsg = pubResult.error || 'Pinterest API dispatch failed';
+    // Differentiate permanent errors (400, 401, 403, 404, invalid board) from transient ones (429, 500, network)
+    const isPermanent = /400|401|403|404|unauthorized|forbidden|invalid board|bad request/i.test(errorMsg);
+
     updateJobInState(job.id, j => {
       const p = j.pinterestPins?.find(item => item.pinNumber === pin.pinNumber);
       if (p) {
         p.publishStatus = 'failed';
-        p.errorMessage = pubResult.error || 'Pinterest API dispatch failed';
+        p.retryCount = (p.retryCount || 0) + 1;
+        p.lastAttemptAt = new Date().toISOString();
+        p.errorMessage = errorMsg;
+        if (isPermanent || p.retryCount >= 3) {
+          p.isPermanentFailure = true;
+        }
       }
       j.logs.push({
         timestamp: new Date().toISOString(),
         level: 'error',
-        message: `Pinterest Slot ${slotTime} failed for Pin ${pin.pinNumber}: ${pubResult.error}`,
+        message: `Pinterest Slot ${slotTime} failed for Pin ${pin.pinNumber} (attempt ${(p?.retryCount || 1)}/3): ${errorMsg}`,
       });
       return j;
     });
@@ -335,6 +423,15 @@ export async function dispatchNextOverduePinterestPin(
 
     if (!job || !pin || pin.publishStatus === 'published' || pin.pinterestPinId) continue;
     if (job.stage !== 'completed' || !job.publishedBlogPostId || job.publicationError) continue;
+    if (pin.isPermanentFailure || (pin.retryCount && pin.retryCount >= 3)) continue;
+
+    // Exponential backoff check: retry 1 wait 2m, retry 2 wait 5m
+    if (pin.lastAttemptAt) {
+      const backoffMs = (pin.retryCount || 1) * 2 * 60 * 1000;
+      const elapsed = Date.now() - new Date(pin.lastAttemptAt).getTime();
+      if (elapsed < backoffMs) continue;
+    }
+
     const result = await dispatchScheduledPinterestSlot(slot, targetDateStr);
     if (result.pinPublished) return result;
   }
