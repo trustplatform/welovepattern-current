@@ -14,7 +14,7 @@ export const DEFAULT_SEO_ENGINE_CONFIG: SeoEngineConfig = {
   autoPublishPinterest: true,
   requiresApproval: false,
   engineActive: true,
-  reuseOnlyMode: true,
+  reuseOnlyMode: false,
   timezone: 'America/New_York',
   activeDays: [1, 2, 3, 4, 5, 6, 7],
   articlePublishTimes: ['08:00', '12:00', '16:00'],
@@ -47,7 +47,7 @@ export const DEFAULT_SEO_ENGINE_CONFIG: SeoEngineConfig = {
   openAiTemperature: 0.7,
   dailyCostLimitUsd: 5.00,
   perJobCostLimitUsd: 1.50,
-  higgsfieldEnabled: false,
+  higgsfieldEnabled: true,
   estimatedImageCostUsd: 0.00,
 };
 
