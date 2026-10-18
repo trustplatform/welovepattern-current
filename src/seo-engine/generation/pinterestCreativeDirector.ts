@@ -1459,13 +1459,14 @@ export function buildHiggsfieldHeroPrompt(
   packet: FactualResearchPacket
 ): string {
   const craftType = packet.craftType || 'crochet';
+  const subjectKeyword = topic.keyword || article.title;
 
   if (topic.targetContentFormat === 'tool_focus') {
     return `Editorial craft flatlay photography for ${craftType} article "${article.title}". Neatly arranged natural wool yarn skeins, smooth birch wooden crochet hooks, a flexible cloth measuring tape, and a crisp textured gauge swatch on a clean warm linen background. Soft diffused natural window light, warm neutral tones, organic cozy maker workspace, 8k resolution, authentic artisan photography, zero digital noise.`;
   } else if (topic.targetContentFormat === 'tutorial') {
-    return `Authentic close-up artisan craft photography for "${article.title}". Maker hands gently working intricate ${craftType} stitches with premium textured yarn, natural wooden hook, soft morning studio light, shallow depth of field, warm cozy maker vibe, immaculate stitch definition, high resolution, organic craft publication aesthetic.`;
+    return `Authentic close-up artisan craft photography for "${article.title}". Maker hands gently working intricate ${craftType} stitches for ${subjectKeyword} with premium textured yarn, natural wooden hook, soft morning studio light, shallow depth of field, warm cozy maker vibe, immaculate stitch definition, high resolution, organic craft publication aesthetic.`;
   } else {
-    return `Warm lifestyle interior photography for "${article.title}". A finished hand-crafted ${craftType} blanket draped gracefully over a comfortable wooden armchair beside a woven basket of cozy yarn cakes, warm sunlight streaming through window, elegant rustic home decor, authentic high-resolution craft photography.`;
+    return `Warm lifestyle interior photography for "${article.title}". Beautiful finished hand-crafted ${craftType} project depicting ${subjectKeyword}, tastefully styled on a rustic wooden surface beside a basket of textured yarn cakes, polished wooden crochet hooks, warm ambient sunlight streaming through window, elegant cozy home decor, authentic high-resolution craft photography.`;
   }
 }
 

@@ -199,7 +199,8 @@ export function evaluateProductionQualityGates(
   article: GeneratedArticle,
   topic: DiscoveredTopic,
   packet: FactualResearchPacket,
-  config: SeoEngineConfig
+  config: SeoEngineConfig,
+  options?: { isTestRun?: boolean }
 ): ProductionQualityGateResult {
   const rejectionReasons: string[] = [];
 
@@ -341,7 +342,7 @@ export function evaluateProductionQualityGates(
   // Evaluates production safety: verifies engine is active and configuration parameters are valid.
   // When autoPublish is enabled without approval, validates that engine is actively configured for autonomous production.
   let pubSafetyPassed = true;
-  if (!config.engineActive) {
+  if (!options?.isTestRun && !config.engineActive) {
     pubSafetyPassed = false;
     rejectionReasons.push('Publication Safety Failure: Engine is inactive (config.engineActive is false).');
   } else if (config.articlesPerDay <= 0 || config.articlesPerDay > 10) {

@@ -13,7 +13,7 @@ export const DEFAULT_SEO_ENGINE_CONFIG: SeoEngineConfig = {
   autoPublish: true,
   autoPublishPinterest: true,
   requiresApproval: false,
-  engineActive: true,
+  engineActive: false,
   reuseOnlyMode: false,
   timezone: 'America/New_York',
   activeDays: [1, 2, 3, 4, 5, 6, 7],
@@ -48,11 +48,19 @@ export const DEFAULT_SEO_ENGINE_CONFIG: SeoEngineConfig = {
   dailyCostLimitUsd: 5.00,
   perJobCostLimitUsd: 1.50,
   higgsfieldEnabled: true,
-  estimatedImageCostUsd: 0.00,
+  estimatedImageCostUsd: 0.03,
+  higgsfieldDailyCostLimitUsd: 1.70,
+  higgsfieldDailyRequestsLimit: 9,
 };
 
 /** Limits and thresholds for article generation and internal linking */
 export const CONTENT_ENGINE_LIMITS = {
+  /** Strict daily spending cap for Higgsfield ($1.70 / production day) */
+  HIGGSFIELD_DAILY_SPEND_CAP_USD: 1.70,
+  /** Maximum unique paid image-generation POST requests per production day (9 unique POSTs) */
+  MAX_DAILY_HIGGSFIELD_PAID_REQUESTS: 9,
+  /** Default estimated cost per generated image */
+  DEFAULT_ESTIMATED_IMAGE_COST_USD: 0.03,
   /** Maximum internal links to inject per article */
   MAX_INTERNAL_LINKS_PER_ARTICLE: 8,
   /** Density threshold: maximum 1 internal link per N words */

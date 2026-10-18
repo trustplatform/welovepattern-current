@@ -19,7 +19,17 @@
 import fs from 'fs';
 import path from 'path';
 import crypto from 'crypto';
-import { recordCostTransaction, getDailyHiggsfieldGenerationsCount } from '../cost/costTracker';
+import {
+  recordCostTransaction,
+  getDailyHiggsfieldGenerationsCount,
+  getDailyHiggsfieldSpendUsd,
+  reserveHiggsfieldPaidSlot,
+  releaseHiggsfieldReservation,
+  markHiggsfieldReservationAmbiguous,
+  isValidCostAmount,
+  HIGGSFIELD_DAILY_SPEND_CAP_USD,
+  MAX_DAILY_HIGGSFIELD_PAID_REQUESTS
+} from '../cost/costTracker';
 import { SEO_ENGINE_STORAGE_PATHS } from '../config';
 
 export interface HiggsfieldGenerationOptions {
@@ -311,7 +321,17 @@ export async function generateHiggsfieldImage(
     };
   }
 
-  const estimatedCost = typeof estimatedCostUsd === 'number' && estimatedCostUsd > 0 ? estimatedCostUsd : 0.03;
+  const estimatedCost = (typeof estimatedCostUsd === 'number' && estimatedCostUsd > 0)
+    ? estimatedCostUsd
+    : 0.03;
+
+  if (!isValidCostAmount(estimatedCost)) {
+    return {
+      success: false,
+      error: `Rejected invalid or zero Higgsfield cost estimate ($${estimatedCostUsd}). Paid image generation requires a positive finite cost estimate and cannot rely on $0.00.`,
+    };
+  }
+
   let currentTaskId: string | undefined = existingTaskId;
   let cdnUrl: string | undefined;
 
@@ -319,6 +339,7 @@ export async function generateHiggsfieldImage(
     // 3. Resume existing remote task OR create a new generation request
     if (existingTaskId) {
       // Direct polling of existing task without creating a duplicate paid POST request
+      // Poll existing task IDs without creating new paid requests
       const pollResult = await pollHiggsfieldTask(existingTaskId, apiKey, Math.max(timeoutMs, 120000));
       if (!pollResult.success || !pollResult.imageUrl) {
         return {
@@ -329,38 +350,69 @@ export async function generateHiggsfieldImage(
       }
       cdnUrl = pollResult.imageUrl;
     } else {
-      // Hard Daily Paid POST Invariant Circuit Breaker:
-      // Invariant: 2 articles/day * 3 images/article = 6 paid POSTs max per calendar day
-      const dailyPaidCount = getDailyHiggsfieldGenerationsCount();
-      const maxDailyPaidGenerations = 6;
-      if (dailyPaidCount >= maxDailyPaidGenerations) {
+      // Strict Higgsfield-only spending cap ($1.70/day) & request limit (9 unique paid POSTs/day)
+      // Reserve estimated cost before every new paid request; count pending or uncertain requests against both limits
+      const reservation = reserveHiggsfieldPaidSlot({
+        estimatedCostUsd: estimatedCost,
+        jobId,
+        customCapUsd: HIGGSFIELD_DAILY_SPEND_CAP_USD,
+        customMaxRequests: MAX_DAILY_HIGGSFIELD_PAID_REQUESTS,
+      });
+
+      if (!reservation.permitted) {
         return {
           success: false,
-          error: `Daily Higgsfield generation limit reached (${dailyPaidCount}/${maxDailyPaidGenerations} paid generations today). Hard circuit breaker activated to prevent runaway spend.`,
+          error: reservation.reason || `Daily Higgsfield generation or budget limit reached ($${HIGGSFIELD_DAILY_SPEND_CAP_USD.toFixed(2)} cap or ${MAX_DAILY_HIGGSFIELD_PAID_REQUESTS} requests). Hard circuit breaker activated.`,
         };
       }
 
-      const controller = new AbortController();
-      const timeout = setTimeout(() => controller.abort(), timeoutMs);
+      const reservationId = reservation.reservationId;
+      let postTimedOut = false;
+      let response: Response;
 
-      // Initial generation request - Higgsfield Marketing Studio Image 2.0 Alpha API
-      const response = await fetch('https://api.higgsfield.ai/marketing-studio/image', {
-        method: 'POST',
-        headers: {
-          'Authorization': formatHiggsfieldAuthHeader(apiKey),
-          'Content-Type': 'application/json',
-          'Accept': 'application/json',
-        },
-        body: JSON.stringify({
-          prompt: prompt,
-          quality: 'medium',
-          resolution: '1k',
-          aspect_ratio: aspectRatio,
-          enhance_prompt: false,
-        }),
-        signal: controller.signal,
-      });
-      clearTimeout(timeout);
+      try {
+        const controller = new AbortController();
+        const timeout = setTimeout(() => {
+          postTimedOut = true;
+          controller.abort();
+        }, timeoutMs);
+
+        // Initial generation request - Higgsfield Marketing Studio Image 2.0 Alpha API
+        response = await fetch('https://api.higgsfield.ai/marketing-studio/image', {
+          method: 'POST',
+          headers: {
+            'Authorization': formatHiggsfieldAuthHeader(apiKey),
+            'Content-Type': 'application/json',
+            'Accept': 'application/json',
+          },
+          body: JSON.stringify({
+            prompt: prompt,
+            quality: 'medium',
+            resolution: '1k',
+            aspect_ratio: aspectRatio,
+            enhance_prompt: false,
+          }),
+          signal: controller.signal,
+        });
+        clearTimeout(timeout);
+      } catch (fetchErr: any) {
+        if (postTimedOut) {
+          // Ambiguous timeout on paid POST request: provider may have received and billed it.
+          // Keep reservation active with extended TTL so it counts against both limits.
+          // Never automatically resubmit an ambiguous timed-out paid request.
+          markHiggsfieldReservationAmbiguous(reservationId);
+          return {
+            success: false,
+            error: `Higgsfield initial POST request timed out after ${Math.round(timeoutMs / 1000)}s. Request is marked uncertain to protect daily budget limits. Auto-resubmission blocked.`,
+          };
+        }
+        // Clean network failure before reaching provider: release in-flight reservation
+        releaseHiggsfieldReservation(reservationId);
+        return {
+          success: false,
+          error: `Network failure connecting to Higgsfield: ${fetchErr?.message || 'Connection error'}`,
+        };
+      }
 
       // Extract provider request ID from headers if available
       const headerRequestId = response.headers.get('x-request-id') || response.headers.get('request-id');
@@ -369,10 +421,10 @@ export async function generateHiggsfieldImage(
       }
 
       if (!response.ok) {
+        releaseHiggsfieldReservation(reservationId);
         const errorText = await response.text().catch(() => '');
         console.error(`[HiggsfieldClient] API Error HTTP ${response.status}:`, errorText || '(empty response body)');
         
-        // Attempt to parse json to extract taskId if present in error payload
         let parsedId: string | undefined;
         try {
           const errJson = JSON.parse(errorText);
@@ -391,6 +443,9 @@ export async function generateHiggsfieldImage(
 
       const data: any = await response.json();
       currentTaskId = data?.id || data?.request_id || data?.requestId || currentTaskId;
+
+      // Release in-flight reservation now that task has arrived and will be settled into persistent cost ledger
+      releaseHiggsfieldReservation(reservationId);
 
       // 1. Immediately persist accepted generation to cost ledger BEFORE polling or download
       if (currentTaskId) {

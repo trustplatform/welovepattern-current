@@ -12,6 +12,7 @@ import { createPinterestPin, getValidPinterestAccessToken } from '../../pinteres
 import { getPinterestAuthRecord } from '../../pinterest/pinterestOAuth';
 import { isValidLocalAsset } from '../queue/assetRecovery';
 import { isRealNumericPinterestBoardId, isPlaceholderBoardId } from './pinterestBoardSelector';
+import { validatePinterestPinCreativeCompliance } from '../validation/pinterestCreativeValidator';
 
 const SITE_URL = 'https://welovepattern.com';
 
@@ -55,6 +56,16 @@ export async function publishPinToPinterest(
       return {
         success: false,
         error: `Pin image asset does not exist on disk at "${pin.stableAssetPath}".`,
+      };
+    }
+
+    // Verify pin creative compliance against production design rules
+    const compliance = await validatePinterestPinCreativeCompliance(pin, job.topic, job.articleContent.title);
+    if (!compliance.isValid) {
+      console.error(`[PinterestPublisher] ❌ Pin fails creative compliance:`, compliance.errors);
+      return {
+        success: false,
+        error: `Pin fails creative compliance: ${compliance.errors.join('; ')}`,
       };
     }
 

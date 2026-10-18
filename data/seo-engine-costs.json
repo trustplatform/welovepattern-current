@@ -1,6 +1,157 @@
 {
   "version": 1,
-  "totalSpendAllTimeUsd": 0,
-  "records": [],
-  "updatedAt": "2026-10-06T11:43:06.899Z"
+  "totalSpendAllTimeUsd": 0.1596,
+  "records": [
+    {
+      "provider": "openai",
+      "operation": "gemini_fallback_completion",
+      "unitsConsumed": 4434,
+      "costUsd": 0.0015,
+      "meta": {
+        "model": "gemini-3.8-flash",
+        "promptTokens": 842,
+        "completionTokens": 2218
+      },
+      "id": "cost_1792282720180_yvs3n",
+      "timestamp": "2026-10-18T00:18:40.180Z"
+    },
+    {
+      "provider": "openai",
+      "operation": "gemini_fallback_completion",
+      "unitsConsumed": 8398,
+      "costUsd": 0.0023,
+      "meta": {
+        "model": "gemini-3.8-flash",
+        "promptTokens": 2769,
+        "completionTokens": 3112
+      },
+      "id": "cost_1792282762488_sho4i",
+      "timestamp": "2026-10-18T00:19:22.488Z"
+    },
+    {
+      "provider": "openai",
+      "operation": "gemini_fallback_completion",
+      "unitsConsumed": 10771,
+      "costUsd": 0.0026,
+      "meta": {
+        "model": "gemini-3.8-flash",
+        "promptTokens": 5286,
+        "completionTokens": 3029
+      },
+      "id": "cost_1792282797324_pc9iz",
+      "timestamp": "2026-10-18T00:19:57.324Z"
+    },
+    {
+      "provider": "openai",
+      "operation": "gemini_fallback_completion",
+      "unitsConsumed": 3864,
+      "costUsd": 0.001,
+      "meta": {
+        "model": "gemini-3.8-flash",
+        "promptTokens": 845,
+        "completionTokens": 1533
+      },
+      "id": "cost_1792319640004_o0w9h",
+      "timestamp": "2026-10-18T10:34:00.004Z"
+    },
+    {
+      "provider": "openai",
+      "operation": "gemini_fallback_completion",
+      "unitsConsumed": 7233,
+      "costUsd": 0.0022,
+      "meta": {
+        "model": "gemini-3.8-flash",
+        "promptTokens": 2191,
+        "completionTokens": 3146
+      },
+      "id": "cost_1792319673465_m8inz",
+      "timestamp": "2026-10-18T10:34:33.465Z"
+    },
+    {
+      "jobId": "job_2026-10-18_1tip0j",
+      "provider": "higgsfield",
+      "operation": "image_generation",
+      "unitsConsumed": 1,
+      "costUsd": 0.03,
+      "meta": {
+        "taskId": "748d18b3-2474-40cd-9925-00835c08a267",
+        "providerRequestId": "748d18b3-2474-40cd-9925-00835c08a267",
+        "prompt": "Warm lifestyle interior photography for \"Crochet Christmas Tree Ornament Pattern Guide & Techniques\"",
+        "targetFolder": "blog",
+        "slug": "crochet-christmas-tree-ornament-pattern-guide-techniques",
+        "status": "completed"
+      },
+      "id": "cost_1792344199328_3b83t",
+      "timestamp": "2026-10-18T17:23:19.328Z"
+    },
+    {
+      "jobId": "job_2026-10-18_1tip0j",
+      "provider": "higgsfield",
+      "operation": "image_generation",
+      "unitsConsumed": 1,
+      "costUsd": 0.03,
+      "meta": {
+        "taskId": "645b9e27-1e9e-4262-ad5e-2285aa67b571",
+        "providerRequestId": "645b9e27-1e9e-4262-ad5e-2285aa67b571",
+        "prompt": "Craft tool in action",
+        "targetFolder": "pinterest",
+        "slug": "crochet-christmas-tree-ornament-pattern-guide-techniques-pin-1",
+        "status": "completed"
+      },
+      "id": "cost_1792344227337_zgh0e",
+      "timestamp": "2026-10-18T17:23:47.337Z"
+    },
+    {
+      "jobId": "job_2026-10-18_1tip0j",
+      "provider": "higgsfield",
+      "operation": "image_generation",
+      "unitsConsumed": 1,
+      "costUsd": 0.03,
+      "meta": {
+        "taskId": "2260da4f-5768-4545-ad7c-1870eaf3a415",
+        "providerRequestId": "2260da4f-5768-4545-ad7c-1870eaf3a415",
+        "prompt": "Craft tool flatlay",
+        "targetFolder": "pinterest",
+        "slug": "crochet-christmas-tree-ornament-pattern-guide-techniques-pin-2",
+        "status": "completed"
+      },
+      "id": "cost_1792344261445_3572b",
+      "timestamp": "2026-10-18T17:24:21.445Z"
+    },
+    {
+      "jobId": "job_2026-10-18_1tip0j",
+      "provider": "higgsfield",
+      "operation": "image_generation",
+      "unitsConsumed": 1,
+      "costUsd": 0.03,
+      "meta": {
+        "taskId": "b1cc7032-31fe-417a-b00a-6668272b7c1e",
+        "providerRequestId": "b1cc7032-31fe-417a-b00a-6668272b7c1e",
+        "prompt": "Complete editorial Pinterest Pin in 2:3 vertical layout. Visually appealing macro craft photography ",
+        "targetFolder": "pinterest",
+        "slug": "crochet-christmas-tree-ornament-pattern-guide-techniques-pin-1-replacement",
+        "status": "completed"
+      },
+      "id": "cost_1792359335484_x3vsw",
+      "timestamp": "2026-10-18T21:35:35.484Z"
+    },
+    {
+      "jobId": "job_2026-10-18_1tip0j",
+      "provider": "higgsfield",
+      "operation": "image_generation",
+      "unitsConsumed": 1,
+      "costUsd": 0.03,
+      "meta": {
+        "taskId": "3dc2c6f0-6744-4965-aeb1-ae4a023fb091",
+        "providerRequestId": "3dc2c6f0-6744-4965-aeb1-ae4a023fb091",
+        "prompt": "Complete 2:3 vertical editorial Pinterest Pin photograph. Authentic atmospheric close-up photography",
+        "targetFolder": "pinterest",
+        "slug": "crochet-christmas-tree-ornament-pattern-guide-techniques-pin-2-replacement",
+        "status": "completed"
+      },
+      "id": "cost_1792359363407_vi8h6",
+      "timestamp": "2026-10-18T21:36:03.407Z"
+    }
+  ],
+  "updatedAt": "2026-10-18T21:36:31.220Z"
 }

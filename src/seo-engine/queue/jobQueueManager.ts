@@ -25,6 +25,7 @@ import { generateHiggsfieldImage, isHiggsfieldConfigured } from '../generation/h
 import { discoverDailyTwoSlotTopics, discoverDailyThreeSlotTopics, discoverTrendingCrochetTopic, discoverToolGuideTopic } from '../discovery/topicDiscovery';
 import { publishArticleToLiveSite } from '../publishing/articlePublisher';
 import { recoverJobLocalAssets, isValidLocalAsset } from './assetRecovery';
+import { validatePinterestPinCreativeCompliance } from '../validation/pinterestCreativeValidator';
 
 let isProcessingQueue = false;
 
@@ -316,10 +317,19 @@ export function resolveOrPreservePinterestPins(
       ).valid
     );
 
-    // 4. Preserve existing pin if it exists (valid asset, in-flight task ID, or established concept)
+    // 4. Preserve existing pin ONLY if it has a valid asset on disk, an active task ID,
+    // or a genuine full Higgsfield creative brief with literal text lock and topic fidelity.
+    const hasFullCreativeBrief = Boolean(
+      existingPin?.compactHiggsfieldPrompt &&
+      existingPin.compactHiggsfieldPrompt.length > 150 &&
+      existingPin.compactHiggsfieldPrompt.includes('LITERAL TEXT LOCK') &&
+      !existingPin.compactHiggsfieldPrompt.includes('Craft tool in action') &&
+      !existingPin.compactHiggsfieldPrompt.includes('Craft tool flatlay')
+    );
+
     const hasExistingConcept = Boolean(
       existingPin &&
-      (hasValidAsset || existingPin.higgsfieldRequestId || existingPin.compactHiggsfieldPrompt || existingPin.conceptAngle)
+      (hasValidAsset || existingPin.higgsfieldRequestId || hasFullCreativeBrief)
     );
 
     if (hasExistingConcept && existingPin) {
@@ -653,14 +663,187 @@ let pins = resolveOrPreservePinterestPins(
     return j;
   });
 
-  // 4. Verify & Bind Existing Disk Image Assets ($0 cost, 0 image-generation calls)
+  // 4. Verify & Bind or Generate Image Assets (Hero 16:9 + Exactly 2 Pinterest Pins 2:3)
   const heroPrompt = job.articleContent?.heroImage?.prompt ||
     buildHiggsfieldHeroPrompt(job.topic, article, packet);
 
   let currentHeroImage = job.articleContent?.heroImage;
-  const isHeroValid = isValidLocalAsset(currentHeroImage?.stableAssetPath);
-  const isPin1Valid = isValidLocalAsset(pins[0]?.stableAssetPath);
-  const isPin2Valid = isValidLocalAsset(pins[1]?.stableAssetPath);
+  let isHeroValid = isValidLocalAsset(currentHeroImage?.stableAssetPath);
+  let isPin1Valid = isValidLocalAsset(pins[0]?.stableAssetPath);
+  let isPin2Valid = isValidLocalAsset(pins[1]?.stableAssetPath);
+
+  const canGenerateImages = !config.reuseOnlyMode && config.higgsfieldEnabled !== false && isHiggsfieldConfigured();
+
+  // Generate Hero Image (16:9) if missing from disk
+  if (!isHeroValid && canGenerateImages) {
+    console.log(`[JobQueueManager] 🎨 Generating Hero image (16:9) via Higgsfield for job ${job.id}...`);
+    const heroResult = await generateHiggsfieldImage({
+      prompt: heroPrompt,
+      aspectRatio: '16:9',
+      resolution: '1k',
+      slug: article.slug,
+      targetFolder: 'blog',
+      jobId: job.id,
+      existingTaskId: currentHeroImage?.higgsfieldRequestId || (currentHeroImage as any)?.higgsfieldTaskId,
+      onTaskIdReceived: (taskId) => {
+        updateJobInState(jobId, j => {
+          if (j.articleContent?.heroImage) {
+            j.articleContent.heroImage.higgsfieldRequestId = taskId;
+            j.articleContent.heroImage.higgsfieldTaskId = taskId;
+          } else {
+            if (!j.articleContent) (j as any).articleContent = {};
+            j.articleContent!.heroImage = {
+              prompt: heroPrompt,
+              compactPrompt: heroPrompt.slice(0, 480),
+              higgsfieldRequestId: taskId,
+              higgsfieldTaskId: taskId,
+              status: 'pending',
+            };
+          }
+          return j;
+        });
+      },
+      estimatedCostUsd: config.estimatedImageCostUsd || 0.03,
+    });
+
+    if (heroResult.success && heroResult.stableAssetPath && isValidLocalAsset(heroResult.stableAssetPath)) {
+      currentHeroImage = {
+        prompt: heroPrompt,
+        compactPrompt: heroPrompt.slice(0, 480),
+        stableAssetPath: heroResult.stableAssetPath,
+        stablePublicUrl: heroResult.stablePublicUrl,
+        higgsfieldRequestId: heroResult.providerRequestId,
+        higgsfieldTaskId: heroResult.providerRequestId,
+        status: 'ready',
+      };
+      updateJobInState(jobId, j => {
+        if (j.articleContent) j.articleContent.heroImage = currentHeroImage;
+        j.articleHeroImage = currentHeroImage;
+        j.logs.push({
+          timestamp: new Date().toISOString(),
+          level: 'info',
+          message: `Hero image generated successfully via Higgsfield: ${heroResult.stablePublicUrl}`,
+        });
+        return j;
+      });
+      isHeroValid = true;
+    } else {
+      console.warn(`[JobQueueManager] Hero image generation failed: ${heroResult.error}`);
+    }
+  }
+
+  // Generate Pin 1 (2:3) if missing from disk
+  if (!isPin1Valid && canGenerateImages && pins[0]) {
+    console.log(`[JobQueueManager] 🎨 Generating Pin 1 (2:3) via Higgsfield for job ${job.id}...`);
+    const pin1Prompt = pins[0].compactHiggsfieldPrompt || pins[0].conceptAngle || `${article.title} crochet`;
+    const pin1Result = await generateHiggsfieldImage({
+      prompt: pin1Prompt,
+      aspectRatio: '2:3',
+      resolution: '1k',
+      slug: `${article.slug}-pin-1`,
+      targetFolder: 'pinterest',
+      jobId: job.id,
+      existingTaskId: pins[0].higgsfieldRequestId || (pins[0] as any)?.higgsfieldTaskId,
+      onTaskIdReceived: (taskId) => {
+        updateJobInState(jobId, j => {
+          const p = j.pinterestPins?.find(item => item.pinNumber === 1);
+          if (p) {
+            p.higgsfieldRequestId = taskId;
+            p.higgsfieldTaskId = taskId;
+          }
+          return j;
+        });
+      },
+      estimatedCostUsd: config.estimatedImageCostUsd || 0.03,
+    });
+
+    if (pin1Result.success && pin1Result.stableAssetPath && isValidLocalAsset(pin1Result.stableAssetPath)) {
+      pins[0].stableAssetPath = pin1Result.stableAssetPath;
+      pins[0].stablePublicUrl = pin1Result.stablePublicUrl;
+      pins[0].higgsfieldRequestId = pin1Result.providerRequestId;
+      pins[0].higgsfieldTaskId = pin1Result.providerRequestId;
+      pins[0].publishStatus = 'image_ready';
+      updateJobInState(jobId, j => {
+        const p = j.pinterestPins?.find(item => item.pinNumber === 1);
+        if (p) {
+          p.stableAssetPath = pin1Result.stableAssetPath;
+          p.stablePublicUrl = pin1Result.stablePublicUrl;
+          p.higgsfieldRequestId = pin1Result.providerRequestId;
+          p.higgsfieldTaskId = pin1Result.providerRequestId;
+          p.publishStatus = 'image_ready';
+        }
+        j.logs.push({
+          timestamp: new Date().toISOString(),
+          level: 'info',
+          message: `Pinterest Pin 1 image generated successfully: ${pin1Result.stablePublicUrl}`,
+        });
+        return j;
+      });
+      isPin1Valid = true;
+    } else {
+      console.warn(`[JobQueueManager] Pin 1 image generation failed: ${pin1Result.error}`);
+    }
+  }
+
+  // Generate Pin 2 (2:3) if missing from disk
+  if (!isPin2Valid && canGenerateImages && pins[1]) {
+    console.log(`[JobQueueManager] 🎨 Generating Pin 2 (2:3) via Higgsfield for job ${job.id}...`);
+    const pin2Prompt = pins[1].compactHiggsfieldPrompt || pins[1].conceptAngle || `${article.title} tutorial`;
+    const pin2Result = await generateHiggsfieldImage({
+      prompt: pin2Prompt,
+      aspectRatio: '2:3',
+      resolution: '1k',
+      slug: `${article.slug}-pin-2`,
+      targetFolder: 'pinterest',
+      jobId: job.id,
+      existingTaskId: pins[1].higgsfieldRequestId || (pins[1] as any)?.higgsfieldTaskId,
+      onTaskIdReceived: (taskId) => {
+        updateJobInState(jobId, j => {
+          const p = j.pinterestPins?.find(item => item.pinNumber === 2);
+          if (p) {
+            p.higgsfieldRequestId = taskId;
+            p.higgsfieldTaskId = taskId;
+          }
+          return j;
+        });
+      },
+      estimatedCostUsd: config.estimatedImageCostUsd || 0.03,
+    });
+
+    if (pin2Result.success && pin2Result.stableAssetPath && isValidLocalAsset(pin2Result.stableAssetPath)) {
+      pins[1].stableAssetPath = pin2Result.stableAssetPath;
+      pins[1].stablePublicUrl = pin2Result.stablePublicUrl;
+      pins[1].higgsfieldRequestId = pin2Result.providerRequestId;
+      pins[1].higgsfieldTaskId = pin2Result.providerRequestId;
+      pins[1].publishStatus = 'image_ready';
+      updateJobInState(jobId, j => {
+        const p = j.pinterestPins?.find(item => item.pinNumber === 2);
+        if (p) {
+          p.stableAssetPath = pin2Result.stableAssetPath;
+          p.stablePublicUrl = pin2Result.stablePublicUrl;
+          p.higgsfieldRequestId = pin2Result.providerRequestId;
+          p.higgsfieldTaskId = pin2Result.providerRequestId;
+          p.publishStatus = 'image_ready';
+        }
+        j.logs.push({
+          timestamp: new Date().toISOString(),
+          level: 'info',
+          message: `Pinterest Pin 2 image generated successfully: ${pin2Result.stablePublicUrl}`,
+        });
+        return j;
+      });
+      isPin2Valid = true;
+    } else {
+      console.warn(`[JobQueueManager] Pin 2 image generation failed: ${pin2Result.error}`);
+    }
+  }
+
+  // Refresh validity checks
+  currentHeroImage = getJobById(jobId)?.articleContent?.heroImage;
+  pins = getJobById(jobId)?.pinterestPins || pins;
+  isHeroValid = isValidLocalAsset(currentHeroImage?.stableAssetPath);
+  isPin1Valid = isValidLocalAsset(pins[0]?.stableAssetPath);
+  isPin2Valid = isValidLocalAsset(pins[1]?.stableAssetPath);
 
   if (!isHeroValid || !isPin1Valid || !isPin2Valid) {
     const missingAssets: string[] = [];
@@ -672,27 +855,57 @@ let pins = resolveOrPreservePinterestPins(
       j.stage = 'failed';
       if (j.articleContent?.heroImage && !isHeroValid) {
         j.articleContent.heroImage.status = 'failed';
-        j.articleContent.heroImage.errorMessage = 'Required existing Hero image missing from disk.';
+        j.articleContent.heroImage.errorMessage = 'Required Hero image missing or failed generation.';
       }
       if (j.pinterestPins?.[0] && !isPin1Valid) {
         j.pinterestPins[0].publishStatus = 'failed';
-        j.pinterestPins[0].errorMessage = 'Required existing Pin 1 image missing from disk.';
+        j.pinterestPins[0].errorMessage = 'Required Pin 1 image missing or failed generation.';
       }
       if (j.pinterestPins?.[1] && !isPin2Valid) {
         j.pinterestPins[1].publishStatus = 'failed';
-        j.pinterestPins[1].errorMessage = 'Required existing Pin 2 image missing from disk.';
+        j.pinterestPins[1].errorMessage = 'Required Pin 2 image missing or failed generation.';
       }
       j.logs.push({
         timestamp: new Date().toISOString(),
         level: 'error',
-        message: `Missing or ambiguous image assets on disk: ${missingAssets.join(', ')}. Image generation is strictly disabled ($0 quota preservation). Skipping job.`,
+        message: `Missing or failed image assets: ${missingAssets.join(', ')}. Job halted safely.`,
       });
       return j;
     });
     return getJobById(jobId)!;
   }
 
-  // All 3 required assets exist on disk: bind them cleanly with zero image generation
+  // 5. Enforce strict Pinterest Creative compliance validation (Photographic dominance, Headline+CTA, Topic fidelity, 2:3 ratio)
+  if (pins[0] && pins[1]) {
+    const pin1Compliance = await validatePinterestPinCreativeCompliance(pins[0], job.topic, article.title);
+    const pin2Compliance = await validatePinterestPinCreativeCompliance(pins[1], job.topic, article.title);
+
+    if (!pin1Compliance.isValid || !pin2Compliance.isValid) {
+      const complianceErrors = [...pin1Compliance.errors, ...pin2Compliance.errors];
+      console.error(`[JobQueueManager] ❌ Pin Creative Compliance Failure:`, complianceErrors);
+
+      updateJobInState(jobId, j => {
+        j.stage = 'failed';
+        if (!pin1Compliance.isValid && j.pinterestPins?.[0]) {
+          j.pinterestPins[0].publishStatus = 'failed';
+          j.pinterestPins[0].errorMessage = pin1Compliance.errors.join('; ');
+        }
+        if (!pin2Compliance.isValid && j.pinterestPins?.[1]) {
+          j.pinterestPins[1].publishStatus = 'failed';
+          j.pinterestPins[1].errorMessage = pin2Compliance.errors.join('; ');
+        }
+        j.logs.push({
+          timestamp: new Date().toISOString(),
+          level: 'error',
+          message: `Pinterest Creative Compliance Failures:\n- ${complianceErrors.join('\n- ')}`,
+        });
+        return j;
+      });
+      return getJobById(jobId)!;
+    }
+  }
+
+  // All 3 required assets exist on disk and pass creative compliance: bind them cleanly
   updateJobInState(jobId, j => {
     if (j.articleContent?.heroImage) {
       j.articleContent.heroImage.status = 'ready';
@@ -706,7 +919,7 @@ let pins = resolveOrPreservePinterestPins(
     j.logs.push({
       timestamp: new Date().toISOString(),
       level: 'info',
-      message: `All 3 visual assets confirmed on disk and bound successfully ($0 cost, 0 image-generation calls).`,
+      message: `All 3 visual assets confirmed on disk and passed creative compliance (Hero 16:9 + 2 Pins 2:3).`,
     });
     return j;
   });
@@ -723,7 +936,7 @@ let pins = resolveOrPreservePinterestPins(
   // -----------------------------------------------------------------
   // STAGE 4: PRODUCTION QUALITY GATES AUDIT
   // -----------------------------------------------------------------
-  const qualityAudit = evaluateProductionQualityGates(jobId, article, job.topic, packet, config);
+  const qualityAudit = evaluateProductionQualityGates(jobId, article, job.topic, packet, config, { isTestRun: isTestExecution });
 
   if (!qualityAudit.passedAllGates) {
     updateJobInState(jobId, j => {

@@ -3848,7 +3848,7 @@ Keep responses friendly, warm, clear, encouraging, structured with bullet points
 Always specify US vs UK stitch terms if applicable.`;
 
     const response = await ai.models.generateContent({
-      model: "gemini-2.5-flash",
+      model: "gemini-3.8-flash",
       contents: [
         { role: "user", parts: [{ text: `${systemInstruction}\n\nContext: ${JSON.stringify(context || {})}\n\nUser Question: ${prompt}` }] }
       ]
@@ -3927,7 +3927,7 @@ Ensure all steps, rows, rounds, and materials are extracted thoroughly.`;
       }
 
       const response = await ai.models.generateContent({
-        model: "gemini-2.5-flash",
+        model: "gemini-3.8-flash",
         contents: [{ role: "user", parts }],
         config: {
           responseMimeType: "application/json"

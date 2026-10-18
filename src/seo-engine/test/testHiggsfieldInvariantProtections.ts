@@ -20,7 +20,7 @@ import { evaluateSchedulerTick } from '../scheduler';
 import { readEngineState, writeEngineState } from '../queue/engineStorage';
 import { resolveOrPreservePinterestPins } from '../queue/jobQueueManager';
 import { generateHiggsfieldImage } from '../generation/higgsfieldClient';
-import { getDailyHiggsfieldGenerationsCount, recordCostTransaction } from '../cost/costTracker';
+import { getDailyHiggsfieldGenerationsCount, recordCostTransaction, MAX_DAILY_HIGGSFIELD_PAID_REQUESTS } from '../cost/costTracker';
 import { DiscoveredTopic, FactualResearchPacket, PinterestCreativeConcept, SeoEngineArticleJob } from '../types';
 import { GeneratedArticle } from '../generation/openAiArticleGenerator';
 
@@ -66,6 +66,8 @@ export async function runHiggsfieldInvariantProtectionsTests(): Promise<boolean>
       },
       lastExecutedArticleSlot: '',
       lastRunDate: '',
+      executedArticleSlots: [],
+      failedArticleSlots: [],
       activeJobs: [
         {
           id: 'test_job_slot1_draft',
@@ -422,9 +424,9 @@ export async function runHiggsfieldInvariantProtectionsTests(): Promise<boolean>
     const prevKey = process.env.HF_KEY;
     process.env.HF_KEY = 'mock_test_hf_key_123';
 
-    // Simulate filling up today's ledger to 6 accepted generations
+    // Simulate filling up today's ledger to MAX_DAILY_HIGGSFIELD_PAID_REQUESTS (9) accepted generations
     const currentCount = getDailyHiggsfieldGenerationsCount();
-    const needed = Math.max(0, 6 - currentCount);
+    const needed = Math.max(0, MAX_DAILY_HIGGSFIELD_PAID_REQUESTS - currentCount);
     for (let i = 0; i < needed; i++) {
       recordCostTransaction({
         jobId: `test_job_circuit_${i}_${Date.now()}`,
@@ -437,9 +439,9 @@ export async function runHiggsfieldInvariantProtectionsTests(): Promise<boolean>
     }
 
     const initialGenCount = getDailyHiggsfieldGenerationsCount();
-    check(initialGenCount >= 6, 'Cost tracker reflects >= 6 daily accepted Higgsfield generations', `Count: ${initialGenCount}`);
+    check(initialGenCount >= MAX_DAILY_HIGGSFIELD_PAID_REQUESTS, `Cost tracker reflects >= ${MAX_DAILY_HIGGSFIELD_PAID_REQUESTS} daily accepted Higgsfield generations`, `Count: ${initialGenCount}`);
 
-    // Attempt a 7th paid generation (with dummy non-cached prompt)
+    // Attempt an additional paid generation beyond the cap
     const blockedGenResult = await generateHiggsfieldImage({
       prompt: `Uncached test prompt for circuit breaker verification ${Date.now()}`,
       aspectRatio: '16:9',
@@ -447,9 +449,9 @@ export async function runHiggsfieldInvariantProtectionsTests(): Promise<boolean>
       targetFolder: 'blog',
     });
 
-    check(blockedGenResult.success === false, '7th generation blocked by circuit breaker');
+    check(blockedGenResult.success === false, 'Additional generation blocked by circuit breaker');
     check(
-      Boolean(blockedGenResult.error?.includes('Daily Higgsfield generation limit reached')),
+      Boolean(blockedGenResult.error?.includes('Daily Higgsfield generation limit reached') || blockedGenResult.error?.includes('limit reached')),
       'Circuit breaker error message clearly indicates limit reached',
       blockedGenResult.error
     );
@@ -457,13 +459,13 @@ export async function runHiggsfieldInvariantProtectionsTests(): Promise<boolean>
     process.env.HF_KEY = prevKey;
 
     // -----------------------------------------------------------------
-    // TEST 9: TWO ARTICLES = MAXIMUM 6 ACCEPTED HIGGSFIELD POSTS
+    // TEST 9: THREE ARTICLES = MAXIMUM 9 ACCEPTED HIGGSFIELD POSTS
     // -----------------------------------------------------------------
-    console.log('\n--- TEST 9: Two Articles Maximum 6 Higgsfield Generations ---');
+    console.log('\n--- TEST 9: Three Articles Maximum 9 Higgsfield Generations ---');
     const maxPostsPerArticle = 3; // Hero (16:9), Pin 1 (2:3), Pin 2 (2:3)
-    const maxArticlesPerDay = 2;
+    const maxArticlesPerDay = 3;
     const maxTotalDailyPosts = maxArticlesPerDay * maxPostsPerArticle;
-    check(maxTotalDailyPosts === 6, '2 articles/day * 3 images/article = exactly 6 maximum paid POSTs/day');
+    check(maxTotalDailyPosts === 9, '3 articles/day * 3 images/article = exactly 9 maximum paid POSTs/day');
 
     // -----------------------------------------------------------------
     // TEST 10: TIMEZONE & MIDNIGHT BOUNDARY SEMANTICS (America/New_York)

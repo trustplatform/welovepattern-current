@@ -52,6 +52,17 @@ function normalizeAndRepairState(raw: Partial<SeoEngineDailyState>): SeoEngineDa
     ...(raw.config || {}),
   };
 
+  // Enforce strict production invariant floors:
+  if (typeof config.higgsfieldDailyCostLimitUsd !== 'number' || config.higgsfieldDailyCostLimitUsd <= 0) {
+    config.higgsfieldDailyCostLimitUsd = 1.70;
+  }
+  if (typeof config.higgsfieldDailyRequestsLimit !== 'number' || config.higgsfieldDailyRequestsLimit <= 0) {
+    config.higgsfieldDailyRequestsLimit = 9;
+  }
+  if (typeof config.estimatedImageCostUsd !== 'number' || config.estimatedImageCostUsd <= 0) {
+    config.estimatedImageCostUsd = 0.03;
+  }
+
   return {
     version: raw.version || 1,
     config,

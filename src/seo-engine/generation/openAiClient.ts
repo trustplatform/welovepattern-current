@@ -14,33 +14,54 @@
  */
 
 import OpenAI from 'openai';
+import { GoogleGenAI } from '@google/genai';
 import { recordCostTransaction } from '../cost/costTracker';
 
 let cachedClient: OpenAI | null = null;
+let cachedGeminiClient: GoogleGenAI | null = null;
 
 /**
- * Checks whether OPENAI_API_KEY is configured in the environment.
+ * Checks whether an AI provider (OpenAI or Gemini) is configured in the environment.
  */
 export function isOpenAiConfigured(): boolean {
-  const key = process.env.OPENAI_API_KEY;
-  return Boolean(key && key.trim().length > 0);
+  const openAiKey = process.env.OPENAI_API_KEY;
+  if (openAiKey && openAiKey.trim().length > 0) return true;
+  const geminiKey = process.env.GEMINI_API_KEY;
+  return Boolean(geminiKey && geminiKey.trim().length > 0);
 }
 
 /**
  * Returns the cached OpenAI client instance or creates one safely.
  */
 export function getOpenAiClient(): OpenAI | null {
-  if (!isOpenAiConfigured()) {
+  const key = process.env.OPENAI_API_KEY;
+  if (!key || key.trim().length === 0) {
     return null;
   }
 
   if (!cachedClient) {
     cachedClient = new OpenAI({
-      apiKey: process.env.OPENAI_API_KEY!.trim(),
+      apiKey: key.trim(),
     });
   }
 
   return cachedClient;
+}
+
+/**
+ * Returns the cached Google GenAI client instance when OpenAI is unconfigured.
+ */
+export function getGeminiFallbackClient(): GoogleGenAI | null {
+  const geminiKey = process.env.GEMINI_API_KEY;
+  if (!geminiKey || geminiKey.trim().length === 0) {
+    return null;
+  }
+
+  if (!cachedGeminiClient) {
+    cachedGeminiClient = new GoogleGenAI({ apiKey: geminiKey.trim() });
+  }
+
+  return cachedGeminiClient;
 }
 
 export interface OpenAiCompletionResult {
@@ -69,7 +90,7 @@ function calculateOpenAiCost(model: string, promptTokens: number, completionToke
   }
 
   const cost = (promptTokens / 1_000_000) * inputRatePerMillion + (completionTokens / 1_000_000) * outputRatePerMillion;
-  return Math.round(cost * 10000) / 10000;
+  return Math.max(0.0001, Math.round(cost * 10000) / 10000);
 }
 
 /**
@@ -93,7 +114,43 @@ export async function executeOpenAiChat(params: {
 }): Promise<OpenAiCompletionResult> {
   const client = getOpenAiClient();
   if (!client) {
-    throw new Error('OPENAI_API_KEY is not configured on the server. Cannot execute article generation.');
+    const gemini = getGeminiFallbackClient();
+    if (!gemini) {
+      throw new Error('Neither OPENAI_API_KEY nor GEMINI_API_KEY is configured on the server. Cannot execute article generation.');
+    }
+    const response = await gemini.models.generateContent({
+      model: 'gemini-3.8-flash',
+      contents: [
+        { role: 'user', parts: [{ text: `${params.systemPrompt}\n\n${params.userPrompt}` }] }
+      ],
+      config: {
+        responseMimeType: params.responseFormat === 'json_object' ? 'application/json' : 'text/plain'
+      }
+    });
+    const content = response.text?.trim() || '';
+    if (!content) {
+      throw new Error('Gemini fallback API returned an empty completion');
+    }
+    const promptTokens = response.usageMetadata?.promptTokenCount ?? 0;
+    const completionTokens = response.usageMetadata?.candidatesTokenCount ?? 0;
+    const totalTokens = response.usageMetadata?.totalTokenCount ?? (promptTokens + completionTokens);
+    const estimatedCostUsd = calculateOpenAiCost('mini', promptTokens, completionTokens);
+    recordCostTransaction({
+      jobId: params.jobId,
+      provider: 'openai',
+      operation: 'gemini_fallback_completion',
+      unitsConsumed: totalTokens,
+      costUsd: estimatedCostUsd,
+      meta: { model: 'gemini-3.8-flash', promptTokens, completionTokens }
+    });
+    return {
+      content,
+      model: 'gemini-3.8-flash',
+      promptTokens,
+      completionTokens,
+      totalTokens,
+      estimatedCostUsd
+    };
   }
 
   const model = params.model || process.env.OPENAI_MODEL || 'gpt-4o';

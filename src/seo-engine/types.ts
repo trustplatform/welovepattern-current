@@ -14,6 +14,7 @@ export type TopicStatus =
   | 'writing' 
   | 'generating_images' 
   | 'awaiting_approval' 
+  | 'ready_to_publish'
   | 'publishing' 
   | 'published'
   | 'completed' 
@@ -167,6 +168,7 @@ export interface PinterestCreativeConcept {
   targetBoardName: string;                    // Real Pinterest board name
   boardName?: string;                         // Convenience alias for targetBoardName
   higgsfieldRequestId?: string;
+  higgsfieldTaskId?: string;
   stableAssetPath?: string;                   // Local path in public/generated/pinterest/seo-pins/
   stablePublicUrl?: string;                   // Public URL served by Express
   pinterestPinId?: string;
@@ -184,6 +186,7 @@ export interface ArticleHeroImage {
   prompt: string;
   compactPrompt: string;
   higgsfieldRequestId?: string;
+  higgsfieldTaskId?: string;
   stableAssetPath?: string;
   stablePublicUrl?: string;
   assetPath?: string;
@@ -214,6 +217,7 @@ export interface SeoEngineArticleJob {
     internalLinks?: VerifiedInternalLink[];
     heroImage?: ArticleHeroImage;
   };
+  articleHeroImage?: ArticleHeroImage;
   pinterestPins: PinterestCreativeConcept[];  // Dynamically sized array (default 2, configurable)
   stage: SeoEngineJobStage;
   requiresApproval: boolean;
@@ -314,6 +318,8 @@ export interface SeoEngineConfig {
   perJobCostLimitUsd: number;                 // Safety limit per job: e.g. 1.50
   higgsfieldEnabled: boolean;                 // Default: true
   estimatedImageCostUsd?: number;             // Configurable cost per image (e.g. 0.03 for Marketing Studio 1k)
+  higgsfieldDailyCostLimitUsd?: number;       // Strict Higgsfield-only spending cap: $1.70/day
+  higgsfieldDailyRequestsLimit?: number;      // Maximum unique paid image-generation POST requests: 9/day
 }
 
 export interface HistoricalJobSummary {

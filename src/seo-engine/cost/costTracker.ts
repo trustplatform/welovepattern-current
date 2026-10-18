@@ -224,19 +224,183 @@ export function getDailySpendUsd(dateStr?: string, timeZone: string = 'America/N
     .reduce((sum, r) => sum + r.costUsd, 0);
 }
 
+export const HIGGSFIELD_DAILY_SPEND_CAP_USD = 1.70;
+export const MAX_DAILY_HIGGSFIELD_PAID_REQUESTS = 9;
+
+export interface ActiveHiggsfieldReservation {
+  reservationId: string;
+  jobId?: string;
+  amountUsd: number;
+  dateStr: string;
+  createdAt: number;
+  expiresAt: number;
+  isAmbiguousTimeout?: boolean;
+}
+
+const activeHiggsfieldReservations = new Map<string, ActiveHiggsfieldReservation>();
+
+/**
+ * Computes today's settled Higgsfield spend in USD in the configured timezone.
+ */
+export function getDailyHiggsfieldSpendUsd(dateStr?: string, timeZone: string = 'America/New_York'): number {
+  const targetDate = dateStr || getTimeInTimezone(new Date(), timeZone).dateStr;
+  const storage = ensureCostFileExists();
+  return storage.records
+    .filter(r =>
+      r.provider === 'higgsfield' &&
+      isValidCostAmount(r.costUsd) &&
+      getRecordDateInTimezone(r.timestamp, timeZone) === targetDate
+    )
+    .reduce((sum, r) => sum + r.costUsd, 0);
+}
+
 /**
  * Computes today's settled Higgsfield image generations count from persistent storage
- * using the configured timezone (default America/New_York to match scheduler).
- * Survives process restarts and container reboots.
+ * using unique taskId/providerRequestId deduplication so accepted + completed
+ * updates never double count.
  */
 export function getDailyHiggsfieldGenerationsCount(dateStr?: string, timeZone: string = 'America/New_York'): number {
   const targetDate = dateStr || getTimeInTimezone(new Date(), timeZone).dateStr;
   const storage = ensureCostFileExists();
-  return (storage.records || []).filter(r =>
-    r.provider === 'higgsfield' &&
-    (r.operation === 'image_generation' || r.operation === 'paid_image_generation') &&
-    getRecordDateInTimezone(r.timestamp, timeZone) === targetDate
-  ).length;
+  const uniqueTaskIds = new Set<string>();
+  let unkeyedCount = 0;
+
+  for (const r of storage.records || []) {
+    if (
+      r.provider === 'higgsfield' &&
+      (r.operation === 'image_generation' || r.operation === 'paid_image_generation') &&
+      getRecordDateInTimezone(r.timestamp, timeZone) === targetDate
+    ) {
+      const tid = r.meta?.taskId || r.meta?.providerRequestId;
+      if (tid && typeof tid === 'string' && tid.trim()) {
+        uniqueTaskIds.add(tid.trim());
+      } else {
+        unkeyedCount++;
+      }
+    }
+  }
+
+  return uniqueTaskIds.size + unkeyedCount;
+}
+
+/**
+ * Computes active in-flight Higgsfield reservations for a given target date.
+ */
+export function getActiveHiggsfieldReservations(
+  targetDateStr?: string,
+  timeZone: string = 'America/New_York',
+  excludeReservationId?: string
+): { reservedSpendUsd: number; reservedRequestsCount: number } {
+  const dateStr = targetDateStr || getTimeInTimezone(new Date(), timeZone).dateStr;
+  const now = Date.now();
+  let reservedSpendUsd = 0;
+  let reservedRequestsCount = 0;
+
+  for (const [key, res] of activeHiggsfieldReservations.entries()) {
+    if (now > res.expiresAt) {
+      activeHiggsfieldReservations.delete(key);
+    } else if (res.dateStr === dateStr && key !== excludeReservationId) {
+      reservedSpendUsd += res.amountUsd;
+      reservedRequestsCount += 1;
+    }
+  }
+
+  return {
+    reservedSpendUsd: Math.round(reservedSpendUsd * 100000) / 100000,
+    reservedRequestsCount,
+  };
+}
+
+/**
+ * Reserves a Higgsfield paid image generation slot before sending any paid POST request.
+ * Strictly verifies both:
+ * 1. Spending cap: max $1.70 / production day (settled + in-flight + estimated <= $1.70)
+ * 2. Request limit: max 9 unique paid POST requests / production day (settled + in-flight + 1 <= 9)
+ * Rejects immediately if estimated cost is unknown, 0, or either limit would be exceeded.
+ */
+export function reserveHiggsfieldPaidSlot(params: {
+  estimatedCostUsd: number;
+  jobId?: string;
+  timeZone?: string;
+  customCapUsd?: number;
+  customMaxRequests?: number;
+}): { permitted: boolean; reservationId?: string; reason?: string } {
+  const timeZone = params.timeZone || 'America/New_York';
+  const capUsd = isValidCostAmount(params.customCapUsd) ? params.customCapUsd : HIGGSFIELD_DAILY_SPEND_CAP_USD;
+  const maxRequests = (typeof params.customMaxRequests === 'number' && params.customMaxRequests > 0)
+    ? params.customMaxRequests
+    : MAX_DAILY_HIGGSFIELD_PAID_REQUESTS;
+
+  // Strict cost validation: cost must be positive finite number > 0, never 0, null, or undefined
+  if (!isValidCostAmount(params.estimatedCostUsd)) {
+    return {
+      permitted: false,
+      reason: `Rejected invalid or zero Higgsfield cost estimate ($${params.estimatedCostUsd}). Paid image generation requires a positive finite cost estimate and cannot rely on $0.00.`,
+    };
+  }
+
+  const todayStr = getTimeInTimezone(new Date(), timeZone).dateStr;
+  const settledSpend = getDailyHiggsfieldSpendUsd(todayStr, timeZone);
+  const settledCount = getDailyHiggsfieldGenerationsCount(todayStr, timeZone);
+  const activeRes = getActiveHiggsfieldReservations(todayStr, timeZone);
+
+  // 1. Spending Cap Check ($1.70 / day)
+  const projectedSpend = Math.round((settledSpend + activeRes.reservedSpendUsd + params.estimatedCostUsd) * 100000) / 100000;
+  if (projectedSpend > capUsd) {
+    return {
+      permitted: false,
+      reason: `Higgsfield daily spend limit reached: projected $${projectedSpend.toFixed(3)} exceeds strict cap of $${capUsd.toFixed(2)} ($${settledSpend.toFixed(3)} settled + $${activeRes.reservedSpendUsd.toFixed(3)} in-flight reserved, requesting $${params.estimatedCostUsd.toFixed(3)})`,
+    };
+  }
+
+  // 2. Request Count Check (9 POSTs / day)
+  const projectedRequests = settledCount + activeRes.reservedRequestsCount + 1;
+  if (projectedRequests > maxRequests) {
+    return {
+      permitted: false,
+      reason: `Higgsfield daily paid requests limit reached: projected ${projectedRequests} exceeds strict cap of ${maxRequests} requests ($${settledCount} settled + ${activeRes.reservedRequestsCount} in-flight reserved, requesting 1 new POST)`,
+    };
+  }
+
+  // 3. Atomically register reservation
+  const reservationId = `hf_res_${Date.now()}_${Math.random().toString(36).substring(2, 8)}`;
+  activeHiggsfieldReservations.set(reservationId, {
+    reservationId,
+    jobId: params.jobId,
+    amountUsd: params.estimatedCostUsd,
+    dateStr: todayStr,
+    createdAt: Date.now(),
+    expiresAt: Date.now() + RESERVATION_TTL_MS,
+  });
+
+  return { permitted: true, reservationId };
+}
+
+/**
+ * Releases an active in-flight Higgsfield reservation (e.g. after transaction is settled or cleanly aborted).
+ */
+export function releaseHiggsfieldReservation(reservationId?: string): void {
+  if (reservationId && activeHiggsfieldReservations.has(reservationId)) {
+    activeHiggsfieldReservations.delete(reservationId);
+  }
+}
+
+/**
+ * Marks a Higgsfield reservation as an ambiguous timeout so it continues counting against daily limits.
+ */
+export function markHiggsfieldReservationAmbiguous(reservationId?: string): void {
+  if (reservationId && activeHiggsfieldReservations.has(reservationId)) {
+    const res = activeHiggsfieldReservations.get(reservationId)!;
+    res.isAmbiguousTimeout = true;
+    res.expiresAt = Date.now() + 2 * 60 * 60 * 1000; // 2 hours hold
+  }
+}
+
+/**
+ * Clears all active Higgsfield reservations (useful for test resets).
+ */
+export function clearAllHiggsfieldReservations(): void {
+  activeHiggsfieldReservations.clear();
 }
 
 /**
