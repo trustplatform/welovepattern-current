@@ -14,7 +14,16 @@
  * - Pinterest slot separation: Pinterest slots NEVER create new article jobs.
  */
 
-import { readEngineState, writeEngineState, updateJobInState } from './queue/engineStorage';
+import {
+  readEngineState,
+  writeEngineState,
+  updateJobInState,
+  mutateEngineStateSync,
+  recordSlotExecutedSync,
+  recordSlotPendingApprovalSync,
+  recordSlotFailedSync,
+  EngineStateLockError
+} from './queue/engineStorage';
 import { createDailyProductionBatch, createSingleSlotProductionJob, processQueueWorker, executeJobLifecycle } from './queue/jobQueueManager';
 import { dispatchScheduledPinterestSlot, dispatchNextOverduePinterestPin } from './publishing/pinterestSlotDispatcher';
 import { getLiveBlogPosts, publishArticleToLiveSite } from './publishing/articlePublisher';
@@ -184,6 +193,21 @@ export async function evaluateSchedulerTick(
   simulatedDate?: Date,
   options?: { useRealDataForSeo?: boolean; skipQueueWorkerExecution?: boolean }
 ): Promise<SchedulerTickResult> {
+  try {
+    return await evaluateSchedulerTickInternal(simulatedDate, options);
+  } catch (err) {
+    if (err instanceof EngineStateLockError) {
+      console.warn(`[SeoEngineScheduler] 🔒 Lock contention: ${err.message}`);
+      return { triggered: false, action: 'skipped_disabled', reason: 'Engine state locked; deferred to next tick.' };
+    }
+    throw err;
+  }
+}
+
+async function evaluateSchedulerTickInternal(
+  simulatedDate?: Date,
+  options?: { useRealDataForSeo?: boolean; skipQueueWorkerExecution?: boolean }
+): Promise<SchedulerTickResult> {
   const state = readEngineState();
   const config = state.config;
 
@@ -243,6 +267,7 @@ export async function evaluateSchedulerTick(
     const slotKey = `${dateStr}_${activeSlotTime}`;
 
     // Deduplication check: Has this exact slot already executed or failed for this date?
+    // Deduplication check: Has this exact slot already executed?
     const alreadyExecuted = state.lastExecutedArticleSlot === slotKey || (state.executedArticleSlots && state.executedArticleSlots.includes(slotKey));
     if (alreadyExecuted) {
       return {
@@ -252,6 +277,50 @@ export async function evaluateSchedulerTick(
         reason: `Article slot ${slotKey} has already executed on date ${dateStr}.`,
       };
     }
+
+    // Pre-flight durable reconciliation across all supported sources (activeJobs, completedJobsHistory, blog-posts.json)
+    const livePosts = getLiveBlogPosts();
+    const activeMatchingJobs = (state.activeJobs || []).filter(j =>
+      (j.assignedPublishDate === dateStr || j.dateScheduled === dateStr) &&
+      (j.assignedSlotTime === activeSlotTime || j.publicationScheduledAt === activeSlotTime)
+    );
+    const historicalMatchingJobs = (state.completedJobsHistory || []).filter(h =>
+      (h.date === dateStr) &&
+      (h.slotTime === activeSlotTime || h.assignedSlotTime === activeSlotTime || h.publicationScheduledAt === activeSlotTime || !h.slotTime)
+    );
+
+    // Rule 1: Exact durable slot key match in blog-posts.json
+    let durablePost = livePosts.find(p => p.seoEngineSlotKey === slotKey && p.status === 'published');
+
+    // Rule 2: Exact linked job ID match across activeJobs or completedJobsHistory
+    if (!durablePost) {
+      durablePost = livePosts.find(p =>
+        p.status === 'published' &&
+        (activeMatchingJobs.some(j => (j.id && j.id === p.seoEngineJobId) || (j.publishedBlogPostId && j.publishedBlogPostId === p.id)) ||
+         historicalMatchingJobs.some(h => (h.jobId && h.jobId === p.seoEngineJobId) || (h.id && h.id === p.id) || (h.publishedBlogPostId && h.publishedBlogPostId === p.id)))
+      );
+    }
+
+    // Rule 2b: Fallback match by assignedSlotTime and date on published post
+    if (!durablePost) {
+      durablePost = livePosts.find(p =>
+        p.status === 'published' &&
+        p.publishedAt?.startsWith(dateStr) &&
+        p.assignedSlotTime === activeSlotTime
+      );
+    }
+
+    if (durablePost) {
+      recordSlotExecutedSync(slotKey, dateStr);
+      return {
+        triggered: true,
+        action: 'article_batch',
+        slotKey,
+        reason: `Article for slot ${slotKey} confirmed published on live website: ${durablePost.slug} (ID: ${durablePost.id})`,
+      };
+    }
+
+    // If no published article was found, check if this slot was previously failed
     const alreadyFailed = state.failedArticleSlots && state.failedArticleSlots.includes(slotKey);
     if (alreadyFailed) {
       return {
@@ -262,8 +331,33 @@ export async function evaluateSchedulerTick(
       };
     }
 
+    // Rule 3: Ambiguity Guard - halt safely ONLY if a genuinely unlinked post (no slot key and no seoEngineJobId) exists on dateStr
+    const unlinkedCandidate = livePosts.find(p =>
+      p.status === 'published' &&
+      p.publishedAt?.startsWith(dateStr) &&
+      !p.seoEngineSlotKey &&
+      !p.seoEngineJobId
+    );
+    if (unlinkedCandidate && activeMatchingJobs.length === 0 && historicalMatchingJobs.length === 0) {
+      console.warn(`[SeoEngineScheduler] ⚠️ Ambiguous unlinked blog post detected for date ${dateStr} (${unlinkedCandidate.slug}). Halting slot to prevent duplicate publication.`);
+      return {
+        triggered: false,
+        action: 'article_batch',
+        slotKey,
+        reason: `Ambiguous publication state detected for slot ${slotKey}. Manual review required.`,
+      };
+    }
+
+    if (state.pendingApprovalArticleSlots && state.pendingApprovalArticleSlots.includes(slotKey)) {
+      return {
+        triggered: false,
+        action: 'article_batch',
+        slotKey,
+        reason: `Article slot ${slotKey} is already generated and awaiting human approval.`,
+      };
+    }
+
     // Daily quota check: Count all active, awaiting approval, or published articles for today
-    const livePosts = getLiveBlogPosts();
     const todaysArticleKeys = new Set<string>();
 
     // 1. Count valid in-flight, awaiting_approval, ready_to_publish, or completed jobs from activeJobs
@@ -289,11 +383,7 @@ export async function evaluateSchedulerTick(
     const articlesPerDayLimit = config.articlesPerDay || 3;
     if (todaysArticlesCount >= articlesPerDayLimit) {
       // Mark slot as acknowledged so we don't repeat the check every minute in this slot
-      state.lastExecutedArticleSlot = slotKey;
-      if (!state.executedArticleSlots) state.executedArticleSlots = [];
-      if (!state.executedArticleSlots.includes(slotKey)) state.executedArticleSlots.push(slotKey);
-      state.lastRunDate = dateStr;
-      writeEngineState(state);
+      recordSlotExecutedSync(slotKey, dateStr);
 
       return {
         triggered: false,
@@ -306,8 +396,7 @@ export async function evaluateSchedulerTick(
     console.log(`[SeoEngineScheduler] 🚀 Article production slot triggered: ${slotKey} (${tz})${missedArticleSlot ? ' [Missed-slot recovery]' : ''}`);
 
     // Record slot evaluation in state
-    state.lastRunDate = dateStr;
-    writeEngineState(state);
+    mutateEngineStateSync(s => { s.lastRunDate = dateStr; });
 
     const slotIdx = articlePublishTimes.indexOf(activeSlotTime);
     const slotNumber: 1 | 2 | 3 = (slotIdx >= 0 ? slotIdx + 1 : missedSlotNumber) as 1 | 2 | 3;
@@ -341,9 +430,58 @@ export async function evaluateSchedulerTick(
             useRealDataForSeo: options?.useRealDataForSeo
           });
           if (targetJob && targetJob.stage === 'selected') {
+            if (options?.skipQueueWorkerExecution) {
+              recordSlotExecutedSync(slotKey, dateStr);
+              return {
+                triggered: true,
+                action: 'article_batch',
+                slotKey,
+                reason: `Production job "${targetJob.articleContent?.title || targetJob.id}" created for slot ${slotKey} (queue execution skipped).`,
+              };
+            }
             await executeJobLifecycle(targetJob.id);
             const freshState = readEngineState();
-            targetJob = freshState.activeJobs.find(j => j.id === targetJob!.id) || targetJob;
+            const completedJob = freshState.activeJobs.find(j => j.id === targetJob!.id) ||
+              freshState.completedJobsHistory?.find(h => h.id === targetJob!.id || h.jobId === targetJob!.id);
+            const currentLivePosts = getLiveBlogPosts();
+
+            // SINGLE PUBLICATION OWNER: Confirm both job stage AND durable blog post record before completing slot
+            if (completedJob && (isArticleJobPublished(completedJob as any, currentLivePosts) || (completedJob as any).stage === 'completed' || Boolean((completedJob as any).publishedBlogPostId))) {
+              recordSlotExecutedSync(slotKey, dateStr);
+              return {
+                triggered: true,
+                action: 'article_batch',
+                slotKey,
+                reason: `Production job "${(completedJob as any).articleContent?.title || completedJob.id}" completed and published to live website: ${(completedJob as any).publishedUrl || (completedJob as any).slug}`,
+              };
+            }
+            if (completedJob && (completedJob as any).stage === 'awaiting_approval') {
+              recordSlotPendingApprovalSync(slotKey, dateStr);
+              return {
+                triggered: true,
+                action: 'article_batch',
+                slotKey,
+                reason: `Production job for slot ${slotKey} completed and is awaiting human approval.`,
+              };
+            }
+            if (completedJob && (completedJob as any).stage === 'failed') {
+              const attempts = recordSlotFailedSync(slotKey);
+              return {
+                triggered: false,
+                action: 'article_batch',
+                slotKey,
+                reason: `Production job lifecycle failed for slot ${slotKey} (attempt ${attempts}/3).`,
+              };
+            }
+            // For newly synthesized generative production jobs, executeJobLifecycle is authoritative.
+            // Never fall through to the second publication path!
+            recordSlotExecutedSync(slotKey, dateStr);
+            return {
+              triggered: true,
+              action: 'article_batch',
+              slotKey,
+              reason: `Production job lifecycle completed for slot ${slotKey}.`,
+            };
           }
         } catch (err: any) {
           console.error(`[SeoEngineScheduler] Error creating/executing production job for Slot ${slotNumber}:`, err);
@@ -405,7 +543,8 @@ export async function evaluateSchedulerTick(
           articlePayload,
           targetJob.topic,
           factualPacket,
-          config
+          config,
+          { excludeBlogPostId: targetJob.publishedBlogPostId }
         );
         passesGate = qualityAudit.passedAllGates;
         if (!passesGate) {
@@ -432,11 +571,8 @@ export async function evaluateSchedulerTick(
               return j;
             });
 
-            // Mark slot as successfully executed
-            state.lastExecutedArticleSlot = slotKey;
-            if (!state.executedArticleSlots) state.executedArticleSlots = [];
-            if (!state.executedArticleSlots.includes(slotKey)) state.executedArticleSlots.push(slotKey);
-            writeEngineState(state);
+            // Mark slot as successfully executed atomically
+            recordSlotExecutedSync(slotKey, dateStr);
 
             return {
               triggered: true,
@@ -451,15 +587,8 @@ export async function evaluateSchedulerTick(
               return j;
             });
 
-            // Record slot failure with bounded retries
-            if (!state.slotAttemptCounts) state.slotAttemptCounts = {};
-            state.slotAttemptCounts[slotKey] = (state.slotAttemptCounts[slotKey] || 0) + 1;
-            const attempts = state.slotAttemptCounts[slotKey];
-            if (attempts >= 3) {
-              if (!state.failedArticleSlots) state.failedArticleSlots = [];
-              if (!state.failedArticleSlots.includes(slotKey)) state.failedArticleSlots.push(slotKey);
-            }
-            writeEngineState(state);
+            // Record slot failure with bounded retries atomically
+            const attempts = recordSlotFailedSync(slotKey);
 
             return {
               triggered: false,
@@ -479,11 +608,8 @@ export async function evaluateSchedulerTick(
             return j;
           });
 
-          // Mark slot as handled
-          state.lastExecutedArticleSlot = slotKey;
-          if (!state.executedArticleSlots) state.executedArticleSlots = [];
-          if (!state.executedArticleSlots.includes(slotKey)) state.executedArticleSlots.push(slotKey);
-          writeEngineState(state);
+          // Mark slot as pending approval atomically
+          recordSlotPendingApprovalSync(slotKey, dateStr);
 
           return {
             triggered: true,
@@ -503,12 +629,8 @@ export async function evaluateSchedulerTick(
           return j;
         });
 
-        // Record permanent gate failure to prevent uncontrolled retry loop
-        if (!state.failedArticleSlots) state.failedArticleSlots = [];
-        if (!state.failedArticleSlots.includes(slotKey)) state.failedArticleSlots.push(slotKey);
-        if (!state.slotAttemptCounts) state.slotAttemptCounts = {};
-        state.slotAttemptCounts[slotKey] = (state.slotAttemptCounts[slotKey] || 0) + 1;
-        writeEngineState(state);
+        // Record permanent gate failure to prevent uncontrolled retry loop atomically
+        recordSlotFailedSync(slotKey);
 
         return {
           triggered: false,
@@ -522,9 +644,7 @@ export async function evaluateSchedulerTick(
     // 2. INVENTORY EXHAUSTION GUARD (Reuse-only) or Missing Job Failure (Generative)
     if (config.reuseOnlyMode !== false) {
       console.log(`[SeoEngineScheduler] 🛑 Inventory exhausted: No unpublished complete article packages remain for slot ${slotKey}. Reuse-only policy enforced: zero AI/image generation.`);
-      if (!state.executedArticleSlots) state.executedArticleSlots = [];
-      if (!state.executedArticleSlots.includes(slotKey)) state.executedArticleSlots.push(slotKey);
-      writeEngineState(state);
+      recordSlotExecutedSync(slotKey, dateStr);
 
       return {
         triggered: false,
@@ -534,9 +654,7 @@ export async function evaluateSchedulerTick(
       };
     } else {
       console.warn(`[SeoEngineScheduler] ⚠️ No article job ready or generated for slot ${slotKey}.`);
-      if (!state.failedArticleSlots) state.failedArticleSlots = [];
-      if (!state.failedArticleSlots.includes(slotKey)) state.failedArticleSlots.push(slotKey);
-      writeEngineState(state);
+      recordSlotFailedSync(slotKey);
 
       return {
         triggered: false,
@@ -566,10 +684,11 @@ export async function evaluateSchedulerTick(
     console.log(`[SeoEngineScheduler] 📌 Pinterest publishing slot triggered: ${slotKey} (${tz})`);
 
     // Record slot execution atomically in state
-    state.lastExecutedPinterestSlot = slotKey;
-    if (!state.executedPinterestSlots) state.executedPinterestSlots = [];
-    if (!state.executedPinterestSlots.includes(slotKey)) state.executedPinterestSlots.push(slotKey);
-    writeEngineState(state);
+    mutateEngineStateSync(s => {
+      s.lastExecutedPinterestSlot = slotKey;
+      if (!s.executedPinterestSlots) s.executedPinterestSlots = [];
+      if (!s.executedPinterestSlots.includes(slotKey)) s.executedPinterestSlots.push(slotKey);
+    });
 
     // 1. Dispatch the specific Pin mapped to this slot:
     // Slot 1 (08:30) -> Art 1 Pin 1, Slot 2 (09:00) -> Art 1 Pin 2

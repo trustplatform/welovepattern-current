@@ -149,8 +149,8 @@ async function runSchedulerTests() {
     // -----------------------------------------------------------------
     // TEST 7: Daily quota (articlesPerDay = 2) prevents 3rd article batch
     // -----------------------------------------------------------------
-    // If an extra slot or manual trigger runs on the same day when 2 jobs already exist
     freshStateFromDisk.lastExecutedArticleSlot = undefined; // clear slot key to test quota guard specifically
+    freshStateFromDisk.executedArticleSlots = [];
     writeEngineState(freshStateFromDisk);
     const tickResultQuota = await evaluateSchedulerTick(slot0800Utc, { useRealDataForSeo: false, skipQueueWorkerExecution: true });
     assert(tickResultQuota.triggered === false, '7a. Daily quota prevented 3rd article creation');

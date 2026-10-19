@@ -25,7 +25,7 @@ async function runConfigValidationTest() {
   assert(DEFAULT_SEO_ENGINE_CONFIG.requiresApproval === false, '1. Default requiresApproval is false');
   assert(DEFAULT_SEO_ENGINE_CONFIG.autoPublish === true, '2. Default autoPublish is true');
   assert(DEFAULT_SEO_ENGINE_CONFIG.autoPublishPinterest === true, '3. Default autoPublishPinterest is true');
-  assert(DEFAULT_SEO_ENGINE_CONFIG.articlesPerDay === 2, '4. Default articlesPerDay is 2');
+  assert(DEFAULT_SEO_ENGINE_CONFIG.articlesPerDay === 3, '4. Default articlesPerDay is 3');
   assert(DEFAULT_SEO_ENGINE_CONFIG.minWordCount === 800, '5. Default minWordCount is 800');
   assert(DEFAULT_SEO_ENGINE_CONFIG.maxWordCount === 2000, '6. Default maxWordCount is 2000');
   assert(DEFAULT_SEO_ENGINE_CONFIG.dailyCostLimitUsd === 5.0, '7. Default dailyCostLimitUsd is $5.00');

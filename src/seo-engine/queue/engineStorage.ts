@@ -5,6 +5,7 @@
  */
 
 import fs from 'fs';
+import crypto from 'crypto';
 import path from 'path';
 import { DEFAULT_SEO_ENGINE_CONFIG, SEO_ENGINE_STORAGE_PATHS } from '../config';
 import { SeoEngineConfig, SeoEngineDailyState, SeoEngineArticleJob } from '../types';
@@ -76,6 +77,7 @@ function normalizeAndRepairState(raw: Partial<SeoEngineDailyState>): SeoEngineDa
       ? raw.executedPinterestSlots
       : (typeof raw.lastExecutedPinterestSlot === 'string' ? [raw.lastExecutedPinterestSlot] : []),
     failedArticleSlots: Array.isArray(raw.failedArticleSlots) ? raw.failedArticleSlots : [],
+    pendingApprovalArticleSlots: Array.isArray(raw.pendingApprovalArticleSlots) ? raw.pendingApprovalArticleSlots : [],
     slotAttemptCounts: raw.slotAttemptCounts && typeof raw.slotAttemptCounts === 'object' ? raw.slotAttemptCounts : {},
     todayDiscoveredTopics: Array.isArray(raw.todayDiscoveredTopics) ? raw.todayDiscoveredTopics : [],
     activeJobs: Array.isArray(raw.activeJobs) ? raw.activeJobs : [],
@@ -157,32 +159,195 @@ export function writeEngineState(state: SeoEngineDailyState): void {
   fs.renameSync(tmpPath, statePath);
 }
 
+export class EngineStateLockError extends Error {
+  constructor(message: string) {
+    super(message);
+    this.name = 'EngineStateLockError';
+  }
+}
+
+const STATE_LOCK_FILE_RELATIVE = 'data/seo-engine-state.json.lock';
+
+export function getEngineStateLockFilePath(): string {
+  const custom = process.env.SEO_ENGINE_STATE_FILE;
+  return path.resolve(process.cwd(), custom ? `${custom}.lock` : STATE_LOCK_FILE_RELATIVE);
+}
+
+function isProcessAlive(pid: number): boolean {
+  if (!pid || typeof pid !== 'number' || pid <= 0) return false;
+  try {
+    process.kill(pid, 0);
+    return true;
+  } catch (err: any) {
+    return err.code === 'EPERM';
+  }
+}
+
+/**
+ * Acquires an exclusive file lock.
+ * Invariant: Fails safely on malformed, unverified, or busy lock files without deleting them.
+ * Throws EngineStateLockError on timeout. Never writes state without holding the lock.
+ */
+export function acquireEngineStateLock(timeoutMs: number = 3000): string {
+  const lockPath = getEngineStateLockFilePath();
+  const dir = path.dirname(lockPath);
+  if (!fs.existsSync(dir)) {
+    fs.mkdirSync(dir, { recursive: true });
+  }
+
+  const token = crypto.randomUUID();
+  const startTime = Date.now();
+  const retryIntervalMs = 25;
+
+  while (Date.now() - startTime < timeoutMs) {
+    try {
+      const payload = JSON.stringify({ token, pid: process.pid, createdAt: Date.now() });
+      fs.writeFileSync(lockPath, payload, { flag: 'wx' });
+      return token;
+    } catch (err: any) {
+      if (err.code === 'EEXIST') {
+        try {
+          const raw = fs.readFileSync(lockPath, 'utf8').trim();
+          if (raw) {
+            const data = JSON.parse(raw);
+            const isValidLockRecord = typeof data.pid === 'number' && typeof data.token === 'string' && typeof data.createdAt === 'number';
+            const isDead = isValidLockRecord && !isProcessAlive(data.pid);
+            const isOld = isValidLockRecord && (Date.now() - data.createdAt > 60000);
+
+            // Safe reclamation ONLY if verifiable dead PID and exceeds 60s threshold
+            if (isDead && isOld) {
+              try {
+                const currentContent = fs.readFileSync(lockPath, 'utf8').trim();
+                const currentData = JSON.parse(currentContent);
+                if (currentData.token === data.token && currentData.pid === data.pid) {
+                  fs.unlinkSync(lockPath);
+                  console.warn(`[SeoEngineStorage] Safely reclaimed verified stale lockfile (${data.token}, dead pid ${data.pid})`);
+                  continue;
+                }
+              } catch {
+                // Another process modified or released it; fail safe
+              }
+            }
+          }
+        } catch {
+          // Malformed, partial, or unreadable lock: FAIL SAFELY. Do not unlink.
+        }
+
+        const sleepUntil = Date.now() + retryIntervalMs;
+        while (Date.now() < sleepUntil) {}
+      } else {
+        throw err;
+      }
+    }
+  }
+
+  throw new EngineStateLockError(
+    `Failed to acquire engine state lock (${lockPath}) within ${timeoutMs}ms. Another process owns the lock or lock is held.`
+  );
+}
+
+export function releaseEngineStateLock(token: string): void {
+  const lockPath = getEngineStateLockFilePath();
+  try {
+    if (!fs.existsSync(lockPath)) return;
+    const raw = fs.readFileSync(lockPath, 'utf8');
+    const data = JSON.parse(raw);
+    if (data.token === token) {
+      fs.unlinkSync(lockPath);
+    }
+  } catch {}
+}
+
+/**
+ * Executes a synchronous read-modify-write under atomic file lock.
+ * INVARIANT: Never reads or writes state if lock acquisition fails.
+ */
+export function mutateEngineStateSync<T>(mutator: (state: SeoEngineDailyState) => T): T {
+  const token = acquireEngineStateLock();
+  try {
+    const state = readEngineState();
+    const result = mutator(state);
+    writeEngineState(state);
+    return result;
+  } finally {
+    releaseEngineStateLock(token);
+  }
+}
+
+export function recordSlotExecutedSync(slotKey: string, dateStr: string): void {
+  mutateEngineStateSync(state => {
+    state.lastExecutedArticleSlot = slotKey;
+    if (!state.executedArticleSlots) state.executedArticleSlots = [];
+    if (!state.executedArticleSlots.includes(slotKey)) {
+      state.executedArticleSlots.push(slotKey);
+    }
+    if (state.failedArticleSlots) {
+      state.failedArticleSlots = state.failedArticleSlots.filter(s => s !== slotKey);
+    }
+    if (state.pendingApprovalArticleSlots) {
+      state.pendingApprovalArticleSlots = state.pendingApprovalArticleSlots.filter(s => s !== slotKey);
+    }
+    if (state.slotAttemptCounts) {
+      delete state.slotAttemptCounts[slotKey];
+    }
+    state.lastRunDate = dateStr;
+  });
+}
+
+export function recordSlotPendingApprovalSync(slotKey: string, dateStr: string): void {
+  mutateEngineStateSync(state => {
+    if (!state.pendingApprovalArticleSlots) state.pendingApprovalArticleSlots = [];
+    if (!state.pendingApprovalArticleSlots.includes(slotKey)) {
+      state.pendingApprovalArticleSlots.push(slotKey);
+    }
+    if (state.failedArticleSlots) {
+      state.failedArticleSlots = state.failedArticleSlots.filter(s => s !== slotKey);
+    }
+    state.lastRunDate = dateStr;
+  });
+}
+
+export function recordSlotFailedSync(slotKey: string): number {
+  return mutateEngineStateSync(state => {
+    if (!state.slotAttemptCounts) state.slotAttemptCounts = {};
+    state.slotAttemptCounts[slotKey] = (state.slotAttemptCounts[slotKey] || 0) + 1;
+    const attempts = state.slotAttemptCounts[slotKey];
+    if (attempts >= 3) {
+      if (!state.failedArticleSlots) state.failedArticleSlots = [];
+      if (!state.failedArticleSlots.includes(slotKey)) {
+        state.failedArticleSlots.push(slotKey);
+      }
+    }
+    return attempts;
+  });
+}
+
 /**
  * Updates partial configuration settings atomically and returns the updated state.
  */
 export function updateEngineConfig(partial: Partial<SeoEngineConfig>): SeoEngineDailyState {
-  const currentState = readEngineState();
-  currentState.config = {
-    ...currentState.config,
-    ...partial,
-  };
-  writeEngineState(currentState);
-  return currentState;
+  return mutateEngineStateSync(currentState => {
+    currentState.config = {
+      ...currentState.config,
+      ...partial,
+    };
+    return currentState;
+  });
 }
 
 /**
  * Adds a new job to the activeJobs array, preventing duplicates by id.
  */
 export function addJobToState(job: SeoEngineArticleJob): SeoEngineDailyState {
-  const state = readEngineState();
-  const existingIdx = state.activeJobs.findIndex(j => j.id === job.id);
-  if (existingIdx >= 0) {
-    state.activeJobs[existingIdx] = job;
-  } else {
-    state.activeJobs.push(job);
-  }
-  writeEngineState(state);
-  return state;
+  return mutateEngineStateSync(state => {
+    const existingIdx = state.activeJobs.findIndex(j => j.id === job.id);
+    if (existingIdx >= 0) {
+      state.activeJobs[existingIdx] = job;
+    } else {
+      state.activeJobs.push(job);
+    }
+    return state;
+  });
 }
 
 /**
@@ -192,18 +357,17 @@ export function updateJobInState(
   jobId: string,
   updater: (job: SeoEngineArticleJob) => SeoEngineArticleJob
 ): SeoEngineArticleJob | null {
-  const state = readEngineState();
-  const index = state.activeJobs.findIndex(j => j.id === jobId);
-  if (index === -1) {
-    return null;
-  }
+  return mutateEngineStateSync(state => {
+    const index = state.activeJobs.findIndex(j => j.id === jobId);
+    if (index === -1) {
+      return null;
+    }
 
-  const updatedJob = updater(state.activeJobs[index]);
-  updatedJob.updatedAt = new Date().toISOString();
-  state.activeJobs[index] = updatedJob;
-
-  writeEngineState(state);
-  return updatedJob;
+    const updatedJob = updater(state.activeJobs[index]);
+    updatedJob.updatedAt = new Date().toISOString();
+    state.activeJobs[index] = updatedJob;
+    return updatedJob;
+  });
 }
 
 /**

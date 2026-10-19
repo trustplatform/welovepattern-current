@@ -1,5 +1,46 @@
 [
   {
+    "id": "blog_1792404000000_magicring",
+    "seoEngineJobId": "job_2026-10-19_magicring",
+    "seoEngineSlotKey": "2026-10-19_08:00",
+    "assignedSlotTime": "08:00",
+    "title": "Magic Ring Crochet Tutorial: Step-by-Step Guide",
+    "slug": "magic-ring-crochet-tutorial-step-by-step-guide",
+    "excerpt": "Master the magic ring crochet technique step-by-step for tight, seamless beginnings in amigurumi, granny squares, and circular patterns.",
+    "content": "<h2>What is a Magic Ring in Crochet?</h2><p>The <strong>magic ring</strong> (also known as an adjustable loop or magic circle) is a fundamental technique for crocheting in the round. Unlike the traditional chain-2 or chain-4 loop method, a magic ring can be pulled completely closed, leaving zero hole in the center of your work.</p><h2>Step-by-Step Tutorial</h2><ol><li><strong>Form the Loop:</strong> Lay the yarn tail over your open left hand and wrap the working yarn around your index and middle fingers to form an X.</li><li><strong>Insert the Hook:</strong> Slide your crochet hook under the bottom-right strand and grab the upper-left working yarn.</li><li><strong>Pull Up a Loop & Chain 1:</strong> Pull the working strand under the first strand, yarn over, and pull through the loop to secure the ring.</li><li><strong>Work Your Stitches:</strong> Work single crochet stitches directly into the center of the ring, working over both the loop strand and the yarn tail.</li><li><strong>Pull the Tail Tight:</strong> Firmly pull the yarn tail until the center hole closes seamlessly.</li></ol><h2>Troubleshooting Tips</h2><ul><li><strong>Preventing unraveling:</strong> Always weave in the yarn tail in three alternating directions with a tapestry needle. Never trim flush.</li><li><strong>Tension control:</strong> Do not stitch too tightly around the ring strands, allowing the core yarn tail to glide freely.</li></ul>",
+    "category": "Crochet",
+    "tags": [
+      "crochet tutorial",
+      "magic ring",
+      "magic circle",
+      "beginner crochet",
+      "amigurumi basics"
+    ],
+    "image": "/uploads/blog/default-crochet.jpg",
+    "heroImage": "/uploads/blog/default-crochet.jpg",
+    "author": "WeLovePattern Editorial Team",
+    "readTime": "6 min read",
+    "readTimeMinutes": 6,
+    "status": "published",
+    "publishedAt": "2026-10-19T12:00:00.000Z",
+    "createdAt": "2026-10-19T12:00:00.000Z",
+    "updatedAt": "2026-10-19T12:00:00.000Z",
+    "seoMeta": {
+      "metaTitle": "Magic Ring Crochet Tutorial: Step-by-Step Guide | WeLovePattern",
+      "metaDescription": "Master the magic ring crochet technique step-by-step for tight, seamless beginnings in amigurumi, granny squares, and circular patterns.",
+      "metaKeywords": "magic ring crochet, magic circle tutorial, how to crochet a magic ring, crochet for beginners",
+      "canonicalUrl": "https://welovepattern.com/blog/magic-ring-crochet-tutorial-step-by-step-guide",
+      "ogTitle": "Magic Ring Crochet Tutorial: Step-by-Step Guide",
+      "ogDescription": "Master the magic ring crochet technique step-by-step for tight, seamless beginnings in amigurumi, granny squares, and circular patterns.",
+      "ogImage": "/uploads/blog/default-crochet.jpg",
+      "twitterTitle": "Magic Ring Crochet Tutorial: Step-by-Step Guide",
+      "twitterDescription": "Master the magic ring crochet technique step-by-step for tight, seamless beginnings in amigurumi, granny squares, and circular patterns.",
+      "twitterImage": "/uploads/blog/default-crochet.jpg",
+      "isNoIndex": false,
+      "isNoFollow": false
+    }
+  },
+  {
     "id": "blog_1792344354248_9pbvqx0",
     "seoEngineJobId": "job_2026-10-18_1tip0j",
     "title": "Crochet Christmas Tree Ornament Pattern Guide & Techniques",

@@ -8,7 +8,7 @@
     "autoPublish": true,
     "autoPublishPinterest": true,
     "requiresApproval": false,
-    "engineActive": false,
+    "engineActive": true,
     "reuseOnlyMode": false,
     "timezone": "America/New_York",
     "activeDays": [
@@ -73,16 +73,23 @@
     "higgsfieldDailyCostLimitUsd": 1.7,
     "higgsfieldDailyRequestsLimit": 9
   },
-  "lastRunDate": "2026-10-17",
-  "lastExecutedArticleSlot": "",
-  "executedArticleSlots": [],
+  "lastRunDate": "2026-10-19",
+  "lastExecutedArticleSlot": "2026-10-19_08:00",
+  "executedArticleSlots": [
+    "2026-10-19_08:00"
+  ],
   "executedPinterestSlots": [
     "2026-10-05_13:00"
   ],
   "failedArticleSlots": [
-    "2026-10-17_08:00"
+    "2026-10-17_08:00",
+    "2026-10-19_12:00"
   ],
-  "slotAttemptCounts": {},
+  "pendingApprovalArticleSlots": [],
+  "slotAttemptCounts": {
+    "2026-10-19_08:00": 3,
+    "2026-10-19_12:00": 3
+  },
   "todayDiscoveredTopics": [
     {
       "id": "topic_crochet_63726f636865",
@@ -98,7 +105,7 @@
       "targetCategoryUrl": "/category/christmas",
       "targetAudienceLevel": "all_levels",
       "searchIntentNotes": "High holiday seasonal search for handmade holiday tree decor.",
-      "discoveredAt": "2026-10-18T10:33:30.999Z",
+      "discoveredAt": "2026-10-19T19:41:49.744Z",
       "status": "discovered"
     },
     {
@@ -116,7 +123,25 @@
       "targetCategoryUrl": "/categories/tools",
       "targetAudienceLevel": "all_levels",
       "searchIntentNotes": "Tool Guide for real WeLovePattern interactive tool: Project Tracker. Problem: Keep track of active WIPs, completion status, yarn stash used, hook sizes, and photo logs.",
-      "discoveredAt": "2026-10-18T10:33:31.001Z",
+      "discoveredAt": "2026-10-19T19:41:49.746Z",
+      "status": "discovered"
+    },
+    {
+      "id": "topic_tool_row_counter_6f6e6c69",
+      "keyword": "online row counter",
+      "contentType": "tool_guide",
+      "category": "tools",
+      "source": "internal_catalog",
+      "trendScore": 85,
+      "trendDirection": "stable",
+      "opportunityScore": 95,
+      "targetContentFormat": "tool_focus",
+      "toolSlug": "row-counter",
+      "targetToolUrl": "/tools/row-counter",
+      "targetCategoryUrl": "/categories/tools",
+      "targetAudienceLevel": "all_levels",
+      "searchIntentNotes": "Tool Guide for real WeLovePattern interactive tool: Row Counter. Problem: Tracking active row repeats and pattern sections without losing count mid-session.",
+      "discoveredAt": "2026-10-19T19:38:51.275Z",
       "status": "discovered"
     },
     {
@@ -140,124 +165,63 @@
   ],
   "activeJobs": [
     {
-      "id": "test_job_slot1_draft",
-      "dateScheduled": "2026-10-15",
+      "id": "job_unpublished_test",
+      "stage": "writing",
+      "dateScheduled": "2026-09-27",
+      "assignedPublishDate": "2026-09-27",
+      "assignedSlotTime": "08:00",
+      "pinterestPins": [
+        {
+          "pinNumber": 1,
+          "assignedSlotTime": "09:00",
+          "scheduledTime": "09:00",
+          "publishStatus": "image_ready",
+          "stableAssetPath": "public/test-a-small.jpg"
+        }
+      ]
+    },
+    {
+      "id": "job_2026-10-19_inmyx8",
+      "dateScheduled": "2026-10-19",
       "contentType": "trending_crochet",
       "category": "crochet",
       "topic": {
-        "id": "t1",
-        "keyword": "crochet pumpkin",
+        "id": "topic_crochet_63726f636865",
+        "keyword": "crochet halloween granny square",
         "contentType": "trending_crochet",
         "category": "crochet",
-        "opportunityScore": 90,
-        "status": "awaiting_approval"
+        "source": "gsc_seed",
+        "trendScore": 0,
+        "combinedTrendScore": 0,
+        "trendDirection": "stable",
+        "opportunityScore": 91,
+        "targetContentFormat": "guide",
+        "targetCategoryUrl": "/category/halloween",
+        "targetAudienceLevel": "all_levels",
+        "searchIntentNotes": "Trending seasonal granny square variations.",
+        "discoveredAt": "2026-10-19T19:38:51.273Z",
+        "status": "discovered"
       },
-      "stage": "awaiting_approval",
-      "requiresApproval": true,
-      "pinterestPins": [
+      "pinterestPins": [],
+      "stage": "selected",
+      "requiresApproval": false,
+      "indexNowNotified": false,
+      "createdAt": "2026-10-19T19:38:51.275Z",
+      "updatedAt": "2026-10-19T19:38:51.278Z",
+      "logs": [
         {
-          "pinNumber": 1,
-          "conceptAngle": "Primary Craft Concept",
-          "visualStyle": {
-            "imageCount": 1,
-            "compositionType": "single_hero",
-            "subjectDescription": "Craft tool",
-            "colorPalette": "natural",
-            "humanElement": "none"
-          },
-          "compactHiggsfieldPrompt": "Craft tool in action",
-          "typographyOverlay": {
-            "primaryHeadline": "crochet pumpkin",
-            "ctaBadgeText": "EXPLORE GUIDE →"
-          },
-          "destinationUrl": "https://welovepattern.com/blog/",
-          "publishStatus": "pending"
-        },
-        {
-          "pinNumber": 2,
-          "conceptAngle": "Technical Layflat Concept",
-          "visualStyle": {
-            "imageCount": 1,
-            "compositionType": "flatlay_materials",
-            "subjectDescription": "Craft tool flatlay",
-            "colorPalette": "warm",
-            "humanElement": "hands_only"
-          },
-          "compactHiggsfieldPrompt": "Craft tool flatlay",
-          "typographyOverlay": {
-            "primaryHeadline": "crochet pumpkin",
-            "ctaBadgeText": "EXPLORE GUIDE →"
-          },
-          "destinationUrl": "https://welovepattern.com/blog/",
-          "publishStatus": "pending"
+          "timestamp": "2026-10-19T19:38:51.275Z",
+          "level": "info",
+          "message": "Job created for TRENDING_CROCHET (Category: CROCHET): \"crochet halloween granny square\" with opportunity score 91."
         }
       ],
-      "indexNowNotified": false,
-      "createdAt": "2026-10-18T00:08:13.218Z",
-      "updatedAt": "2026-10-18T00:08:13.218Z",
-      "logs": []
+      "assignedPublishDate": "2026-10-19",
+      "assignedSlotTime": "08:00",
+      "publicationScheduledAt": "08:00"
     },
     {
-      "id": "test_job_slot2_draft",
-      "dateScheduled": "2026-10-15",
-      "contentType": "tool_guide",
-      "category": "tools",
-      "topic": {
-        "id": "t2",
-        "keyword": "gauge calculator",
-        "contentType": "tool_guide",
-        "category": "tools",
-        "opportunityScore": 85,
-        "status": "awaiting_approval"
-      },
-      "stage": "awaiting_approval",
-      "requiresApproval": true,
-      "pinterestPins": [
-        {
-          "pinNumber": 1,
-          "conceptAngle": "Primary Craft Concept",
-          "visualStyle": {
-            "imageCount": 1,
-            "compositionType": "single_hero",
-            "subjectDescription": "Craft tool",
-            "colorPalette": "natural",
-            "humanElement": "none"
-          },
-          "compactHiggsfieldPrompt": "Craft tool in action",
-          "typographyOverlay": {
-            "primaryHeadline": "gauge calculator",
-            "ctaBadgeText": "EXPLORE GUIDE →"
-          },
-          "destinationUrl": "https://welovepattern.com/blog/",
-          "publishStatus": "pending"
-        },
-        {
-          "pinNumber": 2,
-          "conceptAngle": "Technical Layflat Concept",
-          "visualStyle": {
-            "imageCount": 1,
-            "compositionType": "flatlay_materials",
-            "subjectDescription": "Craft tool flatlay",
-            "colorPalette": "warm",
-            "humanElement": "hands_only"
-          },
-          "compactHiggsfieldPrompt": "Craft tool flatlay",
-          "typographyOverlay": {
-            "primaryHeadline": "gauge calculator",
-            "ctaBadgeText": "EXPLORE GUIDE →"
-          },
-          "destinationUrl": "https://welovepattern.com/blog/",
-          "publishStatus": "pending"
-        }
-      ],
-      "indexNowNotified": false,
-      "createdAt": "2026-10-18T00:08:13.218Z",
-      "updatedAt": "2026-10-18T00:08:13.218Z",
-      "logs": []
-    },
-    {
-      "id": "job_2026-10-15_m7inq3",
-      "dateScheduled": "2026-10-15",
+      "id": "job_2026-10-19_jjdtkz",
+      "dateScheduled": "2026-10-19",
       "contentType": "tool_guide",
       "category": "tools",
       "topic": {
@@ -275,454 +239,29 @@
         "targetCategoryUrl": "/categories/tools",
         "targetAudienceLevel": "all_levels",
         "searchIntentNotes": "Tool Guide for real WeLovePattern interactive tool: Row Counter. Problem: Tracking active row repeats and pattern sections without losing count mid-session.",
-        "discoveredAt": "2026-10-18T00:08:13.242Z",
+        "discoveredAt": "2026-10-19T19:38:51.275Z",
         "status": "discovered"
       },
-      "pinterestPins": [
-        {
-          "pinNumber": 1,
-          "conceptAngle": "Primary Craft Concept",
-          "visualStyle": {
-            "imageCount": 1,
-            "compositionType": "single_hero",
-            "subjectDescription": "Craft tool",
-            "colorPalette": "natural",
-            "humanElement": "none"
-          },
-          "compactHiggsfieldPrompt": "Craft tool in action",
-          "typographyOverlay": {
-            "primaryHeadline": "online row counter",
-            "ctaBadgeText": "EXPLORE GUIDE →"
-          },
-          "destinationUrl": "https://welovepattern.com/blog/",
-          "publishStatus": "pending"
-        },
-        {
-          "pinNumber": 2,
-          "conceptAngle": "Technical Layflat Concept",
-          "visualStyle": {
-            "imageCount": 1,
-            "compositionType": "flatlay_materials",
-            "subjectDescription": "Craft tool flatlay",
-            "colorPalette": "warm",
-            "humanElement": "hands_only"
-          },
-          "compactHiggsfieldPrompt": "Craft tool flatlay",
-          "typographyOverlay": {
-            "primaryHeadline": "online row counter",
-            "ctaBadgeText": "EXPLORE GUIDE →"
-          },
-          "destinationUrl": "https://welovepattern.com/blog/",
-          "publishStatus": "pending"
-        }
-      ],
+      "pinterestPins": [],
       "stage": "selected",
       "requiresApproval": false,
       "indexNowNotified": false,
-      "createdAt": "2026-10-18T00:08:13.243Z",
-      "updatedAt": "2026-10-18T00:09:51.977Z",
+      "createdAt": "2026-10-19T19:38:51.277Z",
+      "updatedAt": "2026-10-19T19:38:51.279Z",
       "logs": [
         {
-          "timestamp": "2026-10-18T00:08:13.243Z",
+          "timestamp": "2026-10-19T19:38:51.277Z",
           "level": "info",
           "message": "Job created for TOOL_GUIDE (Category: TOOLS): \"online row counter\" with opportunity score 95."
-        },
-        {
-          "timestamp": "2026-10-18T00:08:13.249Z",
-          "level": "info",
-          "message": "Starting technical craft research..."
-        },
-        {
-          "timestamp": "2026-10-18T00:08:37.992Z",
-          "level": "info",
-          "message": "Factual research packet validated successfully."
-        },
-        {
-          "timestamp": "2026-10-18T00:08:37.993Z",
-          "level": "info",
-          "message": "Generating article with OpenAI..."
-        },
-        {
-          "timestamp": "2026-10-18T00:09:51.977Z",
-          "level": "warn",
-          "message": "Process restart detected. Safely reset from interrupted state to \"selected\" for clean recovery."
         }
       ],
-      "assignedPublishDate": "2026-10-15",
-      "assignedSlotTime": "12:00",
-      "publicationScheduledAt": "12:00",
-      "factualResearch": {
-        "topicId": "topic_tool_row_counter_6f6e6c69",
-        "topic": "online row counter",
-        "searchIntent": "Maker search query focused on online row counter",
-        "craftType": "crochet",
-        "sourceAuthority": "Craft Yarn Council Technical Standards & WeLovePattern Craft Library",
-        "cycStandardVersion": "CYC 2024 Guidelines",
-        "generatedAt": "2026-10-18T00:08:37.990Z",
-        "verifiedTerminology": [
-          "Gauge Swatch (4x4 inches / 10x10 cm)",
-          "Single Crochet (US sc / UK dc)",
-          "Double Crochet (US dc / UK tr)",
-          "Half Double Crochet (US hdc / UK htr)",
-          "Slip Stitch (sl st)",
-          "Turning Chain (ch)"
-        ],
-        "verifiedMaterials": {
-          "yarnWeights": [
-            "Medium / Worsted (#4)",
-            "Light / DK (#3)"
-          ],
-          "hookSizes": [
-            "5.0 mm (H-8)",
-            "5.5 mm (I-9)",
-            "4.0 mm (G-6)"
-          ],
-          "standardYardages": "Standard projects require 800 - 1,400 meters depending on dimension"
-        },
-        "authorizedPercentages": [
-          10,
-          15,
-          20
-        ],
-        "prohibitedMetrics": [
-          "stitches per skein",
-          "divide stitches by stitches per skein",
-          "arbitrary yards per stitch",
-          "invented mattress or bed sizes",
-          "commercial sales pricing or revenue claims"
-        ],
-        "verifiedFormulas": [
-          {
-            "name": "Area Ratio Swatch Scaling Method",
-            "description": "Calculates total project yardage by scaling the measured yardage consumed by a 4x4 inch blocked swatch to the total project surface area.",
-            "formulaText": "Total Yardage = (Total Project Surface Area / Swatch Surface Area) * Swatch Yardage * 1.10 (safety buffer)",
-            "steps": [
-              "Crochet a 4x4 inch (16 sq in / 100 sq cm) gauge swatch using the project hook and yarn.",
-              "Measure the exact yardage used in the swatch (either by weighing with a gram scale or measuring the yarn before swatching).",
-              "Calculate total project area in square inches (width in inches multiplied by length in inches).",
-              "Divide total project area by swatch area to find the scale multiplier, multiply by swatch yardage, and add 10% to 15% safety buffer for borders, ends, and tension variance."
-            ]
-          }
-        ],
-        "supportedClaims": [
-          "Textured stitches like bobbles, puff stitches, and cables consume substantially more yarn per square inch than flat stitches like single crochet and double crochet.",
-          "A 10% to 15% yardage buffer is essential to prevent running out of yarn before border completion.",
-          "Yarn skeins are sold and measured by weight and yardage/meters, never by a fixed stitch count.",
-          "Dye lot consistency is critical across large surface items to avoid noticeable color demarcation lines."
-        ],
-        "techniqueKeyPoints": [
-          "Always crochet and block a 4x4 inch (10x10 cm) gauge swatch before starting garments or fitted items.",
-          "Yarn requirements increase significantly with textured stitches like waffle stitch or bobbles compared to basic double crochet.",
-          "Tension consistency between rows determines finished project drape and dimensional accuracy."
-        ],
-        "makerPainPoints": [
-          "Running out of yarn on the final border row due to approximate estimation.",
-          "Blanket borders ruffling or curling because stitch count pick-ups along edges are uneven.",
-          "Finished item sizing significantly larger or smaller than pattern specs due to skipped gauge swatching."
-        ],
-        "faqItems": [
-          {
-            "question": "Why is checking your gauge essential for online row counter?",
-            "factualAnswer": "Individual crafter tension varies widely. Even with the identical hook and yarn weight, one maker may crochet 12 stitches per 4 inches while another crochets 15 stitches, altering finished dimensions by up to 25%."
-          },
-          {
-            "question": "What is the most common mistake when calculating yarn yardage?",
-            "factualAnswer": "Failing to include a 10% to 15% safety buffer for swatch testing, color changes, and border edging, which often results in running out of dye lot before completion."
-          },
-          {
-            "question": "How do US and UK stitch terms differ for this technique?",
-            "factualAnswer": "US terms name stitches by yarn overs, whereas UK terms name them by loops on the hook. For example, a US single crochet is identical in height and technique to a UK double crochet."
-          }
-        ],
-        "verifiedInternalLinks": [
-          {
-            "anchorText": "online row counter",
-            "url": "/tools/row-counter",
-            "entityType": "tool"
-          }
-        ],
-        "targetTool": {
-          "id": "row-counter",
-          "slug": "row-counter",
-          "title": "Row Counter",
-          "description": "Offline-ready interactive row counter with audio chime, haptic vibration, reset, and log history.",
-          "icon": "Hash",
-          "category": "Counter",
-          "actionType": "counter",
-          "actionLabel": "Start Counting Rows →",
-          "actionVerb": "Count Rows",
-          "isPopular": true,
-          "isOfflineCapable": true
-        }
-      }
+      "assignedPublishDate": "2026-10-19",
+      "assignedSlotTime": "16:00",
+      "publicationScheduledAt": "16:00"
     },
     {
-      "id": "job_2026-10-18_g0x86n",
-      "dateScheduled": "2026-10-18",
-      "contentType": "trending_crochet",
-      "category": "crochet",
-      "topic": {
-        "id": "topic_crochet_63726f636865",
-        "keyword": "crochet halloween granny square",
-        "contentType": "trending_crochet",
-        "category": "crochet",
-        "source": "gsc_seed",
-        "trendScore": 0,
-        "combinedTrendScore": 0,
-        "trendDirection": "stable",
-        "opportunityScore": 91,
-        "targetContentFormat": "guide",
-        "targetCategoryUrl": "/category/halloween",
-        "targetAudienceLevel": "all_levels",
-        "searchIntentNotes": "Trending seasonal granny square variations.",
-        "discoveredAt": "2026-10-18T00:18:10.723Z",
-        "status": "discovered"
-      },
-      "pinterestPins": [
-        {
-          "pinNumber": 1,
-          "conceptAngle": "Primary Craft Concept",
-          "visualStyle": {
-            "imageCount": 1,
-            "compositionType": "single_hero",
-            "subjectDescription": "Craft tool",
-            "colorPalette": "natural",
-            "humanElement": "none"
-          },
-          "compactHiggsfieldPrompt": "Craft tool in action",
-          "typographyOverlay": {
-            "primaryHeadline": "crochet halloween granny square",
-            "ctaBadgeText": "EXPLORE GUIDE →"
-          },
-          "destinationUrl": "https://welovepattern.com/blog/",
-          "publishStatus": "failed",
-          "targetBoardId": "board_blankets",
-          "targetBoardName": "Crochet Blankets & Afghans",
-          "boardName": "Crochet Blankets & Afghans",
-          "errorMessage": "Required Pin 1 image missing or failed generation."
-        },
-        {
-          "pinNumber": 2,
-          "conceptAngle": "Technical Layflat Concept",
-          "visualStyle": {
-            "imageCount": 1,
-            "compositionType": "flatlay_materials",
-            "subjectDescription": "Craft tool flatlay",
-            "colorPalette": "warm",
-            "humanElement": "hands_only"
-          },
-          "compactHiggsfieldPrompt": "Craft tool flatlay",
-          "typographyOverlay": {
-            "primaryHeadline": "crochet halloween granny square",
-            "ctaBadgeText": "EXPLORE GUIDE →"
-          },
-          "destinationUrl": "https://welovepattern.com/blog/",
-          "publishStatus": "failed",
-          "targetBoardId": "board_blankets",
-          "targetBoardName": "Crochet Blankets & Afghans",
-          "boardName": "Crochet Blankets & Afghans",
-          "errorMessage": "Required Pin 2 image missing or failed generation."
-        }
-      ],
-      "stage": "failed",
-      "requiresApproval": true,
-      "indexNowNotified": false,
-      "createdAt": "2026-10-18T00:18:10.728Z",
-      "updatedAt": "2026-10-18T00:19:57.351Z",
-      "logs": [
-        {
-          "timestamp": "2026-10-18T00:18:10.728Z",
-          "level": "info",
-          "message": "Job created for TRENDING_CROCHET (Category: CROCHET): \"crochet halloween granny square\" with opportunity score 91."
-        },
-        {
-          "timestamp": "2026-10-18T00:18:10.759Z",
-          "level": "info",
-          "message": "Starting technical craft research..."
-        },
-        {
-          "timestamp": "2026-10-18T00:18:40.184Z",
-          "level": "info",
-          "message": "Factual research packet validated successfully."
-        },
-        {
-          "timestamp": "2026-10-18T00:18:40.186Z",
-          "level": "info",
-          "message": "Generating article with OpenAI..."
-        },
-        {
-          "timestamp": "2026-10-18T00:19:57.332Z",
-          "level": "info",
-          "message": "Article generated successfully (1799 words). Content safely persisted to job state."
-        },
-        {
-          "timestamp": "2026-10-18T00:19:57.334Z",
-          "level": "info",
-          "message": "Starting Stage 3: Board resolution and local image asset binding ($0 cost)..."
-        },
-        {
-          "timestamp": "2026-10-18T00:19:57.340Z",
-          "level": "info",
-          "message": "[TEST RUNNER] Using test sandbox board \"Crochet Blankets & Afghans\" for creative concept generation only. Live Pinterest publishing remains strictly disabled."
-        },
-        {
-          "timestamp": "2026-10-18T00:19:57.351Z",
-          "level": "error",
-          "message": "Missing or failed image assets: Hero (16:9), Pin 1 (2:3), Pin 2 (2:3). Job halted safely."
-        }
-      ],
-      "factualResearch": {
-        "topicId": "topic_crochet_63726f636865",
-        "topic": "crochet halloween granny square",
-        "searchIntent": "Crafters searching for design patterns, technical squaring-off methods, colorwork approaches, yardage estimation, and assembly guidance to create Halloween-themed crochet granny squares (such as pumpkins, skulls, ghosts, candy corn, and spiderwebs) for afghans, tote bags, and garments.",
-        "craftType": "crochet",
-        "sourceAuthority": "Craft Yarn Council Technical Standards & OpenAI Craft Research",
-        "cycStandardVersion": "CYC 2024 Guidelines",
-        "generatedAt": "2026-10-18T00:18:40.181Z",
-        "verifiedTerminology": [
-          "Single Crochet [US] / Double Crochet [UK] (sc / dc)",
-          "Double Crochet [US] / Treble Crochet [UK] (dc / tr)",
-          "Half Double Crochet [US] / Half Treble Crochet [UK] (hdc / htr)",
-          "Treble Crochet [US] / Double Treble Crochet [UK] (tr / dtr)",
-          "Magic Ring / Adjustable Loop",
-          "Bobble Stitch (bo / 5-dc cluster)",
-          "Corner Space (ch-2 or ch-3 space)",
-          "Join-As-You-Go (JAYG)",
-          "Blocking (Wet blocking / Steam blocking)",
-          "Tapestry Crochet / Intarsia Crochet",
-          "Surface Slip Stitch"
-        ],
-        "verifiedMaterials": {
-          "yarnWeights": [
-            "CYC #4 Medium (Worsted / Aran)",
-            "CYC #3 Light (DK / Light Worsted)"
-          ],
-          "hookSizes": [
-            "3.75 mm (F-5)",
-            "4.0 mm (G-6)",
-            "5.0 mm (H-8)",
-            "5.5 mm (I-9)"
-          ],
-          "standardYardages": "Individual 5-inch square: 22 to 38 yards (20 to 35 meters) depending on stitch texture. Baby Blanket (30 x 36 in / 42 squares): 1,100 to 1,500 yards (1,006 to 1,372 meters). Throw Blanket (50 x 60 in / 120 squares): 2,800 to 3,600 yards (2,560 to 3,292 meters), including join and border.",
-          "verifiedDimensions": {
-            "Individual Motif Square (Small)": "4 x 4 inches (10 x 10 cm)",
-            "Individual Motif Square (Standard)": "5 x 5 inches (12.7 x 12.7 cm)",
-            "Individual Motif Square (Large)": "6 x 6 inches (15.2 x 15.2 cm)",
-            "Baby Blanket": "30 x 36 inches (76 x 91 cm)",
-            "Lapghan": "36 x 48 inches (91 x 122 cm)",
-            "Throw Blanket": "50 x 60 inches (127 x 152 cm)",
-            "Twin Blanket": "66 x 90 inches (168 x 229 cm)"
-          }
-        },
-        "authorizedPercentages": [
-          10,
-          15,
-          20
-        ],
-        "prohibitedMetrics": [
-          "stitches per skein",
-          "divide stitches by stitches per skein",
-          "arbitrary yards per stitch",
-          "invented mattress or bed sizes",
-          "commercial sales pricing or revenue claims"
-        ],
-        "verifiedFormulas": [
-          {
-            "name": "Mass-to-Yardage Motif Estimation Method",
-            "description": "Calculates the total project yarn requirement by weighing a blocked sample motif on a precision scale and determining the linear length based on the yarn manufacturer's mass-to-length ratio.",
-            "formulaText": "Total Yarn (yds) = [(Weight of Finished Motif in grams / Skein Weight in grams) * Skein Yardage * Total Number of Squares] * 1.15 (Border, Joining, and Buffer Factor)",
-            "steps": [
-              "Step 1: Crochet one complete Halloween granny square motif and block it to final dimensions.",
-              "Step 2: Weigh the sample square on a digital gram scale to obtain Motif Mass (M_motif).",
-              "Step 3: Identify the yarn specifications from the label: Skein Mass (M_skein in grams) and Skein Length (L_skein in yards or meters).",
-              "Step 4: Compute single square yardage: Y_single = (M_motif / M_skein) * L_skein.",
-              "Step 5: Multiply Y_single by the total target square count for the project.",
-              "Step 6: Multiply the result by 1.15 to add a 15% allowance for seaming, joining, border, and gauge fluctuation."
-            ]
-          },
-          {
-            "name": "Area Ratio Swatch Scaling Method",
-            "description": "Calculates total project yardage by scaling swatch yardage to the total blanket surface area.",
-            "formulaText": "Total Yardage = (Blanket Area / Swatch Area) * Swatch Yardage * 1.10",
-            "steps": [
-              "Step 1: Calculate the area of a single blocked square (e.g., 5 in x 5 in = 25 sq in).",
-              "Step 2: Calculate the total area of the finished layout (e.g., 50 in x 60 in = 3,000 sq in).",
-              "Step 3: Measure the precise yardage consumed in the single square swatch.",
-              "Step 4: Divide total area by swatch area to find the total square multiplier.",
-              "Step 5: Multiply the square count by swatch yardage and apply a 1.10 to 1.15 safety buffer for joining and edges."
-            ]
-          }
-        ],
-        "supportedClaims": [
-          "Textured stitches commonly used in Halloween motifs (e.g., bobbles for pumpkin ridges, puff stitches for ghost textures) consume between 200% and 400% more yarn per stitch than standard double crochet stitches.",
-          "Tapestry crochet colorwork where unused yarn is carried inside the stitches increases square thickness and increases yarn consumption by 30% to 50% across the worked rows.",
-          "Yarn is manufactured and sold strictly by weight and overall length, never by stitch count, requiring mathematical yardage calculations based on mass or surface area.",
-          "A 10% to 15% safety buffer is an established industry baseline to account for tension variations across different motif designs, tails required for color change weaving, and joining seam allowance.",
-          "Wet or steam blocking to uniform dimensions is mathematically mandatory when assembling disparate character motifs (e.g., a solid skull versus an open lacy spiderweb) to normalize outer stitch tension and edge lengths prior to joining."
-        ],
-        "techniqueKeyPoints": [
-          "Squaring the Circle: Converting circular Halloween character motifs (pumpkins, cauldrons, eyes) into a square foundation requires graduating stitch heights along the final round—using sc or hdc along the flat center sides and taller stitches (dc, tr, or dtr) into corner ch-spaces.",
-          "High-Contrast Color Management: Working with Halloween palettes (black, white, neon green, bright orange, purple) requires clean color changes at the final pull-through of the preceding stitch to avoid visible color bleed along motif borders.",
-          "End-Weaving Protocol: Frequent color shifts create multiple tail ends; tails must be split and woven in three alternating directions across solid stitch areas to prevent unraveling under washing and physical wear.",
-          "Hook Down for Dark Yarns: When working dark background borders (such as CYC #4 black around a white ghost center), maintaining consistent hook gauge prevents gaps that show carried strands."
-        ],
-        "makerPainPoints": [
-          "Gauge Discrepancy Across Different Motifs: A dense bobble pumpkin center produces a smaller, stiffer square than an open-mesh lace spiderweb square worked with the same hook size.",
-          "Dark Yarn Fatigue: Crocheting black backgrounds or borders causes eyestrain, leading to missed stitches, incorrect corner counts, and unintentional tight tension.",
-          "Excessive Tail Weaving: Multi-colored character squares (e.g., candy corn or witch hats) produce 6 to 12 ends per square, causing burnout and loose threads if not locked down.",
-          "Ruffling and Curling: Increasing too rapidly when squaring off a round applique center causes the border to ruffle, while too few corner increases causes cupping."
-        ],
-        "faqItems": [
-          {
-            "question": "How do you make different Halloween motifs (pumpkins, ghosts, spiderwebs) end up the exact same size?",
-            "factualAnswer": "Gauge differences occur because solid stitches (bobbles, sc) are denser than lace stitches (ch-spaces, dc). To equalize squares: 1) Adjust hook size per motif (e.g., use a 5.0 mm (H-8) for dense bobble pumpkins and a 4.5 mm (7) or 4.0 mm (G-6) for open spiderwebs). 2) Adjust the outer squaring round using taller or shorter stitches (hdc vs. dc) to meet the exact measurement. 3) Pin and steam-block all squares on a gridded blocking board to the identical target dimension before seaming."
-          },
-          {
-            "question": "What is the best joining method for multi-colored Halloween granny squares?",
-            "factualAnswer": "A continuous flat slip stitch join or a single crochet join worked on the wrong side with the dominant border color (usually black or charcoal) creates a clean, uniform structural grid that frames diverse character squares without color mismatch across seams."
-          },
-          {
-            "question": "How much extra yarn is required for the joining and border of a Halloween granny square throw blanket?",
-            "factualAnswer": "Joining and border construction typically consume between 15% and 25% of the total blanket yardage, depending on border width. For a 50 x 60 inch throw blanket requiring ~2,400 yards for 120 squares, allocate an additional 400 to 600 yards of border/joining yarn."
-          }
-        ],
-        "verifiedInternalLinks": [
-          {
-            "anchorText": "halloween",
-            "url": "/category/halloween",
-            "entityType": "category"
-          },
-          {
-            "anchorText": "granny square",
-            "url": "/category/granny-squares",
-            "entityType": "category"
-          }
-        ]
-      },
-      "articleContent": {
-        "title": "Crochet Halloween Granny Square Guide: Motifs, Sizing, and Assembly",
-        "slug": "crochet-halloween-granny-square-guide-motifs-sizing-and-assembly",
-        "excerpt": "Master the crochet halloween granny square with professional techniques for squaring circular character motifs, managing high-contrast colors, and calculating precise yardage.",
-        "contentHtml": "<h2>The Magic of Halloween Granny Squares: Project Overview and Sizing</h2><p>Seasonal motif crafting captures creative excitement like few other yarn projects can. The <strong>crochet <a href=\"/category/halloween\" class=\"text-amber-700 underline hover:text-amber-800 transition-colors\">halloween</a> <a href=\"/category/granny-squares\" class=\"text-amber-700 underline hover:text-amber-800 transition-colors\">granny square</a></strong> allows makers to showcase an eclectic range of spooky character motifs—including dimensional pumpkins, graphic skulls, whimsical ghosts, bold candy corn, and intricate spiderwebs. Whether you plan to combine these individual designs into a cozy October afghan, stitch several into a festive tote bag, or use single motifs for home decor, mastering the foundational geometry and yarn dynamics ensures a professional, polished finish.</p><p>A critical consideration when building multi-motif Halloween projects is dimensional consistency. Because Halloween motifs feature contrasting stitch architecture—from solid, raised surfaces to airy lacework—they must be engineered to finish at identical dimensions. Across standard crafting layouts, three primary square sizes serve as reliable building blocks:</p><ul><li><strong>Individual Motif Square (Small):</strong> 4 x 4 inches (10 x 10 cm), ideal for compact accessories, tote bags, and bunting.</li><li><strong>Individual Motif Square (Standard):</strong> 5 x 5 inches (12.7 x 12.7 cm), the most versatile baseline for multi-motif afghans and throws.</li><li><strong>Individual Motif Square (Large):</strong> 6 x 6 inches (15.2 x 15.2 cm), best suited for rapid blanket assembly and oversized, bold character portraits.</li></ul><p>When assembling these individual squares into larger household projects, established blanket standard sizes help you plan your grid arrangement with mathematical precision:</p><ul><li><strong>Baby Blanket:</strong> 30 x 36 inches (76 x 91 cm), requiring 42 standard 5-inch squares, plus border.</li><li><strong>Lapghan:</strong> 36 x 48 inches (91 x 122 cm), perfect for an autumn armchair display.</li><li><strong>Throw Blanket:</strong> 50 x 60 inches (127 x 152 cm), utilizing 120 standard 5-inch squares, plus border.</li><li><strong>Twin Blanket:</strong> 66 x 90 inches (168 x 229 cm), providing expansive coverage with an impressive motif layout.</li></ul><h2>Approved Materials, Hook Sizes, and Yarn Selection</h2><p>Selecting the right fiber weight and tool pairing provides the structural foundation needed for crisp stitch definition and predictable sizing. For Halloween motifs, two yarn weights deliver the balance between stitch crispness and drape:</p><ul><li><strong>CYC #4 Medium (Worsted / Aran):</strong> The industry standard for seasonal blankets and sturdy items. It offers excellent stitch clarity for dimensional features like pumpkin ribs, while working up quickly on larger projects.</li><li><strong>CYC #3 Light (DK / Light Worsted):</strong> An exceptional choice for lighter-weight garments, wearable accessories, or delicate lacy motifs like spiderwebs, avoiding excessive bulk when joining multiple squares.</li></ul><p>To control gauge across varying stitch textures, keep the following approved hook sizes at your workstation:</p><ul><li><strong>3.75 mm (F-5):</strong> Ideal for dense, tight shaping on smaller appliques or firm DK motifs.</li><li><strong>4.0 mm (G-6):</strong> Perfect for maintaining control with CYC #3 Light or tightening loose mesh stitches.</li><li><strong>5.0 mm (H-8):</strong> The standard pairing for CYC #4 Medium yarn, producing a balanced fabric with clean stitch definition.</li><li><strong>5.5 mm (I-9):</strong> Recommended when working dense, textured stitches in CYC #4 Medium to maintain square dimensions and prevent fabric stiffness.</li></ul><h3>Fiber Consumption by Stitch Architecture</h3><p>Halloween motifs often employ specialized stitch techniques that dramatically alter yarn usage compared to traditional open granny stitches:</p><ul><li><strong>Textured Stitches:</strong> Dimensional elements such as bobbles (used to shape pumpkin ridges) and puff stitches (used for textured ghost bodies) consume significantly more yarn per stitch than standard double crochet stitches.</li><li><strong>Tapestry Colorwork:</strong> When working graphic designs where unused contrast colors are carried inside the working stitches, the fabric thickness increases and overall yarn consumption rises notably across the worked rows.</li></ul><h2>Accurate Yardage Formulas and Calculation Methodologies</h2><p>Because yarn is manufactured and sold strictly by weight and overall length—never by stitch count—successful project planning depends on mathematical yardage calculations based on mass or surface area. To ensure you never run short of a dye lot, adhere to standard baselines and verified estimation formulas.</p><h3>Standard Yardage Baselines</h3><ul><li><strong>Individual 5-inch square:</strong> 22 to 38 yards (20 to 35 meters), depending on the stitch density and surface texture.</li><li><strong>Baby Blanket (30 x 36 in / 42 squares):</strong> 1,100 to 1,500 yards (1,006 to 1,372 meters), accounting for motifs, join, and border.</li><li><strong>Throw Blanket (50 x 60 in / 120 squares):</strong> 2,800 to 3,600 yards (2,560 to 3,292 meters), including joining seams and finishing edges.</li></ul><h3>Mass-to-Yardage Motif Estimation Method</h3><p>When working with scrap yarn or combining different motif patterns, the Mass-to-Yardage method provides the highest accuracy:</p><blockquote><p><strong>Formula:</strong> Total Yarn (yds) = [(Weight of Finished Motif in grams / Skein Weight in grams) * Skein Yardage * Total Number of Squares] * 1.15</p></blockquote><ol><li><strong>Step 1:</strong> Crochet one complete Halloween granny square motif and block it to final dimensions.</li><li><strong>Step 2:</strong> Weigh the sample square on a digital gram scale to obtain Motif Mass (M_motif).</li><li><strong>Step 3:</strong> Identify the yarn specifications from the label: Skein Mass (M_skein in grams) and Skein Length (L_skein in yards or meters).</li><li><strong>Step 4:</strong> Compute the single square yardage: Y_single = (M_motif / M_skein) * L_skein.</li><li><strong>Step 5:</strong> Multiply Y_single by the total target square count for your layout.</li><li><strong>Step 6:</strong> Multiply the result by 1.15 to add a 15% safety allowance for seaming, joining, border work, and tension fluctuations.</li></ol><h3>Area Ratio Swatch Scaling Method</h3><p>If you have already determined the yardage of an individual sample square through measured cut lengths, scale using the Area Ratio method:</p><blockquote><p><strong>Formula:</strong> Total Yardage = (Blanket Area / Swatch Area) * Swatch Yardage * 1.10</p></blockquote><ol><li><strong>Step 1:</strong> Calculate the area of a single blocked square (for example, 5 in x 5 in = 25 sq in).</li><li><strong>Step 2:</strong> Calculate the total area of the finished layout (for example, a 50 in x 60 in Throw Blanket = 3,000 sq in).</li><li><strong>Step 3:</strong> Measure the precise yardage consumed in the single square swatch.</li><li><strong>Step 4:</strong> Divide the total area by the swatch area (3,000 / 25 = 120) to establish your total square multiplier.</li><li><strong>Step 5:</strong> Multiply the square count by the swatch yardage and apply a 1.10 to 1.15 safety buffer (10% to 15%) to accommodate border construction, joining seams, and weaving tails.</li></ol><h2>Technical Construction: Squaring the Circle and Color Management</h2><h3>Squaring the Circle</h3><p>Most Halloween character designs—such as round pumpkins, bubbling cauldrons, and spooky eyeballs—start as circular rounds. Converting these circular centers into a true geometric square requires graduating stitch heights across the squaring round:</p><ul><li><strong>Flat Center Sides:</strong> Work shorter stitches, such as single crochet (sc) or half double crochet (hdc), across the apex of the circle's curved sides to minimize outward expansion.</li><li><strong>Corners:</strong> Transition gradually to taller stitches—working double crochet (dc), treble crochet (tr), or double treble crochet (dtr)—into corner chain spaces (typically ch-2 or ch-3). The added vertical height bridges the spatial distance from the circle's perimeter to the corner vertices, establishing crisp 90-degree angles without buckling.</li></ul><h3>High-Contrast Color Management</h3><p>Halloween palettes rely heavily on extreme visual contrast: stark white skulls against midnight black backgrounds, neon greens paired with deep purples, and vibrant oranges framed in charcoal. To eliminate muddy, jagged edges between rounds:</p><ul><li><strong>Clean Pull-Through:</strong> Always initiate color changes on the final yarn-over and pull-through of the stitch preceding the new color. The loop resting on your hook will now match the color of the upcoming round, leaving the top loops clean and unmarred.</li><li><strong>Hook Down for Dark Borders:</strong> When framing a light applique (like a white ghost) with a CYC #4 black background, drop down a half hook size (e.g., from 5.5 mm to 5.0 mm) on the first framing round. This compacts the dark stitches and closes loose gaps that could reveal carried white fibers underneath.</li></ul><h3>End-Weaving Protocol</h3><p>Multi-color motifs inevitably generate multiple yarn tails. Leaving ends unsecured invites unraveling during laundering. Split your yarn tails and weave each half in three alternating directions across solid stitch areas. This mechanical friction locks the fibers securely, ensuring your character squares remain intact over years of seasonal use.</p><h2>Maker Solutions: Overcoming Common Halloween Motif Challenges</h2><ul><li><strong>Gauge Discrepancy Across Motifs:</strong> Because a dense bobble pumpkin square naturally pulls tighter than an open, lacy spiderweb, swap hooks intentionally. Use a larger hook (such as a 5.0 mm or 5.5 mm) for dense, bobbled centers, and drop to a 4.0 mm or 3.75 mm for open lace patterns to maintain identical outer boundaries.</li><li><strong>Dark Yarn Eyestrain:</strong> Working dark backgrounds like black or deep purple can cause visual fatigue, leading to dropped stitches or misplaced corner counts. Position a direct task light over your hands and place a light-colored cloth or pillow across your lap while crocheting to keep dark stitch bars clearly visible.</li><li><strong>Tail-Weaving Fatigue:</strong> Squares with frequent color changes (such as striped candy corn motifs) generate 6 to 12 ends per block. Weave in tails as you complete each round rather than leaving dozens of ends per square until the end of the project.</li><li><strong>Border Ruffling and Cupping:</strong> When squaring off a circular applique, adding too many stitches along the side edges causes the fabric to wave and ruffle. Conversely, working too few corner increases forces the center to cup into a bowl. Ensure your stitch progression matches the graduating stitch sequence precisely.</li></ul><h2>Assembly, Blocking, and Finishing</h2><p>Wet or steam blocking to uniform dimensions is mathematically mandatory when assembling disparate character motifs. Blocking normalizes outer stitch tension and edge lengths across solid and open-work squares, eliminating seam distortion during assembly.</p><p>Pin each square to a gridded blocking board, mist with water (or hover a steam iron 1 inch above acrylic fibers), and allow them to dry completely. For assembly, a continuous flat slip stitch join or a single crochet join worked across the wrong side using your primary border color (such as black) creates a structured, uniform frame that ties diverse Halloween motifs into a cohesive, heirloom-quality masterpiece.</p><h2>Frequently Asked Questions</h2><h3>How do you make different Halloween motifs (pumpkins, ghosts, spiderwebs) end up the exact same size?</h3><p>Gauge differences occur because solid stitches (bobbles, sc) are denser than lace stitches (ch-spaces, dc). To equalize squares: 1) Adjust hook size per motif (e.g., use a 5.0 mm (H-8) for dense bobble pumpkins and a 4.5 mm (7) or 4.0 mm (G-6) for open spiderwebs). 2) Adjust the outer squaring round using taller or shorter stitches (hdc vs. dc) to meet the exact measurement. 3) Pin and steam-block all squares on a gridded blocking board to the identical target dimension before seaming.</p><h3>What is the best joining method for multi-colored Halloween granny squares?</h3><p>A continuous flat slip stitch join or a single crochet join worked on the wrong side with the dominant border color (usually black or charcoal) creates a clean, uniform structural grid that frames diverse character squares without color mismatch across seams.</p><h3>How much extra yarn is required for the joining and border of a Halloween granny square throw blanket?</h3><p>Joining and border construction typically consume between 15% and 25% of the total blanket yardage, depending on border width. For a 50 x 60 inch throw blanket requiring ~2,400 yards for 120 squares, allocate an additional 400 to 600 yards of border/joining yarn.</p>",
-        "wordCount": 1799,
-        "category": "crochet",
-        "tags": [
-          "crochet halloween granny square",
-          "granny square patterns",
-          "crochet colorwork",
-          "yarn yardage calculation",
-          "blocking crochet"
-        ],
-        "seoMeta": {
-          "title": "Crochet Halloween Granny Square: Patterns, Sizing & Yardage",
-          "description": "Learn how to crochet halloween granny square projects with accurate motif dimensions, yarn calculations, technical squaring methods, and seamless joining advice.",
-          "keywords": "crochet halloween granny square, halloween granny square pattern, crochet pumpkin square, crochet skull granny square, granny square blanket yardage"
-        }
-      }
-    },
-    {
-      "id": "job_2026-10-18_1tip0j",
-      "dateScheduled": "2026-10-18",
+      "id": "job_2026-10-19_jnwie5",
+      "dateScheduled": "2026-10-19",
       "contentType": "trending_crochet",
       "category": "crochet",
       "topic": {
@@ -739,349 +278,76 @@
         "targetCategoryUrl": "/category/christmas",
         "targetAudienceLevel": "all_levels",
         "searchIntentNotes": "High holiday seasonal search for handmade holiday tree decor.",
-        "discoveredAt": "2026-10-18T10:33:30.999Z",
+        "discoveredAt": "2026-10-19T19:41:49.744Z",
         "status": "discovered"
       },
-      "pinterestPins": [
-        {
-          "pinNumber": 1,
-          "conceptAngle": "Close-up Crochet Christmas Tree Ornament",
-          "visualStyle": {
-            "imageCount": 1,
-            "compositionType": "single_hero",
-            "subjectDescription": "Close-up crochet Christmas tree ornament",
-            "colorPalette": "Deep forest pine green, cranberry red, winter cream, and warm brass",
-            "humanElement": "none"
-          },
-          "compactHiggsfieldPrompt": "Complete editorial Pinterest Pin in 2:3 vertical layout. Visually appealing macro craft photography of a finished handmade crochet Christmas tree ornament, showcasing intricate stitch definition, textured wool yarn, and festive details. Soft ambient winter morning light, cozy festive ambiance, palette of deep forest pine green, cranberry red, winter cream, and warm brass. Premium craft magazine editorial photography, photography dominates the composition.. Soft ambient winter morning light, cozy festive ambiance, palette of Deep forest pine green, cranberry red, winter cream, and warm brass. Premium craft magazine editorial photography, photography dominates the composition.\nEDITORIAL TYPOGRAPHY & ART DIRECTION (RENDER EXACTLY TWO TEXT ELEMENTS):\n\nLITERAL TEXT LOCK — TYPOGRAPHY MUST RENDER THE FOLLOWING STRINGS CHARACTER-FOR-CHARACTER:\nHEADLINE — EXACT LITERAL STRING:\n\"CROCHET CHRISTMAS TREE ORNAMENT PATTERN\"\n\nCTA — EXACT LITERAL STRING:\n\"SEE FULL TUTORIAL →\"\n\nThe words above are not semantic instructions. They are literal visual text.\nDo not interpret their meaning.\nDo not substitute synonyms.\nDo not rewrite them.\nDo not improve them.\nDo not paraphrase them.\nDo not change any individual word.\nDo not change punctuation.\nDo not replace MORE with ALL.\nDo not replace ALL with MORE.\nDo not replace the arrow.\nRender the exact supplied characters as visible typography.\n\nBefore rendering, internally verify that the visible CTA exactly matches the supplied CTA string \"SEE FULL TUTORIAL →\". If the rendered wording differs in any word, it is incorrect.\n\n1. HEADLINE VISUAL STYLING:\n   - Placement: Upper area in clean negative space.\n   - Typography: Elegant high-end editorial SERIF typeface inspired by luxury fashion magazines and fine Pinterest editorial design. Sophisticated, feminine, refined, and artistic with high visual impact and generous scale. (NOT a heavy generic display font, NOT a playful cartoon font, NOT handwriting).\n   - Creative Background: Typography is integrated over a natural soft photographic shadow with high organic contrast. No artificial panels or paper.\n\n2. ACTION CTA VISUAL STYLING:\n   - Placement: Lower-right area in natural negative space with generous breathing room and clear physical separation from the headline. Never attached or placed directly beneath the headline.\n   - Typography: Rendered in Montserrat ExtraBold (font-weight 800, uppercase, ~24px visual size, letter spacing 1.2–1.5px, line height 1.0–1.1). Bold, crisp, highly readable on mobile, modern, premium, and confident (deep forest pine and winter cream tones with crisp high-contrast typography).\n   - Creative Background: Rendered as clean standalone editorial typography directly over the photograph negative space without any panel, badge, button, or container.\n\nSTRICT PROHIBITIONS & FINAL TEXT CONFIRMATION:\n- ABSOLUTELY ZERO OTHER TEXT ON THE ENTIRE IMAGE: No subtitles, no secondary descriptions, no bullet points, no website headers, no URLs, no logos.\n- NEVER ADD decorative filler words such as \"PATTERNS\", \"PROJECTS\", \"INSPIRATION\", \"COZY\", \"HANDMADE\", or any random phrases.\n- GLOBAL HARD PROHIBITION: ABSOLUTELY NO paper, torn paper, paper wash, pigment wash, paint wash, brushstroke, watercolor shape, card, panel, banner, badge, button, pill, UI element, Canva-style graphic, or artificial text container.\n- Typography must feel like natural, artistic editorial text placed directly within the photographic space.\n- Photography must dominate the frame with ample breathing room.\n- FINAL CONFIRMED TEXT ELEMENTS TO RENDER (EXACTLY TWO):\n  1. HEADLINE: \"CROCHET CHRISTMAS TREE ORNAMENT PATTERN\"\n  2. CTA: \"SEE FULL TUTORIAL →\"",
-          "typographyOverlay": {
-            "primaryHeadline": "CROCHET CHRISTMAS TREE ORNAMENT PATTERN",
-            "ctaBadgeText": "SEE FULL TUTORIAL →"
-          },
-          "destinationUrl": "https://welovepattern.com/blog/crochet-christmas-tree-ornament-pattern-guide-techniques",
-          "publishStatus": "image_ready",
-          "stableAssetPath": "/app/applet/public/generated/pinterest/seo-pins/crochet-christmas-tree-ornament-pattern--1ca0ddf414.jpg",
-          "stablePublicUrl": "/generated/pinterest/seo-pins/crochet-christmas-tree-ornament-pattern--1ca0ddf414.jpg",
-          "higgsfieldRequestId": "b1cc7032-31fe-417a-b00a-6668272b7c1e"
-        },
-        {
-          "pinNumber": 2,
-          "conceptAngle": "Hands Crocheting Christmas Tree Ornament",
-          "visualStyle": {
-            "imageCount": 1,
-            "compositionType": "single_hero",
-            "subjectDescription": "Hands crocheting a Christmas tree ornament with yarn and crochet hook",
-            "colorPalette": "Deep forest pine green, cranberry red, winter cream, and warm brass",
-            "humanElement": "hands_only"
-          },
-          "compactHiggsfieldPrompt": "Complete 2:3 vertical editorial Pinterest Pin photograph. Authentic atmospheric close-up photography of artisan maker hands actively crocheting a delicate Christmas tree ornament with textured yarn and a smooth wooden crochet hook on a warm rustic workbench. Soft cozy holiday lighting, rich palette of festive pine green, cranberry red, warm oatmeal wool, and alpine white. Authentic handmade craft atmosphere, immaculate stitch definition.. Soft ambient winter morning light, cozy festive ambiance, rich palette of Deep forest pine green, cranberry red, winter cream, and warm brass. Authentic handmade atmosphere, immaculate stitch definition.\nEDITORIAL TYPOGRAPHY & ART DIRECTION (RENDER EXACTLY TWO TEXT ELEMENTS):\n\nLITERAL TEXT LOCK — TYPOGRAPHY MUST RENDER THE FOLLOWING STRINGS CHARACTER-FOR-CHARACTER:\nHEADLINE — EXACT LITERAL STRING:\n\"CROCHET CHRISTMAS TREE ORNAMENT PATTERN\"\n\nCTA — EXACT LITERAL STRING:\n\"SEE FULL TUTORIAL →\"\n\nThe words above are not semantic instructions. They are literal visual text.\nDo not interpret their meaning.\nDo not substitute synonyms.\nDo not rewrite them.\nDo not improve them.\nDo not paraphrase them.\nDo not change any individual word.\nDo not change punctuation.\nDo not replace MORE with ALL.\nDo not replace ALL with MORE.\nDo not replace the arrow.\nRender the exact supplied characters as visible typography.\n\nBefore rendering, internally verify that the visible CTA exactly matches the supplied CTA string \"SEE FULL TUTORIAL →\". If the rendered wording differs in any word, it is incorrect.\n\n1. HEADLINE VISUAL STYLING:\n   - Placement: Upper-center area in clean negative space above the focal subject.\n   - Typography: Bold, clean modern architectural SANS-SERIF typeface (geometric, heavy, crisp, contemporary editorial style with high visual impact and immaculate readability).\n   - Creative Background: Rendered cleanly across a natural background architectural surface (such as smooth wooden table or stone surface) in the photograph. No artificial cards or boxes.\n\n2. ACTION CTA VISUAL STYLING:\n   - Placement: Lower-left area in natural negative space, completely physically separated from the headline.\n   - Typography: Rendered in Montserrat ExtraBold (font-weight 800, uppercase, ~24px visual size, letter spacing 1.2–1.5px, line height 1.0–1.1). Bold, crisp, highly readable on mobile, modern, premium, and confident (deep forest pine and winter cream tones with crisp high-contrast typography).\n   - Creative Background: Rendered as crisp editorial text with a delicate, minimalist fine hairline boundary sized tightly to the text.\n\nSTRICT PROHIBITIONS & FINAL TEXT CONFIRMATION:\n- ABSOLUTELY ZERO OTHER TEXT ON THE ENTIRE IMAGE: No subtitles, no secondary descriptions, no bullet points, no website headers, no URLs, no logos.\n- NEVER ADD decorative filler words such as \"PATTERNS\", \"PROJECTS\", \"INSPIRATION\", \"COZY\", \"HANDMADE\", or any random phrases.\n- GLOBAL HARD PROHIBITION: ABSOLUTELY NO paper, torn paper, paper wash, pigment wash, paint wash, brushstroke, watercolor shape, card, panel, banner, badge, button, pill, UI element, Canva-style graphic, or artificial text container.\n- Typography must feel like natural, artistic editorial text placed directly within the photographic space.\n- Photography must dominate the frame with ample breathing room.\n- FINAL CONFIRMED TEXT ELEMENTS TO RENDER (EXACTLY TWO):\n  1. HEADLINE: \"CROCHET CHRISTMAS TREE ORNAMENT PATTERN\"\n  2. CTA: \"SEE FULL TUTORIAL →\"",
-          "typographyOverlay": {
-            "primaryHeadline": "CROCHET CHRISTMAS TREE ORNAMENT PATTERN",
-            "ctaBadgeText": "SEE FULL TUTORIAL →"
-          },
-          "destinationUrl": "https://welovepattern.com/blog/crochet-christmas-tree-ornament-pattern-guide-techniques",
-          "publishStatus": "image_ready",
-          "stableAssetPath": "/app/applet/public/generated/pinterest/seo-pins/crochet-christmas-tree-ornament-pattern--389be39e58.jpg",
-          "stablePublicUrl": "/generated/pinterest/seo-pins/crochet-christmas-tree-ornament-pattern--389be39e58.jpg",
-          "higgsfieldRequestId": "3dc2c6f0-6744-4965-aeb1-ae4a023fb091"
-        }
-      ],
-      "stage": "completed",
-      "requiresApproval": true,
-      "indexNowNotified": true,
-      "createdAt": "2026-10-18T10:33:31.005Z",
-      "updatedAt": "2026-10-18T21:36:31.228Z",
+      "pinterestPins": [],
+      "stage": "selected",
+      "requiresApproval": false,
+      "indexNowNotified": false,
+      "createdAt": "2026-10-19T19:41:49.747Z",
+      "updatedAt": "2026-10-19T19:41:49.750Z",
       "logs": [
         {
-          "timestamp": "2026-10-18T10:33:31.005Z",
+          "timestamp": "2026-10-19T19:41:49.747Z",
           "level": "info",
           "message": "Job created for TRENDING_CROCHET (Category: CROCHET): \"crochet christmas tree ornament pattern\" with opportunity score 89."
-        },
-        {
-          "timestamp": "2026-10-18T10:33:31.035Z",
-          "level": "info",
-          "message": "Starting technical craft research..."
-        },
-        {
-          "timestamp": "2026-10-18T10:34:00.008Z",
-          "level": "info",
-          "message": "Factual research packet validated successfully."
-        },
-        {
-          "timestamp": "2026-10-18T10:34:00.009Z",
-          "level": "info",
-          "message": "Generating article with OpenAI..."
-        },
-        {
-          "timestamp": "2026-10-18T10:34:33.490Z",
-          "level": "info",
-          "message": "Article generated successfully (1981 words). Content safely persisted to job state."
-        },
-        {
-          "timestamp": "2026-10-18T10:34:33.492Z",
-          "level": "info",
-          "message": "Starting Stage 3: Board resolution and local image asset binding ($0 cost)..."
-        },
-        {
-          "timestamp": "2026-10-18T10:34:33.506Z",
-          "level": "error",
-          "message": "Missing or failed image assets: Hero (16:9), Pin 1 (2:3), Pin 2 (2:3). Job halted safely."
-        },
-        {
-          "timestamp": "2026-10-18T17:23:18.845Z",
-          "level": "info",
-          "message": "Resuming job execution after HF_KEY configuration. Existing article draft preserved."
-        },
-        {
-          "timestamp": "2026-10-18T17:23:18.876Z",
-          "level": "info",
-          "message": "Starting technical craft research..."
-        },
-        {
-          "timestamp": "2026-10-18T17:23:18.879Z",
-          "level": "info",
-          "message": "Existing valid article draft detected (\"Crochet Christmas Tree Ornament Pattern Guide & Techniques\", 1981 words). Reusing without calling OpenAI."
-        },
-        {
-          "timestamp": "2026-10-18T17:23:18.881Z",
-          "level": "info",
-          "message": "Starting Stage 3: Board resolution and local image asset binding ($0 cost)..."
-        },
-        {
-          "timestamp": "2026-10-18T17:23:47.233Z",
-          "level": "info",
-          "message": "Hero image generated successfully via Higgsfield: /generated/blog/crochet-christmas-tree-ornament-pattern--8d03870b02.jpg"
-        },
-        {
-          "timestamp": "2026-10-18T17:24:21.329Z",
-          "level": "info",
-          "message": "Pinterest Pin 1 image generated successfully: /generated/pinterest/seo-pins/crochet-christmas-tree-ornament-pattern--3fa68088e5.jpg"
-        },
-        {
-          "timestamp": "2026-10-18T17:24:52.343Z",
-          "level": "info",
-          "message": "Pinterest Pin 2 image generated successfully: /generated/pinterest/seo-pins/crochet-christmas-tree-ornament-pattern--fcf3fb1f30.jpg"
-        },
-        {
-          "timestamp": "2026-10-18T17:24:52.347Z",
-          "level": "info",
-          "message": "All 3 visual assets confirmed on disk and bound successfully (Hero 16:9 + 2 Pins 2:3)."
-        },
-        {
-          "timestamp": "2026-10-18T17:24:52.363Z",
-          "level": "error",
-          "message": "Quality Gate Failures:\n- Publication Safety Failure: Engine is inactive (config.engineActive is false)."
-        },
-        {
-          "timestamp": "2026-10-18T17:25:54.174Z",
-          "level": "info",
-          "message": "Resuming job execution after HF_KEY configuration. Existing article draft preserved."
-        },
-        {
-          "timestamp": "2026-10-18T17:25:54.207Z",
-          "level": "info",
-          "message": "Starting technical craft research..."
-        },
-        {
-          "timestamp": "2026-10-18T17:25:54.209Z",
-          "level": "info",
-          "message": "Existing valid article draft detected (\"Crochet Christmas Tree Ornament Pattern Guide & Techniques\", 1981 words). Reusing without calling OpenAI."
-        },
-        {
-          "timestamp": "2026-10-18T17:25:54.211Z",
-          "level": "info",
-          "message": "Starting Stage 3: Board resolution and local image asset binding ($0 cost)..."
-        },
-        {
-          "timestamp": "2026-10-18T17:25:54.223Z",
-          "level": "info",
-          "message": "All 3 visual assets confirmed on disk and bound successfully (Hero 16:9 + 2 Pins 2:3)."
-        },
-        {
-          "timestamp": "2026-10-18T17:25:54.236Z",
-          "level": "info",
-          "message": "Article passed all 9 quality gates. Auto-publishing directly to live website..."
-        },
-        {
-          "timestamp": "2026-10-18T17:25:54.276Z",
-          "level": "info",
-          "message": "Article successfully published to live website: https://welovepattern.com/blog/crochet-christmas-tree-ornament-pattern-guide-techniques (Blog Post ID: blog_1792344354248_9pbvqx0)"
-        },
-        {
-          "timestamp": "2026-10-18T17:25:54.305Z",
-          "level": "info",
-          "message": "Article published live: https://welovepattern.com/blog/crochet-christmas-tree-ornament-pattern-guide-techniques (ID: blog_1792344354248_9pbvqx0)"
-        },
-        {
-          "timestamp": "2026-10-18T17:49:57.988Z",
-          "level": "warn",
-          "message": "Detached non-compliant placeholder pin assets (/generated/pinterest/seo-pins/crochet-christmas-tree-ornament-pattern--3fa68088e5.jpg, /generated/pinterest/seo-pins/crochet-christmas-tree-ornament-pattern--fcf3fb1f30.jpg) generated from corrupted prompt. Prepared corrected creative concepts conforming to production design rules."
-        },
-        {
-          "timestamp": "2026-10-18T21:36:31.228Z",
-          "level": "info",
-          "message": "Replacement Pinterest Pins generated and validated successfully (Pin 1: /generated/pinterest/seo-pins/crochet-christmas-tree-ornament-pattern--1ca0ddf414.jpg, Pin 2: /generated/pinterest/seo-pins/crochet-christmas-tree-ornament-pattern--389be39e58.jpg). Ready for Pinterest publishing pending account authorization and board ID."
         }
       ],
-      "factualResearch": {
-        "topicId": "topic_crochet_63726f636865",
-        "topic": "crochet christmas tree ornament pattern",
-        "searchIntent": "Crafters searching for technical specifications, material requirements, dimensions, and stitch architecture to construct durable, aesthetically balanced flat or three-dimensional crochet Christmas tree ornaments.",
-        "craftType": "crochet",
-        "sourceAuthority": "Craft Yarn Council Technical Standards & OpenAI Craft Research",
-        "cycStandardVersion": "CYC 2024 Guidelines",
-        "generatedAt": "2026-10-18T10:34:00.004Z",
-        "verifiedTerminology": [
-          "US single crochet [sc] (UK double crochet [dc])",
-          "US half double crochet [hdc] (UK half treble crochet [htr])",
-          "US double crochet [dc] (UK treble crochet [tr])",
-          "US slip stitch [sl st] (UK slip stitch [ss])",
-          "Adjustable loop / Magic ring",
-          "Invisible decrease [invdec] (working front loops only [FLO])",
-          "Picot stitch (typically ch 3, sl st in third ch from hook)"
-        ],
-        "verifiedMaterials": {
-          "yarnWeights": [
-            "CYC #1 Super Fine / Fingering",
-            "CYC #2 Fine / Sport",
-            "CYC #3 Light / DK",
-            "CYC #4 Medium / Worsted"
-          ],
-          "hookSizes": [
-            "2.25 mm (B-1)",
-            "2.75 mm (C-2)",
-            "3.25 mm (D-3)",
-            "3.5 mm (E-4)",
-            "3.75 mm (F-5)",
-            "4.0 mm (G-6)"
-          ],
-          "standardYardages": "Single flat motif: 15 - 35 yards (14 - 32 m); Single 3D stuffed cone ornament: 40 - 75 yards (37 - 69 m); Set of 6 standard ornaments: 150 - 300 yards (137 - 274 m)",
-          "verifiedDimensions": {
-            "Mini Flat Tree Applique": "2.5 x 2.0 inches (6.4 x 5.1 cm)",
-            "Standard Flat Tree Motif": "4.0 x 3.0 inches (10.2 x 7.6 cm)",
-            "Small 3D Cone Tree Ornament": "3.5 in height x 2.0 in base diameter (8.9 x 5.1 cm)",
-            "Medium 3D Amigurumi Tree Ornament": "5.0 in height x 3.0 in base diameter (12.7 x 7.6 cm)"
-          }
-        },
-        "authorizedPercentages": [
-          10,
-          15,
-          20
-        ],
-        "prohibitedMetrics": [
-          "stitches per skein",
-          "divide stitches by stitches per skein",
-          "arbitrary yards per stitch",
-          "invented mattress or bed sizes",
-          "commercial sales pricing or revenue claims"
-        ],
-        "verifiedFormulas": [
-          {
-            "name": "Mass-Proportional Batch Yardage Formula",
-            "description": "Calculates total yarn yardage required to produce a specific quantity of ornaments based on precision gram weight of a finished prototype sample.",
-            "formulaText": "Total Yardage = ((Sample Weight in Grams / Skein Net Weight in Grams) * Total Skein Yardage) * Target Quantity * 1.10",
-            "steps": [
-              "Step 1: Complete and block one prototype ornament, including tails and hanging loop, then weigh it on a digital scale calibrated to 0.1 grams.",
-              "Step 2: Divide the sample weight by the manufacturer's total net weight per skein (e.g., 50g or 100g) to calculate the fraction of the skein consumed.",
-              "Step 3: Multiply this fraction by the full yardage or meterage of the skein to establish unit yarn consumption.",
-              "Step 4: Multiply by the total number of ornaments desired.",
-              "Step 5: Apply a 1.10 multiplier to incorporate a mandatory 10% safety buffer for tension variations and tail trimming."
-            ]
-          }
-        ],
-        "supportedClaims": [
-          "Using a crochet hook 1.0 mm to 1.5 mm smaller than stated on yarn ball bands creates a dense, firm fabric gauge that prevents polyester stuffing from migrating between stitches.",
-          "Mercerized cotton yarn possesses higher tensile strength and structural rigidity than unmercerized cotton, wool, or standard acrylic, mitigating distortion under gravity when suspended from tree branches.",
-          "Wet blocking or starching with rustproof stainless steel pins is required to set flat triangular motifs; non-stainless pins oxidize and cause permanent rust stains on light fibers.",
-          "A 10% to 15% yardage buffer is necessary when calculating production sets to accommodate variation in hanging loop lengths, tension changes, and seam sewing allowances."
-        ],
-        "techniqueKeyPoints": [
-          "For 3D cone ornaments, work in continuous spiral rounds utilizing a running stitch marker to eliminate visible diagonal joining seams.",
-          "Execute invisible decreases through the front loop only (FLO) when tapering tree crowns to avoid distinct ridges or surface gaping.",
-          "Secure hanging loops through the interior structural apex rather than an exterior single-loop strand to prevent thread breakage under sustained hanging tension.",
-          "Incorporate structural stiffening (blocking spray, diluted PVA glue solution, or textile starch) on flat motifs to counteract the natural curling torque of triangular stitch increases."
-        ],
-        "makerPainPoints": [
-          "Edge curling on flat 2D trees caused by unequal stitch tension and edge increases along triangular diagonals.",
-          "Polyester fiberfill protruding through stitches in 3D stuffed cone ornaments due to loose gauge or oversized hook choice.",
-          "Hanging loop detachment caused by tying knots externally rather than anchoring firmly to the internal core before closure.",
-          "Loss of structural conical definition over time, causing 3D trees to slump or bulge irregularly."
-        ],
-        "faqItems": [
-          {
-            "question": "What is the best fiber content for crocheted Christmas tree ornaments?",
-            "factualAnswer": "100% mercerized cotton (CYC #1 to CYC #3) is preferred for ornaments. Mercerization provides high tensile strength, crisp stitch definition, zero halo, and resistance to sagging, while accepting blocking starch and stiffeners better than acrylic or animal fibers."
-          },
-          {
-            "question": "Why do flat crochet tree ornaments curl at the corners?",
-            "factualAnswer": "Triangular shaping concentrates row-by-row increases on the outer margins, creating uneven mechanical stress and yarn torque. This is resolved by blocking the completed motif flat using stainless steel T-pins and applying steam or a dilute fabric-stiffening solution."
-          },
-          {
-            "question": "How do you prevent stuffing from showing through 3D amigurumi tree ornaments?",
-            "factualAnswer": "Select a crochet hook size 1.0 mm to 1.5 mm smaller than recommended by the Craft Yarn Council for that yarn weight (e.g., using a 2.75 mm or 3.25 mm hook with CYC #4 Worsted yarn) and use invisible decreases (invdec) worked exclusively in the front loops."
-          }
-        ],
-        "verifiedInternalLinks": [
-          {
-            "anchorText": "christmas",
-            "url": "/category/christmas",
-            "entityType": "category"
-          }
-        ]
+      "assignedPublishDate": "2026-10-19",
+      "assignedSlotTime": "08:00",
+      "publicationScheduledAt": "08:00"
+    },
+    {
+      "id": "job_2026-10-19_zrjvnm",
+      "dateScheduled": "2026-10-19",
+      "contentType": "tool_guide",
+      "category": "tools",
+      "topic": {
+        "id": "topic_tool_project_tracker_70726f6a",
+        "keyword": "project tracker crochet tool",
+        "contentType": "tool_guide",
+        "category": "tools",
+        "source": "internal_catalog",
+        "trendScore": 85,
+        "trendDirection": "stable",
+        "opportunityScore": 95,
+        "targetContentFormat": "tool_focus",
+        "toolSlug": "project-tracker",
+        "targetToolUrl": "/tools/project-tracker",
+        "targetCategoryUrl": "/categories/tools",
+        "targetAudienceLevel": "all_levels",
+        "searchIntentNotes": "Tool Guide for real WeLovePattern interactive tool: Project Tracker. Problem: Keep track of active WIPs, completion status, yarn stash used, hook sizes, and photo logs.",
+        "discoveredAt": "2026-10-19T19:41:49.746Z",
+        "status": "discovered"
       },
-      "articleContent": {
-        "title": "Crochet Christmas Tree Ornament Pattern Guide & Techniques",
-        "slug": "crochet-christmas-tree-ornament-pattern-guide-techniques",
-        "excerpt": "Master the crochet Christmas tree ornament pattern with verified dimensions, seamless cone construction, blocking tips, and batch yardage formulas.",
-        "contentHtml": "<h2>Architectural Anatomy of a Crochet Christmas Tree Ornament</h2><p>Designing and stitching handmade holiday decorations requires a deliberate balance of structural rigidity, precise stitch tension, and aesthetic balance. When searching for a <strong>crochet <a href=\"/category/christmas\" class=\"text-amber-700 underline hover:text-amber-800 transition-colors\">christmas</a> tree ornament pattern</strong>, makers frequently encounter two distinct structural styles: two-dimensional flat motifs (often used as appliques, gift toppers, or minimalist hanging decorations) and three-dimensional stuffed cone ornaments (worked in the round as classic amigurumi). While both styles evoke the iconic silhouette of an evergreen, each presents unique physical and mechanical demands on your yarn and hook combination.</p><p>A hanging ornament is subject to continuous gravitational pull while suspended from tree branches. Over time, poor fiber choices or loose stitch architecture will result in distorted triangular points, sagging branches, or bulging conical bodies. To maintain a crisp, professional presentation year after year, crafters must treat ornament construction with the same technical rigor applied to garments or dimensional toys. Fiber selection serves as the foundation of this structural integrity.</p><p>Mercerized cotton yarn possesses higher tensile strength and structural rigidity than unmercerized cotton, wool, or standard acrylic, mitigating distortion under gravity when suspended from tree branches. The mercerization process removes excess fiber fuzz, smooths the cellular structure of the cotton strands, and produces a subtle sheen that catches holiday lighting beautifully. In contrast, untreated wool or novelty yarns with a loose twist yield excessive drape, which causes flat tree tips to droop and prevents 3D tree bases from resting flat. By pairing high-twist mercerized cotton with dense stitch execution, you ensure that every needle-like point and tiered branch retains its shape permanently.</p><h2>Essential Materials, Hook Sizing, and Dimension Specifications</h2><p>Executing an heirloom-grade ornament depends on selecting an appropriate yarn weight and pairing it with a hook engineered to create dense, closed-gauge fabric. Holiday ornaments do not benefit from the loose drape desired in shawls or blankets; rather, they require a tight, compact weave that holds firm edges or conceals interior polyester fiberfill.</p><h3>Approved Yarn Weights and Hook Pairings</h3><p>Depending on your desired ornament scale and silhouette, you can utilize the following approved Craft Yarn Council (CYC) yarn categories alongside recommended ergonomic hooks:</p><ul><li><strong>CYC #1 Super Fine / Fingering:</strong> Pair with a 2.25 mm (B-1) or 2.75 mm (C-2) hook for delicate, miniature flat tree appliques and lace-like suspended heirlooms.</li><li><strong>CYC #2 Fine / Sport:</strong> Pair with a 2.75 mm (C-2) or 3.25 mm (D-3) hook to achieve crisp stitch definition in small 3D cone ornaments.</li><li><strong>CYC #3 Light / DK:</strong> Pair with a 3.25 mm (D-3) or 3.5 mm (E-4) hook for balanced structure, moderate project speed, and excellent surface stability.</li><li><strong>CYC #4 Medium / Worsted:</strong> Pair with a 3.5 mm (E-4), 3.75 mm (F-5), or 4.0 mm (G-6) hook for standard flat tree motifs and medium 3D amigurumi ornaments.</li></ul><p>A vital principle of dimensional holiday crochet is hook down-sizing: using a crochet hook 1.0 mm to 1.5 mm smaller than stated on yarn ball bands creates a dense, firm fabric gauge that prevents polyester stuffing from migrating between stitches. When working with CYC #4 Worsted yarn—which typically suggests a 5.0 mm or 5.5 mm hook on the commercial label—stepping down to a 3.75 mm (F-5) or 3.5 mm (E-4) hook pulls the single crochet stitches into a compact interlocked grid, completely sealing the core.</p><h3>Verified Dimensions and Baseline Yardages</h3><p>To avoid guesswork when planning holiday collections, adhere strictly to these standardized physical dimensions and yardage baselines:</p><ul><li><strong>Mini Flat Tree Applique:</strong> 2.5 x 2.0 inches (6.4 x 5.1 cm) | Consumes approximately 15 - 35 yards (14 - 32 m).</li><li><strong>Standard Flat Tree Motif:</strong> 4.0 x 3.0 inches (10.2 x 7.6 cm) | Consumes approximately 15 - 35 yards (14 - 32 m).</li><li><strong>Small 3D Cone Tree Ornament:</strong> 3.5 in height x 2.0 in base diameter (8.9 x 5.1 cm) | Consumes approximately 40 - 75 yards (37 - 69 m).</li><li><strong>Medium 3D Amigurumi Tree Ornament:</strong> 5.0 in height x 3.0 in base diameter (12.7 x 7.6 cm) | Consumes approximately 40 - 75 yards (37 - 69 m).</li><li><strong>Set of 6 Standard Ornaments:</strong> Regardless of whether you assemble flat motifs or dimensional cones, crafting a coordinated half-dozen requires 150 - 300 yards (137 - 274 m) in total yarn yardage.</li></ul><h2>Batch Production Yardage Calculation: The Mass-Proportional Method</h2><p>When producing ornament sets for craft fairs, family gift exchanges, or full-tree decorating themes, running short on a discontinued dye lot is catastrophic. Estimating yarn consumption based on generic guesses or theoretical stitch counts is inherently inaccurate because individual tension, brand-specific fiber density, and loop lengths vary widely. Skeins are sold strictly by weight and overall length, not by stitch count.</p><p>To obtain an exact, scientifically sound measurement of your project's yarn needs, apply the <strong>Mass-Proportional Batch Yardage Formula</strong>:</p><blockquote><code>Total Yardage = ((Sample Weight in Grams / Skein Net Weight in Grams) * Total Skein Yardage) * Target Quantity * 1.10</code></blockquote><p>Follow these five progressive steps to calculate your exact yarn requirements:</p><ol><li><strong>Step 1:</strong> Complete and block one prototype ornament, including tails and hanging loop, then weigh it on a digital scale calibrated to 0.1 grams.</li><li><strong>Step 2:</strong> Divide the sample weight by the manufacturer's total net weight per skein (e.g., 50g or 100g) to calculate the fraction of the skein consumed.</li><li><strong>Step 3:</strong> Multiply this fraction by the full yardage or meterage of the skein to establish unit yarn consumption.</li><li><strong>Step 4:</strong> Multiply by the total number of ornaments desired in your production set.</li><li><strong>Step 5:</strong> Apply a 1.10 multiplier to incorporate a mandatory 10% safety buffer for tension variations and tail trimming. A 10% to 15% yardage buffer is necessary when calculating production sets to accommodate variation in hanging loop lengths, tension changes, and seam sewing allowances.</li></ol><h2>Mastering the Flat Tree Motif: Taming Edge Curl and Stiffening</h2><p>Flat crochet tree ornaments are quick to stitch and exceptionally versatile, but they frequently frustrate makers by curling inward at the edges. When working bottom-up or top-down triangular shapes, row-by-row increases and decreases concentrate mechanical torque on the outer margins. The natural twist of the yarn, combined with uneven lateral tension across turning chains, causes the outer corners to lift and roll forward rather than resting flat against evergreen boughs.</p><h3>Blocking and Starch Application</h3><p>Mechanical blocking is non-negotiable for two-dimensional motifs. Wet blocking or starching with rustproof stainless steel pins is required to set flat triangular motifs; non-stainless pins oxidize and cause permanent rust stains on light fibers. Because holiday palettes heavily feature white, cream, and vibrant seasonal hues, ordinary dressmaker pins can ruin hours of work within minutes of moisture contact.</p><p>To permanently set your flat tree motifs:</p><ul><li>Submerge the finished motif in lukewarm water until completely saturated, then gently press out excess moisture between clean towels without wringing.</li><li>Pin the ornament onto a high-density blocking board using rustproof stainless steel T-pins. Pin each branch point and trunk base precisely, opening the stitch definition fully.</li><li>Incorporate structural stiffening (blocking spray, diluted PVA glue solution, or textile starch) on flat motifs to counteract the natural curling torque of triangular stitch increases. A solution of 50% PVA craft glue and 50% water painted onto the reverse side of mercerized cotton dries completely clear, imparting durable, cardboard-like stiffness that resists environmental humidity.</li><li>Allow the motif to dry completely for a minimum of 24 hours before removing the pins.</li></ul><h2>Engineering 3D Conical Ornaments: Seamless Construction and Core Integrity</h2><p>Three-dimensional cone ornaments mimic miniature fir trees and offer tactile charm. However, without meticulous technique, they frequently develop unsightly spiral seams, visible interior stuffing, or weak suspension points that fail under handling.</p><h3>Working in Continuous Spirals</h3><p>Traditional crochet rounds joined with a slip stitch and turning chain create a distinct, diagonal seam that travels up the face of the cone, breaking the visual harmony of your tree tiers. For 3D cone ornaments, work in continuous spiral rounds utilizing a running stitch marker to eliminate visible diagonal joining seams. Instead of joining each tier with a slip stitch, work directly into the first stitch of the previous round. Lay a strand of contrasting thread vertically across the first stitch of each round to monitor your placement effortlessly without distorting the surrounding fabric.</p><h3>Flawless Tapering with Invisible Decreases</h3><p>When working from the broad base upward toward the spire, decreasing stitch counts must be executed cleanly. Execute invisible decreases through the front loop only (FLO) when tapering tree crowns to avoid distinct ridges or surface gaping. By inserting your hook under the front loop of the first stitch, then immediately under the front loop of the adjacent stitch before yarning over and completing the single crochet, the decrease mimics a standard single crochet stitch perfectly, leaving zero gap through which polyester stuffing can escape.</p><h3>Internal Structural Loop Anchoring</h3><p>One of the most frequent failure points in handmade ornaments is loop separation. Tying a simple strand of embroidery floss around an exterior top stitch creates a high-friction shear point that will eventually snap the yarn fiber. Secure hanging loops through the interior structural apex rather than an exterior single-loop strand to prevent thread breakage under sustained hanging tension.</p><p>Thread your hanging cord through the apex of the tree cone <em>before</em> closing the final round and stuffing the lower half. Knot the cord securely inside the inner crown, backed by an interior washer, bead, or a tightly knotted cluster of yarn tails. When the ornament is stuffed and suspended, gravitational load pulls against the interior core and structural fiberfill rather than placing direct tension on a single, vulnerable surface loop.</p><h2>Troubleshooting Common Holiday Ornament Pitfalls</h2><p>Even experienced makers encounter unexpected complications when working at small scales. Below is how to diagnose and resolve the primary engineering challenges of tree ornament fabrication:</p><ul><li><strong>Edge Curling on Flat 2D Trees:</strong> This is caused by asymmetrical stitch torque along triangular margins. Remedy this by maintaining uniform gauge across edge turning chains and applying a firm wet-blocking treatment with textile stiffener using rustproof stainless steel pins.</li><li><strong>Polyester Fiberfill Protruding Through Fabric:</strong> This indicates an overly loose gauge or a hook that is too large for the yarn weight. Step your crochet hook down 1.0 mm to 1.5 mm smaller than the yarn manufacturer's baseline recommendation, and ensure all crown reductions utilize front-loop-only invisible decreases.</li><li><strong>Hanging Loop Detachment:</strong> Surface knots lack structural reinforcement. Always drop your loop ends into the interior apex cavity during the early phases of construction, anchoring them internally against the stuffed body before closing the base.</li><li><strong>Loss of Conical Definition and Base Slumping:</strong> Over time, standard fiberfill shifts downward under gravity, causing cone trees to bulge around their lower diameter while flattening the bottom disc. Prevent this by cutting a circular template out of flexible, washable plastic (such as a clean food-grade lid) matching the exact base diameter: 2.0 inches for the Small 3D Cone or 3.0 inches for the Medium 3D Cone. Insert this rigid plastic disc into the base of the ornament before closing the bottom stitches to establish a permanent, slump-proof foundation.</li></ul><h2>Frequently Asked Questions</h2><h3>What is the best fiber content for crocheted Christmas tree ornaments?</h3><p>100% mercerized cotton (CYC #1 to CYC #3) is preferred for ornaments. Mercerization provides high tensile strength, crisp stitch definition, zero halo, and resistance to sagging, while accepting blocking starch and stiffeners better than acrylic or animal fibers.</p><h3>Why do flat crochet tree ornaments curl at the corners?</h3><p>Triangular shaping concentrates row-by-row increases on the outer margins, creating uneven mechanical stress and yarn torque. This is resolved by blocking the completed motif flat using stainless steel T-pins and applying steam or a dilute fabric-stiffening solution.</p><h3>How do you prevent stuffing from showing through 3D amigurumi tree ornaments?</h3><p>Select a crochet hook size 1.0 mm to 1.5 mm smaller than recommended by the Craft Yarn Council for that yarn weight (e.g., using a 2.75 mm or 3.25 mm hook with CYC #4 Worsted yarn) and use invisible decreases (invdec) worked exclusively in the front loops.</p>",
-        "wordCount": 1981,
-        "category": "crochet",
-        "contentType": "trending_crochet",
-        "tags": [
-          "crochet patterns",
-          "holiday crochet",
-          "amigurumi",
-          "christmas tree ornament",
-          "crochet techniques"
-        ],
-        "seoMeta": {
-          "title": "Crochet Christmas Tree Ornament Pattern & Guide",
-          "description": "Learn how to crochet Christmas tree ornaments. Explore flat motifs, 3D cone engineering, stitch gauge, yardage calculations, and blocking tips.",
-          "keywords": "crochet christmas tree ornament pattern, crochet holiday ornaments, 3d crochet tree, flat crochet tree motif, amigurumi christmas tree"
-        },
-        "heroImage": {
-          "prompt": "Warm lifestyle interior photography for \"Crochet Christmas Tree Ornament Pattern Guide & Techniques\". A finished hand-crafted crochet blanket draped gracefully over a comfortable wooden armchair beside a woven basket of cozy yarn cakes, warm sunlight streaming through window, elegant rustic home decor, authentic high-resolution craft photography.",
-          "compactPrompt": "Warm lifestyle interior photography for \"Crochet Christmas Tree Ornament Pattern Guide & Techniques\". A finished hand-crafted crochet blanket draped gracefully over a comfortable wooden armchair beside a woven basket of cozy yarn cakes, warm sunlight streaming through window, elegant rustic home decor, authentic high-resolution craft photography.",
-          "stableAssetPath": "/app/applet/public/generated/blog/crochet-christmas-tree-ornament-pattern--8d03870b02.jpg",
-          "stablePublicUrl": "/generated/blog/crochet-christmas-tree-ornament-pattern--8d03870b02.jpg",
-          "status": "ready"
+      "pinterestPins": [],
+      "stage": "selected",
+      "requiresApproval": false,
+      "indexNowNotified": false,
+      "createdAt": "2026-10-19T19:41:49.748Z",
+      "updatedAt": "2026-10-19T19:41:49.751Z",
+      "logs": [
+        {
+          "timestamp": "2026-10-19T19:41:49.748Z",
+          "level": "info",
+          "message": "Job created for TOOL_GUIDE (Category: TOOLS): \"project tracker crochet tool\" with opportunity score 95."
         }
-      },
-      "articleHeroImage": {
-        "prompt": "Warm lifestyle interior photography for \"Crochet Christmas Tree Ornament Pattern Guide & Techniques\". A finished hand-crafted crochet blanket draped gracefully over a comfortable wooden armchair beside a woven basket of cozy yarn cakes, warm sunlight streaming through window, elegant rustic home decor, authentic high-resolution craft photography.",
-        "compactPrompt": "Warm lifestyle interior photography for \"Crochet Christmas Tree Ornament Pattern Guide & Techniques\". A finished hand-crafted crochet blanket draped gracefully over a comfortable wooden armchair beside a woven basket of cozy yarn cakes, warm sunlight streaming through window, elegant rustic home decor, authentic high-resolution craft photography.",
-        "stableAssetPath": "/app/applet/public/generated/blog/crochet-christmas-tree-ornament-pattern--8d03870b02.jpg",
-        "stablePublicUrl": "/generated/blog/crochet-christmas-tree-ornament-pattern--8d03870b02.jpg",
-        "higgsfieldRequestId": "748d18b3-2474-40cd-9925-00835c08a267",
-        "higgsfieldTaskId": "748d18b3-2474-40cd-9925-00835c08a267",
-        "status": "ready"
-      },
-      "costBreakdown": {
-        "dataForSeoCostUsd": 0,
-        "openAiCostUsd": 0,
-        "higgsfieldCostUsd": 0.09,
-        "totalCostUsd": 0.09
-      },
-      "validatedAt": "2026-10-18T17:25:54.236Z",
-      "generatedAt": "2026-10-18T17:25:54.236Z",
-      "publicationScheduledAt": "08:00",
-      "publishedBlogPostId": "blog_1792344354248_9pbvqx0",
-      "publishedSlug": "crochet-christmas-tree-ornament-pattern-guide-techniques",
-      "publishedUrl": "https://welovepattern.com/blog/crochet-christmas-tree-ornament-pattern-guide-techniques",
-      "publishedAt": "2026-10-18T17:25:54.276Z"
+      ],
+      "assignedPublishDate": "2026-10-19",
+      "assignedSlotTime": "16:00",
+      "publicationScheduledAt": "16:00"
     }
   ],
   "completedJobsHistory": [
+    {
+      "id": "job_2026-10-19_magicring",
+      "jobId": "job_2026-10-19_magicring",
+      "date": "2026-10-19",
+      "slotTime": "08:00",
+      "slug": "magic-ring-crochet-tutorial-step-by-step-guide",
+      "publishedBlogPostId": "blog_1792404000000_magicring"
+    },
     {
       "jobId": "job_2026-09-24_i9oswl",
       "id": "job_2026-09-24_i9oswl",
@@ -1254,5 +520,5 @@
       "publishedBlogPostId": "blog_1791158695786_64pw6gf"
     }
   ],
-  "updatedAt": "2026-10-18T21:36:31.228Z"
+  "updatedAt": "2026-10-19T19:41:54.843Z"
 }

@@ -123,9 +123,15 @@ export async function publishArticleToLiveSite(job: SeoEngineArticleJob): Promis
     const wordCount = job.articleContent.wordCount || cleanHtml.split(/\s+/).length;
     const readTimeMinutes = Math.max(2, Math.ceil(wordCount / 200));
 
+    const assignedSlotTime = job.assignedSlotTime || job.publicationScheduledAt;
+    const assignedDate = job.assignedPublishDate || job.dateScheduled;
+    const seoEngineSlotKey = assignedDate && assignedSlotTime ? `${assignedDate}_${assignedSlotTime}` : undefined;
+
     const blogPostRecord = {
       id: blogPostId,
       seoEngineJobId: job.id,
+      seoEngineSlotKey,
+      assignedSlotTime,
       title: title.trim(),
       slug: cleanSlug,
       excerpt: excerpt || title,

@@ -15,7 +15,7 @@ import fs from 'fs';
 const TEST_STATE_FILE = path.join(process.cwd(), 'data', 'test-restart-slots-state.json');
 const TEST_POSTS_FILE = path.join(process.cwd(), 'data', 'test-restart-slots-posts.json');
 
-process.env.SEO_ENGINE_STATE_FILE = 'test-restart-slots-state.json';
+process.env.SEO_ENGINE_STATE_FILE = path.join('data', 'test-restart-slots-state.json');
 process.env.SEO_ENGINE_BLOG_POSTS_FILE = 'test-restart-slots-posts.json';
 
 import { evaluateSchedulerTick } from './scheduler';

@@ -336,6 +336,9 @@ export interface HistoricalJobSummary {
   publishedBlogPostId?: string;
   slug?: string;
   id?: string;
+  slotTime?: string;
+  assignedSlotTime?: string;
+  publicationScheduledAt?: string;
 }
 
 export interface SeoEngineDailyState {
@@ -347,6 +350,7 @@ export interface SeoEngineDailyState {
   executedArticleSlots?: string[];            // Tracks all successfully executed article slots for the day
   executedPinterestSlots?: string[];          // Tracks all executed Pinterest slots for the day
   failedArticleSlots?: string[];              // Tracks failed article slots to prevent uncontrolled retry loops
+  pendingApprovalArticleSlots?: string[];     // Tracks article slots generated and awaiting human approval
   failedPinterestSlots?: string[];            // Tracks failed Pinterest slots to prevent uncontrolled retry loops
   slotAttemptCounts?: Record<string, number>; // Tracks execution attempts per slot key
   todayDiscoveredTopics: DiscoveredTopic[];

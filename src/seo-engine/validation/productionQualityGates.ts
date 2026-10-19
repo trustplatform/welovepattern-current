@@ -144,8 +144,14 @@ function computeSemanticOverlap(strA: string, strB: string): number {
 
 /**
  * Checks if a slug or title collides or cannibalizes existing published blog posts or tools.
+ * Narrow self-exclusion: Excludes only the exact record matching excludeJobId or excludeBlogPostId.
  */
-function checkContentCannibalization(slug: string, title: string, keyword: string): { hasCollision: boolean; reason?: string } {
+export function checkContentCannibalization(
+  slug: string,
+  title: string,
+  keyword: string,
+  options?: { excludeJobId?: string; excludeBlogPostId?: string }
+): { hasCollision: boolean; reason?: string } {
   let publishedPosts: any[] = BLOG_DATA;
 
   try {
@@ -164,20 +170,25 @@ function checkContentCannibalization(slug: string, title: string, keyword: strin
   const normTitle = title.trim().toLowerCase();
   const normKeyword = keyword.trim().toLowerCase();
 
+  const isSelf = (post: any) =>
+    (Boolean(options?.excludeJobId) && post.seoEngineJobId === options.excludeJobId) ||
+    (Boolean(options?.excludeBlogPostId) && post.id === options.excludeBlogPostId);
+
   // 1. Exact slug collision
-  const slugMatch = publishedPosts.find(p => p.slug?.toLowerCase() === normSlug);
+  const slugMatch = publishedPosts.find(p => p.slug?.toLowerCase() === normSlug && !isSelf(p));
   if (slugMatch) {
     return { hasCollision: true, reason: `Slug collision: "${normSlug}" already exists in published blog posts.` };
   }
 
   // 2. Exact title collision
-  const titleMatch = publishedPosts.find(p => p.title?.toLowerCase() === normTitle);
+  const titleMatch = publishedPosts.find(p => p.title?.toLowerCase() === normTitle && !isSelf(p));
   if (titleMatch) {
     return { hasCollision: true, reason: `Title collision: "${title}" is identical to an existing published post.` };
   }
 
   // 3. Semantic intent cannibalization (overlap >= 75%)
   for (const post of publishedPosts) {
+    if (isSelf(post)) continue;
     const postTitle = (post.title || '').toLowerCase();
     const overlap = computeSemanticOverlap(`${normTitle} ${normKeyword}`, postTitle);
     if (overlap >= 0.75) {
@@ -200,7 +211,7 @@ export function evaluateProductionQualityGates(
   topic: DiscoveredTopic,
   packet: FactualResearchPacket,
   config: SeoEngineConfig,
-  options?: { isTestRun?: boolean }
+  options?: { isTestRun?: boolean; excludeBlogPostId?: string }
 ): ProductionQualityGateResult {
   const rejectionReasons: string[] = [];
 
@@ -311,7 +322,10 @@ export function evaluateProductionQualityGates(
   // -----------------------------------------------------------------
   // GATE 6: DUPLICATION & CONTENT CANNIBALIZATION
   // -----------------------------------------------------------------
-  const cannibalization = checkContentCannibalization(article.slug, article.title, topic.keyword);
+  const cannibalization = checkContentCannibalization(article.slug, article.title, topic.keyword, {
+    excludeJobId: jobId,
+    excludeBlogPostId: options?.excludeBlogPostId,
+  });
   const duplicationPassed = !cannibalization.hasCollision;
   if (!duplicationPassed) {
     rejectionReasons.push(`Duplication Failure: ${cannibalization.reason}`);
