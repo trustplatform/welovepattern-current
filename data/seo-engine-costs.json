@@ -1,6 +1,6 @@
 {
   "version": 1,
-  "totalSpendAllTimeUsd": 0.1596,
+  "totalSpendAllTimeUsd": 0.2333,
   "records": [
     {
       "provider": "openai",
@@ -151,7 +151,63 @@
       },
       "id": "cost_1792359363407_vi8h6",
       "timestamp": "2026-10-18T21:36:03.407Z"
+    },
+    {
+      "provider": "openai",
+      "operation": "chat_completion",
+      "unitsConsumed": 1546,
+      "costUsd": 0.0096,
+      "meta": {
+        "model": "gpt-4o",
+        "promptTokens": 785,
+        "completionTokens": 761
+      },
+      "id": "cost_1792493745192_vfkhs",
+      "timestamp": "2026-10-20T10:55:45.192Z"
+    },
+    {
+      "provider": "openai",
+      "operation": "chat_completion",
+      "unitsConsumed": 2632,
+      "costUsd": 0.0149,
+      "meta": {
+        "model": "gpt-4o",
+        "promptTokens": 1523,
+        "completionTokens": 1109
+      },
+      "id": "cost_1792493752447_1t6ft",
+      "timestamp": "2026-10-20T10:55:52.447Z"
+    },
+    {
+      "provider": "openai",
+      "operation": "chat_completion",
+      "unitsConsumed": 3303,
+      "costUsd": 0.0192,
+      "meta": {
+        "model": "gpt-4o",
+        "promptTokens": 1848,
+        "completionTokens": 1455
+      },
+      "id": "cost_1792493761830_pag0b",
+      "timestamp": "2026-10-20T10:56:01.831Z"
+    },
+    {
+      "jobId": "job_2026-10-19_inmyx8",
+      "provider": "higgsfield",
+      "operation": "image_generation",
+      "unitsConsumed": 1,
+      "costUsd": 0.03,
+      "meta": {
+        "taskId": "2608008b-8690-4b93-81ba-707d916f9155",
+        "providerRequestId": "2608008b-8690-4b93-81ba-707d916f9155",
+        "prompt": "Warm lifestyle interior photography for \"Crafting a Halloween Granny Square: A Crochet Guide\". Beaut",
+        "targetFolder": "blog",
+        "slug": "crafting-a-halloween-granny-square-a-crochet-guide",
+        "status": "accepted"
+      },
+      "id": "cost_1792493762123_pdu4b",
+      "timestamp": "2026-10-20T10:56:02.123Z"
     }
   ],
-  "updatedAt": "2026-10-19T19:41:54.836Z"
+  "updatedAt": "2026-10-20T10:56:02.123Z"
 }

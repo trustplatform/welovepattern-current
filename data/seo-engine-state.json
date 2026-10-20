@@ -74,9 +74,11 @@
     "higgsfieldDailyRequestsLimit": 9
   },
   "lastRunDate": "2026-10-19",
-  "lastExecutedArticleSlot": "2026-10-19_08:00",
+  "lastExecutedArticleSlot": "2026-10-19_20:00",
   "executedArticleSlots": [
-    "2026-10-19_08:00"
+    "2026-10-19_08:00",
+    "2026-10-19_16:00",
+    "2026-10-19_20:00"
   ],
   "executedPinterestSlots": [
     "2026-10-05_13:00"
@@ -165,22 +167,6 @@
   ],
   "activeJobs": [
     {
-      "id": "job_unpublished_test",
-      "stage": "writing",
-      "dateScheduled": "2026-09-27",
-      "assignedPublishDate": "2026-09-27",
-      "assignedSlotTime": "08:00",
-      "pinterestPins": [
-        {
-          "pinNumber": 1,
-          "assignedSlotTime": "09:00",
-          "scheduledTime": "09:00",
-          "publishStatus": "image_ready",
-          "stableAssetPath": "public/test-a-small.jpg"
-        }
-      ]
-    },
-    {
       "id": "job_2026-10-19_inmyx8",
       "dateScheduled": "2026-10-19",
       "contentType": "trending_crochet",
@@ -202,22 +188,262 @@
         "discoveredAt": "2026-10-19T19:38:51.273Z",
         "status": "discovered"
       },
-      "pinterestPins": [],
-      "stage": "selected",
+      "pinterestPins": [
+        {
+          "pinNumber": 1,
+          "conceptAngle": "Curated Editorial Multi-Project Showcase",
+          "visualStyle": {
+            "imageCount": 4,
+            "compositionType": "4_image_grid",
+            "subjectDescription": "Curated Editorial Multi-Project Showcase for Crafting a Halloween Granny Square: A Crochet Guide",
+            "colorPalette": "Warm terracotta, burnt pumpkin orange, deep espresso, and antique linen",
+            "humanElement": "none"
+          },
+          "compactHiggsfieldPrompt": "Complete editorial Pinterest Pin photograph in 2:3 vertical layout. Curated editorial display of 3 to 4 distinct finished handmade crochet motifs naturally grouped across a rustic textured surface in cozy ambient lighting. The composition is one unified, organic photograph—NOT a Canva grid, NOT UI cards, and NOT boxed panels. Warm golden autumn afternoon sunlight, cozy harvest textures, color palette of Warm terracotta, burnt pumpkin orange, deep espresso, and antique linen. Authentic artisan aesthetic.\nEDITORIAL TYPOGRAPHY & ART DIRECTION (RENDER EXACTLY TWO TEXT ELEMENTS):\n\nLITERAL TEXT LOCK — TYPOGRAPHY MUST RENDER THE FOLLOWING STRINGS CHARACTER-FOR-CHARACTER:\nHEADLINE — EXACT LITERAL STRING:\n\"CROCHET HALLOWEEN GRANNY SQUARE\"\n\nCTA — EXACT LITERAL STRING:\n\"SEE ALL IDEAS →\"\n\nThe words above are not semantic instructions. They are literal visual text.\nDo not interpret their meaning.\nDo not substitute synonyms.\nDo not rewrite them.\nDo not improve them.\nDo not paraphrase them.\nDo not change any individual word.\nDo not change punctuation.\nDo not replace MORE with ALL.\nDo not replace ALL with MORE.\nDo not replace the arrow.\nRender the exact supplied characters as visible typography.\n\nBefore rendering, internally verify that the visible CTA exactly matches the supplied CTA string \"SEE ALL IDEAS →\". If the rendered wording differs in any word, it is incorrect.\n\n1. HEADLINE VISUAL STYLING:\n   - Placement: Upper-center area in clean negative space above the focal subject.\n   - Typography: Elegant high-end editorial SERIF typeface inspired by luxury fashion magazines and fine Pinterest editorial design. Sophisticated, feminine, refined, and artistic with high visual impact and generous scale. (NOT a heavy generic display font, NOT a playful cartoon font, NOT handwriting).\n   - Creative Background: Positioned over a subtle photographic ambient light gradient with clean contrast. No artificial card or panel elements.\n\n2. ACTION CTA VISUAL STYLING:\n   - Placement: Lower-right area in natural negative space with generous breathing room and clear physical separation from the headline. Never attached or placed directly beneath the headline.\n   - Typography: Rendered in Montserrat ExtraBold (font-weight 800, uppercase, ~24px visual size, letter spacing 1.2–1.5px, line height 1.0–1.1). Bold, crisp, highly readable on mobile, modern, premium, and confident (warm terracotta and burnt pumpkin tones with crisp cream editorial typography).\n   - Creative Background: Rendered as clean, compact editorial typography positioned naturally in negative space.\n\nSTRICT PROHIBITIONS & FINAL TEXT CONFIRMATION:\n- ABSOLUTELY ZERO OTHER TEXT ON THE ENTIRE IMAGE: No subtitles, no secondary descriptions, no bullet points, no website headers, no URLs, no logos.\n- NEVER ADD decorative filler words such as \"PATTERNS\", \"PROJECTS\", \"INSPIRATION\", \"COZY\", \"HANDMADE\", or any random phrases.\n- GLOBAL HARD PROHIBITION: ABSOLUTELY NO paper, torn paper, paper wash, pigment wash, paint wash, brushstroke, watercolor shape, card, panel, banner, badge, button, pill, UI element, Canva-style graphic, or artificial text container.\n- Typography must feel like natural, artistic editorial text placed directly within the photographic space.\n- Photography must dominate the frame with ample breathing room.\n- FINAL CONFIRMED TEXT ELEMENTS TO RENDER (EXACTLY TWO):\n  1. HEADLINE: \"CROCHET HALLOWEEN GRANNY SQUARE\"\n  2. CTA: \"SEE ALL IDEAS →\"",
+          "typographyOverlay": {
+            "primaryHeadline": "CROCHET HALLOWEEN GRANNY SQUARE",
+            "ctaBadgeText": "SEE ALL IDEAS →",
+            "textContainerStyle": "subtle_light_gradient"
+          },
+          "destinationUrl": "https://welovepattern.com/blog/crafting-a-halloween-granny-square-a-crochet-guide",
+          "targetBoardId": "",
+          "targetBoardName": "Unassigned (No Matching Board)",
+          "boardName": "Unassigned (No Matching Board)",
+          "publishStatus": "pending",
+          "higgsfieldRequestId": "0fbc4ff1-ff3e-41f9-b2a3-0cdd2d725cdd",
+          "higgsfieldTaskId": "0fbc4ff1-ff3e-41f9-b2a3-0cdd2d725cdd"
+        },
+        {
+          "pinNumber": 2,
+          "conceptAngle": "Asymmetric Dynamic Editorial Feature",
+          "visualStyle": {
+            "imageCount": 1,
+            "compositionType": "single_hero",
+            "subjectDescription": "Asymmetric Dynamic Editorial Feature for Crafting a Halloween Granny Square: A Crochet Guide",
+            "colorPalette": "Deep plum, rich terracotta, warm parchment, and vintage amber gold",
+            "humanElement": "none"
+          },
+          "compactHiggsfieldPrompt": "Complete editorial Pinterest Pin in 2:3 vertical aspect ratio. Modern asymmetric hero composition featuring a single striking handmade crochet project positioned dynamically in negative space with rich natural textures. Moody directional candlelight and golden hour amber tones, palette of Deep plum, rich terracotta, warm parchment, and vintage amber gold. High-resolution real photography dominates the frame.\nEDITORIAL TYPOGRAPHY & ART DIRECTION (RENDER EXACTLY TWO TEXT ELEMENTS):\n\nLITERAL TEXT LOCK — TYPOGRAPHY MUST RENDER THE FOLLOWING STRINGS CHARACTER-FOR-CHARACTER:\nHEADLINE — EXACT LITERAL STRING:\n\"CROCHET HALLOWEEN GRANNY SQUARE\"\n\nCTA — EXACT LITERAL STRING:\n\"SEE ALL IDEAS →\"\n\nThe words above are not semantic instructions. They are literal visual text.\nDo not interpret their meaning.\nDo not substitute synonyms.\nDo not rewrite them.\nDo not improve them.\nDo not paraphrase them.\nDo not change any individual word.\nDo not change punctuation.\nDo not replace MORE with ALL.\nDo not replace ALL with MORE.\nDo not replace the arrow.\nRender the exact supplied characters as visible typography.\n\nBefore rendering, internally verify that the visible CTA exactly matches the supplied CTA string \"SEE ALL IDEAS →\". If the rendered wording differs in any word, it is incorrect.\n\n1. HEADLINE VISUAL STYLING:\n   - Placement: Lower-right area in natural negative space balanced with the composition.\n   - Typography: Bold, clean modern architectural SANS-SERIF typeface (geometric, heavy, crisp, contemporary editorial style with high visual impact and immaculate readability).\n   - Creative Background: Place typography directly into clean photographic negative space. No text background treatment whatsoever.\n\n2. ACTION CTA VISUAL STYLING:\n   - Placement: Upper-left area in natural negative space, well separated from the headline.\n   - Typography: Rendered in Montserrat ExtraBold (font-weight 800, uppercase, ~24px visual size, letter spacing 1.2–1.5px, line height 1.0–1.1). Bold, crisp, highly readable on mobile, modern, premium, and confident (deep plum and warm terracotta tones with crisp cream editorial typography).\n   - Creative Background: Rendered as clean standalone editorial typography directly over the photograph negative space without any panel, badge, button, or container.\n\nSTRICT PROHIBITIONS & FINAL TEXT CONFIRMATION:\n- ABSOLUTELY ZERO OTHER TEXT ON THE ENTIRE IMAGE: No subtitles, no secondary descriptions, no bullet points, no website headers, no URLs, no logos.\n- NEVER ADD decorative filler words such as \"PATTERNS\", \"PROJECTS\", \"INSPIRATION\", \"COZY\", \"HANDMADE\", or any random phrases.\n- GLOBAL HARD PROHIBITION: ABSOLUTELY NO paper, torn paper, paper wash, pigment wash, paint wash, brushstroke, watercolor shape, card, panel, banner, badge, button, pill, UI element, Canva-style graphic, or artificial text container.\n- Typography must feel like natural, artistic editorial text placed directly within the photographic space.\n- Photography must dominate the frame with ample breathing room.\n- FINAL CONFIRMED TEXT ELEMENTS TO RENDER (EXACTLY TWO):\n  1. HEADLINE: \"CROCHET HALLOWEEN GRANNY SQUARE\"\n  2. CTA: \"SEE ALL IDEAS →\"",
+          "typographyOverlay": {
+            "primaryHeadline": "CROCHET HALLOWEEN GRANNY SQUARE",
+            "ctaBadgeText": "SEE ALL IDEAS →",
+            "textContainerStyle": "none_direct_photo"
+          },
+          "destinationUrl": "https://welovepattern.com/blog/crafting-a-halloween-granny-square-a-crochet-guide",
+          "targetBoardId": "",
+          "targetBoardName": "Unassigned (No Matching Board)",
+          "boardName": "Unassigned (No Matching Board)",
+          "publishStatus": "pending"
+        }
+      ],
+      "stage": "generating_images",
       "requiresApproval": false,
       "indexNowNotified": false,
       "createdAt": "2026-10-19T19:38:51.275Z",
-      "updatedAt": "2026-10-19T19:38:51.278Z",
+      "updatedAt": "2026-10-20T10:56:38.801Z",
       "logs": [
         {
           "timestamp": "2026-10-19T19:38:51.275Z",
           "level": "info",
           "message": "Job created for TRENDING_CROCHET (Category: CROCHET): \"crochet halloween granny square\" with opportunity score 91."
+        },
+        {
+          "timestamp": "2026-10-20T10:55:39.593Z",
+          "level": "info",
+          "message": "Starting technical craft research..."
+        },
+        {
+          "timestamp": "2026-10-20T10:55:45.196Z",
+          "level": "info",
+          "message": "Factual research packet validated successfully."
+        },
+        {
+          "timestamp": "2026-10-20T10:55:45.198Z",
+          "level": "info",
+          "message": "Generating article with OpenAI..."
+        },
+        {
+          "timestamp": "2026-10-20T10:56:01.849Z",
+          "level": "info",
+          "message": "Article generated successfully (941 words). Content safely persisted to job state."
+        },
+        {
+          "timestamp": "2026-10-20T10:56:01.850Z",
+          "level": "info",
+          "message": "Starting Stage 3: Board resolution and local image asset binding ($0 cost)..."
+        },
+        {
+          "timestamp": "2026-10-20T10:56:01.855Z",
+          "level": "warn",
+          "message": "No suitable Pinterest board found (Low confidence semantic match (20/100) for topic \"crochet halloween granny square\" with board \"Crochet Blankets & Afghans\".). Article generation will proceed to completion. Pinterest Pin publication deferred until a matching board is assigned in Admin."
+        },
+        {
+          "timestamp": "2026-10-20T10:56:27.087Z",
+          "level": "info",
+          "message": "Hero image generated successfully via Higgsfield: /generated/blog/crafting-a-halloween-granny-square-a-cro-98ed11f1d7.jpg"
+        },
+        {
+          "timestamp": "2026-10-20T10:56:38.776Z",
+          "level": "warn",
+          "message": "Process restart detected. Safely reset from interrupted state to \"selected\" for clean recovery."
+        },
+        {
+          "timestamp": "2026-10-20T10:56:38.789Z",
+          "level": "info",
+          "message": "Starting technical craft research..."
+        },
+        {
+          "timestamp": "2026-10-20T10:56:38.790Z",
+          "level": "info",
+          "message": "Existing valid article draft detected (\"Crafting a Halloween Granny Square: A Crochet Guide\", 941 words). Reusing without calling OpenAI."
+        },
+        {
+          "timestamp": "2026-10-20T10:56:38.792Z",
+          "level": "info",
+          "message": "Starting Stage 3: Board resolution and local image asset binding ($0 cost)..."
+        },
+        {
+          "timestamp": "2026-10-20T10:56:38.799Z",
+          "level": "warn",
+          "message": "No suitable Pinterest board found (Low confidence semantic match (20/100) for topic \"crochet halloween granny square\" with board \"Crochet Blankets & Afghans\".). Article generation will proceed to completion. Pinterest Pin publication deferred until a matching board is assigned in Admin."
         }
       ],
       "assignedPublishDate": "2026-10-19",
       "assignedSlotTime": "08:00",
-      "publicationScheduledAt": "08:00"
+      "publicationScheduledAt": "08:00",
+      "factualResearch": {
+        "topicId": "topic_crochet_63726f636865",
+        "topic": "crochet halloween granny square",
+        "searchIntent": "The user is seeking detailed and technical information about creating crochet granny squares with a Halloween theme, potentially for use in blankets, decorations, or other craft projects.",
+        "craftType": "crochet",
+        "sourceAuthority": "Craft Yarn Council Technical Standards & OpenAI Craft Research",
+        "cycStandardVersion": "CYC 2024 Guidelines",
+        "generatedAt": "2026-10-20T10:55:45.193Z",
+        "verifiedTerminology": [
+          "Double crochet (UK: Treble crochet)",
+          "Single crochet (UK: Double crochet)",
+          "Chain stitch"
+        ],
+        "verifiedMaterials": {
+          "yarnWeights": [
+            "CYC #4 Worsted",
+            "CYC #3 DK"
+          ],
+          "hookSizes": [
+            "5.0 mm (H-8)",
+            "4.0 mm (G-6)"
+          ],
+          "standardYardages": "A single 12-inch granny square typically requires around 50-100 meters of yarn.",
+          "verifiedDimensions": {
+            "Baby Blanket": "30 x 36 inches (76 x 91 cm)",
+            "Lapghan": "36 x 48 inches (91 x 122 cm)",
+            "Throw Blanket": "50 x 60 inches (127 x 152 cm)",
+            "Twin Blanket": "66 x 90 inches (168 x 229 cm)"
+          }
+        },
+        "authorizedPercentages": [
+          10,
+          15,
+          20
+        ],
+        "prohibitedMetrics": [
+          "stitches per skein",
+          "divide stitches by stitches per skein",
+          "arbitrary yards per stitch",
+          "invented mattress or bed sizes",
+          "commercial sales pricing or revenue claims"
+        ],
+        "verifiedFormulas": [
+          {
+            "name": "Area Ratio Swatch Scaling Method",
+            "description": "Calculates total project yardage by scaling swatch yardage to blanket surface area",
+            "formulaText": "Total Yardage = (Blanket Area / Swatch Area) * Swatch Yardage * 1.10",
+            "steps": [
+              "Step 1: Measure the area of the completed swatch.",
+              "Step 2: Calculate the area of the intended blanket size.",
+              "Step 3: Divide the blanket area by the swatch area to get the scaling factor.",
+              "Step 4: Multiply the swatch yardage by the scaling factor and then by 1.10 to account for a 10% buffer."
+            ]
+          }
+        ],
+        "supportedClaims": [
+          "Textured stitches like bobbles and puff stitches consume more yarn than flat stitches like single crochet and double crochet.",
+          "A 10% to 15% safety buffer is standard practice.",
+          "Yarn is sold by weight and yardage, not by stitch count."
+        ],
+        "techniqueKeyPoints": [
+          "Utilize contrasting colors such as black, orange, purple, and green for a Halloween theme.",
+          "Incorporate textured stitches like the popcorn or bobble stitch to add dimension.",
+          "Use embellishments such as spider appliques or pumpkin motifs to enhance the theme."
+        ],
+        "makerPainPoints": [
+          "Achieving consistent tension across multiple squares.",
+          "Selecting the correct hook size for different yarn weights.",
+          "Ensuring color changes are neat and the ends are woven in securely."
+        ],
+        "faqItems": [
+          {
+            "question": "What size should a granny square be for a blanket?",
+            "factualAnswer": "A typical granny square for a blanket is around 12 inches, but sizes can vary based on design preferences."
+          },
+          {
+            "question": "How do I change colors in a granny square?",
+            "factualAnswer": "To change colors, finish the last stitch of the round with the new color, ensuring to pull through the new color on the last yarn over."
+          },
+          {
+            "question": "What are some Halloween-themed motifs I can include in my granny squares?",
+            "factualAnswer": "Common motifs include pumpkins, ghosts, bats, and spiders, which can be crocheted separately and sewn onto the squares."
+          }
+        ],
+        "verifiedInternalLinks": [
+          {
+            "anchorText": "halloween",
+            "url": "/category/halloween",
+            "entityType": "category"
+          },
+          {
+            "anchorText": "granny square",
+            "url": "/category/granny-squares",
+            "entityType": "category"
+          }
+        ]
+      },
+      "articleContent": {
+        "title": "Crafting a Halloween Granny Square: A Crochet Guide",
+        "slug": "crafting-a-halloween-granny-square-a-crochet-guide",
+        "excerpt": "Learn how to crochet a spooky Halloween-themed granny square with our comprehensive guide, featuring materials, techniques, and creative tips.",
+        "contentHtml": "<h2>Overview of the Halloween Granny Square Project</h2>\n<p>Creating a <a href=\"/category/halloween\" class=\"text-amber-700 underline hover:text-amber-800 transition-colors\">Halloween</a>-themed <a href=\"/category/granny-squares\" class=\"text-amber-700 underline hover:text-amber-800 transition-colors\">granny square</a> is a delightful way to get into the spirit of the season and add a touch of spooky charm to your crochet projects. Whether you're planning a festive blanket or unique decorations, the Halloween granny square offers endless creativity. This guide will walk you through every step, ensuring your squares are as impressive as they are fun to make.</p>\n\n<h2>Materials and Tools Needed</h2>\n<h3>Yarn Selection</h3>\n<p>For this project, you will need yarn in classic Halloween colors: black, orange, purple, and green. We recommend using either CYC #4 Worsted weight or CYC #3 DK weight yarn, as these thicknesses provide a good balance of durability and ease of use. Each weight offers its own advantages: worsted weight is thicker and results in a sturdier fabric, while DK weight is lighter and can give more drape to your finished project.</p>\n\n<h3>Recommended Hook Sizes</h3>\n<p>Depending on your yarn choice, select a 5.0 mm (H-8) hook for worsted weight yarn or a 4.0 mm (G-6) hook for DK weight yarn. Using the correct hook size is crucial for maintaining consistent tension and achieving the desired square size. It also affects the overall texture and tightness of your granny squares, influencing how your motifs will look and feel.</p>\n\n<h3>Additional Supplies</h3>\n<ul>\n<li>Scissors</li>\n<li>Tapestry needle for weaving in ends</li>\n<li>Stitch markers (optional)</li>\n</ul>\n\n<h2>Stitch Techniques and Construction Steps</h2>\n<h3>Basic Granny Square Structure</h3>\n<p>The foundation of your Halloween square is the classic granny square pattern, which involves creating rounds of double crochet clusters. Start with a magic ring, and work in rounds to expand the square. Each round typically builds upon the last with corners created by chains and clusters of stitches to maintain the square shape.</p>\n\n<h3>Color Changes</h3>\n<p>To incorporate color changes effectively, complete the last yarn over of a stitch with the new color. This ensures a seamless transition between colors. Neat color changes can significantly enhance the aesthetic of your granny squares, making them look professional and polished.</p>\n\n<h3>Adding Textured Stitches</h3>\n<p>Introduce dimension by incorporating popcorn or bobble stitches. These textured elements are perfect for creating features like pumpkins or ghosts. Remember, textured stitches will require more yarn than flat stitches. These stitches add bulk and visual interest, making your granny squares pop with character.</p>\n\n<h3>Embellishments</h3>\n<p>For added Halloween flair, consider sewing on small crocheted appliques such as spiders, bats, or pumpkins. These can be crafted separately and attached to the finished square, adding layers and depth to your Halloween theme. Appliques can also be an excellent way to personalize each square, making each one unique.</p>\n\n<h2>Sizing and Yardage Calculations</h2>\n<h3>Square Size</h3>\n<p>Each granny square should ideally be around 12 inches. This size is versatile for various projects, from lapghans to throw blankets. Larger squares mean fewer seams when joining, which can simplify the assembly of larger items.</p>\n\n<h3>Calculating Yardage</h3>\n<p>Use the Area Ratio Swatch Scaling Method to determine total yarn requirements. Begin by measuring your completed swatch, then calculate your intended blanket size. Apply the scaling factor to your swatch yardage, including a 10% buffer for safety. This method ensures that you have a realistic estimate of the yarn needed, preventing shortages and allowing for consistent production.</p>\n\n<h2>Tips for Consistent Results</h2>\n<h3>Maintaining Tension</h3>\n<p>Consistent tension is crucial for uniform squares. Practice keeping your yarn at even tension, and use stitch markers to track sections if necessary. Consistent tension not only impacts the size of your squares but also the overall appearance of the stitches, affecting the final look of the blanket.</p>\n\n<h3>Neat Color Changes</h3>\n<p>To ensure neat color transitions, always complete the final stitch of a round with the new color. Securely weave in all yarn ends with a tapestry needle to prevent unraveling. Properly managed ends contribute to a tidy finish, essential for a professional-looking project.</p>\n\n<h3>Blocking Your Squares</h3>\n<p>Blocking is an essential finishing step that ensures each square is uniform in size and shape. For granny squares, wet blocking is often preferred. To wet block, soak the squares in water, gently squeeze out excess moisture, and pin them to a blocking mat to dry. This technique relaxes the fibers and sets the stitches. Alternatively, steam blocking can be used, but take care with heat, especially if using synthetic yarns.</p>\n\n<h2>Practical Troubleshooting</h2>\n<h3>Uneven Tension</h3>\n<p>If you find that your tension varies across squares, try to relax and practice consistently. Occasionally check your work for size and adjust your grip if needed. Consider using the same hook throughout your project to avoid discrepancies.</p>\n\n<h3>Border Curling</h3>\n<p>Border curling can be addressed by ensuring your stitch count is consistent and blocking the finished squares. Adding a simple border, such as a row of single crochet, can also help stabilize the edges.</p>\n\n<h2>Variations and Creative Ideas</h2>\n<p>Expand your creativity by experimenting with different motifs and patterns. Consider thematic variations, such as a ghostly granny square with white yarn and black bobble stitches for eyes. Explore the use of different textures and embellishments to create a collection of unique squares that tell a story or convey a particular Halloween scene.</p>\n\n<h2>Frequently Asked Questions</h2>\n<h3>What size should a granny square be for a blanket?</h3>\n<p>A typical granny square for a blanket is around 12 inches, but sizes can vary based on design preferences.</p>\n\n<h3>How do I change colors in a granny square?</h3>\n<p>To change colors, finish the last stitch of the round with the new color, ensuring to pull through the new color on the last yarn over.</p>\n\n<h3>What are some Halloween-themed motifs I can include in my granny squares?</h3>\n<p>Common motifs include pumpkins, ghosts, bats, and spiders, which can be crocheted separately and sewn onto the squares.</p>",
+        "wordCount": 941,
+        "category": "crochet",
+        "tags": [
+          "crochet",
+          "halloween",
+          "granny square",
+          "yarn",
+          "DIY"
+        ],
+        "seoMeta": {
+          "title": "Crochet Halloween Granny Square Guide",
+          "description": "Master the art of crochet with our Halloween granny square guide, perfect for blankets and decorations.",
+          "keywords": "crochet, halloween, granny square, yarn, DIY"
+        },
+        "heroImage": {
+          "prompt": "Warm lifestyle interior photography for \"Crafting a Halloween Granny Square: A Crochet Guide\". Beautiful finished hand-crafted crochet project depicting crochet halloween granny square, tastefully styled on a rustic wooden surface beside a basket of textured yarn cakes, polished wooden crochet hooks, warm ambient sunlight streaming through window, elegant cozy home decor, authentic high-resolution craft photography.",
+          "compactPrompt": "Warm lifestyle interior photography for \"Crafting a Halloween Granny Square: A Crochet Guide\". Beautiful finished hand-crafted crochet project depicting crochet halloween granny square, tastefully styled on a rustic wooden surface beside a basket of textured yarn cakes, polished wooden crochet hooks, warm ambient sunlight streaming through window, elegant cozy home decor, authentic high-resolution craft photography.",
+          "stableAssetPath": "/app/applet/public/generated/blog/crafting-a-halloween-granny-square-a-cro-98ed11f1d7.jpg",
+          "stablePublicUrl": "/generated/blog/crafting-a-halloween-granny-square-a-cro-98ed11f1d7.jpg",
+          "status": "ready"
+        }
+      },
+      "articleHeroImage": {
+        "prompt": "Warm lifestyle interior photography for \"Crafting a Halloween Granny Square: A Crochet Guide\". Beautiful finished hand-crafted crochet project depicting crochet halloween granny square, tastefully styled on a rustic wooden surface beside a basket of textured yarn cakes, polished wooden crochet hooks, warm ambient sunlight streaming through window, elegant cozy home decor, authentic high-resolution craft photography.",
+        "compactPrompt": "Warm lifestyle interior photography for \"Crafting a Halloween Granny Square: A Crochet Guide\". Beautiful finished hand-crafted crochet project depicting crochet halloween granny square, tastefully styled on a rustic wooden surface beside a basket of textured yarn cakes, polished wooden crochet hooks, warm ambient sunlight streaming through window, elegant cozy home decor, authentic high-resolution craft photography.",
+        "stableAssetPath": "/app/applet/public/generated/blog/crafting-a-halloween-granny-square-a-cro-98ed11f1d7.jpg",
+        "stablePublicUrl": "/generated/blog/crafting-a-halloween-granny-square-a-cro-98ed11f1d7.jpg",
+        "higgsfieldRequestId": "2608008b-8690-4b93-81ba-707d916f9155",
+        "higgsfieldTaskId": "2608008b-8690-4b93-81ba-707d916f9155",
+        "status": "ready"
+      }
     },
     {
       "id": "job_2026-10-19_jjdtkz",
@@ -242,7 +468,44 @@
         "discoveredAt": "2026-10-19T19:38:51.275Z",
         "status": "discovered"
       },
-      "pinterestPins": [],
+      "pinterestPins": [
+        {
+          "pinNumber": 1,
+          "conceptAngle": "",
+          "visualStyle": {
+            "imageCount": 1,
+            "compositionType": "single_hero",
+            "subjectDescription": "",
+            "colorPalette": "",
+            "humanElement": "none"
+          },
+          "compactHiggsfieldPrompt": "",
+          "typographyOverlay": {
+            "primaryHeadline": "online row counter",
+            "ctaBadgeText": ""
+          },
+          "destinationUrl": "https://welovepattern.com/blog/",
+          "publishStatus": "pending"
+        },
+        {
+          "pinNumber": 2,
+          "conceptAngle": "",
+          "visualStyle": {
+            "imageCount": 1,
+            "compositionType": "single_hero",
+            "subjectDescription": "",
+            "colorPalette": "",
+            "humanElement": "none"
+          },
+          "compactHiggsfieldPrompt": "",
+          "typographyOverlay": {
+            "primaryHeadline": "online row counter",
+            "ctaBadgeText": ""
+          },
+          "destinationUrl": "https://welovepattern.com/blog/",
+          "publishStatus": "pending"
+        }
+      ],
       "stage": "selected",
       "requiresApproval": false,
       "indexNowNotified": false,
@@ -281,7 +544,44 @@
         "discoveredAt": "2026-10-19T19:41:49.744Z",
         "status": "discovered"
       },
-      "pinterestPins": [],
+      "pinterestPins": [
+        {
+          "pinNumber": 1,
+          "conceptAngle": "",
+          "visualStyle": {
+            "imageCount": 1,
+            "compositionType": "single_hero",
+            "subjectDescription": "",
+            "colorPalette": "",
+            "humanElement": "none"
+          },
+          "compactHiggsfieldPrompt": "",
+          "typographyOverlay": {
+            "primaryHeadline": "crochet christmas tree ornament pattern",
+            "ctaBadgeText": ""
+          },
+          "destinationUrl": "https://welovepattern.com/blog/",
+          "publishStatus": "pending"
+        },
+        {
+          "pinNumber": 2,
+          "conceptAngle": "",
+          "visualStyle": {
+            "imageCount": 1,
+            "compositionType": "single_hero",
+            "subjectDescription": "",
+            "colorPalette": "",
+            "humanElement": "none"
+          },
+          "compactHiggsfieldPrompt": "",
+          "typographyOverlay": {
+            "primaryHeadline": "crochet christmas tree ornament pattern",
+            "ctaBadgeText": ""
+          },
+          "destinationUrl": "https://welovepattern.com/blog/",
+          "publishStatus": "pending"
+        }
+      ],
       "stage": "selected",
       "requiresApproval": false,
       "indexNowNotified": false,
@@ -321,7 +621,44 @@
         "discoveredAt": "2026-10-19T19:41:49.746Z",
         "status": "discovered"
       },
-      "pinterestPins": [],
+      "pinterestPins": [
+        {
+          "pinNumber": 1,
+          "conceptAngle": "",
+          "visualStyle": {
+            "imageCount": 1,
+            "compositionType": "single_hero",
+            "subjectDescription": "",
+            "colorPalette": "",
+            "humanElement": "none"
+          },
+          "compactHiggsfieldPrompt": "",
+          "typographyOverlay": {
+            "primaryHeadline": "project tracker crochet tool",
+            "ctaBadgeText": ""
+          },
+          "destinationUrl": "https://welovepattern.com/blog/",
+          "publishStatus": "pending"
+        },
+        {
+          "pinNumber": 2,
+          "conceptAngle": "",
+          "visualStyle": {
+            "imageCount": 1,
+            "compositionType": "single_hero",
+            "subjectDescription": "",
+            "colorPalette": "",
+            "humanElement": "none"
+          },
+          "compactHiggsfieldPrompt": "",
+          "typographyOverlay": {
+            "primaryHeadline": "project tracker crochet tool",
+            "ctaBadgeText": ""
+          },
+          "destinationUrl": "https://welovepattern.com/blog/",
+          "publishStatus": "pending"
+        }
+      ],
       "stage": "selected",
       "requiresApproval": false,
       "indexNowNotified": false,
@@ -346,7 +683,8 @@
       "date": "2026-10-19",
       "slotTime": "08:00",
       "slug": "magic-ring-crochet-tutorial-step-by-step-guide",
-      "publishedBlogPostId": "blog_1792404000000_magicring"
+      "publishedBlogPostId": "blog_1792404000000_magicring",
+      "logs": []
     },
     {
       "jobId": "job_2026-09-24_i9oswl",
@@ -359,7 +697,8 @@
       "wordCount": 980,
       "pinIds": [],
       "status": "completed",
-      "publishedBlogPostId": "blog_1791836992562_xsqom50"
+      "publishedBlogPostId": "blog_1791836992562_xsqom50",
+      "logs": []
     },
     {
       "jobId": "job_2026-09-27_znmxez",
@@ -376,7 +715,8 @@
         "1148488342518272068"
       ],
       "status": "completed",
-      "publishedBlogPostId": "blog_1790514339065_zksehfy"
+      "publishedBlogPostId": "blog_1790514339065_zksehfy",
+      "logs": []
     },
     {
       "jobId": "job_2026-09-28_brg2ty",
@@ -394,7 +734,8 @@
         "1148488342518356601"
       ],
       "status": "completed",
-      "publishedBlogPostId": "blog_1790553773226_tg765qw"
+      "publishedBlogPostId": "blog_1790553773226_tg765qw",
+      "logs": []
     },
     {
       "jobId": "job_2026-09-28_1op8wt",
@@ -412,7 +753,8 @@
         "1148488342518387814"
       ],
       "status": "completed",
-      "publishedBlogPostId": "blog_1790597000591_1w1dd3l"
+      "publishedBlogPostId": "blog_1790597000591_1w1dd3l",
+      "logs": []
     },
     {
       "jobId": "job_2026-09-29_f1mufi",
@@ -430,7 +772,8 @@
         "1148488342518438960"
       ],
       "status": "completed",
-      "publishedBlogPostId": "blog_1790683431850_36gwy3i"
+      "publishedBlogPostId": "blog_1790683431850_36gwy3i",
+      "logs": []
     },
     {
       "jobId": "job_2026-09-30_mv8u9s",
@@ -448,7 +791,8 @@
         "1148488342518518501"
       ],
       "status": "completed",
-      "publishedBlogPostId": "blog_1790726603542_ek5jfxk"
+      "publishedBlogPostId": "blog_1790726603542_ek5jfxk",
+      "logs": []
     },
     {
       "jobId": "job_2026-09-30_dbdnc2",
@@ -466,7 +810,8 @@
         "1148488342518549608"
       ],
       "status": "completed",
-      "publishedBlogPostId": "blog_1790769804933_shht60x"
+      "publishedBlogPostId": "blog_1790769804933_shht60x",
+      "logs": []
     },
     {
       "jobId": "job_2026-10-02_it4uvc",
@@ -484,7 +829,8 @@
         "1148488342518692272"
       ],
       "status": "completed",
-      "publishedBlogPostId": "blog_1790899406830_ypd6ncz"
+      "publishedBlogPostId": "blog_1790899406830_ypd6ncz",
+      "logs": []
     },
     {
       "jobId": "job_2026-10-05_jfqh17",
@@ -502,7 +848,8 @@
         "1148488342518960079"
       ],
       "status": "completed",
-      "publishedBlogPostId": "blog_1791158574673_0dm7p0n"
+      "publishedBlogPostId": "blog_1791158574673_0dm7p0n",
+      "logs": []
     },
     {
       "jobId": "job_2026-10-05_jvvuqu",
@@ -517,8 +864,9 @@
       "wordCount": 1000,
       "pinIds": [],
       "status": "completed",
-      "publishedBlogPostId": "blog_1791158695786_64pw6gf"
+      "publishedBlogPostId": "blog_1791158695786_64pw6gf",
+      "logs": []
     }
   ],
-  "updatedAt": "2026-10-19T19:41:54.843Z"
+  "updatedAt": "2026-10-20T10:56:38.801Z"
 }

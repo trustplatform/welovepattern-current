@@ -80,8 +80,20 @@ function normalizeAndRepairState(raw: Partial<SeoEngineDailyState>): SeoEngineDa
     pendingApprovalArticleSlots: Array.isArray(raw.pendingApprovalArticleSlots) ? raw.pendingApprovalArticleSlots : [],
     slotAttemptCounts: raw.slotAttemptCounts && typeof raw.slotAttemptCounts === 'object' ? raw.slotAttemptCounts : {},
     todayDiscoveredTopics: Array.isArray(raw.todayDiscoveredTopics) ? raw.todayDiscoveredTopics : [],
-    activeJobs: Array.isArray(raw.activeJobs) ? raw.activeJobs : [],
-    completedJobsHistory: Array.isArray(raw.completedJobsHistory) ? raw.completedJobsHistory : [],
+    activeJobs: Array.isArray(raw.activeJobs)
+      ? raw.activeJobs
+          .filter((j: any) => j && typeof j === 'object')
+          .map((j: any) => ({
+            ...j,
+            logs: Array.isArray(j?.logs) ? j.logs : [],
+          }))
+      : [],
+    completedJobsHistory: Array.isArray(raw.completedJobsHistory)
+      ? raw.completedJobsHistory.map((h: any) => ({
+          ...h,
+          logs: Array.isArray(h?.logs) ? h.logs : [],
+        }))
+      : [],
     updatedAt: new Date().toISOString(),
   };
 }
@@ -363,7 +375,15 @@ export function updateJobInState(
       return null;
     }
 
-    const updatedJob = updater(state.activeJobs[index]);
+    const currentJob = state.activeJobs[index];
+    if (!Array.isArray(currentJob.logs)) {
+      currentJob.logs = [];
+    }
+
+    const updatedJob = updater(currentJob);
+    if (!Array.isArray(updatedJob.logs)) {
+      updatedJob.logs = [];
+    }
     updatedJob.updatedAt = new Date().toISOString();
     state.activeJobs[index] = updatedJob;
     return updatedJob;

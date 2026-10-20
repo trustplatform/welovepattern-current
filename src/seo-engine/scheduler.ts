@@ -563,6 +563,7 @@ async function evaluateSchedulerTickInternal(
               j.publishedUrl = pubResult.publicUrl;
               j.publishedAt = new Date().toISOString();
               j.indexNowNotified = true;
+              if (!Array.isArray(j.logs)) j.logs = [];
               j.logs.push({
                 timestamp: new Date().toISOString(),
                 level: 'info',
@@ -600,6 +601,7 @@ async function evaluateSchedulerTickInternal(
         } else {
           updateJobInState(targetJob.id, j => {
             j.stage = 'awaiting_approval';
+            if (!Array.isArray(j.logs)) j.logs = [];
             j.logs.push({
               timestamp: new Date().toISOString(),
               level: 'info',
@@ -621,6 +623,7 @@ async function evaluateSchedulerTickInternal(
       } else {
         updateJobInState(targetJob.id, j => {
           j.stage = 'failed';
+          if (!Array.isArray(j.logs)) j.logs = [];
           j.logs.push({
             timestamp: new Date().toISOString(),
             level: 'error',

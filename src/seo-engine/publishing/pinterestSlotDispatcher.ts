@@ -268,6 +268,7 @@ export async function dispatchScheduledPinterestSlot(
           p.targetBoardName = boardSelection.board!.name;
           p.boardName = boardSelection.board!.name;
         }
+        if (!Array.isArray(j.logs)) j.logs = [];
         j.logs.push({
           timestamp: new Date().toISOString(),
           level: 'info',
@@ -293,6 +294,7 @@ export async function dispatchScheduledPinterestSlot(
             p.isPermanentFailure = true;
           }
         }
+        if (!Array.isArray(j.logs)) j.logs = [];
         j.logs.push({
           timestamp: new Date().toISOString(),
           level: 'warn',
@@ -327,6 +329,7 @@ export async function dispatchScheduledPinterestSlot(
         p.publishedAt = new Date().toISOString();
         p.errorMessage = undefined;
       }
+      if (!Array.isArray(j.logs)) j.logs = [];
       j.logs.push({
         timestamp: new Date().toISOString(),
         level: 'info',
@@ -360,6 +363,7 @@ export async function dispatchScheduledPinterestSlot(
           p.isPermanentFailure = true;
         }
       }
+      if (!Array.isArray(j.logs)) j.logs = [];
       j.logs.push({
         timestamp: new Date().toISOString(),
         level: 'error',

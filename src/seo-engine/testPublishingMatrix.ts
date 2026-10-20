@@ -219,6 +219,7 @@ async function runPublishingTests() {
       id: 'job_unpublished_test',
       stage: 'writing',
       publishedBlogPostId: undefined,
+      logs: [],
     };
     const testState = readEngineState();
     testState.config.engineActive = true;
