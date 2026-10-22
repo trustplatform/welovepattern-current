@@ -53,6 +53,7 @@ export function recoverInterruptedJobs(): void {
     if (job.stage === 'researching' || job.stage === 'writing' || job.stage === 'generating_images') {
       console.warn(`[JobQueueManager] Detected interrupted job "${job.id}" in stage "${job.stage}". Resetting to "selected" for clean recovery.`);
       job.stage = 'selected';
+      if (!Array.isArray(job.logs)) job.logs = [];
       job.logs.push({
         timestamp: new Date().toISOString(),
         level: 'warn',

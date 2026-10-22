@@ -498,6 +498,7 @@ export function recoverJobLocalAssets(job: SeoEngineArticleJob): JobRecoveryResu
     if (previousStage === 'failed' || previousStage === 'generating_images') {
       newStage = 'awaiting_approval';
       job.stage = newStage;
+      if (!Array.isArray(job.logs)) job.logs = [];
       job.logs.push({
         timestamp: new Date().toISOString(),
         level: 'info',
@@ -660,6 +661,7 @@ export function assignRecoveredJobToSlot(
     }
   }
 
+  if (!Array.isArray(job.logs)) job.logs = [];
   job.logs.push({
     timestamp: new Date().toISOString(),
     level: 'info',

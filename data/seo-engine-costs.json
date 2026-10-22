@@ -1,6 +1,6 @@
 {
   "version": 1,
-  "totalSpendAllTimeUsd": 0.2333,
+  "totalSpendAllTimeUsd": 0.8587,
   "records": [
     {
       "provider": "openai",
@@ -207,7 +207,452 @@
       },
       "id": "cost_1792493762123_pdu4b",
       "timestamp": "2026-10-20T10:56:02.123Z"
+    },
+    {
+      "provider": "dataforseo",
+      "operation": "google_trends_task_post",
+      "unitsConsumed": 1,
+      "costUsd": 0.0027,
+      "meta": {
+        "taskId": "10210000-2571-0170-0000-e19bcfa675c0",
+        "keywords": [
+          "crochet gauge calculator"
+        ]
+      },
+      "id": "cost_1792540803484_z7zd0",
+      "timestamp": "2026-10-21T00:00:03.484Z"
+    },
+    {
+      "provider": "openai",
+      "operation": "chat_completion",
+      "unitsConsumed": 1506,
+      "costUsd": 0.0092,
+      "meta": {
+        "model": "gpt-4o",
+        "promptTokens": 782,
+        "completionTokens": 724
+      },
+      "id": "cost_1792540828444_dynou",
+      "timestamp": "2026-10-21T00:00:28.444Z"
+    },
+    {
+      "provider": "openai",
+      "operation": "chat_completion",
+      "unitsConsumed": 2570,
+      "costUsd": 0.0136,
+      "meta": {
+        "model": "gpt-4o",
+        "promptTokens": 1615,
+        "completionTokens": 955
+      },
+      "id": "cost_1792540839922_6wsf4",
+      "timestamp": "2026-10-21T00:00:39.922Z"
+    },
+    {
+      "provider": "openai",
+      "operation": "chat_completion",
+      "unitsConsumed": 2937,
+      "costUsd": 0.0165,
+      "meta": {
+        "model": "gpt-4o",
+        "promptTokens": 1715,
+        "completionTokens": 1222
+      },
+      "id": "cost_1792540851635_93aav",
+      "timestamp": "2026-10-21T00:00:51.635Z"
+    },
+    {
+      "jobId": "job_2026-10-20_h2r1r6",
+      "provider": "higgsfield",
+      "operation": "image_generation",
+      "unitsConsumed": 1,
+      "costUsd": 0.03,
+      "meta": {
+        "taskId": "9d069769-04e0-486b-b8e1-1ace36f93ede",
+        "providerRequestId": "9d069769-04e0-486b-b8e1-1ace36f93ede",
+        "prompt": "Editorial craft flatlay photography for crochet article \"Master Your Crochet Projects with Our Gauge",
+        "targetFolder": "blog",
+        "slug": "master-your-crochet-projects-with-our-gauge-calculator",
+        "status": "completed"
+      },
+      "id": "cost_1792540851944_78vmx",
+      "timestamp": "2026-10-21T00:00:51.944Z"
+    },
+    {
+      "jobId": "job_2026-10-19_inmyx8",
+      "provider": "higgsfield",
+      "operation": "image_generation",
+      "unitsConsumed": 1,
+      "costUsd": 0.03,
+      "meta": {
+        "taskId": "16ff3e1f-44a2-483f-b25f-ab10469b22af",
+        "providerRequestId": "16ff3e1f-44a2-483f-b25f-ab10469b22af",
+        "prompt": "Warm lifestyle interior photography for \"Crafting a Halloween Granny Square: A Crochet Guide\". Beaut",
+        "targetFolder": "blog",
+        "slug": "crafting-a-halloween-granny-square-a-crochet-guide",
+        "status": "completed"
+      },
+      "id": "cost_1792540986444_znv3e",
+      "timestamp": "2026-10-21T00:03:06.444Z"
+    },
+    {
+      "jobId": "job_2026-10-19_inmyx8",
+      "provider": "higgsfield",
+      "operation": "image_generation",
+      "unitsConsumed": 1,
+      "costUsd": 0.03,
+      "meta": {
+        "taskId": "0fbc4ff1-ff3e-41f9-b2a3-0cdd2d725cdd",
+        "providerRequestId": "0fbc4ff1-ff3e-41f9-b2a3-0cdd2d725cdd",
+        "prompt": "Complete editorial Pinterest Pin photograph in 2:3 vertical layout. Curated editorial display of 3 t",
+        "targetFolder": "pinterest",
+        "slug": "crafting-a-halloween-granny-square-a-crochet-guide-pin-1",
+        "status": "completed"
+      },
+      "id": "cost_1792541017479_rz4e6",
+      "timestamp": "2026-10-21T00:03:37.479Z"
+    },
+    {
+      "jobId": "job_2026-10-19_inmyx8",
+      "provider": "higgsfield",
+      "operation": "image_generation",
+      "unitsConsumed": 1,
+      "costUsd": 0.03,
+      "meta": {
+        "taskId": "e64859da-23a6-45fa-8dce-55001486fdd4",
+        "providerRequestId": "e64859da-23a6-45fa-8dce-55001486fdd4",
+        "prompt": "Complete editorial Pinterest Pin in 2:3 vertical aspect ratio. Modern asymmetric hero composition fe",
+        "targetFolder": "pinterest",
+        "slug": "crafting-a-halloween-granny-square-a-crochet-guide-pin-2",
+        "status": "accepted"
+      },
+      "id": "cost_1792541017599_m6o58",
+      "timestamp": "2026-10-21T00:03:37.599Z"
+    },
+    {
+      "jobId": "job_2026-10-19_inmyx8",
+      "provider": "higgsfield",
+      "operation": "image_generation",
+      "unitsConsumed": 1,
+      "costUsd": 0.03,
+      "meta": {
+        "taskId": "456aad22-9533-466c-9ae8-defd168db864",
+        "providerRequestId": "456aad22-9533-466c-9ae8-defd168db864",
+        "prompt": "Complete editorial Pinterest Pin in 2:3 vertical aspect ratio. Modern asymmetric hero composition fe",
+        "targetFolder": "pinterest",
+        "slug": "crafting-a-halloween-granny-square-a-crochet-guide-pin-2",
+        "status": "accepted"
+      },
+      "id": "cost_1792541018379_f9ai1",
+      "timestamp": "2026-10-21T00:03:38.379Z"
+    },
+    {
+      "provider": "openai",
+      "operation": "chat_completion",
+      "unitsConsumed": 1503,
+      "costUsd": 0.0092,
+      "meta": {
+        "model": "gpt-4o",
+        "promptTokens": 780,
+        "completionTokens": 723
+      },
+      "id": "cost_1792541164173_ygbak",
+      "timestamp": "2026-10-21T00:06:04.173Z"
+    },
+    {
+      "provider": "openai",
+      "operation": "chat_completion",
+      "unitsConsumed": 2685,
+      "costUsd": 0.0148,
+      "meta": {
+        "model": "gpt-4o",
+        "promptTokens": 1610,
+        "completionTokens": 1075
+      },
+      "id": "cost_1792541173413_zwnjh",
+      "timestamp": "2026-10-21T00:06:13.413Z"
+    },
+    {
+      "provider": "openai",
+      "operation": "chat_completion",
+      "unitsConsumed": 3237,
+      "costUsd": 0.0186,
+      "meta": {
+        "model": "gpt-4o",
+        "promptTokens": 1830,
+        "completionTokens": 1407
+      },
+      "id": "cost_1792541182956_ykraz",
+      "timestamp": "2026-10-21T00:06:22.956Z"
+    },
+    {
+      "jobId": "job_2026-10-19_jjdtkz",
+      "provider": "higgsfield",
+      "operation": "image_generation",
+      "unitsConsumed": 1,
+      "costUsd": 0.03,
+      "meta": {
+        "taskId": "7830ef77-c69c-4850-bb18-818d95e60343",
+        "providerRequestId": "7830ef77-c69c-4850-bb18-818d95e60343",
+        "prompt": "Realistic photography-led craft editorial visual for 16:9 widescreen article hero format, featuring ",
+        "targetFolder": "blog",
+        "slug": "master-your-crochet-projects-with-an-online-row-counter",
+        "status": "completed"
+      },
+      "id": "cost_1792541183265_vmcmz",
+      "timestamp": "2026-10-21T00:06:23.265Z"
+    },
+    {
+      "provider": "openai",
+      "operation": "chat_completion",
+      "unitsConsumed": 1424,
+      "costUsd": 0.0083,
+      "meta": {
+        "model": "gpt-4o",
+        "promptTokens": 788,
+        "completionTokens": 636
+      },
+      "id": "cost_1792541216696_fh8h8",
+      "timestamp": "2026-10-21T00:06:56.696Z"
+    },
+    {
+      "provider": "openai",
+      "operation": "chat_completion",
+      "unitsConsumed": 2516,
+      "costUsd": 0.0146,
+      "meta": {
+        "model": "gpt-4o",
+        "promptTokens": 1402,
+        "completionTokens": 1114
+      },
+      "id": "cost_1792541224578_xk3bl",
+      "timestamp": "2026-10-21T00:07:04.578Z"
+    },
+    {
+      "provider": "openai",
+      "operation": "chat_completion",
+      "unitsConsumed": 3360,
+      "costUsd": 0.0202,
+      "meta": {
+        "model": "gpt-4o",
+        "promptTokens": 1789,
+        "completionTokens": 1571
+      },
+      "id": "cost_1792541236690_to0rk",
+      "timestamp": "2026-10-21T00:07:16.690Z"
+    },
+    {
+      "jobId": "job_2026-10-19_jnwie5",
+      "provider": "higgsfield",
+      "operation": "image_generation",
+      "unitsConsumed": 1,
+      "costUsd": 0.03,
+      "meta": {
+        "taskId": "2bc9279a-5300-4a2d-9921-c9d3c7110e27",
+        "providerRequestId": "2bc9279a-5300-4a2d-9921-c9d3c7110e27",
+        "prompt": "Realistic photography-led craft editorial visual for 16:9 widescreen article hero format, featuring ",
+        "targetFolder": "blog",
+        "slug": "create-stunning-crochet-christmas-tree-ornaments",
+        "status": "completed"
+      },
+      "id": "cost_1792541237236_m3o3z",
+      "timestamp": "2026-10-21T00:07:17.236Z"
+    },
+    {
+      "provider": "openai",
+      "operation": "chat_completion",
+      "unitsConsumed": 1522,
+      "costUsd": 0.0093,
+      "meta": {
+        "model": "gpt-4o",
+        "promptTokens": 783,
+        "completionTokens": 739
+      },
+      "id": "cost_1792541268572_51mvq",
+      "timestamp": "2026-10-21T00:07:48.572Z"
+    },
+    {
+      "provider": "openai",
+      "operation": "chat_completion",
+      "unitsConsumed": 2681,
+      "costUsd": 0.0146,
+      "meta": {
+        "model": "gpt-4o",
+        "promptTokens": 1634,
+        "completionTokens": 1047
+      },
+      "id": "cost_1792541275629_c7a34",
+      "timestamp": "2026-10-21T00:07:55.629Z"
+    },
+    {
+      "provider": "openai",
+      "operation": "chat_completion",
+      "unitsConsumed": 3256,
+      "costUsd": 0.0188,
+      "meta": {
+        "model": "gpt-4o",
+        "promptTokens": 1830,
+        "completionTokens": 1426
+      },
+      "id": "cost_1792541285403_maooh",
+      "timestamp": "2026-10-21T00:08:05.403Z"
+    },
+    {
+      "jobId": "job_2026-10-19_zrjvnm",
+      "provider": "higgsfield",
+      "operation": "image_generation",
+      "unitsConsumed": 1,
+      "costUsd": 0.03,
+      "meta": {
+        "taskId": "df019c10-f0ac-4e14-b270-ffc87d83e8ce",
+        "providerRequestId": "df019c10-f0ac-4e14-b270-ffc87d83e8ce",
+        "prompt": "Realistic photography-led craft editorial visual for 16:9 widescreen article hero format, featuring ",
+        "targetFolder": "blog",
+        "slug": "master-your-projects-with-the-ultimate-crochet-tracker-tool",
+        "status": "completed"
+      },
+      "id": "cost_1792541285660_cw5w5",
+      "timestamp": "2026-10-21T00:08:05.660Z"
+    },
+    {
+      "provider": "openai",
+      "operation": "chat_completion",
+      "unitsConsumed": 1492,
+      "costUsd": 0.009,
+      "meta": {
+        "model": "gpt-4o",
+        "promptTokens": 783,
+        "completionTokens": 709
+      },
+      "id": "cost_1792541330041_l7dn4",
+      "timestamp": "2026-10-21T00:08:50.041Z"
+    },
+    {
+      "provider": "openai",
+      "operation": "chat_completion",
+      "unitsConsumed": 2712,
+      "costUsd": 0.0161,
+      "meta": {
+        "model": "gpt-4o",
+        "promptTokens": 1463,
+        "completionTokens": 1249
+      },
+      "id": "cost_1792541341962_b7qrf",
+      "timestamp": "2026-10-21T00:09:01.962Z"
+    },
+    {
+      "provider": "openai",
+      "operation": "chat_completion",
+      "unitsConsumed": 3870,
+      "costUsd": 0.0239,
+      "meta": {
+        "model": "gpt-4o",
+        "promptTokens": 1978,
+        "completionTokens": 1892
+      },
+      "id": "cost_1792541355613_8coju",
+      "timestamp": "2026-10-21T00:09:15.613Z"
+    },
+    {
+      "provider": "openai",
+      "operation": "chat_completion",
+      "unitsConsumed": 4853,
+      "costUsd": 0.0272,
+      "meta": {
+        "model": "gpt-4o",
+        "promptTokens": 2838,
+        "completionTokens": 2015
+      },
+      "id": "cost_1792541368914_tx8zo",
+      "timestamp": "2026-10-21T00:09:28.914Z"
+    },
+    {
+      "provider": "openai",
+      "operation": "chat_completion",
+      "unitsConsumed": 1451,
+      "costUsd": 0.0086,
+      "meta": {
+        "model": "gpt-4o",
+        "promptTokens": 783,
+        "completionTokens": 668
+      },
+      "id": "cost_1792541475962_5r5pq",
+      "timestamp": "2026-10-21T00:11:15.962Z"
+    },
+    {
+      "provider": "openai",
+      "operation": "chat_completion",
+      "unitsConsumed": 2755,
+      "costUsd": 0.0169,
+      "meta": {
+        "model": "gpt-4o",
+        "promptTokens": 1418,
+        "completionTokens": 1337
+      },
+      "id": "cost_1792541485295_nsws2",
+      "timestamp": "2026-10-21T00:11:25.295Z"
+    },
+    {
+      "provider": "openai",
+      "operation": "chat_completion",
+      "unitsConsumed": 3788,
+      "costUsd": 0.0233,
+      "meta": {
+        "model": "gpt-4o",
+        "promptTokens": 1946,
+        "completionTokens": 1842
+      },
+      "id": "cost_1792541496494_vhw6g",
+      "timestamp": "2026-10-21T00:11:36.494Z"
+    },
+    {
+      "provider": "higgsfield",
+      "operation": "image_generation",
+      "unitsConsumed": 1,
+      "costUsd": 0.03,
+      "meta": {
+        "taskId": "bdc383ea-5a7e-4b5c-b61b-c74453f22b83",
+        "providerRequestId": "bdc383ea-5a7e-4b5c-b61b-c74453f22b83",
+        "prompt": "Realistic photography-led craft tutorial visual for 16:9 widescreen article hero format, featuring a",
+        "targetFolder": "test-visual",
+        "slug": "test-bat-hero",
+        "status": "completed"
+      },
+      "id": "cost_1792541496719_2d2ye",
+      "timestamp": "2026-10-21T00:11:36.719Z"
+    },
+    {
+      "provider": "higgsfield",
+      "operation": "image_generation",
+      "unitsConsumed": 1,
+      "costUsd": 0.03,
+      "meta": {
+        "taskId": "f2703bb8-b1ab-4733-896b-c7239ca10d0a",
+        "providerRequestId": "f2703bb8-b1ab-4733-896b-c7239ca10d0a",
+        "prompt": "Complete 2:3 vertical Pinterest Pin visual with authentic photography-led tutorial composition (3-pa",
+        "targetFolder": "test-visual",
+        "slug": "test-bat-pin1",
+        "status": "completed"
+      },
+      "id": "cost_1792541521697_c8rxl",
+      "timestamp": "2026-10-21T00:12:01.697Z"
+    },
+    {
+      "provider": "higgsfield",
+      "operation": "image_generation",
+      "unitsConsumed": 1,
+      "costUsd": 0.03,
+      "meta": {
+        "taskId": "ef2571c5-d62e-45bd-abd2-b4fcd6b13e8c",
+        "providerRequestId": "ef2571c5-d62e-45bd-abd2-b4fcd6b13e8c",
+        "prompt": "Complete 2:3 vertical Pinterest Pin visual with authentic photography-led tutorial composition (3-pa",
+        "targetFolder": "test-visual",
+        "slug": "test-bat-pin2",
+        "status": "completed"
+      },
+      "id": "cost_1792541549648_xe1mj",
+      "timestamp": "2026-10-21T00:12:29.648Z"
     }
   ],
-  "updatedAt": "2026-10-20T10:56:02.123Z"
+  "updatedAt": "2026-10-21T00:13:00.530Z"
 }

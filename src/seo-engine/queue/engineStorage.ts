@@ -352,6 +352,7 @@ export function updateEngineConfig(partial: Partial<SeoEngineConfig>): SeoEngine
  */
 export function addJobToState(job: SeoEngineArticleJob): SeoEngineDailyState {
   return mutateEngineStateSync(state => {
+    if (!Array.isArray(state.activeJobs)) state.activeJobs = [];
     const existingIdx = state.activeJobs.findIndex(j => j.id === job.id);
     if (existingIdx >= 0) {
       state.activeJobs[existingIdx] = job;

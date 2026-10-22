@@ -43,6 +43,8 @@ export interface HiggsfieldGenerationOptions {
   existingTaskId?: string;
   onTaskIdReceived?: (taskId: string) => void;
   estimatedCostUsd?: number;
+  customCapUsd?: number;
+  customMaxRequests?: number;
 }
 
 export interface HiggsfieldGenerationResult {
@@ -289,6 +291,8 @@ export async function generateHiggsfieldImage(
   // Determine local target directory
   const relativeDir = targetFolder === 'blog'
     ? SEO_ENGINE_STORAGE_PATHS.BLOG_IMAGES_DIR
+    : targetFolder === 'test' || targetFolder === 'test-visual'
+    ? 'public/generated/test-visual'
     : SEO_ENGINE_STORAGE_PATHS.SEO_PINS_DIR;
   const absoluteDir = path.resolve(process.cwd(), relativeDir);
 
@@ -355,8 +359,8 @@ export async function generateHiggsfieldImage(
       const reservation = reserveHiggsfieldPaidSlot({
         estimatedCostUsd: estimatedCost,
         jobId,
-        customCapUsd: HIGGSFIELD_DAILY_SPEND_CAP_USD,
-        customMaxRequests: MAX_DAILY_HIGGSFIELD_PAID_REQUESTS,
+        customCapUsd: options.customCapUsd || HIGGSFIELD_DAILY_SPEND_CAP_USD,
+        customMaxRequests: options.customMaxRequests || MAX_DAILY_HIGGSFIELD_PAID_REQUESTS,
       });
 
       if (!reservation.permitted) {

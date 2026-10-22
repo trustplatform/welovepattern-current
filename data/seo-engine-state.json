@@ -73,7 +73,7 @@
     "higgsfieldDailyCostLimitUsd": 1.7,
     "higgsfieldDailyRequestsLimit": 9
   },
-  "lastRunDate": "2026-10-19",
+  "lastRunDate": "2026-10-20",
   "lastExecutedArticleSlot": "2026-10-19_20:00",
   "executedArticleSlots": [
     "2026-10-19_08:00",
@@ -85,12 +85,20 @@
   ],
   "failedArticleSlots": [
     "2026-10-17_08:00",
-    "2026-10-19_12:00"
+    "2026-10-19_12:00",
+    "2026-10-20_08:00",
+    "2026-10-20_12:00",
+    "2026-10-20_16:00",
+    "2026-10-20_20:00"
   ],
   "pendingApprovalArticleSlots": [],
   "slotAttemptCounts": {
     "2026-10-19_08:00": 3,
-    "2026-10-19_12:00": 3
+    "2026-10-19_12:00": 3,
+    "2026-10-20_08:00": 3,
+    "2026-10-20_12:00": 3,
+    "2026-10-20_16:00": 3,
+    "2026-10-20_20:00": 3
   },
   "todayDiscoveredTopics": [
     {
@@ -209,9 +217,11 @@
           "targetBoardId": "",
           "targetBoardName": "Unassigned (No Matching Board)",
           "boardName": "Unassigned (No Matching Board)",
-          "publishStatus": "pending",
+          "publishStatus": "image_ready",
           "higgsfieldRequestId": "0fbc4ff1-ff3e-41f9-b2a3-0cdd2d725cdd",
-          "higgsfieldTaskId": "0fbc4ff1-ff3e-41f9-b2a3-0cdd2d725cdd"
+          "higgsfieldTaskId": "0fbc4ff1-ff3e-41f9-b2a3-0cdd2d725cdd",
+          "stableAssetPath": "/app/applet/public/generated/pinterest/seo-pins/crafting-a-halloween-granny-square-a-cro-406c504729.jpg",
+          "stablePublicUrl": "/generated/pinterest/seo-pins/crafting-a-halloween-granny-square-a-cro-406c504729.jpg"
         },
         {
           "pinNumber": 2,
@@ -233,14 +243,16 @@
           "targetBoardId": "",
           "targetBoardName": "Unassigned (No Matching Board)",
           "boardName": "Unassigned (No Matching Board)",
-          "publishStatus": "pending"
+          "publishStatus": "pending",
+          "higgsfieldRequestId": "456aad22-9533-466c-9ae8-defd168db864",
+          "higgsfieldTaskId": "456aad22-9533-466c-9ae8-defd168db864"
         }
       ],
       "stage": "generating_images",
       "requiresApproval": false,
       "indexNowNotified": false,
       "createdAt": "2026-10-19T19:38:51.275Z",
-      "updatedAt": "2026-10-20T10:56:38.801Z",
+      "updatedAt": "2026-10-21T00:03:38.381Z",
       "logs": [
         {
           "timestamp": "2026-10-19T19:38:51.275Z",
@@ -306,6 +318,76 @@
           "timestamp": "2026-10-20T10:56:38.799Z",
           "level": "warn",
           "message": "No suitable Pinterest board found (Low confidence semantic match (20/100) for topic \"crochet halloween granny square\" with board \"Crochet Blankets & Afghans\".). Article generation will proceed to completion. Pinterest Pin publication deferred until a matching board is assigned in Admin."
+        },
+        {
+          "timestamp": "2026-10-21T00:03:05.991Z",
+          "level": "warn",
+          "message": "Process restart detected. Safely reset from interrupted state to \"selected\" for clean recovery."
+        },
+        {
+          "timestamp": "2026-10-21T00:03:06.010Z",
+          "level": "info",
+          "message": "Starting technical craft research..."
+        },
+        {
+          "timestamp": "2026-10-21T00:03:06.013Z",
+          "level": "info",
+          "message": "Existing valid article draft detected (\"Crafting a Halloween Granny Square: A Crochet Guide\", 941 words). Reusing without calling OpenAI."
+        },
+        {
+          "timestamp": "2026-10-21T00:03:06.015Z",
+          "level": "info",
+          "message": "Starting Stage 3: Board resolution and local image asset binding ($0 cost)..."
+        },
+        {
+          "timestamp": "2026-10-21T00:03:06.024Z",
+          "level": "warn",
+          "message": "No suitable Pinterest board found (Low confidence semantic match (20/100) for topic \"crochet halloween granny square\" with board \"Crochet Blankets & Afghans\".). Article generation will proceed to completion. Pinterest Pin publication deferred until a matching board is assigned in Admin."
+        },
+        {
+          "timestamp": "2026-10-21T00:03:16.315Z",
+          "level": "warn",
+          "message": "Process restart detected. Safely reset from interrupted state to \"selected\" for clean recovery."
+        },
+        {
+          "timestamp": "2026-10-21T00:03:16.333Z",
+          "level": "info",
+          "message": "Starting technical craft research..."
+        },
+        {
+          "timestamp": "2026-10-21T00:03:16.335Z",
+          "level": "info",
+          "message": "Existing valid article draft detected (\"Crafting a Halloween Granny Square: A Crochet Guide\", 941 words). Reusing without calling OpenAI."
+        },
+        {
+          "timestamp": "2026-10-21T00:03:16.337Z",
+          "level": "info",
+          "message": "Starting Stage 3: Board resolution and local image asset binding ($0 cost)..."
+        },
+        {
+          "timestamp": "2026-10-21T00:03:16.346Z",
+          "level": "warn",
+          "message": "No suitable Pinterest board found (Low confidence semantic match (20/100) for topic \"crochet halloween granny square\" with board \"Crochet Blankets & Afghans\".). Article generation will proceed to completion. Pinterest Pin publication deferred until a matching board is assigned in Admin."
+        },
+        {
+          "timestamp": "2026-10-21T00:03:34.368Z",
+          "level": "info",
+          "message": "Hero image generated successfully via Higgsfield: /generated/blog/crafting-a-halloween-granny-square-a-cro-98ed11f1d7.jpg"
+        },
+        {
+          "timestamp": "2026-10-21T00:03:35.122Z",
+          "level": "info",
+          "message": "Hero image generated successfully via Higgsfield: /generated/blog/crafting-a-halloween-granny-square-a-cro-98ed11f1d7.jpg"
+        },
+        {
+          "timestamp": "2026-10-21T00:03:37.483Z",
+          "level": "info",
+          "message": "Pinterest Pin 1 image generated successfully: /generated/pinterest/seo-pins/crafting-a-halloween-granny-square-a-cro-406c504729.jpg"
+        },
+        {
+          "timestamp": "2026-10-21T00:03:38.231Z",
+          "level": "info",
+          "message": "Pinterest Pin 1 image generated successfully: /generated/pinterest/seo-pins/crafting-a-halloween-granny-square-a-cro-406c504729.jpg"
         }
       ],
       "assignedPublishDate": "2026-10-19",
@@ -432,6 +514,8 @@
           "compactPrompt": "Warm lifestyle interior photography for \"Crafting a Halloween Granny Square: A Crochet Guide\". Beautiful finished hand-crafted crochet project depicting crochet halloween granny square, tastefully styled on a rustic wooden surface beside a basket of textured yarn cakes, polished wooden crochet hooks, warm ambient sunlight streaming through window, elegant cozy home decor, authentic high-resolution craft photography.",
           "stableAssetPath": "/app/applet/public/generated/blog/crafting-a-halloween-granny-square-a-cro-98ed11f1d7.jpg",
           "stablePublicUrl": "/generated/blog/crafting-a-halloween-granny-square-a-cro-98ed11f1d7.jpg",
+          "higgsfieldRequestId": "16ff3e1f-44a2-483f-b25f-ab10469b22af",
+          "higgsfieldTaskId": "16ff3e1f-44a2-483f-b25f-ab10469b22af",
           "status": "ready"
         }
       },
@@ -440,8 +524,8 @@
         "compactPrompt": "Warm lifestyle interior photography for \"Crafting a Halloween Granny Square: A Crochet Guide\". Beautiful finished hand-crafted crochet project depicting crochet halloween granny square, tastefully styled on a rustic wooden surface beside a basket of textured yarn cakes, polished wooden crochet hooks, warm ambient sunlight streaming through window, elegant cozy home decor, authentic high-resolution craft photography.",
         "stableAssetPath": "/app/applet/public/generated/blog/crafting-a-halloween-granny-square-a-cro-98ed11f1d7.jpg",
         "stablePublicUrl": "/generated/blog/crafting-a-halloween-granny-square-a-cro-98ed11f1d7.jpg",
-        "higgsfieldRequestId": "2608008b-8690-4b93-81ba-707d916f9155",
-        "higgsfieldTaskId": "2608008b-8690-4b93-81ba-707d916f9155",
+        "higgsfieldRequestId": "16ff3e1f-44a2-483f-b25f-ab10469b22af",
+        "higgsfieldTaskId": "16ff3e1f-44a2-483f-b25f-ab10469b22af",
         "status": "ready"
       }
     },
@@ -674,6 +758,285 @@
       "assignedPublishDate": "2026-10-19",
       "assignedSlotTime": "16:00",
       "publicationScheduledAt": "16:00"
+    },
+    {
+      "id": "job_2026-10-20_h2r1r6",
+      "dateScheduled": "2026-10-20",
+      "contentType": "tool_guide",
+      "category": "tools",
+      "topic": {
+        "id": "topic_tool_gauge_calculator_63726f63",
+        "keyword": "crochet gauge calculator",
+        "contentType": "tool_guide",
+        "category": "tools",
+        "source": "internal_catalog",
+        "trendScore": 85,
+        "trendDirection": "stable",
+        "opportunityScore": 95,
+        "targetContentFormat": "tool_focus",
+        "toolSlug": "gauge-calculator",
+        "targetToolUrl": "/tools/gauge-calculator",
+        "targetCategoryUrl": "/categories/tools",
+        "targetAudienceLevel": "all_levels",
+        "searchIntentNotes": "Tool Guide for real WeLovePattern interactive tool: Gauge Calculator. Problem: How to calculate stitch and row adjustments from a gauge swatch so garments fit properly.",
+        "discoveredAt": "2026-10-21T00:00:19.573Z",
+        "status": "discovered"
+      },
+      "pinterestPins": [
+        {
+          "pinNumber": 1,
+          "conceptAngle": "",
+          "visualStyle": {
+            "imageCount": 1,
+            "compositionType": "single_hero",
+            "subjectDescription": "",
+            "colorPalette": "",
+            "humanElement": "none"
+          },
+          "compactHiggsfieldPrompt": "",
+          "typographyOverlay": {
+            "primaryHeadline": "crochet gauge calculator",
+            "ctaBadgeText": ""
+          },
+          "destinationUrl": "https://welovepattern.com/blog/",
+          "publishStatus": "image_ready",
+          "stableAssetPath": "/app/applet/public/generated/pinterest/seo-pins/mastering-crochet-gauge-your-ultimate-ca-e1844b9974.jpg",
+          "stablePublicUrl": "/generated/pinterest/seo-pins/mastering-crochet-gauge-your-ultimate-ca-e1844b9974.jpg",
+          "targetBoardId": "board_tools",
+          "targetBoardName": "Crochet Tools & Yarn Calculators",
+          "boardName": "Crochet Tools & Yarn Calculators",
+          "errorMessage": "Topic Fidelity Failure: Pin 1 prompt is too short (0 chars) or missing a complete creative brief.; Topic Fidelity Failure: Pin 1 prompt does not contain any crochet, yarn, or stitch references.; Typography Failure: Pin 1 is missing a required action CTA.; Literal Text Lock Failure: Pin 1 prompt is missing the mandatory LITERAL TEXT LOCK instruction.; Photographic Dominance Failure: Pin 1 prompt is missing the Global Hard Prohibition against paper/panels/Canva grids."
+        },
+        {
+          "pinNumber": 2,
+          "conceptAngle": "",
+          "visualStyle": {
+            "imageCount": 1,
+            "compositionType": "single_hero",
+            "subjectDescription": "",
+            "colorPalette": "",
+            "humanElement": "none"
+          },
+          "compactHiggsfieldPrompt": "",
+          "typographyOverlay": {
+            "primaryHeadline": "crochet gauge calculator",
+            "ctaBadgeText": ""
+          },
+          "destinationUrl": "https://welovepattern.com/blog/",
+          "publishStatus": "image_ready",
+          "stableAssetPath": "/app/applet/public/generated/pinterest/seo-pins/mastering-crochet-gauge-your-ultimate-ca-f3ea9cf368.jpg",
+          "stablePublicUrl": "/generated/pinterest/seo-pins/mastering-crochet-gauge-your-ultimate-ca-f3ea9cf368.jpg",
+          "targetBoardId": "board_tools",
+          "targetBoardName": "Crochet Tools & Yarn Calculators",
+          "boardName": "Crochet Tools & Yarn Calculators",
+          "errorMessage": "Topic Fidelity Failure: Pin 2 prompt is too short (0 chars) or missing a complete creative brief.; Topic Fidelity Failure: Pin 2 prompt does not contain any crochet, yarn, or stitch references.; Typography Failure: Pin 2 is missing a required action CTA.; Literal Text Lock Failure: Pin 2 prompt is missing the mandatory LITERAL TEXT LOCK instruction.; Photographic Dominance Failure: Pin 2 prompt is missing the Global Hard Prohibition against paper/panels/Canva grids."
+        }
+      ],
+      "stage": "awaiting_approval",
+      "requiresApproval": false,
+      "indexNowNotified": false,
+      "createdAt": "2026-10-21T00:00:19.574Z",
+      "updatedAt": "2026-10-21T00:01:22.957Z",
+      "logs": [
+        {
+          "timestamp": "2026-10-21T00:00:19.574Z",
+          "level": "info",
+          "message": "Job created for TOOL_GUIDE (Category: TOOLS): \"crochet gauge calculator\" with opportunity score 95."
+        },
+        {
+          "timestamp": "2026-10-21T00:00:19.590Z",
+          "level": "info",
+          "message": "Starting technical craft research..."
+        },
+        {
+          "timestamp": "2026-10-21T00:00:28.450Z",
+          "level": "info",
+          "message": "Factual research packet validated successfully."
+        },
+        {
+          "timestamp": "2026-10-21T00:00:28.452Z",
+          "level": "info",
+          "message": "Generating article with OpenAI..."
+        },
+        {
+          "timestamp": "2026-10-21T00:00:30.371Z",
+          "level": "error",
+          "message": "Publication validation failures for job:\n- SEO Title is too short (0 chars, minimum 25 chars required).; SEO Title fails intent alignment: misses key search concepts from query \"crochet gauge calculator\".; Meta Description is too brief (0 chars, minimum 70 chars required).; Tool Guide Validation Error: Missing required tool link \"/tools/gauge-calculator\" in article HTML.; Tool Guide Validation Error: Article content must explicitly mention the tool identity (\"Gauge Calculator\").; Tool Guide Validation Error: Missing required WeLovePattern Tool CTA component for \"Gauge Calculator\".; Tool Guide Validation Error: Article lacks semantic action alignment for tool action \"calculator\" (Calculate Gauge).; SEO Intent Alignment Failure: Score 0/100 is below 60 threshold.; SEO Title is too short (0 chars, minimum 25 chars required).; SEO Title fails intent alignment: misses key search concepts from query \"crochet gauge calculator\".; Meta Description is too brief (0 chars, minimum 70 chars required).; Editorial Length Failure: Word count (0) is outside allowed bounds [800 - 2000]."
+        },
+        {
+          "timestamp": "2026-10-21T00:00:51.647Z",
+          "level": "info",
+          "message": "Article generated successfully (885 words). Content safely persisted to job state."
+        },
+        {
+          "timestamp": "2026-10-21T00:00:51.651Z",
+          "level": "info",
+          "message": "Starting Stage 3: Board resolution and local image asset binding ($0 cost)..."
+        },
+        {
+          "timestamp": "2026-10-21T00:01:22.941Z",
+          "level": "info",
+          "message": "Hero image generated successfully via Higgsfield: /generated/blog/master-your-crochet-projects-with-our-ga-73f7e75458.jpg"
+        },
+        {
+          "timestamp": "2026-10-21T00:01:22.957Z",
+          "level": "error",
+          "message": "Pinterest Creative Compliance Failures:\n- Topic Fidelity Failure: Pin 1 prompt is too short (0 chars) or missing a complete creative brief.\n- Topic Fidelity Failure: Pin 1 prompt does not contain any crochet, yarn, or stitch references.\n- Typography Failure: Pin 1 is missing a required action CTA.\n- Literal Text Lock Failure: Pin 1 prompt is missing the mandatory LITERAL TEXT LOCK instruction.\n- Photographic Dominance Failure: Pin 1 prompt is missing the Global Hard Prohibition against paper/panels/Canva grids.\n- Topic Fidelity Failure: Pin 2 prompt is too short (0 chars) or missing a complete creative brief.\n- Topic Fidelity Failure: Pin 2 prompt does not contain any crochet, yarn, or stitch references.\n- Typography Failure: Pin 2 is missing a required action CTA.\n- Literal Text Lock Failure: Pin 2 prompt is missing the mandatory LITERAL TEXT LOCK instruction.\n- Photographic Dominance Failure: Pin 2 prompt is missing the Global Hard Prohibition against paper/panels/Canva grids."
+        },
+        {
+          "timestamp": "2026-10-21T00:03:05.993Z",
+          "level": "info",
+          "message": "[AssetRecovery] All 3 visual assets recovered locally ($0 cost). Job transitioned from failed to awaiting_approval."
+        }
+      ],
+      "assignedPublishDate": "2026-10-20",
+      "assignedSlotTime": "20:00",
+      "publicationScheduledAt": "20:00",
+      "factualResearch": {
+        "topicId": "topic_tool_gauge_calculator_63726f63",
+        "topic": "crochet gauge calculator",
+        "searchIntent": "To understand how to use a gauge calculator for determining the correct stitch count and dimensions in crochet projects, ensuring the final product matches the desired size.",
+        "craftType": "crochet",
+        "sourceAuthority": "Craft Yarn Council Technical Standards & OpenAI Craft Research",
+        "cycStandardVersion": "CYC 2024 Guidelines",
+        "generatedAt": "2026-10-21T00:00:28.445Z",
+        "verifiedTerminology": [
+          "Single Crochet (UK: Double Crochet)",
+          "Double Crochet (UK: Treble Crochet)"
+        ],
+        "verifiedMaterials": {
+          "yarnWeights": [
+            "CYC #4 Worsted",
+            "CYC #3 DK"
+          ],
+          "hookSizes": [
+            "5.0 mm (H-8)",
+            "4.0 mm (G-6)"
+          ],
+          "standardYardages": "Baby blanket: 700 - 1,000 meters, Throw blanket: 1,200 - 1,500 meters",
+          "verifiedDimensions": {
+            "Baby Blanket": "30 x 36 inches (76 x 91 cm)",
+            "Lapghan": "36 x 48 inches (91 x 122 cm)",
+            "Throw Blanket": "50 x 60 inches (127 x 152 cm)",
+            "Twin Blanket": "66 x 90 inches (168 x 229 cm)"
+          }
+        },
+        "authorizedPercentages": [
+          10,
+          15,
+          20
+        ],
+        "prohibitedMetrics": [
+          "stitches per skein",
+          "divide stitches by stitches per skein",
+          "arbitrary yards per stitch",
+          "invented mattress or bed sizes",
+          "commercial sales pricing or revenue claims"
+        ],
+        "verifiedFormulas": [
+          {
+            "name": "Area Ratio Swatch Scaling Method",
+            "description": "Calculates total project yardage by scaling swatch yardage to blanket surface area",
+            "formulaText": "Total Yardage = (Blanket Area / Swatch Area) * Swatch Yardage * 1.10",
+            "steps": [
+              "Step 1: Measure the dimensions of your swatch (length and width).",
+              "Step 2: Calculate the area of your swatch by multiplying the length by the width.",
+              "Step 3: Measure the desired dimensions of your final project and calculate its area.",
+              "Step 4: Use the formula to calculate the total yardage needed, including a 10% buffer."
+            ]
+          }
+        ],
+        "supportedClaims": [
+          "Textured stitches like bobbles and puff stitches consume more yarn than flat stitches like single crochet and double crochet.",
+          "A 10% to 15% safety buffer is standard practice.",
+          "Yarn is sold by weight and yardage, not by stitch count."
+        ],
+        "techniqueKeyPoints": [
+          "Ensure your swatch is blocked as it will affect the gauge.",
+          "Use the same yarn and hook size as the project for your swatch.",
+          "Measure your swatch carefully for accurate gauge calculations."
+        ],
+        "makerPainPoints": [
+          "Struggling to match pattern gauge with personal tension.",
+          "Difficulty adjusting patterns to fit personalized dimensions.",
+          "Frustration when projects turn out smaller or larger than intended."
+        ],
+        "faqItems": [
+          {
+            "question": "How do I adjust my tension to meet gauge?",
+            "factualAnswer": "Use a larger hook to loosen tension or a smaller hook to tighten tension."
+          },
+          {
+            "question": "What happens if my gauge is off?",
+            "factualAnswer": "If your gauge is off, the final size of your project will differ from the pattern's intended size."
+          },
+          {
+            "question": "Why is a gauge swatch important?",
+            "factualAnswer": "A gauge swatch ensures that your project will match the pattern's dimensions and fit as expected."
+          }
+        ],
+        "verifiedInternalLinks": [
+          {
+            "anchorText": "crochet gauge calculator",
+            "url": "/tools/gauge-calculator",
+            "entityType": "tool"
+          },
+          {
+            "anchorText": "calculator",
+            "url": "/blog/how-to-price-your-crochet-items-for-profit",
+            "entityType": "blog"
+          }
+        ],
+        "targetTool": {
+          "id": "gauge-calculator",
+          "slug": "gauge-calculator",
+          "title": "Gauge Calculator",
+          "description": "Compare your swatch gauge to pattern target gauge to calculate exact stitch & row count adjustments.",
+          "icon": "Ruler",
+          "category": "Calculator",
+          "actionType": "calculator",
+          "actionLabel": "Let's Calculate Gauge →",
+          "actionVerb": "Calculate Gauge",
+          "isPopular": true
+        }
+      },
+      "articleContent": {
+        "title": "Master Your Crochet Projects with Our Gauge Calculator",
+        "slug": "master-your-crochet-projects-with-our-gauge-calculator",
+        "excerpt": "Learn how to use a crochet gauge calculator to ensure your projects match the desired size and dimensions effortlessly.",
+        "contentHtml": "<h2>Understanding the Importance of Crochet Gauge</h2><p>Crochet projects, whether a cozy baby blanket or an elaborate throw, hinge on precise sizing to achieve the desired outcome. This is where gauge becomes crucial. Gauge refers to the number of stitches and rows per inch achieved with specific yarn and hook size. It is crucial because an incorrect gauge can lead to a finished project that is either too large or too small compared to the pattern's intent. Creating a gauge swatch is a fundamental step to ensure accuracy in your crochet projects.</p><h2>The Essentials of Crochet Gauge Calculation</h2><p>Determining the correct gauge starts with creating a swatch using the same yarn and hook size as your intended project. It is important to block your swatch, as blocking can significantly alter the gauge by affecting the fibers' relaxations and settling. The swatch should be measured carefully to provide accurate information for your calculations.</p><h3>Steps for Manual Gauge Calculation</h3><ol><li><strong>Measure your swatch:</strong> Use a ruler for precise measurement of your swatch's length and width in either inches or centimeters.</li><li><strong>Calculate swatch area:</strong> Multiply the length by the width to determine the area of your swatch.</li><li><strong>Determine project area:</strong> Measure the desired dimensions of your final project (e.g., a baby blanket at 30 x 36 inches) and calculate its total area.</li><li><strong>Calculate total yardage:</strong> Apply the formula: <em>Total Yardage = (Blanket Area / Swatch Area) * Swatch Yardage * 1.10</em> to find the amount of yarn needed, factoring in a 10% buffer for safety.</li></ol><p>By understanding these steps, you can manually calculate the gauge and yardage needed, ensuring your project meets your expectations in size and material usage.</p><h2>Introducing the WeLovePattern Gauge Calculator</h2><p>While manual calculations are essential for understanding, they are prone to human error. Enter the WeLovePattern Gauge <a href=\"/blog/how-to-price-your-crochet-items-for-profit\" class=\"text-amber-700 underline hover:text-amber-800 transition-colors\">Calculator</a>, an interactive tool designed to streamline the process and eliminate potential mistakes. This calculator allows you to input your swatch measurements and desired project dimensions, offering precise stitch and row adjustments tailored to your needs.</p><h3>Practical Usage of the Gauge Calculator</h3><p>To effectively utilize our calculator, follow these steps:</p><ul><li>Enter the stitch and row count from your swatch into the calculator.</li><li>Input the pattern's target gauge to compare against your swatch.</li><li>Receive immediate adjustments for your stitch and row counts, ensuring your project aligns with the pattern's intended dimensions.</li></ul><p>This calculator is invaluable for adjusting patterns to fit personalized dimensions, helping to ensure your final product matches the intended size.</p><h2>Choosing the Right Yarn and Hook</h2><p>Choosing the correct yarn and hook size is critical to achieving the desired gauge. Approved yarn weights such as CYC #4 Worsted and CYC #3 DK are standard, along with hook sizes of 5.0 mm (H-8) and 4.0 mm (G-6). Different fibers such as wool, acrylic, and cotton have unique properties that can affect gauge. Wool tends to have elasticity, making it suitable for garments that require some stretch. Acrylic is more stable and less prone to stretching, making it ideal for blankets. Cotton has minimal stretch but excellent absorbency, perfect for kitchen and bath items. Selecting the right material for your project affects both the appearance and functionality of the finished item.</p><h2>Blocking Techniques</h2><p>Blocking is a crucial step in achieving the correct gauge, as it can significantly change the swatch's dimensions. There are two primary methods: wet blocking and steam blocking. Wet blocking involves soaking the swatch in water, then shaping it to the desired dimensions and allowing it to dry. This method is effective for natural fibers like wool. Steam blocking involves using a steam iron to gently press the swatch, suitable for synthetic fibers like acrylic. Both methods help set the stitches, providing a more accurate gauge measurement.</p>\n\n<div class=\"welovepattern-tool-cta my-8 p-6 sm:p-8 rounded-3xl bg-gradient-to-br from-pink-50 via-rose-50/40 to-amber-50/50 dark:from-slate-800 dark:via-slate-800/90 dark:to-slate-800/60 border border-pink-200/70 dark:border-slate-700/80 shadow-sm not-prose\" data-tool-cta=\"gauge-calculator\">\n  <div class=\"flex flex-col sm:flex-row items-start sm:items-center justify-between gap-5\">\n    <div class=\"space-y-2 flex-1\">\n      <div class=\"inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-xs font-semibold bg-pink-100/80 dark:bg-pink-950/60 text-[#E96BA8] dark:text-pink-300\">\n        <span class=\"w-2 h-2 rounded-full bg-[#E96BA8] animate-pulse\"></span>\n        Interactive WeLovePattern Tool\n      </div>\n      <h3 class=\"text-xl sm:text-2xl font-black text-slate-900 dark:text-white tracking-tight m-0\">\n        Gauge Calculator\n      </h3>\n      <p class=\"text-sm text-slate-600 dark:text-slate-300 leading-relaxed m-0\">\n        Compare your swatch gauge to pattern target gauge to calculate exact stitch & row count adjustments.\n      </p>\n    </div>\n    <div class=\"shrink-0 w-full sm:w-auto\">\n      <a href=\"/tools/gauge-calculator\" class=\"inline-flex items-center justify-center gap-2 w-full sm:w-auto px-6 py-3.5 rounded-2xl bg-gradient-to-r from-[#E96BA8] to-[#FF8E53] hover:from-[#d85596] hover:to-[#e87d42] text-white font-bold text-sm sm:text-base shadow-md hover:shadow-lg transition-all transform hover:-translate-y-0.5 no-underline\">\n        <span>Let's Calculate Gauge →</span>\n      </a>\n    </div>\n  </div>\n</div>\n\n<h2>Troubleshooting Common Challenges</h2><p>Matching gauge can be challenging, particularly due to individual tension differences. If your gauge is too tight, resulting in a smaller project, try using a larger hook size to loosen your tension. Conversely, if your gauge is too loose, making your project larger, use a smaller hook. Additionally, textured stitches like bobbles and puff stitches consume more yarn than flat stitches like single crochet or double crochet, which can affect your yardage calculations. It's crucial to adjust accordingly, using the WeLovePattern Gauge Calculator to assist with precise adjustments.</p><h2>Frequently Asked Questions</h2><h3>How do I adjust my tension to meet gauge?</h3><p>Use a larger hook to loosen your tension or a smaller hook to tighten it. This simple adjustment can help you achieve the desired gauge.</p><h3>What happens if my gauge is off?</h3><p>If your gauge is off, your project's final size will differ from the pattern's intended dimensions, potentially leading to an item that is too small or too large.</p><h3>Why is a gauge swatch important?</h3><p>A gauge swatch ensures that your project will match the pattern's dimensions and fit as expected. It's an essential step for accurate crochet projects.</p><p>By understanding and utilizing a crochet gauge calculator, you can confidently master your projects. Whether crafting a cozy baby blanket or a stylish throw, ensuring your gauge aligns with the pattern is key to a successful outcome. The WeLovePattern Gauge Calculator makes this process effortless and accurate. Let's Calculate Gauge →</p>",
+        "wordCount": 885,
+        "category": "tools",
+        "tags": [
+          "crochet",
+          "gauge calculator",
+          "yarn",
+          "crochet tools",
+          "swatch",
+          "pattern adjustments"
+        ],
+        "seoMeta": {
+          "title": "Crochet Gauge Calculator Guide",
+          "description": "Discover how to use a crochet gauge calculator for accurate stitch and row adjustments.",
+          "keywords": "crochet gauge calculator, yarn gauge, crochet tools"
+        },
+        "heroImage": {
+          "prompt": "Editorial craft flatlay photography for crochet article \"Master Your Crochet Projects with Our Gauge Calculator\". Neatly arranged natural wool yarn skeins, smooth birch wooden crochet hooks, a flexible cloth measuring tape, and a crisp textured gauge swatch on a clean warm linen background. Soft diffused natural window light, warm neutral tones, organic cozy maker workspace, 8k resolution, authentic artisan photography, zero digital noise.",
+          "compactPrompt": "Editorial craft flatlay photography for crochet article \"Master Your Crochet Projects with Our Gauge Calculator\". Neatly arranged natural wool yarn skeins, smooth birch wooden crochet hooks, a flexible cloth measuring tape, and a crisp textured gauge swatch on a clean warm linen background. Soft diffused natural window light, warm neutral tones, organic cozy maker workspace, 8k resolution, authentic artisan photography, zero digital noise.",
+          "stableAssetPath": "/app/applet/public/generated/blog/master-your-crochet-projects-with-our-ga-73f7e75458.jpg",
+          "stablePublicUrl": "/generated/blog/master-your-crochet-projects-with-our-ga-73f7e75458.jpg",
+          "status": "ready"
+        }
+      },
+      "articleHeroImage": {
+        "prompt": "Editorial craft flatlay photography for crochet article \"Master Your Crochet Projects with Our Gauge Calculator\". Neatly arranged natural wool yarn skeins, smooth birch wooden crochet hooks, a flexible cloth measuring tape, and a crisp textured gauge swatch on a clean warm linen background. Soft diffused natural window light, warm neutral tones, organic cozy maker workspace, 8k resolution, authentic artisan photography, zero digital noise.",
+        "compactPrompt": "Editorial craft flatlay photography for crochet article \"Master Your Crochet Projects with Our Gauge Calculator\". Neatly arranged natural wool yarn skeins, smooth birch wooden crochet hooks, a flexible cloth measuring tape, and a crisp textured gauge swatch on a clean warm linen background. Soft diffused natural window light, warm neutral tones, organic cozy maker workspace, 8k resolution, authentic artisan photography, zero digital noise.",
+        "stableAssetPath": "/app/applet/public/generated/blog/master-your-crochet-projects-with-our-ga-73f7e75458.jpg",
+        "stablePublicUrl": "/generated/blog/master-your-crochet-projects-with-our-ga-73f7e75458.jpg",
+        "higgsfieldRequestId": "9d069769-04e0-486b-b8e1-1ace36f93ede",
+        "higgsfieldTaskId": "9d069769-04e0-486b-b8e1-1ace36f93ede",
+        "status": "ready"
+      }
     }
   ],
   "completedJobsHistory": [
@@ -868,5 +1231,5 @@
       "logs": []
     }
   ],
-  "updatedAt": "2026-10-20T10:56:38.801Z"
+  "updatedAt": "2026-10-21T00:03:38.381Z"
 }

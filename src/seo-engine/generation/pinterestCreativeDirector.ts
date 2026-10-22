@@ -893,9 +893,95 @@ export function selectDistinctCreativeConceptPair(
 }
 
 /**
+ * Derives a dynamic, product-aware context for any crochet topic.
+ * Extracts the specific finished crochet object, matching in-progress scene details,
+ * and authentic yarn/tool attributes for physical continuity.
+ */
+export interface CrochetProductContext {
+  productName: string;
+  finishedSceneDescription: string;
+  inProgressSceneDescription: string;
+  yarnDetails: string;
+}
+
+export function deriveCrochetProductContext(
+  topic: DiscoveredTopic,
+  article: GeneratedArticle,
+  packet: FactualResearchPacket
+): CrochetProductContext {
+  const craft = packet.craftType || 'crochet';
+  const kw = (topic.keyword || '').toLowerCase();
+  const title = (article.title || '').toLowerCase();
+  const text = `${kw} ${title}`;
+
+  let productName = 'handmade crochet project';
+  let finishedScene = 'A large, clear photograph of the finished handmade crochet project, beautifully arranged in sharp focus on a simple textured linen surface';
+  let inProgressScene = 'real human hands actively crocheting the project with a smooth wooden hook, working yarn and visible stitches in progress';
+
+  const hook = packet.verifiedMaterials?.hookSizes?.[0] || 'wooden crochet hook';
+  const yarn = packet.verifiedMaterials?.yarnWeights?.[0] || 'textured yarn';
+  const yarnDetails = `matching ${yarn} and a genuine ${hook}`;
+
+  if (/bat/i.test(text)) {
+    productName = 'handmade crochet bat';
+    finishedScene = 'A large, clear, centered photograph of the finished handmade crochet bat with sculpted wings, cute pointed ears, and clean stitch definition, placed on a warm neutral linen background in soft natural light';
+    inProgressScene = `close-up photograph of real human hands actively crocheting the body and wings of that SAME crochet bat, using the identical dark charcoal yarn, with an authentic ${hook} and visible, physically plausible stitches`;
+  } else if (/pumpkin/i.test(text)) {
+    productName = 'rustic handmade crochet pumpkin';
+    finishedScene = 'A large, clear photograph of the finished rustic crochet autumn pumpkin with ribbed texture, natural cinnamon stick stem, and curled twine accent on a clean wooden table';
+    inProgressScene = `close-up photograph of real human hands actively crocheting the ribbed ridges of that SAME pumpkin using identical warm rust-orange yarn, an authentic ${hook}, and visible stitches`;
+  } else if (/ornament|christmas tree/i.test(text)) {
+    productName = 'handmade crochet Christmas tree ornament';
+    finishedScene = 'A large, clear photograph of the finished handmade crochet Christmas tree ornament with festive textured stitches, neat hanging loop, and crisp form on a natural wood surface';
+    inProgressScene = `close-up photograph of real human hands actively crocheting the branch tiers of that SAME ornament using identical festive evergreen yarn, an authentic ${hook}, and visible stitches`;
+  } else if (/waffle stitch/i.test(text)) {
+    productName = 'textured waffle stitch crochet project';
+    finishedScene = 'A large, clear photograph of the finished waffle stitch crochet piece showcasing deep geometric relief square texture and straight clean edges';
+    inProgressScene = `close-up photograph of real human hands actively working the front-post double crochet waffle relief stitches of that SAME project with identical yarn and hook`;
+  } else if (/granny square/i.test(text)) {
+    productName = 'classic handmade crochet granny square';
+    finishedScene = 'A large, clear photograph of the finished handmade crochet granny square motif with crisp corner clusters, flat blocking, and clean stitch definition';
+    inProgressScene = `close-up photograph of real human hands actively working the outer cluster stitches of that SAME granny square with identical yarn and hook`;
+  } else if (/beanie|hat/i.test(text)) {
+    productName = 'handmade chunky ribbed crochet beanie';
+    finishedScene = 'A large, clear photograph of the finished chunky ribbed crochet beanie with fold-over brim and neat top crown closure on a neutral tabletop';
+    inProgressScene = `close-up photograph of real human hands actively crocheting the vertical ribbing rows into back loops of that SAME beanie with identical chunky yarn and hook`;
+  } else if (/bag|tote|market/i.test(text)) {
+    productName = 'handmade crochet market tote bag';
+    finishedScene = 'A large, clear photograph of the finished crochet market tote bag featuring an open textured mesh lace body and reinforced sturdy handles';
+    inProgressScene = `close-up photograph of real human hands actively crocheting the open mesh grid rows of that SAME tote bag with identical cotton yarn and hook`;
+  } else if (/amigurumi|plush|toy/i.test(text)) {
+    productName = 'handmade crochet amigurumi figure';
+    finishedScene = 'A large, clear photograph of the finished handmade amigurumi figure with tight seamless stitches, firm structural shaping, and neat details';
+    inProgressScene = `close-up photograph of real human hands actively crocheting the continuous spiral rounds of that SAME amigurumi with identical yarn and hook`;
+  } else if (/blanket|afghan|throw/i.test(text)) {
+    productName = 'handmade textured crochet blanket';
+    finishedScene = 'A large, clear photograph of the finished handmade textured crochet blanket throw, draped neatly showing rich stitch texture and finished border';
+    inProgressScene = `close-up photograph of real human hands actively crocheting the rhythmic pattern rows of that SAME blanket with identical yarn and hook`;
+  } else if (/gauge|swatch|counter|calculator|tool/i.test(text)) {
+    productName = 'neat handmade crochet gauge swatch';
+    finishedScene = 'A large, clear photograph of the finished blocked crochet gauge swatch with immaculate stitch alignment alongside a flexible cloth measuring tape and polished wooden hook';
+    inProgressScene = `close-up photograph of real human hands actively crocheting the tension rows of that SAME gauge swatch with identical yarn and hook`;
+  } else {
+    // Dynamic general craft item
+    const cleanKw = topic.keyword
+      .replace(/how to crochet|how to|crochet pattern|crochet tutorial|free pattern|free crochet|step by step|guide|easy|best|diy/gi, '')
+      .trim();
+    const itemLabel = cleanKw.length >= 3 ? cleanKw : `${craft} project`;
+    productName = `handmade crochet ${itemLabel}`;
+    finishedScene = `A large, clear photograph of the finished handmade crochet ${itemLabel}, professionally styled in sharp focus on a clean neutral background with soft natural lighting`;
+    inProgressScene = `close-up photograph of real human hands actively crocheting that SAME ${itemLabel}, using identical yarn color and weight, with an authentic ${hook} and visible stitches in progress`;
+  }
+
+  return { productName, finishedSceneDescription: finishedScene, inProgressSceneDescription: inProgressScene, yarnDetails };
+}
+
+/**
  * Builds a dedicated, dynamic Higgsfield prompt enforcing STRICT IMMUTABLE TEXT & EDITORIAL ART DIRECTION:
+ * - 3-PART STACKED COMPOSITION: Top Image (Finished Product), Center Title (Neutral Horizontal Band), Bottom Image (Hands Actively Crocheting the Same Product).
+ * - Non-negotiable Realism: Authentic photography, anatomically natural human hands with 5 fingers, physically plausible hook and stitches, visual continuity.
  * - EXACTLY TWO text elements: Headline and CTA.
- * - Dynamic Title & CTA Placement: No hardcoded top-left / bottom-left. Placement adapts directly to chosen dimensions.
+ * - Dynamic Title & CTA Placement: Placement adapts directly to chosen dimensions.
  * - Dynamic Typography & Backgrounds: Editorial serif, bold modern sans, compact stacked.
  * - ZERO PAPER / ZERO CARDS: Global hard prohibition on paper panels, pigment washes, paint dabs, watercolor shapes, badges, and UI boxes.
  * - Strict Literal Text Lock: Headline and CTA strings locked character-for-character.
@@ -912,6 +998,7 @@ export function buildHiggsfieldPinPrompt(
   dimensions?: PinterestCreativeDimensions
 ): string {
   const craftType = packet.craftType || 'crochet';
+  const productContext = deriveCrochetProductContext(topic, article, packet);
 
   // Extract dimensions or fallback to format defaults
   const titlePos = dimensions?.titlePosition || 'top_left';
@@ -959,7 +1046,7 @@ export function buildHiggsfieldPinPrompt(
       ? 'Refined, airy uppercase editorial typography with generous letter tracking and sophisticated breathing room.'
       : 'Elegant high-end editorial SERIF typeface inspired by luxury fashion magazines and fine Pinterest editorial design. Sophisticated, feminine, refined, and artistic with high visual impact and generous scale. (NOT a heavy generic display font, NOT a playful cartoon font, NOT handwriting).';
 
-  // Format Headline Background Description (Strictly NON-PAPER, integrated into photography)
+  // Format Headline Background Description (Strictly NON-PAPER)
   const headlineBgText =
     bgStyle === 'none_direct_photo'
       ? 'Place typography directly into clean photographic negative space. No text background treatment whatsoever.'
@@ -984,6 +1071,29 @@ export function buildHiggsfieldPinPrompt(
       : ctaVisual === 'minimal_underline'
       ? 'Rendered with a single crisp minimalist hairline underline.'
       : 'Rendered as clean, compact editorial typography positioned naturally in negative space.';
+
+  const threePartCompositionBrief = `REALISTIC PHOTOGRAPHY-LED CROCHET TUTORIAL VISUAL (3-PART STACKED COMPOSITION):
+1. TOP IMAGE (UPPER SECTION):
+${productContext.finishedSceneDescription}. The completed ${productContext.productName} is presented in sharp photographic focus with authentic yarn stitch definition and physical handmade texture under soft diffused natural window lighting.
+
+2. CENTER TITLE (NEUTRAL HORIZONTAL BAND):
+One short, readable article title on a simple, neutral horizontal band cleanly separating the two photographs:
+"${headline}"
+Clean, restrained, legible typography in uppercase, high contrast against the neutral band, visually separating the top and bottom photographs. No extra text, icons, stickers, badges, decorative frames, or unnecessary graphics.
+
+3. BOTTOM IMAGE (LOWER SECTION):
+A close-up photograph of real human hands actively crocheting the EXACT SAME ${productContext.productName}. ${productContext.inProgressSceneDescription}. Anatomically natural hands with realistic skin texture, authentic fingernails, and five correctly formed fingers holding an authentic crochet hook in a natural grip. The hands are actively working the identical yarn (${productContext.yarnDetails}) with visible, physically plausible stitches in progress. Strict visual continuity in yarn color, weight, texture, and project construction between the finished item above and the in-progress project below.
+
+NON-NEGOTIABLE REALISM REQUIREMENTS:
+- Prioritize authentic photographic realism over illustration, CGI, cartoon aesthetics, and obvious AI-generated imagery.
+- Human hands must look anatomically natural, with correctly formed fingers and realistic skin texture.
+- The hook, yarn, and stitches must be physically plausible.
+- Show a coherent crochet-in-progress stage, not an unrelated object or a finished product being held as if it were being crocheted.
+- Maintain visual continuity between the finished product and the in-progress project with identical yarn color, weight, and construction.
+- Use natural lighting, realistic textures, simple backgrounds, and close-up photography.
+- Avoid artificial plastic-looking yarn, malformed hands, impossible hooks, disconnected stitches, and inconsistent product details.
+- Do not add extra text, icons, stickers, badges, decorative frames, or unnecessary graphics.
+- The title must be short, legible, correctly spelled, and visually separated from the two photographs.`;
 
   const editorialArtDirection = `
 EDITORIAL TYPOGRAPHY & ART DIRECTION (RENDER EXACTLY TWO TEXT ELEMENTS):
@@ -1030,35 +1140,9 @@ STRICT PROHIBITIONS & FINAL TEXT CONFIRMATION:
   1. HEADLINE: "${headline}"
   2. CTA: "${cta}"`;
 
-  // Base prompt by visual format / dimensions
-  const comp = dimensions?.composition || (visualFormat as PinterestCompositionType);
-  const story = dimensions?.propStorytelling;
-
-  if (comp === 'overhead_flatlay' || visualFormat === 'flatlay_projects') {
-    return `Complete editorial Pinterest Pin in 2:3 vertical format. ${story || `Artful overhead flatlay photography of natural wool yarn skeins, smooth wooden hooks, measuring tape, and neat finished ${craftType} swatches and motifs arranged on an antique linen background`}. ${moodTheme.lightingAndMood}, palette of ${moodTheme.paletteDescription}. Clean modern craft aesthetic.${editorialArtDirection}`;
-  }
-
-  if (comp === 'craftsmanship_macro' || visualFormat === 'closeup_craftsmanship') {
-    return `Complete editorial Pinterest Pin in 2:3 vertical layout. ${story || `Macro artisan craft photography highlighting exquisite stitch definition, rich yarn texture, and fine handmade craftsmanship`}. ${moodTheme.lightingAndMood}, palette of ${moodTheme.paletteDescription}. Premium craft magazine editorial photography, photography dominates the composition.${editorialArtDirection}`;
-  }
-
-  if (comp === 'hands_crafting' || visualFormat === 'hands_crafting') {
-    return `Complete 2:3 vertical editorial Pinterest Pin photograph. ${story || `Atmospheric close-up photography of artisan maker hands actively crocheting textured yarn with a smooth wooden ${craftType} hook, surrounded by finished handmade motifs and vintage craft tools on a warm wooden table`}. ${moodTheme.lightingAndMood}, rich palette of ${moodTheme.paletteDescription}. Authentic handmade atmosphere, immaculate stitch definition.${editorialArtDirection}`;
-  }
-
-  if (comp === 'multi_project_showcase' || visualFormat === 'editorial_collage') {
-    return `Complete editorial Pinterest Pin photograph in 2:3 vertical layout. ${story || `High-end cohesive craft photography organically showcasing 3 to 4 distinct handmade ${craftType} projects naturally composed across a rustic textured surface`}. The composition is one unified, organic photograph—NOT a Canva grid, NOT UI cards, and NOT boxed panels. ${moodTheme.lightingAndMood}, color palette of ${moodTheme.paletteDescription}. Authentic artisan aesthetic.${editorialArtDirection}`;
-  }
-
-  if (comp === 'asymmetric_editorial') {
-    return `Complete editorial Pinterest Pin in 2:3 vertical aspect ratio. ${story || `Modern asymmetric editorial craft photography featuring a textured handmade ${craftType} project positioned off-center in dramatic natural light`}. ${moodTheme.lightingAndMood}, palette of ${moodTheme.paletteDescription}. High-resolution real photography dominates the frame.${editorialArtDirection}`;
-  }
-
-  if (comp === 'lifestyle_scene' || comp === 'editorial_portrait' || visualFormat === 'lifestyle_person') {
-    return `Complete editorial Pinterest Pin in 2:3 vertical aspect ratio. ${story || `Authentic lifestyle craft photography of a real adult woman in a cozy, beautifully lit environment wearing or holding a finished handcrafted ${craftType} piece, photographed with natural depth of field and warm ambient lighting`}. ${moodTheme.lightingAndMood}, palette of ${moodTheme.paletteDescription}. High-resolution real photography dominates the frame.${editorialArtDirection}`;
-  }
-
-  return `Complete editorial Pinterest Pin artwork in 2:3 vertical aspect ratio. ${story || `Aesthetic lifestyle photography of a finished handmade textured ${craftType} project draped gracefully in cozy natural lighting`}. ${moodTheme.lightingAndMood}, palette of ${moodTheme.paletteDescription}. Professional Pinterest craft editorial layout.${editorialArtDirection}`;
+  return `Complete 2:3 vertical Pinterest Pin visual. ${threePartCompositionBrief}
+${moodTheme.lightingAndMood}, palette of ${moodTheme.paletteDescription}.
+${editorialArtDirection}`;
 }
 
 /**
@@ -1452,6 +1536,7 @@ export function matchPinterestBoard(
 
 /**
  * Builds a dedicated, content-aware Hero prompt for Higgsfield (16:9, pure high-res photography).
+ * Adapts the 3-part tutorial composition (Finished Product, Center Title Band, Hands Actively Crocheting) naturally to 16:9 format.
  */
 export function buildHiggsfieldHeroPrompt(
   topic: DiscoveredTopic,
@@ -1459,15 +1544,23 @@ export function buildHiggsfieldHeroPrompt(
   packet: FactualResearchPacket
 ): string {
   const craftType = packet.craftType || 'crochet';
-  const subjectKeyword = topic.keyword || article.title;
+  const { productName, finishedSceneDescription, inProgressSceneDescription, yarnDetails } = deriveCrochetProductContext(topic, article, packet);
+  const headline = article.title;
 
-  if (topic.targetContentFormat === 'tool_focus') {
-    return `Editorial craft flatlay photography for ${craftType} article "${article.title}". Neatly arranged natural wool yarn skeins, smooth birch wooden crochet hooks, a flexible cloth measuring tape, and a crisp textured gauge swatch on a clean warm linen background. Soft diffused natural window light, warm neutral tones, organic cozy maker workspace, 8k resolution, authentic artisan photography, zero digital noise.`;
-  } else if (topic.targetContentFormat === 'tutorial') {
-    return `Authentic close-up artisan craft photography for "${article.title}". Maker hands gently working intricate ${craftType} stitches for ${subjectKeyword} with premium textured yarn, natural wooden hook, soft morning studio light, shallow depth of field, warm cozy maker vibe, immaculate stitch definition, high resolution, organic craft publication aesthetic.`;
-  } else {
-    return `Warm lifestyle interior photography for "${article.title}". Beautiful finished hand-crafted ${craftType} project depicting ${subjectKeyword}, tastefully styled on a rustic wooden surface beside a basket of textured yarn cakes, polished wooden crochet hooks, warm ambient sunlight streaming through window, elegant cozy home decor, authentic high-resolution craft photography.`;
-  }
+  return `Realistic photography-led craft editorial visual for 16:9 widescreen article hero format, featuring an authentic dual-focus tutorial composition:
+1. FINISHED OBJECT (LEFT): ${finishedSceneDescription}. A large, clear photograph of the completed handmade ${craftType} ${productName}, complete and beautifully styled on a clean warm linen or rustic wooden surface with soft diffused natural morning window light.
+2. CENTER TITLE: A clean, neutral horizontal divider band displaying the short title "${headline}". Simple, restrained, readable typography with zero decorative stickers or badges.
+3. CROCHET IN PROGRESS (RIGHT): A close-up photograph of real human hands actively crocheting the EXACT SAME ${productName}, holding a smooth wooden hook with ${yarnDetails}, showing physically plausible stitches in progress (${inProgressSceneDescription}).
+NON-NEGOTIABLE REALISM REQUIREMENTS:
+- Prioritize authentic photographic realism over illustration, CGI, cartoon aesthetics, and obvious AI-generated imagery.
+- Human hands must look anatomically natural, with correctly formed fingers and realistic skin texture.
+- The hook, yarn, and stitches must be physically plausible.
+- Show a coherent crochet-in-progress stage, not an unrelated object or a finished product being held as if it were being crocheted.
+- Maintain visual continuity between the finished product and the in-progress project with identical yarn color, weight, and construction.
+- Natural lighting, realistic textures, simple backgrounds, close-up photography.
+- Avoid artificial plastic-looking yarn, malformed hands, impossible hooks, disconnected stitches, and inconsistent product details.
+- Do not add extra text, icons, stickers, badges, decorative frames, or unnecessary graphics.
+- The title must be short, legible, correctly spelled, and visually separated from the two photographs.`;
 }
 
 /**
