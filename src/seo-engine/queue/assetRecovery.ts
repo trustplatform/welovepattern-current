@@ -490,10 +490,12 @@ export function recoverJobLocalAssets(job: SeoEngineArticleJob): JobRecoveryResu
     reasons.push('Pin 2 asset could not be deterministically recovered.');
   }
 
-  const allAssetsReady = heroRecovered && pin1Recovered && pin2Recovered;
+  const engineState = readEngineState();
+  const targetPinsCount = Math.max(1, engineState.config?.pinsPerArticle || 1);
+  const allAssetsReady = heroRecovered && pin1Recovered && (targetPinsCount < 2 || pin2Recovered);
   let newStage = previousStage;
 
-  // Workflow transition guard: Only transition if complete article AND all 3 assets exist
+  // Workflow transition guard: Only transition if complete article AND required visual assets exist
   if (hasCompleteArticle && allAssetsReady) {
     if (previousStage === 'failed' || previousStage === 'generating_images') {
       newStage = 'awaiting_approval';
@@ -502,7 +504,7 @@ export function recoverJobLocalAssets(job: SeoEngineArticleJob): JobRecoveryResu
       job.logs.push({
         timestamp: new Date().toISOString(),
         level: 'info',
-        message: `[AssetRecovery] All 3 visual assets recovered locally ($0 cost). Job transitioned from ${previousStage} to ${newStage}.`,
+        message: `[AssetRecovery] All required visual assets recovered locally ($0 cost). Job transitioned from ${previousStage} to ${newStage}.`,
       });
     }
   }
@@ -609,10 +611,11 @@ export function getEligibleRecoveredJobs(limit: number = 1): SeoEngineArticleJob
       continue;
     }
 
-    // 4. Must have exactly one verified local Hero image and two verified local Pinterest Pin images
+    // 4. Must have verified local Hero image and verified local Pinterest Pin image(s)
+    const targetPinsCount = Math.max(1, state.config?.pinsPerArticle || 1);
     const hasValidHero = isValidLocalAsset(job.articleContent?.heroImage?.stableAssetPath);
     const hasValidPin1 = isValidLocalAsset(job.pinterestPins?.[0]?.stableAssetPath);
-    const hasValidPin2 = isValidLocalAsset(job.pinterestPins?.[1]?.stableAssetPath);
+    const hasValidPin2 = targetPinsCount < 2 || isValidLocalAsset(job.pinterestPins?.[1]?.stableAssetPath);
 
     if (hasValidHero && hasValidPin1 && hasValidPin2) {
       candidates.push(job);
@@ -638,36 +641,44 @@ export function assignRecoveredJobToSlot(
   const job = state.activeJobs?.find(j => j.id === jobId);
   if (!job) return null;
 
+  const config = state.config;
+  const pinSlots = config?.pinterestPublishTimes?.length ? config.pinterestPublishTimes : ['09:15'];
+  const targetPinsCount = Math.max(1, config?.pinsPerArticle || 1);
+
   job.assignedPublishDate = dateStr;
   job.assignedSlotTime = slotTime;
   job.publicationScheduledAt = slotTime;
 
-  if (job.pinterestPins && job.pinterestPins.length >= 2) {
-    if (slotNumber === 1) {
-      job.pinterestPins[0].assignedSlotTime = '08:30';
-      job.pinterestPins[0].scheduledTime = '08:30';
-      job.pinterestPins[1].assignedSlotTime = '09:00';
-      job.pinterestPins[1].scheduledTime = '09:00';
-    } else if (slotNumber === 2) {
-      job.pinterestPins[0].assignedSlotTime = '12:30';
-      job.pinterestPins[0].scheduledTime = '12:30';
-      job.pinterestPins[1].assignedSlotTime = '13:00';
-      job.pinterestPins[1].scheduledTime = '13:00';
-    } else {
-      job.pinterestPins[0].assignedSlotTime = '16:30';
-      job.pinterestPins[0].scheduledTime = '16:30';
-      job.pinterestPins[1].assignedSlotTime = '17:00';
-      job.pinterestPins[1].scheduledTime = '17:00';
+  if (job.pinterestPins && job.pinterestPins.length > 0) {
+    if (targetPinsCount === 1) {
+      job.pinterestPins[0].assignedSlotTime = pinSlots[0] || '09:15';
+      job.pinterestPins[0].scheduledTime = pinSlots[0] || '09:15';
+    } else if (job.pinterestPins.length >= 2) {
+      if (slotNumber === 1) {
+        job.pinterestPins[0].assignedSlotTime = pinSlots[0] || '08:30';
+        job.pinterestPins[0].scheduledTime = pinSlots[0] || '08:30';
+        job.pinterestPins[1].assignedSlotTime = pinSlots[1] || '09:00';
+        job.pinterestPins[1].scheduledTime = pinSlots[1] || '09:00';
+      } else if (slotNumber === 2) {
+        job.pinterestPins[0].assignedSlotTime = pinSlots[2] || '12:30';
+        job.pinterestPins[0].scheduledTime = pinSlots[2] || '12:30';
+        job.pinterestPins[1].assignedSlotTime = pinSlots[3] || '13:00';
+        job.pinterestPins[1].scheduledTime = pinSlots[3] || '13:00';
+      } else {
+        job.pinterestPins[0].assignedSlotTime = pinSlots[4] || '16:30';
+        job.pinterestPins[0].scheduledTime = pinSlots[4] || '16:30';
+        job.pinterestPins[1].assignedSlotTime = pinSlots[5] || '17:00';
+        job.pinterestPins[1].scheduledTime = pinSlots[5] || '17:00';
+      }
     }
   }
 
+  const pinTimesSummary = targetPinsCount === 1 ? (pinSlots[0] || '09:15') : (slotNumber === 1 ? '08:30 & 09:00' : slotNumber === 2 ? '12:30 & 13:00' : '16:30 & 17:00');
   if (!Array.isArray(job.logs)) job.logs = [];
   job.logs.push({
     timestamp: new Date().toISOString(),
     level: 'info',
-    message: `[AssetRecovery] Assigned recovered job to Article Slot ${slotNumber} (${slotTime} on ${dateStr}). Pinterest Pins assigned to ${
-      slotNumber === 1 ? '08:30 & 09:00' : slotNumber === 2 ? '12:30 & 13:00' : '16:30 & 17:00'
-    }.`,
+    message: `[AssetRecovery] Assigned recovered job to Article Slot ${slotNumber} (${slotTime} on ${dateStr}). Pinterest Pins assigned to ${pinTimesSummary}.`,
   });
 
   writeEngineState(state);

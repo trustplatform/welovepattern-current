@@ -12,6 +12,7 @@ import { DiscoveredTopic, FactualResearchPacket, VerifiedInternalLink } from '..
 import { findRelevantInternalLinks, getVerifiedInternalLinkCatalog } from '../generation/internalLinkCatalog';
 import { isOpenAiConfigured, executeOpenAiChat } from '../generation/openAiClient';
 import { getToolBySlug, getToolByUrl } from '../../data/toolsData';
+import { TOOL_CAPABILITY_PROFILES } from '../discovery/trendToolMatcher';
 
 /** Standard Craft Yarn Council (CYC) Yarn Weight Reference */
 export const CYC_YARN_STANDARDS: Record<string, { weightName: string; number: number; recommendedHooks: string; typicalGauge: string }> = {
@@ -130,6 +131,32 @@ function generateDeterministicCraftPacket(
   const targetTool = topic.toolSlug
     ? getToolBySlug(topic.toolSlug)
     : (topic.targetToolUrl ? getToolByUrl(topic.targetToolUrl) : undefined);
+
+  const toolProfile = targetTool ? TOOL_CAPABILITY_PROFILES.find(p => p.toolSlug === targetTool.slug) : undefined;
+  if (toolProfile) {
+    if (!makerPainPoints.includes(toolProfile.coreProblem)) {
+      makerPainPoints.unshift(toolProfile.coreProblem);
+    }
+    for (const cap of toolProfile.practicalCapabilities) {
+      if (!supportedClaims.includes(cap)) supportedClaims.push(cap);
+    }
+    for (const lim of toolProfile.limitations) {
+      if (!supportedClaims.includes(lim)) supportedClaims.push(lim);
+    }
+    techniqueKeyPoints.push(
+      `The interactive ${toolProfile.toolTitle} (/tools/${toolProfile.toolSlug}) calculates exact results based on: ${toolProfile.inputs.join(', ')}.`,
+      `Practical tool limitation to observe: ${toolProfile.limitations[0]}`
+    );
+
+    const toolUrl = `/tools/${targetTool.slug}`;
+    if (!verifiedLinks.some(l => l.url.toLowerCase() === toolUrl.toLowerCase())) {
+      verifiedLinks.unshift({
+        anchorText: targetTool.title,
+        url: toolUrl,
+        entityType: 'tool'
+      });
+    }
+  }
 
   return {
     topicId: topic.id,

@@ -6,9 +6,9 @@
 import { SeoEngineConfig } from './types';
 
 export const DEFAULT_SEO_ENGINE_CONFIG: SeoEngineConfig = {
-  articlesPerDay: 3,
-  pinsPerDay: 6,
-  pinsPerArticle: 2,
+  articlesPerDay: 1,
+  pinsPerDay: 1,
+  pinsPerArticle: 1,
   trendTasksPerDay: 20,
   autoPublish: true,
   autoPublishPinterest: true,
@@ -17,8 +17,8 @@ export const DEFAULT_SEO_ENGINE_CONFIG: SeoEngineConfig = {
   reuseOnlyMode: false,
   timezone: 'America/New_York',
   activeDays: [1, 2, 3, 4, 5, 6, 7],
-  articlePublishTimes: ['08:00', '12:00', '16:00'],
-  pinterestPublishTimes: ['08:30', '09:00', '12:30', '13:00', '16:30', '17:00'],
+  articlePublishTimes: ['09:00'],
+  pinterestPublishTimes: ['09:15'],
   maxConcurrentJobs: 1,
   fallbackBoardId: '1148488411165286195',
   fallbackBoardName: 'Animals Crochet',

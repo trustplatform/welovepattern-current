@@ -22,6 +22,9 @@ import { isDataForSeoConfigured, createGoogleTrendsTask, getGoogleTrendsTaskResu
 import { scoreTrendingCrochetTopic, scoreToolGuideTopic, isToolKeyword } from './opportunityScorer';
 import { readEngineState, writeEngineState } from '../queue/engineStorage';
 import { CONTENT_ENGINE_LIMITS } from '../config';
+import { matchTopicToTool, getToolRotationHistory } from './trendToolMatcher';
+import { getLiveBlogPosts } from '../publishing/articlePublisher';
+import { checkContentCannibalization } from '../validation/productionQualityGates';
 
 export interface RunDiscoveryOptions {
   limit?: number;
@@ -45,11 +48,31 @@ function getRecentHistoricalData(lookbackDays = CONTENT_ENGINE_LIMITS.DUPLICATE_
   const recentToolSlugs = new Set<string>();
   const recentSlugs = new Set<string>();
 
+  // 1. Check live blog posts in data/blog-posts.json to prevent cannibalization
+  try {
+    const livePosts = getLiveBlogPosts();
+    for (const post of livePosts) {
+      if (post?.slug) recentSlugs.add(post.slug.toLowerCase().trim());
+      if (post?.title) recentKeywords.add(post.title.toLowerCase().trim());
+      if (post?.toolSlug) recentToolSlugs.add(post.toolSlug.toLowerCase().trim());
+      if (post?.keyword) recentKeywords.add(post.keyword.toLowerCase().trim());
+    }
+  } catch (err) {
+    // Non-blocking
+  }
+
+  // 2. Add full tool rotation history from state
+  const rotationHistory = getToolRotationHistory(state);
+  for (const slug of rotationHistory) {
+    recentToolSlugs.add(slug);
+  }
+
   const completedHistory = Array.isArray((state as any).completedJobsHistory) ? (state as any).completedJobsHistory : [];
   for (const job of completedHistory) {
     if (job?.date && new Date(job.date).getTime() > cutoffTime) {
       if (job.keyword) recentKeywords.add(job.keyword.toLowerCase().trim());
       if (job.articleSlug) recentSlugs.add(job.articleSlug.toLowerCase().trim());
+      if (job.toolSlug) recentToolSlugs.add(job.toolSlug.toLowerCase().trim());
     }
   }
 
@@ -80,7 +103,7 @@ function getRecentHistoricalData(lookbackDays = CONTENT_ENGINE_LIMITS.DUPLICATE_
  * - Strict tool disqualification & 60-day cannibalization guard.
  */
 export async function discoverTrendingCrochetTopic(options: RunDiscoveryOptions = {}): Promise<DiscoveredTopic> {
-  const { recentKeywords } = getRecentHistoricalData();
+  const { recentKeywords, recentToolSlugs } = getRecentHistoricalData();
   const state = readEngineState();
   const cfg = state.config;
 
@@ -107,10 +130,13 @@ export async function discoverTrendingCrochetTopic(options: RunDiscoveryOptions 
     combinedSeedPool.push(...TRENDING_CROCHET_SEEDS.map(s => ({ ...s, source: 'gsc_seed' as const })));
   }
 
-  const availableCandidates = combinedSeedPool.filter(s => 
-    !recentKeywords.has(s.keyword.toLowerCase().trim()) &&
-    !isToolKeyword(s.keyword)
-  );
+  const availableCandidates = combinedSeedPool.filter(s => {
+    const kw = s.keyword.toLowerCase().trim();
+    if (recentKeywords.has(kw) || isToolKeyword(kw)) return false;
+    const testSlug = kw.replace(/[^a-z0-9]+/g, '-');
+    const cannibalCheck = checkContentCannibalization(testSlug, kw, kw);
+    return !cannibalCheck.hasCollision;
+  });
 
   const candidatePool = availableCandidates.length > 0 ? availableCandidates : combinedSeedPool;
   const candidateKeywords = candidatePool.slice(0, 8).map(s => s.keyword);
@@ -296,7 +322,7 @@ export async function discoverTrendingCrochetTopic(options: RunDiscoveryOptions 
     keyword: candidateKeywords[0] || 'easy crochet pumpkin pattern free',
     contentType: 'trending_crochet',
     category: 'crochet',
-    source: 'gsc_seed',
+    source: /pumpkin|halloween|ghost|fall|autumn|winter|christmas|snowflake|holiday|valentine/i.test(candidateKeywords[0] || '') ? 'seasonal_trend' : 'gsc_seed',
     trendScore: 85,
     freshTrendScore: 85,
     recentTrendScore: 80,
@@ -307,10 +333,29 @@ export async function discoverTrendingCrochetTopic(options: RunDiscoveryOptions 
     targetContentFormat: 'tutorial',
     targetCategoryUrl: '/categories/tutorials',
     targetAudienceLevel: 'all_levels',
-    searchIntentNotes: 'Fallback qualified trending crochet topic',
+    searchIntentNotes: 'Curated seasonal craft search opportunity (Slot 1)',
     discoveredAt: new Date().toISOString(),
     status: 'discovered',
   };
+
+  // Pair best trending crochet topic with an eligible, rotated WeLovePattern tool
+  const toolMatch = matchTopicToTool(bestTopic.keyword, {
+    recentToolSlugs: Array.from(recentToolSlugs)
+  });
+
+  if (toolMatch.success && toolMatch.tool) {
+    bestTopic.toolSlug = toolMatch.tool.slug;
+    bestTopic.targetToolUrl = `/tools/${toolMatch.tool.slug}`;
+    (bestTopic as any).toolPairing = {
+      toolSlug: toolMatch.tool.slug,
+      toolTitle: toolMatch.tool.title,
+      actionVerb: toolMatch.profile.actionVerb,
+      actionLabel: toolMatch.profile.actionLabel,
+      problemSolved: toolMatch.problemSolved,
+      isRotationFallback: toolMatch.isRotationFallback,
+      rotationNote: toolMatch.rotationNote,
+    };
+  }
 
   return bestTopic;
 }

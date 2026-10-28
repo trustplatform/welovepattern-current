@@ -226,16 +226,34 @@ async function evaluateSchedulerTickInternal(
     return { triggered: false, reason: `Day of week ${dayOfWeek} is not in activeDays` };
   }
 
-  const articlePublishTimes = config.articlePublishTimes || ['08:00', '12:00', '16:00'];
-  const pinterestPublishTimes = config.pinterestPublishTimes || ['08:30', '09:00', '12:30', '13:00', '16:30', '17:00'];
+  const articlePublishTimes = config.articlePublishTimes?.length ? config.articlePublishTimes : ['09:00'];
+  const pinterestPublishTimes = config.pinterestPublishTimes?.length ? config.pinterestPublishTimes : ['09:15'];
 
   const isArticleSlot = articlePublishTimes.includes(timeStr);
   const isPinterestSlot = pinterestPublishTimes.includes(timeStr);
 
+  const liveBlogPostsForQuota = getLiveBlogPosts();
+  const articlesPerDayLimit = config.articlesPerDay ?? 1;
+
+  // Count existing today articles to prevent redundant missed-slot recovery
+  const todaysExistingArticleKeys = new Set<string>();
+  for (const job of state.activeJobs || []) {
+    const isForToday = (job.assignedPublishDate === dateStr) || (!job.assignedPublishDate && job.dateScheduled === dateStr);
+    if (isForToday && job.stage !== 'failed' && (job.stage as string) !== 'filtered_out') {
+      todaysExistingArticleKeys.add(job.publishedBlogPostId || job.publishedSlug || job.id);
+    }
+  }
+  for (const historyItem of state.completedJobsHistory || []) {
+    if (historyItem.date === dateStr && isHistoricalJobPublished(historyItem, liveBlogPostsForQuota)) {
+      todaysExistingArticleKeys.add(historyItem.publishedBlogPostId || historyItem.slug || historyItem.jobId || historyItem.id);
+    }
+  }
+  const isDailyArticleQuotaFull = todaysExistingArticleKeys.size >= articlesPerDayLimit;
+
   // Check for missed past article slots today (e.g. server outage / reboot catch-up)
   let missedArticleSlot: string | null = null;
   let missedSlotNumber: 1 | 2 | 3 = 1;
-  if (!isArticleSlot) {
+  if (!isArticleSlot && !isDailyArticleQuotaFull) {
     for (let i = 0; i < articlePublishTimes.length; i++) {
       const s = articlePublishTimes[i];
       if (s <= timeStr) {
@@ -380,7 +398,7 @@ async function evaluateSchedulerTickInternal(
 
     const todaysArticlesCount = todaysArticleKeys.size;
 
-    const articlesPerDayLimit = config.articlesPerDay || 3;
+    const articlesPerDayLimit = config.articlesPerDay ?? 1;
     if (todaysArticlesCount >= articlesPerDayLimit) {
       // Mark slot as acknowledged so we don't repeat the check every minute in this slot
       recordSlotExecutedSync(slotKey, dateStr);

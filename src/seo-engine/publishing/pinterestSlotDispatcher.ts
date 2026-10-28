@@ -69,7 +69,7 @@ export async function dispatchScheduledPinterestSlot(
     return { triggered: false, pinPublished: false, reason: 'autoPublishPinterest is disabled.' };
   }
 
-  const pinterestPublishTimes = config.pinterestPublishTimes || ['08:30', '09:00', '12:30', '13:00', '16:30', '17:00'];
+  const pinterestPublishTimes = config.pinterestPublishTimes?.length ? config.pinterestPublishTimes : ['09:15'];
   const slotIndex = pinterestPublishTimes.indexOf(slotTime);
 
   if (slotIndex === -1) {
@@ -114,17 +114,14 @@ export async function dispatchScheduledPinterestSlot(
     };
   }
 
-  // Exact 1-to-1 slot mapping across 6 daily Pinterest slots:
-  // Slot 0 (08:30) -> Article 1 (08:00 slot), Pin 1
-  // Slot 1 (09:00) -> Article 1 (08:00 slot), Pin 2
-  // Slot 2 (12:30) -> Article 2 (12:00 slot), Pin 1
-  // Slot 3 (13:00) -> Article 2 (12:00 slot), Pin 2
-  // Slot 4 (16:30) -> Article 3 (16:00 slot), Pin 1
-  // Slot 5 (17:00) -> Article 3 (16:00 slot), Pin 2
-  const targetArticleIndex = Math.floor(slotIndex / 2);
-  const targetPinIndex = slotIndex % 2;
-  const articlePublishTimes = config.articlePublishTimes || ['08:00', '12:00', '16:00'];
-  const targetArticleSlotTime = articlePublishTimes[targetArticleIndex] || (targetArticleIndex === 0 ? '08:00' : targetArticleIndex === 1 ? '12:00' : '16:00');
+  // Dynamic slot mapping across configured Pinterest slots and pins per article:
+  // e.g. With 1 pin per article: Slot 0 (09:15) -> Article 1 (09:00 slot), Pin 1
+  // With 2 pins per article: Slot 0 -> Article 1, Pin 1; Slot 1 -> Article 1, Pin 2
+  const pinsPerArt = Math.max(1, config.pinsPerArticle || 1);
+  const targetArticleIndex = Math.floor(slotIndex / pinsPerArt);
+  const targetPinIndex = slotIndex % pinsPerArt;
+  const articlePublishTimes = config.articlePublishTimes?.length ? config.articlePublishTimes : ['09:00'];
+  const targetArticleSlotTime = articlePublishTimes[targetArticleIndex] || articlePublishTimes[0] || '09:00';
 
   // Deterministically match article job for this Pinterest slot:
   // 1. By pin assignedSlotTime or scheduledTime (e.g. 08:30)
@@ -396,7 +393,7 @@ export async function dispatchNextOverduePinterestPin(
   const config = state.config;
   if (!config.engineActive || config.autoPublishPinterest === false) return null;
 
-  const slots = config.pinterestPublishTimes || ['08:30', '09:00', '12:30', '13:00', '16:30', '17:00'];
+  const slots = config.pinterestPublishTimes?.length ? config.pinterestPublishTimes : ['09:15'];
   const eligibleSlots = slots.filter(s => s <= currentTimeStr);
   if (eligibleSlots.length === 0) return null;
 
@@ -404,13 +401,14 @@ export async function dispatchNextOverduePinterestPin(
     .filter(j => j.assignedPublishDate === targetDateStr || (!j.assignedPublishDate && j.dateScheduled === targetDateStr))
     .sort((a, b) => ((a.assignedSlotTime || a.publicationScheduledAt || '')).localeCompare(b.assignedSlotTime || b.publicationScheduledAt || ''));
 
-  const articlePublishTimes = config.articlePublishTimes || ['08:00', '12:00', '16:00'];
+  const articlePublishTimes = config.articlePublishTimes?.length ? config.articlePublishTimes : ['09:00'];
+  const pinsPerArt = Math.max(1, config.pinsPerArticle || 1);
 
   for (const slot of eligibleSlots) {
     const idx = slots.indexOf(slot);
-    const articleIndex = Math.floor(idx / 2);
-    const pinIndex = idx % 2;
-    const targetArticleSlotTime = articlePublishTimes[articleIndex] || (articleIndex === 0 ? '08:00' : articleIndex === 1 ? '12:00' : '16:00');
+    const articleIndex = Math.floor(idx / pinsPerArt);
+    const pinIndex = idx % pinsPerArt;
+    const targetArticleSlotTime = articlePublishTimes[articleIndex] || articlePublishTimes[0] || '09:00';
 
     let job = jobs.find(j => j.pinterestPins?.some(p => p.assignedSlotTime === slot || p.scheduledTime === slot));
     if (!job) {

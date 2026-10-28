@@ -1638,7 +1638,7 @@ export function generatePinterestCreativeConcepts(
   article: GeneratedArticle,
   packet: FactualResearchPacket,
   resolvedBoard: NormalizedPinterestBoard,
-  pinsPerArticle = 2
+  pinsPerArticle = 1
 ): PinterestCreativeConcept[] {
   const concepts: PinterestCreativeConcept[] = [];
   const destinationUrl = `https://welovepattern.com/blog/${article.slug}`;

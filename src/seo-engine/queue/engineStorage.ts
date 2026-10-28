@@ -45,13 +45,31 @@ export function createInitialDailyState(customConfig?: Partial<SeoEngineConfig>)
 /**
  * Validates and repairs state shape if any required fields are missing
  */
-function normalizeAndRepairState(raw: Partial<SeoEngineDailyState>): SeoEngineDailyState {
+export function normalizeAndRepairState(raw: Partial<SeoEngineDailyState>): SeoEngineDailyState {
   const defaults = createInitialDailyState();
 
   const config: SeoEngineConfig = {
     ...DEFAULT_SEO_ENGINE_CONFIG,
     ...(raw.config || {}),
   };
+
+  // Default empty or missing arrays to Phase 1 defaults (09:00 article, 09:15 Pinterest)
+  if (!Array.isArray(config.articlePublishTimes) || config.articlePublishTimes.length === 0) {
+    config.articlePublishTimes = ['09:00'];
+  }
+  if (!Array.isArray(config.pinterestPublishTimes) || config.pinterestPublishTimes.length === 0) {
+    config.pinterestPublishTimes = ['09:15'];
+  }
+
+  if (typeof config.articlesPerDay !== 'number' || config.articlesPerDay <= 0) {
+    config.articlesPerDay = 1;
+  }
+  if (typeof config.pinsPerArticle !== 'number' || config.pinsPerArticle <= 0) {
+    config.pinsPerArticle = 1;
+  }
+  if (typeof config.pinsPerDay !== 'number' || config.pinsPerDay <= 0) {
+    config.pinsPerDay = 1;
+  }
 
   // Enforce strict production invariant floors:
   if (typeof config.higgsfieldDailyCostLimitUsd !== 'number' || config.higgsfieldDailyCostLimitUsd <= 0) {

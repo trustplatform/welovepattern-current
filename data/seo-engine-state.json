@@ -1,9 +1,9 @@
 {
   "version": 1,
   "config": {
-    "articlesPerDay": 3,
-    "pinsPerDay": 6,
-    "pinsPerArticle": 2,
+    "articlesPerDay": 1,
+    "pinsPerDay": 1,
+    "pinsPerArticle": 1,
     "trendTasksPerDay": 20,
     "autoPublish": true,
     "autoPublishPinterest": true,
@@ -21,18 +21,10 @@
       7
     ],
     "articlePublishTimes": [
-      "08:00",
-      "12:00",
-      "16:00",
-      "20:00"
+      "09:00"
     ],
     "pinterestPublishTimes": [
-      "08:30",
-      "09:00",
-      "12:30",
-      "13:00",
-      "16:30",
-      "17:00"
+      "09:15"
     ],
     "maxConcurrentJobs": 1,
     "fallbackBoardId": "",
@@ -555,56 +547,244 @@
       "pinterestPins": [
         {
           "pinNumber": 1,
-          "conceptAngle": "",
+          "conceptAngle": "Organized Maker Flatlay & Direct Practical Solution",
           "visualStyle": {
             "imageCount": 1,
-            "compositionType": "single_hero",
-            "subjectDescription": "",
-            "colorPalette": "",
+            "compositionType": "flatlay_materials",
+            "subjectDescription": "Organized Maker Flatlay & Direct Practical Solution for Mastering Crochet with an Online Row Counter",
+            "colorPalette": "Natural oatmeal, warm terracotta, slate charcoal, and creamy linen",
             "humanElement": "none"
           },
-          "compactHiggsfieldPrompt": "",
+          "compactHiggsfieldPrompt": "Complete 2:3 vertical Pinterest Pin visual. REALISTIC PHOTOGRAPHY-LED CROCHET TUTORIAL VISUAL (3-PART STACKED COMPOSITION):\n1. TOP IMAGE (UPPER SECTION):\nA large, clear photograph of the finished blocked crochet gauge swatch with immaculate stitch alignment alongside a flexible cloth measuring tape and polished wooden hook. The completed neat handmade crochet gauge swatch is presented in sharp photographic focus with authentic yarn stitch definition and physical handmade texture under soft diffused natural window lighting.\n\n2. CENTER TITLE (NEUTRAL HORIZONTAL BAND):\nOne short, readable article title on a simple, neutral horizontal band cleanly separating the two photographs:\n\"ONLINE ROW COUNTER\"\nClean, restrained, legible typography in uppercase, high contrast against the neutral band, visually separating the top and bottom photographs. No extra text, icons, stickers, badges, decorative frames, or unnecessary graphics.\n\n3. BOTTOM IMAGE (LOWER SECTION):\nA close-up photograph of real human hands actively crocheting the EXACT SAME neat handmade crochet gauge swatch. close-up photograph of real human hands actively crocheting the tension rows of that SAME gauge swatch with identical yarn and hook. Anatomically natural hands with realistic skin texture, authentic fingernails, and five correctly formed fingers holding an authentic crochet hook in a natural grip. The hands are actively working the identical yarn (matching CYC #4 Worsted and a genuine 5.0 mm (H-8)) with visible, physically plausible stitches in progress. Strict visual continuity in yarn color, weight, texture, and project construction between the finished item above and the in-progress project below.\n\nNON-NEGOTIABLE REALISM REQUIREMENTS:\n- Prioritize authentic photographic realism over illustration, CGI, cartoon aesthetics, and obvious AI-generated imagery.\n- Human hands must look anatomically natural, with correctly formed fingers and realistic skin texture.\n- The hook, yarn, and stitches must be physically plausible.\n- Show a coherent crochet-in-progress stage, not an unrelated object or a finished product being held as if it were being crocheted.\n- Maintain visual continuity between the finished product and the in-progress project with identical yarn color, weight, and construction.\n- Use natural lighting, realistic textures, simple backgrounds, and close-up photography.\n- Avoid artificial plastic-looking yarn, malformed hands, impossible hooks, disconnected stitches, and inconsistent product details.\n- Do not add extra text, icons, stickers, badges, decorative frames, or unnecessary graphics.\n- The title must be short, legible, correctly spelled, and visually separated from the two photographs.\nClean diffused overhead daylight, pristine maker workspace layout, palette of Natural oatmeal, warm terracotta, slate charcoal, and creamy linen.\n\nEDITORIAL TYPOGRAPHY & ART DIRECTION (RENDER EXACTLY TWO TEXT ELEMENTS):\n\nLITERAL TEXT LOCK — TYPOGRAPHY MUST RENDER THE FOLLOWING STRINGS CHARACTER-FOR-CHARACTER:\nHEADLINE — EXACT LITERAL STRING:\n\"ONLINE ROW COUNTER\"\n\nCTA — EXACT LITERAL STRING:\n\"USE ROW COUNTER →\"\n\nThe words above are not semantic instructions. They are literal visual text.\nDo not interpret their meaning.\nDo not substitute synonyms.\nDo not rewrite them.\nDo not improve them.\nDo not paraphrase them.\nDo not change any individual word.\nDo not change punctuation.\nDo not replace MORE with ALL.\nDo not replace ALL with MORE.\nDo not replace the arrow.\nRender the exact supplied characters as visible typography.\n\nBefore rendering, internally verify that the visible CTA exactly matches the supplied CTA string \"USE ROW COUNTER →\". If the rendered wording differs in any word, it is incorrect.\n\n1. HEADLINE VISUAL STYLING:\n   - Placement: Upper-center area in clean negative space above the focal subject.\n   - Typography: Bold, clean modern architectural SANS-SERIF typeface (geometric, heavy, crisp, contemporary editorial style with high visual impact and immaculate readability).\n   - Creative Background: Place typography directly into clean photographic negative space. No text background treatment whatsoever.\n\n2. ACTION CTA VISUAL STYLING:\n   - Placement: Centered bottom area with generous breathing room and clean physical separation from the headline.\n   - Typography: Rendered in Montserrat ExtraBold (font-weight 800, uppercase, ~24px visual size, letter spacing 1.2–1.5px, line height 1.0–1.1). Bold, crisp, highly readable on mobile, modern, premium, and confident (warm terracotta and oatmeal tones with sharp editorial legibility).\n   - Creative Background: Rendered as crisp editorial text with a delicate, minimalist fine hairline boundary sized tightly to the text.\n\nSTRICT PROHIBITIONS & FINAL TEXT CONFIRMATION:\n- ABSOLUTELY ZERO OTHER TEXT ON THE ENTIRE IMAGE: No subtitles, no secondary descriptions, no bullet points, no website headers, no URLs, no logos.\n- NEVER ADD decorative filler words such as \"PATTERNS\", \"PROJECTS\", \"INSPIRATION\", \"COZY\", \"HANDMADE\", or any random phrases.\n- GLOBAL HARD PROHIBITION: ABSOLUTELY NO paper, torn paper, paper wash, pigment wash, paint wash, brushstroke, watercolor shape, card, panel, banner, badge, button, pill, UI element, Canva-style graphic, or artificial text container.\n- Typography must feel like natural, artistic editorial text placed directly within the photographic space.\n- Photography must dominate the frame with ample breathing room.\n- FINAL CONFIRMED TEXT ELEMENTS TO RENDER (EXACTLY TWO):\n  1. HEADLINE: \"ONLINE ROW COUNTER\"\n  2. CTA: \"USE ROW COUNTER →\"",
           "typographyOverlay": {
-            "primaryHeadline": "online row counter",
-            "ctaBadgeText": ""
+            "primaryHeadline": "ONLINE ROW COUNTER",
+            "ctaBadgeText": "USE ROW COUNTER →",
+            "textContainerStyle": "none_direct_photo"
           },
-          "destinationUrl": "https://welovepattern.com/blog/",
-          "publishStatus": "pending"
+          "destinationUrl": "https://welovepattern.com/blog/mastering-crochet-with-an-online-row-counter",
+          "targetBoardId": "board_tools",
+          "targetBoardName": "Crochet Tools & Yarn Calculators",
+          "boardName": "Crochet Tools & Yarn Calculators",
+          "publishStatus": "failed",
+          "errorMessage": "Required Pin 1 image missing or failed generation."
         },
         {
           "pinNumber": 2,
-          "conceptAngle": "",
+          "conceptAngle": "Authentic Cozy Lifestyle & Finished Project in Use",
           "visualStyle": {
             "imageCount": 1,
-            "compositionType": "single_hero",
-            "subjectDescription": "",
-            "colorPalette": "",
-            "humanElement": "none"
+            "compositionType": "lifestyle_scene",
+            "subjectDescription": "Authentic Cozy Lifestyle & Finished Project in Use for Mastering Crochet with an Online Row Counter",
+            "colorPalette": "Rich indigo dye, warm birch wood, slate charcoal, and crisp milk cotton",
+            "humanElement": "person_wearing"
           },
-          "compactHiggsfieldPrompt": "",
+          "compactHiggsfieldPrompt": "Complete 2:3 vertical Pinterest Pin visual. REALISTIC PHOTOGRAPHY-LED CROCHET TUTORIAL VISUAL (3-PART STACKED COMPOSITION):\n1. TOP IMAGE (UPPER SECTION):\nA large, clear photograph of the finished blocked crochet gauge swatch with immaculate stitch alignment alongside a flexible cloth measuring tape and polished wooden hook. The completed neat handmade crochet gauge swatch is presented in sharp photographic focus with authentic yarn stitch definition and physical handmade texture under soft diffused natural window lighting.\n\n2. CENTER TITLE (NEUTRAL HORIZONTAL BAND):\nOne short, readable article title on a simple, neutral horizontal band cleanly separating the two photographs:\n\"ONLINE ROW COUNTER\"\nClean, restrained, legible typography in uppercase, high contrast against the neutral band, visually separating the top and bottom photographs. No extra text, icons, stickers, badges, decorative frames, or unnecessary graphics.\n\n3. BOTTOM IMAGE (LOWER SECTION):\nA close-up photograph of real human hands actively crocheting the EXACT SAME neat handmade crochet gauge swatch. close-up photograph of real human hands actively crocheting the tension rows of that SAME gauge swatch with identical yarn and hook. Anatomically natural hands with realistic skin texture, authentic fingernails, and five correctly formed fingers holding an authentic crochet hook in a natural grip. The hands are actively working the identical yarn (matching CYC #4 Worsted and a genuine 5.0 mm (H-8)) with visible, physically plausible stitches in progress. Strict visual continuity in yarn color, weight, texture, and project construction between the finished item above and the in-progress project below.\n\nNON-NEGOTIABLE REALISM REQUIREMENTS:\n- Prioritize authentic photographic realism over illustration, CGI, cartoon aesthetics, and obvious AI-generated imagery.\n- Human hands must look anatomically natural, with correctly formed fingers and realistic skin texture.\n- The hook, yarn, and stitches must be physically plausible.\n- Show a coherent crochet-in-progress stage, not an unrelated object or a finished product being held as if it were being crocheted.\n- Maintain visual continuity between the finished product and the in-progress project with identical yarn color, weight, and construction.\n- Use natural lighting, realistic textures, simple backgrounds, and close-up photography.\n- Avoid artificial plastic-looking yarn, malformed hands, impossible hooks, disconnected stitches, and inconsistent product details.\n- Do not add extra text, icons, stickers, badges, decorative frames, or unnecessary graphics.\n- The title must be short, legible, correctly spelled, and visually separated from the two photographs.\nWarm natural side light in an authentic craft workshop, palette of Rich indigo dye, warm birch wood, slate charcoal, and crisp milk cotton.\n\nEDITORIAL TYPOGRAPHY & ART DIRECTION (RENDER EXACTLY TWO TEXT ELEMENTS):\n\nLITERAL TEXT LOCK — TYPOGRAPHY MUST RENDER THE FOLLOWING STRINGS CHARACTER-FOR-CHARACTER:\nHEADLINE — EXACT LITERAL STRING:\n\"ONLINE ROW COUNTER\"\n\nCTA — EXACT LITERAL STRING:\n\"USE ROW COUNTER →\"\n\nThe words above are not semantic instructions. They are literal visual text.\nDo not interpret their meaning.\nDo not substitute synonyms.\nDo not rewrite them.\nDo not improve them.\nDo not paraphrase them.\nDo not change any individual word.\nDo not change punctuation.\nDo not replace MORE with ALL.\nDo not replace ALL with MORE.\nDo not replace the arrow.\nRender the exact supplied characters as visible typography.\n\nBefore rendering, internally verify that the visible CTA exactly matches the supplied CTA string \"USE ROW COUNTER →\". If the rendered wording differs in any word, it is incorrect.\n\n1. HEADLINE VISUAL STYLING:\n   - Placement: Upper area in clean negative space.\n   - Typography: Elegant high-end editorial SERIF typeface inspired by luxury fashion magazines and fine Pinterest editorial design. Sophisticated, feminine, refined, and artistic with high visual impact and generous scale. (NOT a heavy generic display font, NOT a playful cartoon font, NOT handwriting).\n   - Creative Background: Positioned naturally within clean environmental negative space in the photographic composition. No background shape or panel.\n\n2. ACTION CTA VISUAL STYLING:\n   - Placement: Lower-right area in natural negative space with generous breathing room and clear physical separation from the headline. Never attached or placed directly beneath the headline.\n   - Typography: Rendered in Montserrat ExtraBold (font-weight 800, uppercase, ~24px visual size, letter spacing 1.2–1.5px, line height 1.0–1.1). Bold, crisp, highly readable on mobile, modern, premium, and confident (rich indigo and warm birch tones with sharp modern legibility).\n   - Creative Background: Rendered cleanly with a subtle, soft tonal tint sized closely around the text.\n\nSTRICT PROHIBITIONS & FINAL TEXT CONFIRMATION:\n- ABSOLUTELY ZERO OTHER TEXT ON THE ENTIRE IMAGE: No subtitles, no secondary descriptions, no bullet points, no website headers, no URLs, no logos.\n- NEVER ADD decorative filler words such as \"PATTERNS\", \"PROJECTS\", \"INSPIRATION\", \"COZY\", \"HANDMADE\", or any random phrases.\n- GLOBAL HARD PROHIBITION: ABSOLUTELY NO paper, torn paper, paper wash, pigment wash, paint wash, brushstroke, watercolor shape, card, panel, banner, badge, button, pill, UI element, Canva-style graphic, or artificial text container.\n- Typography must feel like natural, artistic editorial text placed directly within the photographic space.\n- Photography must dominate the frame with ample breathing room.\n- FINAL CONFIRMED TEXT ELEMENTS TO RENDER (EXACTLY TWO):\n  1. HEADLINE: \"ONLINE ROW COUNTER\"\n  2. CTA: \"USE ROW COUNTER →\"",
           "typographyOverlay": {
-            "primaryHeadline": "online row counter",
-            "ctaBadgeText": ""
+            "primaryHeadline": "ONLINE ROW COUNTER",
+            "ctaBadgeText": "USE ROW COUNTER →",
+            "textContainerStyle": "environmental_negative_space"
           },
-          "destinationUrl": "https://welovepattern.com/blog/",
-          "publishStatus": "pending"
+          "destinationUrl": "https://welovepattern.com/blog/mastering-crochet-with-an-online-row-counter",
+          "targetBoardId": "board_tools",
+          "targetBoardName": "Crochet Tools & Yarn Calculators",
+          "boardName": "Crochet Tools & Yarn Calculators",
+          "publishStatus": "failed",
+          "errorMessage": "Required Pin 2 image missing or failed generation."
         }
       ],
-      "stage": "selected",
+      "stage": "failed",
       "requiresApproval": false,
       "indexNowNotified": false,
       "createdAt": "2026-10-19T19:38:51.277Z",
-      "updatedAt": "2026-10-19T19:38:51.279Z",
+      "updatedAt": "2026-10-28T10:59:59.845Z",
       "logs": [
         {
           "timestamp": "2026-10-19T19:38:51.277Z",
           "level": "info",
           "message": "Job created for TOOL_GUIDE (Category: TOOLS): \"online row counter\" with opportunity score 95."
+        },
+        {
+          "timestamp": "2026-10-28T10:59:11.542Z",
+          "level": "info",
+          "message": "Starting technical craft research..."
+        },
+        {
+          "timestamp": "2026-10-28T10:59:17.050Z",
+          "level": "info",
+          "message": "Factual research packet validated successfully."
+        },
+        {
+          "timestamp": "2026-10-28T10:59:17.053Z",
+          "level": "info",
+          "message": "Generating article with OpenAI..."
+        },
+        {
+          "timestamp": "2026-10-28T10:59:31.138Z",
+          "level": "info",
+          "message": "Article generated successfully (952 words). Content safely persisted to job state."
+        },
+        {
+          "timestamp": "2026-10-28T10:59:31.140Z",
+          "level": "info",
+          "message": "Starting Stage 3: Board resolution and local image asset binding ($0 cost)..."
+        },
+        {
+          "timestamp": "2026-10-28T10:59:59.313Z",
+          "level": "info",
+          "message": "Hero image generated successfully via Higgsfield: /generated/blog/mastering-crochet-with-an-online-row-cou-4fb4dbc52d.jpg"
+        },
+        {
+          "timestamp": "2026-10-28T10:59:59.845Z",
+          "level": "error",
+          "message": "Missing or failed image assets: Pin 1 (2:3), Pin 2 (2:3). Job halted safely."
         }
       ],
       "assignedPublishDate": "2026-10-19",
       "assignedSlotTime": "16:00",
-      "publicationScheduledAt": "16:00"
+      "publicationScheduledAt": "16:00",
+      "factualResearch": {
+        "topicId": "topic_tool_row_counter_6f6e6c69",
+        "topic": "online row counter",
+        "searchIntent": "To find tools that help track rows when crocheting, especially for projects that require precise row or pattern tracking.",
+        "craftType": "crochet",
+        "sourceAuthority": "Craft Yarn Council Technical Standards & OpenAI Craft Research",
+        "cycStandardVersion": "CYC 2024 Guidelines",
+        "generatedAt": "2026-10-28T10:59:17.047Z",
+        "verifiedTerminology": [
+          "Single Crochet (UK: Double Crochet)",
+          "Double Crochet (UK: Treble Crochet)",
+          "Row Counter"
+        ],
+        "verifiedMaterials": {
+          "yarnWeights": [
+            "CYC #4 Worsted",
+            "CYC #3 DK"
+          ],
+          "hookSizes": [
+            "5.0 mm (H-8)",
+            "4.0 mm (G-6)"
+          ],
+          "standardYardages": "Baby blanket: 700 - 1,000 meters, Throw blanket: 1,500 - 2,000 meters",
+          "verifiedDimensions": {
+            "Baby Blanket": "30 x 36 inches (76 x 91 cm)",
+            "Lapghan": "36 x 48 inches (91 x 122 cm)",
+            "Throw Blanket": "50 x 60 inches (127 x 152 cm)",
+            "Twin Blanket": "66 x 90 inches (168 x 229 cm)"
+          }
+        },
+        "authorizedPercentages": [
+          10,
+          15,
+          20
+        ],
+        "prohibitedMetrics": [
+          "stitches per skein",
+          "divide stitches by stitches per skein",
+          "arbitrary yards per stitch",
+          "invented mattress or bed sizes",
+          "commercial sales pricing or revenue claims"
+        ],
+        "verifiedFormulas": [
+          {
+            "name": "Area Ratio Swatch Scaling Method",
+            "description": "Calculates total project yardage by scaling swatch yardage to blanket surface area",
+            "formulaText": "Total Yardage = (Blanket Area / Swatch Area) * Swatch Yardage * 1.10",
+            "steps": [
+              "Step 1: Measure the swatch area.",
+              "Step 2: Measure the target blanket area.",
+              "Step 3: Calculate the area ratio.",
+              "Step 4: Multiply swatch yardage by area ratio and add a 10% buffer."
+            ]
+          }
+        ],
+        "supportedClaims": [
+          "Textured stitches like bobbles and puff stitches consume more yarn than flat stitches like single crochet and double crochet.",
+          "A 10% to 15% safety buffer is standard practice.",
+          "Yarn is sold by weight and yardage, not by stitch count."
+        ],
+        "techniqueKeyPoints": [
+          "Online row counters help maintain accuracy in row counting without the need for manual tracking.",
+          "Digital tools often include additional features like pattern repeats and stitch counting.",
+          "Row counters can be standalone apps or part of broader crochet project management software."
+        ],
+        "makerPainPoints": [
+          "Forgetting the row count in complex patterns.",
+          "Struggling with manual counting, especially in large projects.",
+          "Difficulty in managing pattern repeats without a counter."
+        ],
+        "faqItems": [
+          {
+            "question": "How does an online row counter work?",
+            "factualAnswer": "An online row counter typically allows users to increment a digital counter with each completed row, helping track progress accurately."
+          },
+          {
+            "question": "Can row counters be used for any type of crochet project?",
+            "factualAnswer": "Yes, row counters are versatile and can be used for any project that requires row tracking, from simple scarves to complex blankets."
+          },
+          {
+            "question": "Are there free online row counters available?",
+            "factualAnswer": "Yes, there are several free online row counters available, often as standalone apps or as part of crochet project management tools."
+          }
+        ],
+        "verifiedInternalLinks": [
+          {
+            "anchorText": "online row counter",
+            "url": "/tools/row-counter",
+            "entityType": "tool"
+          }
+        ],
+        "targetTool": {
+          "id": "row-counter",
+          "slug": "row-counter",
+          "title": "Row Counter",
+          "description": "Offline-ready interactive row counter with audio chime, haptic vibration, reset, and log history.",
+          "icon": "Hash",
+          "category": "Counter",
+          "actionType": "counter",
+          "actionLabel": "Start Counting Rows →",
+          "actionVerb": "Count Rows",
+          "isPopular": true,
+          "isOfflineCapable": true
+        }
+      },
+      "articleContent": {
+        "title": "Mastering Crochet with an Online Row Counter",
+        "slug": "mastering-crochet-with-an-online-row-counter",
+        "excerpt": "Discover how an online row counter can streamline your crochet projects, ensuring precision and ease, from simple scarves to complex blankets.",
+        "contentHtml": "<h2>The Importance of Row Counters in Crochet</h2><p>Crochet enthusiasts know that maintaining accuracy in row counting is crucial, especially when working on intricate patterns. Whether you're crafting a baby blanket measuring 30 x 36 inches or a throw blanket at 50 x 60 inches, keeping track of each row is essential to ensure your project turns out as intended. Traditional methods, such as pen and paper or mental tallying, can lead to errors, particularly in large projects or when using textured stitches like bobbles and puff stitches that consume more yarn than flat stitches.</p><p>Textured stitches not only require more yarn but also demand meticulous attention to detail, making an accurate row count even more important. If you lose track, you risk unraveling a significant portion of your work to correct mistakes, which can be frustrating and time-consuming.</p><h2>Manual Row Counting Techniques</h2><p>Before digital solutions, crafters relied heavily on manual counting techniques. These methods, while effective, often required significant attention and could be prone to human error. Here's how you can count rows manually:</p><ol><li><strong>Use a Notepad:</strong> Write down the pattern and manually mark each completed row. This method is straightforward but can become cumbersome in complex patterns.</li><li><strong>Physical Row Counters:</strong> Use a physical counter that you click after each row. These are portable and simple but can be easy to misplace.</li><li><strong>Stitch Markers:</strong> Place a marker at the end of each row, moving it up as you progress. This method is particularly useful for visually tracking progress but requires constant adjustment.</li></ol><p>While these methods can work, they require constant attention and do not offer the fail-safes that digital solutions provide. In large projects like a throw blanket or twin blanket, manual techniques can lead to repetitive strain or miscounts, especially when managing pattern repeats without a counter.</p><h2>Introducing the WeLovePattern Row Counter</h2><p>The WeLovePattern Row Counter is designed to eliminate the guesswork and potential errors from manual counting. This offline-ready interactive tool features an audio chime and haptic vibration, ensuring you never lose track, even if you're engrossed in a complex pattern. Additionally, it offers a reset function and log history, making it easy to manage pattern repeats and stitch counts.</p><h2>Using the WeLovePattern Row Counter</h2><p>To use our dedicated row counter, follow these steps:</p><ol><li><strong>Start Counting:</strong> Click the <em>Start Counting Rows →</em> button to begin. The digital interface is user-friendly and intuitive.</li><li><strong>Increment Rows:</strong> Each time you complete a row, simply press the increment button. You'll hear a chime and feel a vibration, confirming the count. This feedback ensures that you are always aware of your progress.</li><li><strong>Reset and Log:</strong> If you need to reset or review your progress, use the reset button and access the log history for detailed tracking. This feature is invaluable for tracking pattern repeats and ensuring consistency.</li></ol><p>This tool is not only practical but also enhances your crafting experience by allowing you to focus more on creativity and less on the mechanics of counting. By integrating technology into your crochet practice, you can achieve a higher level of precision and enjoy the process more fully.</p><h2>Practical Applications</h2><p>Our row counter is versatile and can be used for all types of crochet projects. Whether you're crafting a simple scarf or a twin blanket measuring 66 x 90 inches, the counter adapts to your needs. It is especially useful for managing pattern repeats and ensuring that each section of your project aligns perfectly with your blueprint.</p><p>Consider the challenges of creating a large throw blanket. Such projects require careful attention to detail to maintain uniformity and avoid distortion. An online row counter simplifies this process by providing a reliable method to track rows and pattern repeats, thus reducing the likelihood of errors.</p><h2>Row Counter Features and Options</h2><p>Online row counters often come with a variety of features that enhance the crocheting experience. In addition to basic counting, many digital tools include:</p><ul><li><strong>Pattern Repeats:</strong> Track specific sections of your pattern, helping you focus on complex designs without losing your place.</li><li><strong>Stitch Counting:</strong> Some advanced counters allow for individual stitch tracking, which is beneficial for intricate patterns.</li><li><strong>Project Management:</strong> Integrated tools that help manage multiple projects simultaneously, offering a holistic view of your crafting workload.</li></ul><p>These features make digital row counters an indispensable tool for both novice and experienced crocheters.</p>\n\n<div class=\"welovepattern-tool-cta my-8 p-6 sm:p-8 rounded-3xl bg-gradient-to-br from-pink-50 via-rose-50/40 to-amber-50/50 dark:from-slate-800 dark:via-slate-800/90 dark:to-slate-800/60 border border-pink-200/70 dark:border-slate-700/80 shadow-sm not-prose\" data-tool-cta=\"row-counter\">\n  <div class=\"flex flex-col sm:flex-row items-start sm:items-center justify-between gap-5\">\n    <div class=\"space-y-2 flex-1\">\n      <div class=\"inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-xs font-semibold bg-pink-100/80 dark:bg-pink-950/60 text-[#E96BA8] dark:text-pink-300\">\n        <span class=\"w-2 h-2 rounded-full bg-[#E96BA8] animate-pulse\"></span>\n        Interactive WeLovePattern Tool\n      </div>\n      <h3 class=\"text-xl sm:text-2xl font-black text-slate-900 dark:text-white tracking-tight m-0\">\n        Row Counter\n      </h3>\n      <p class=\"text-sm text-slate-600 dark:text-slate-300 leading-relaxed m-0\">\n        Offline-ready interactive row counter with audio chime, haptic vibration, reset, and log history.\n      </p>\n    </div>\n    <div class=\"shrink-0 w-full sm:w-auto\">\n      <a href=\"/tools/row-counter\" class=\"inline-flex items-center justify-center gap-2 w-full sm:w-auto px-6 py-3.5 rounded-2xl bg-gradient-to-r from-[#E96BA8] to-[#FF8E53] hover:from-[#d85596] hover:to-[#e87d42] text-white font-bold text-sm sm:text-base shadow-md hover:shadow-lg transition-all transform hover:-translate-y-0.5 no-underline\">\n        <span>Start Counting Rows →</span>\n      </a>\n    </div>\n  </div>\n</div>\n\n<h2>Frequently Asked Questions</h2><h3>How does an online row counter work?</h3><p>An online row counter typically allows users to increment a digital counter with each completed row, helping track progress accurately. This ensures that you can maintain a consistent row count, providing peace of mind and enhancing the quality of your finished project.</p><h3>Can row counters be used for any type of crochet project?</h3><p>Yes, row counters are versatile and can be used for any project that requires row tracking, from simple scarves to complex blankets. Their adaptability makes them a valuable addition to any crocheter's toolkit.</p><h3>Are there free online row counters available?</h3><p>Yes, there are several free online row counters available, often as standalone apps or as part of crochet project management tools. These free versions can be an excellent starting point for those new to digital row counting.</p><h2>Conclusion</h2><p>An online row counter, like the WeLovePattern tool, is invaluable for maintaining accuracy and efficiency in your crochet projects. By leveraging digital advancements, you can ensure precision and reduce the stress of manual counting. Whether you're working on a cozy lapghan measuring 36 x 48 inches or a beautiful baby blanket, this tool will help you achieve professional-level results. Embracing these tools not only simplifies your workflow but also enhances your enjoyment and creativity in crochet.</p>",
+        "wordCount": 952,
+        "category": "tools",
+        "tags": [
+          "crochet",
+          "row counter",
+          "yarn crafting",
+          "pattern tracking",
+          "handmade"
+        ],
+        "seoMeta": {
+          "title": "Online Row Counter for Crochet Projects",
+          "description": "Learn how an online row counter enhances crochet accuracy for all projects.",
+          "keywords": "online row counter, crochet tool, pattern tracking, yarn crafting"
+        },
+        "heroImage": {
+          "prompt": "Realistic photography-led craft editorial visual for 16:9 widescreen article hero format, featuring an authentic dual-focus tutorial composition:\n1. FINISHED OBJECT (LEFT): A large, clear photograph of the finished blocked crochet gauge swatch with immaculate stitch alignment alongside a flexible cloth measuring tape and polished wooden hook. A large, clear photograph of the completed handmade crochet neat handmade crochet gauge swatch, complete and beautifully styled on a clean warm linen or rustic wooden surface with soft diffused natural morning window light.\n2. CENTER TITLE: A clean, neutral horizontal divider band displaying the short title \"Mastering Crochet with an Online Row Counter\". Simple, restrained, readable typography with zero decorative stickers or badges.\n3. CROCHET IN PROGRESS (RIGHT): A close-up photograph of real human hands actively crocheting the EXACT SAME neat handmade crochet gauge swatch, holding a smooth wooden hook with matching CYC #4 Worsted and a genuine 5.0 mm (H-8), showing physically plausible stitches in progress (close-up photograph of real human hands actively crocheting the tension rows of that SAME gauge swatch with identical yarn and hook).\nNON-NEGOTIABLE REALISM REQUIREMENTS:\n- Prioritize authentic photographic realism over illustration, CGI, cartoon aesthetics, and obvious AI-generated imagery.\n- Human hands must look anatomically natural, with correctly formed fingers and realistic skin texture.\n- The hook, yarn, and stitches must be physically plausible.\n- Show a coherent crochet-in-progress stage, not an unrelated object or a finished product being held as if it were being crocheted.\n- Maintain visual continuity between the finished product and the in-progress project with identical yarn color, weight, and construction.\n- Natural lighting, realistic textures, simple backgrounds, close-up photography.\n- Avoid artificial plastic-looking yarn, malformed hands, impossible hooks, disconnected stitches, and inconsistent product details.\n- Do not add extra text, icons, stickers, badges, decorative frames, or unnecessary graphics.\n- The title must be short, legible, correctly spelled, and visually separated from the two photographs.",
+          "compactPrompt": "Realistic photography-led craft editorial visual for 16:9 widescreen article hero format, featuring an authentic dual-focus tutorial composition:\n1. FINISHED OBJECT (LEFT): A large, clear photograph of the finished blocked crochet gauge swatch with immaculate stitch alignment alongside a flexible cloth measuring tape and polished wooden hook. A large, clear photograph of the completed handmade crochet neat handmade crochet gauge swatch, complete and beautifully styled on a cl",
+          "stableAssetPath": "/app/applet/public/generated/blog/mastering-crochet-with-an-online-row-cou-4fb4dbc52d.jpg",
+          "stablePublicUrl": "/generated/blog/mastering-crochet-with-an-online-row-cou-4fb4dbc52d.jpg",
+          "higgsfieldRequestId": "01a1822a-4786-7150-ba4a-1d23697bb69e",
+          "higgsfieldTaskId": "01a1822a-4786-7150-ba4a-1d23697bb69e",
+          "status": "ready"
+        }
+      },
+      "articleHeroImage": {
+        "prompt": "Realistic photography-led craft editorial visual for 16:9 widescreen article hero format, featuring an authentic dual-focus tutorial composition:\n1. FINISHED OBJECT (LEFT): A large, clear photograph of the finished blocked crochet gauge swatch with immaculate stitch alignment alongside a flexible cloth measuring tape and polished wooden hook. A large, clear photograph of the completed handmade crochet neat handmade crochet gauge swatch, complete and beautifully styled on a clean warm linen or rustic wooden surface with soft diffused natural morning window light.\n2. CENTER TITLE: A clean, neutral horizontal divider band displaying the short title \"Mastering Crochet with an Online Row Counter\". Simple, restrained, readable typography with zero decorative stickers or badges.\n3. CROCHET IN PROGRESS (RIGHT): A close-up photograph of real human hands actively crocheting the EXACT SAME neat handmade crochet gauge swatch, holding a smooth wooden hook with matching CYC #4 Worsted and a genuine 5.0 mm (H-8), showing physically plausible stitches in progress (close-up photograph of real human hands actively crocheting the tension rows of that SAME gauge swatch with identical yarn and hook).\nNON-NEGOTIABLE REALISM REQUIREMENTS:\n- Prioritize authentic photographic realism over illustration, CGI, cartoon aesthetics, and obvious AI-generated imagery.\n- Human hands must look anatomically natural, with correctly formed fingers and realistic skin texture.\n- The hook, yarn, and stitches must be physically plausible.\n- Show a coherent crochet-in-progress stage, not an unrelated object or a finished product being held as if it were being crocheted.\n- Maintain visual continuity between the finished product and the in-progress project with identical yarn color, weight, and construction.\n- Natural lighting, realistic textures, simple backgrounds, close-up photography.\n- Avoid artificial plastic-looking yarn, malformed hands, impossible hooks, disconnected stitches, and inconsistent product details.\n- Do not add extra text, icons, stickers, badges, decorative frames, or unnecessary graphics.\n- The title must be short, legible, correctly spelled, and visually separated from the two photographs.",
+        "compactPrompt": "Realistic photography-led craft editorial visual for 16:9 widescreen article hero format, featuring an authentic dual-focus tutorial composition:\n1. FINISHED OBJECT (LEFT): A large, clear photograph of the finished blocked crochet gauge swatch with immaculate stitch alignment alongside a flexible cloth measuring tape and polished wooden hook. A large, clear photograph of the completed handmade crochet neat handmade crochet gauge swatch, complete and beautifully styled on a cl",
+        "stableAssetPath": "/app/applet/public/generated/blog/mastering-crochet-with-an-online-row-cou-4fb4dbc52d.jpg",
+        "stablePublicUrl": "/generated/blog/mastering-crochet-with-an-online-row-cou-4fb4dbc52d.jpg",
+        "higgsfieldRequestId": "01a1822a-4786-7150-ba4a-1d23697bb69e",
+        "higgsfieldTaskId": "01a1822a-4786-7150-ba4a-1d23697bb69e",
+        "status": "ready"
+      }
     },
     {
       "id": "job_2026-10-19_jnwie5",
@@ -631,56 +811,231 @@
       "pinterestPins": [
         {
           "pinNumber": 1,
-          "conceptAngle": "",
+          "conceptAngle": "Curated Editorial Multi-Project Showcase",
           "visualStyle": {
-            "imageCount": 1,
-            "compositionType": "single_hero",
-            "subjectDescription": "",
-            "colorPalette": "",
+            "imageCount": 4,
+            "compositionType": "4_image_grid",
+            "subjectDescription": "Curated Editorial Multi-Project Showcase for Charming Crochet Christmas Tree Ornament Patterns",
+            "colorPalette": "Deep forest pine green, cranberry red, winter cream, and warm brass",
             "humanElement": "none"
           },
-          "compactHiggsfieldPrompt": "",
+          "compactHiggsfieldPrompt": "Complete 2:3 vertical Pinterest Pin visual. REALISTIC PHOTOGRAPHY-LED CROCHET TUTORIAL VISUAL (3-PART STACKED COMPOSITION):\n1. TOP IMAGE (UPPER SECTION):\nA large, clear photograph of the finished handmade crochet Christmas tree ornament with festive textured stitches, neat hanging loop, and crisp form on a natural wood surface. The completed handmade crochet Christmas tree ornament is presented in sharp photographic focus with authentic yarn stitch definition and physical handmade texture under soft diffused natural window lighting.\n\n2. CENTER TITLE (NEUTRAL HORIZONTAL BAND):\nOne short, readable article title on a simple, neutral horizontal band cleanly separating the two photographs:\n\"CROCHET CHRISTMAS TREE ORNAMENT PATTERN\"\nClean, restrained, legible typography in uppercase, high contrast against the neutral band, visually separating the top and bottom photographs. No extra text, icons, stickers, badges, decorative frames, or unnecessary graphics.\n\n3. BOTTOM IMAGE (LOWER SECTION):\nA close-up photograph of real human hands actively crocheting the EXACT SAME handmade crochet Christmas tree ornament. close-up photograph of real human hands actively crocheting the branch tiers of that SAME ornament using identical festive evergreen yarn, an authentic 4.0 mm (G-6), and visible stitches. Anatomically natural hands with realistic skin texture, authentic fingernails, and five correctly formed fingers holding an authentic crochet hook in a natural grip. The hands are actively working the identical yarn (matching CYC #3 DK and a genuine 4.0 mm (G-6)) with visible, physically plausible stitches in progress. Strict visual continuity in yarn color, weight, texture, and project construction between the finished item above and the in-progress project below.\n\nNON-NEGOTIABLE REALISM REQUIREMENTS:\n- Prioritize authentic photographic realism over illustration, CGI, cartoon aesthetics, and obvious AI-generated imagery.\n- Human hands must look anatomically natural, with correctly formed fingers and realistic skin texture.\n- The hook, yarn, and stitches must be physically plausible.\n- Show a coherent crochet-in-progress stage, not an unrelated object or a finished product being held as if it were being crocheted.\n- Maintain visual continuity between the finished product and the in-progress project with identical yarn color, weight, and construction.\n- Use natural lighting, realistic textures, simple backgrounds, and close-up photography.\n- Avoid artificial plastic-looking yarn, malformed hands, impossible hooks, disconnected stitches, and inconsistent product details.\n- Do not add extra text, icons, stickers, badges, decorative frames, or unnecessary graphics.\n- The title must be short, legible, correctly spelled, and visually separated from the two photographs.\nSoft ambient winter morning light, cozy festive ambiance, palette of Deep forest pine green, cranberry red, winter cream, and warm brass.\n\nEDITORIAL TYPOGRAPHY & ART DIRECTION (RENDER EXACTLY TWO TEXT ELEMENTS):\n\nLITERAL TEXT LOCK — TYPOGRAPHY MUST RENDER THE FOLLOWING STRINGS CHARACTER-FOR-CHARACTER:\nHEADLINE — EXACT LITERAL STRING:\n\"CROCHET CHRISTMAS TREE ORNAMENT PATTERN\"\n\nCTA — EXACT LITERAL STRING:\n\"SEE ALL IDEAS →\"\n\nThe words above are not semantic instructions. They are literal visual text.\nDo not interpret their meaning.\nDo not substitute synonyms.\nDo not rewrite them.\nDo not improve them.\nDo not paraphrase them.\nDo not change any individual word.\nDo not change punctuation.\nDo not replace MORE with ALL.\nDo not replace ALL with MORE.\nDo not replace the arrow.\nRender the exact supplied characters as visible typography.\n\nBefore rendering, internally verify that the visible CTA exactly matches the supplied CTA string \"SEE ALL IDEAS →\". If the rendered wording differs in any word, it is incorrect.\n\n1. HEADLINE VISUAL STYLING:\n   - Placement: Upper-center area in clean negative space above the focal subject.\n   - Typography: Elegant high-end editorial SERIF typeface inspired by luxury fashion magazines and fine Pinterest editorial design. Sophisticated, feminine, refined, and artistic with high visual impact and generous scale. (NOT a heavy generic display font, NOT a playful cartoon font, NOT handwriting).\n   - Creative Background: Positioned over a subtle photographic ambient light gradient with clean contrast. No artificial card or panel elements.\n\n2. ACTION CTA VISUAL STYLING:\n   - Placement: Lower-right area in natural negative space with generous breathing room and clear physical separation from the headline. Never attached or placed directly beneath the headline.\n   - Typography: Rendered in Montserrat ExtraBold (font-weight 800, uppercase, ~24px visual size, letter spacing 1.2–1.5px, line height 1.0–1.1). Bold, crisp, highly readable on mobile, modern, premium, and confident (deep forest pine and winter cream tones with crisp high-contrast typography).\n   - Creative Background: Rendered as clean, compact editorial typography positioned naturally in negative space.\n\nSTRICT PROHIBITIONS & FINAL TEXT CONFIRMATION:\n- ABSOLUTELY ZERO OTHER TEXT ON THE ENTIRE IMAGE: No subtitles, no secondary descriptions, no bullet points, no website headers, no URLs, no logos.\n- NEVER ADD decorative filler words such as \"PATTERNS\", \"PROJECTS\", \"INSPIRATION\", \"COZY\", \"HANDMADE\", or any random phrases.\n- GLOBAL HARD PROHIBITION: ABSOLUTELY NO paper, torn paper, paper wash, pigment wash, paint wash, brushstroke, watercolor shape, card, panel, banner, badge, button, pill, UI element, Canva-style graphic, or artificial text container.\n- Typography must feel like natural, artistic editorial text placed directly within the photographic space.\n- Photography must dominate the frame with ample breathing room.\n- FINAL CONFIRMED TEXT ELEMENTS TO RENDER (EXACTLY TWO):\n  1. HEADLINE: \"CROCHET CHRISTMAS TREE ORNAMENT PATTERN\"\n  2. CTA: \"SEE ALL IDEAS →\"",
           "typographyOverlay": {
-            "primaryHeadline": "crochet christmas tree ornament pattern",
-            "ctaBadgeText": ""
+            "primaryHeadline": "CROCHET CHRISTMAS TREE ORNAMENT PATTERN",
+            "ctaBadgeText": "SEE ALL IDEAS →",
+            "textContainerStyle": "subtle_light_gradient"
           },
-          "destinationUrl": "https://welovepattern.com/blog/",
-          "publishStatus": "pending"
+          "destinationUrl": "https://welovepattern.com/blog/charming-crochet-christmas-tree-ornament-patterns",
+          "targetBoardId": "board_decor",
+          "targetBoardName": "Crochet Home Decor",
+          "boardName": "Crochet Home Decor",
+          "publishStatus": "failed",
+          "errorMessage": "Required Pin 1 image missing or failed generation."
         },
         {
           "pinNumber": 2,
-          "conceptAngle": "",
+          "conceptAngle": "Asymmetric Dynamic Editorial Feature",
           "visualStyle": {
             "imageCount": 1,
             "compositionType": "single_hero",
-            "subjectDescription": "",
-            "colorPalette": "",
+            "subjectDescription": "Asymmetric Dynamic Editorial Feature for Charming Crochet Christmas Tree Ornament Patterns",
+            "colorPalette": "Warm oatmeal wool, rich cinnamon, toasted pecan, and alpine white",
             "humanElement": "none"
           },
-          "compactHiggsfieldPrompt": "",
+          "compactHiggsfieldPrompt": "Complete 2:3 vertical Pinterest Pin visual. REALISTIC PHOTOGRAPHY-LED CROCHET TUTORIAL VISUAL (3-PART STACKED COMPOSITION):\n1. TOP IMAGE (UPPER SECTION):\nA large, clear photograph of the finished handmade crochet Christmas tree ornament with festive textured stitches, neat hanging loop, and crisp form on a natural wood surface. The completed handmade crochet Christmas tree ornament is presented in sharp photographic focus with authentic yarn stitch definition and physical handmade texture under soft diffused natural window lighting.\n\n2. CENTER TITLE (NEUTRAL HORIZONTAL BAND):\nOne short, readable article title on a simple, neutral horizontal band cleanly separating the two photographs:\n\"CROCHET CHRISTMAS TREE ORNAMENT PATTERN\"\nClean, restrained, legible typography in uppercase, high contrast against the neutral band, visually separating the top and bottom photographs. No extra text, icons, stickers, badges, decorative frames, or unnecessary graphics.\n\n3. BOTTOM IMAGE (LOWER SECTION):\nA close-up photograph of real human hands actively crocheting the EXACT SAME handmade crochet Christmas tree ornament. close-up photograph of real human hands actively crocheting the branch tiers of that SAME ornament using identical festive evergreen yarn, an authentic 4.0 mm (G-6), and visible stitches. Anatomically natural hands with realistic skin texture, authentic fingernails, and five correctly formed fingers holding an authentic crochet hook in a natural grip. The hands are actively working the identical yarn (matching CYC #3 DK and a genuine 4.0 mm (G-6)) with visible, physically plausible stitches in progress. Strict visual continuity in yarn color, weight, texture, and project construction between the finished item above and the in-progress project below.\n\nNON-NEGOTIABLE REALISM REQUIREMENTS:\n- Prioritize authentic photographic realism over illustration, CGI, cartoon aesthetics, and obvious AI-generated imagery.\n- Human hands must look anatomically natural, with correctly formed fingers and realistic skin texture.\n- The hook, yarn, and stitches must be physically plausible.\n- Show a coherent crochet-in-progress stage, not an unrelated object or a finished product being held as if it were being crocheted.\n- Maintain visual continuity between the finished product and the in-progress project with identical yarn color, weight, and construction.\n- Use natural lighting, realistic textures, simple backgrounds, and close-up photography.\n- Avoid artificial plastic-looking yarn, malformed hands, impossible hooks, disconnected stitches, and inconsistent product details.\n- Do not add extra text, icons, stickers, badges, decorative frames, or unnecessary graphics.\n- The title must be short, legible, correctly spelled, and visually separated from the two photographs.\nCozy hearthside glow with soft ambient shadows, palette of Warm oatmeal wool, rich cinnamon, toasted pecan, and alpine white.\n\nEDITORIAL TYPOGRAPHY & ART DIRECTION (RENDER EXACTLY TWO TEXT ELEMENTS):\n\nLITERAL TEXT LOCK — TYPOGRAPHY MUST RENDER THE FOLLOWING STRINGS CHARACTER-FOR-CHARACTER:\nHEADLINE — EXACT LITERAL STRING:\n\"CROCHET CHRISTMAS TREE ORNAMENT PATTERN\"\n\nCTA — EXACT LITERAL STRING:\n\"SEE ALL IDEAS →\"\n\nThe words above are not semantic instructions. They are literal visual text.\nDo not interpret their meaning.\nDo not substitute synonyms.\nDo not rewrite them.\nDo not improve them.\nDo not paraphrase them.\nDo not change any individual word.\nDo not change punctuation.\nDo not replace MORE with ALL.\nDo not replace ALL with MORE.\nDo not replace the arrow.\nRender the exact supplied characters as visible typography.\n\nBefore rendering, internally verify that the visible CTA exactly matches the supplied CTA string \"SEE ALL IDEAS →\". If the rendered wording differs in any word, it is incorrect.\n\n1. HEADLINE VISUAL STYLING:\n   - Placement: Lower-right area in natural negative space balanced with the composition.\n   - Typography: Bold, clean modern architectural SANS-SERIF typeface (geometric, heavy, crisp, contemporary editorial style with high visual impact and immaculate readability).\n   - Creative Background: Place typography directly into clean photographic negative space. No text background treatment whatsoever.\n\n2. ACTION CTA VISUAL STYLING:\n   - Placement: Upper-left area in natural negative space, well separated from the headline.\n   - Typography: Rendered in Montserrat ExtraBold (font-weight 800, uppercase, ~24px visual size, letter spacing 1.2–1.5px, line height 1.0–1.1). Bold, crisp, highly readable on mobile, modern, premium, and confident (warm cinnamon and oatmeal tones with refined typography).\n   - Creative Background: Rendered as clean standalone editorial typography directly over the photograph negative space without any panel, badge, button, or container.\n\nSTRICT PROHIBITIONS & FINAL TEXT CONFIRMATION:\n- ABSOLUTELY ZERO OTHER TEXT ON THE ENTIRE IMAGE: No subtitles, no secondary descriptions, no bullet points, no website headers, no URLs, no logos.\n- NEVER ADD decorative filler words such as \"PATTERNS\", \"PROJECTS\", \"INSPIRATION\", \"COZY\", \"HANDMADE\", or any random phrases.\n- GLOBAL HARD PROHIBITION: ABSOLUTELY NO paper, torn paper, paper wash, pigment wash, paint wash, brushstroke, watercolor shape, card, panel, banner, badge, button, pill, UI element, Canva-style graphic, or artificial text container.\n- Typography must feel like natural, artistic editorial text placed directly within the photographic space.\n- Photography must dominate the frame with ample breathing room.\n- FINAL CONFIRMED TEXT ELEMENTS TO RENDER (EXACTLY TWO):\n  1. HEADLINE: \"CROCHET CHRISTMAS TREE ORNAMENT PATTERN\"\n  2. CTA: \"SEE ALL IDEAS →\"",
           "typographyOverlay": {
-            "primaryHeadline": "crochet christmas tree ornament pattern",
-            "ctaBadgeText": ""
+            "primaryHeadline": "CROCHET CHRISTMAS TREE ORNAMENT PATTERN",
+            "ctaBadgeText": "SEE ALL IDEAS →",
+            "textContainerStyle": "none_direct_photo"
           },
-          "destinationUrl": "https://welovepattern.com/blog/",
-          "publishStatus": "pending"
+          "destinationUrl": "https://welovepattern.com/blog/charming-crochet-christmas-tree-ornament-patterns",
+          "targetBoardId": "board_decor",
+          "targetBoardName": "Crochet Home Decor",
+          "boardName": "Crochet Home Decor",
+          "publishStatus": "failed",
+          "errorMessage": "Required Pin 2 image missing or failed generation."
         }
       ],
-      "stage": "selected",
+      "stage": "failed",
       "requiresApproval": false,
       "indexNowNotified": false,
       "createdAt": "2026-10-19T19:41:49.747Z",
-      "updatedAt": "2026-10-19T19:41:49.750Z",
+      "updatedAt": "2026-10-28T11:00:58.874Z",
       "logs": [
         {
           "timestamp": "2026-10-19T19:41:49.747Z",
           "level": "info",
           "message": "Job created for TRENDING_CROCHET (Category: CROCHET): \"crochet christmas tree ornament pattern\" with opportunity score 89."
+        },
+        {
+          "timestamp": "2026-10-28T10:59:59.869Z",
+          "level": "info",
+          "message": "Starting technical craft research..."
+        },
+        {
+          "timestamp": "2026-10-28T11:00:05.957Z",
+          "level": "info",
+          "message": "Factual research packet validated successfully."
+        },
+        {
+          "timestamp": "2026-10-28T11:00:05.963Z",
+          "level": "info",
+          "message": "Generating article with OpenAI..."
+        },
+        {
+          "timestamp": "2026-10-28T11:00:33.277Z",
+          "level": "info",
+          "message": "Article generated successfully (1139 words). Content safely persisted to job state."
+        },
+        {
+          "timestamp": "2026-10-28T11:00:33.280Z",
+          "level": "info",
+          "message": "Starting Stage 3: Board resolution and local image asset binding ($0 cost)..."
+        },
+        {
+          "timestamp": "2026-10-28T11:00:58.602Z",
+          "level": "info",
+          "message": "Hero image generated successfully via Higgsfield: /generated/blog/charming-crochet-christmas-tree-ornament-9e71bf0bee.jpg"
+        },
+        {
+          "timestamp": "2026-10-28T11:00:58.874Z",
+          "level": "error",
+          "message": "Missing or failed image assets: Pin 1 (2:3), Pin 2 (2:3). Job halted safely."
         }
       ],
       "assignedPublishDate": "2026-10-19",
       "assignedSlotTime": "08:00",
-      "publicationScheduledAt": "08:00"
+      "publicationScheduledAt": "08:00",
+      "factualResearch": {
+        "topicId": "topic_crochet_63726f636865",
+        "topic": "crochet christmas tree ornament pattern",
+        "searchIntent": "The user is looking for technical information and guidance on creating crochet Christmas tree ornaments, including materials, techniques, and patterns.",
+        "craftType": "crochet",
+        "sourceAuthority": "Craft Yarn Council Technical Standards & OpenAI Craft Research",
+        "cycStandardVersion": "CYC 2024 Guidelines",
+        "generatedAt": "2026-10-28T11:00:05.955Z",
+        "verifiedTerminology": [
+          "Single Crochet (UK: Double Crochet)",
+          "Double Crochet (UK: Treble Crochet)",
+          "Magic Ring"
+        ],
+        "verifiedMaterials": {
+          "yarnWeights": [
+            "CYC #3 DK",
+            "CYC #4 Worsted"
+          ],
+          "hookSizes": [
+            "4.0 mm (G-6)",
+            "5.0 mm (H-8)"
+          ],
+          "standardYardages": "Typically 50 - 150 meters for small ornaments.",
+          "verifiedDimensions": {
+            "Baby Blanket": "30 x 36 inches (76 x 91 cm)",
+            "Lapghan": "36 x 48 inches (91 x 122 cm)",
+            "Throw Blanket": "50 x 60 inches (127 x 152 cm)",
+            "Twin Blanket": "66 x 90 inches (168 x 229 cm)"
+          }
+        },
+        "authorizedPercentages": [
+          10,
+          15,
+          20
+        ],
+        "prohibitedMetrics": [
+          "stitches per skein",
+          "divide stitches by stitches per skein",
+          "arbitrary yards per stitch",
+          "invented mattress or bed sizes",
+          "commercial sales pricing or revenue claims"
+        ],
+        "verifiedFormulas": [
+          {
+            "name": "Area Ratio Swatch Scaling Method",
+            "description": "Calculates total project yardage by scaling swatch yardage to blanket surface area",
+            "formulaText": "Total Yardage = (Blanket Area / Swatch Area) * Swatch Yardage * 1.10",
+            "steps": [
+              "Step 1: Measure the area of the finished swatch.",
+              "Step 2: Calculate the area of the intended project.",
+              "Step 3: Use the formula to estimate total yardage needed.",
+              "Step 4: Add a 10% buffer for safety."
+            ]
+          }
+        ],
+        "supportedClaims": [
+          "Textured stitches like bobbles and puff stitches consume more yarn than flat stitches like single crochet and double crochet.",
+          "A 10% to 15% safety buffer is standard practice.",
+          "Yarn is sold by weight and yardage, not by stitch count."
+        ],
+        "techniqueKeyPoints": [
+          "Using a magic ring to start creates a tight center for round ornaments.",
+          "Blocking may be required to shape the ornaments properly.",
+          "Incorporating beads or metallic threads can add a festive touch."
+        ],
+        "makerPainPoints": [
+          "Difficulty in achieving uniformity in ornament size.",
+          "Complexity in working with small stitches and hook sizes.",
+          "Managing tension to ensure a consistent final product."
+        ],
+        "faqItems": [
+          {
+            "question": "What type of yarn is best for crochet Christmas ornaments?",
+            "factualAnswer": "Cotton yarn is often recommended for its durability and ability to hold shape, but acrylic yarn can also be used for a softer look."
+          },
+          {
+            "question": "How do I ensure my ornaments are the right size?",
+            "factualAnswer": "Use a gauge swatch to ensure your tension matches the pattern's specifications. Blocking can also help achieve the correct size."
+          },
+          {
+            "question": "Can I use larger hooks for ornaments?",
+            "factualAnswer": "While larger hooks can be used, they may result in a looser fabric, which might not hold shape well for ornaments. Adjust the pattern accordingly."
+          }
+        ],
+        "verifiedInternalLinks": [
+          {
+            "anchorText": "christmas",
+            "url": "/category/christmas",
+            "entityType": "category"
+          }
+        ]
+      },
+      "articleContent": {
+        "title": "Charming Crochet Christmas Tree Ornament Patterns",
+        "slug": "charming-crochet-christmas-tree-ornament-patterns",
+        "excerpt": "Discover delightful crochet Christmas tree ornament patterns with detailed instructions, materials, and tips for perfect festive decor.",
+        "contentHtml": "<h2>Introduction to Crochet Christmas Tree Ornaments</h2><p>As the holiday season approaches, adding a personal touch to your <a href=\"/category/christmas\" class=\"text-amber-700 underline hover:text-amber-800 transition-colors\">Christmas</a> tree with handmade ornaments can bring warmth and charm to your home decor. Crocheting your own Christmas tree ornaments is not only a delightful craft but also a wonderful way to create keepsakes that can be cherished year after year. In this guide, we will explore different crochet patterns for Christmas tree ornaments, discuss materials and techniques, and provide helpful tips to ensure your ornaments turn out beautifully. Whether you’re a beginner or an experienced crocheter, these patterns will inspire creativity and festive spirit.</p><h2>Materials Needed for Crochet Christmas Ornaments</h2><h3>Yarn Selection</h3><p>When selecting yarn for your crochet Christmas ornaments, consider using cotton yarn for its durability and ability to hold shape. Cotton yarn provides a crisp finish, which is ideal for ornaments that need to maintain form. However, acrylic yarn can also provide a softer look and is available in a variety of colors, making it a versatile choice for holiday-themed projects. Both CYC #3 DK and CYC #4 Worsted yarns are suitable choices for this project, offering different textures and finishes. The choice between these yarn weights can affect the final size and texture of your ornament, so consider the look you want to achieve.</p><h3>Hook Sizes and Tools</h3><p>The recommended hook sizes for crochet ornaments are 4.0 mm (G-6) and 5.0 mm (H-8). These sizes allow for a tight stitch, which is essential for creating sturdy and well-shaped ornaments. A tighter stitch ensures that the stuffing does not show through and helps the ornament hold its shape over time. Additionally, having a tapestry needle for weaving in ends and some blocking tools will be beneficial to finalize your ornaments' shapes. A pair of scissors and stitch markers can also be helpful for managing your projects efficiently.</p><h2>Essential Crochet Techniques for Ornaments</h2><h3>Magic Ring Start</h3><p>One of the most important techniques for crocheting round ornaments is the magic ring. This method allows you to begin your project with a tight center, preventing any gaps in the middle of your ornament. To create a magic ring, loop the yarn around your fingers, insert the hook through the loop, and pull up a loop of yarn. Chain one to secure, and then proceed with your stitches as specified in the pattern. The magic ring technique is particularly useful for projects like ball ornaments and snowflakes, where a seamless center is desired.</p><h3>Blocking Your Ornaments</h3><p>Blocking is a crucial step in shaping your crochet ornaments. Once your piece is complete, gently soak it in water, shape it to the desired form, and allow it to dry completely. This process helps ensure your ornaments hold their shape and look polished on your tree. There are two main types of blocking: wet blocking and steam blocking. Wet blocking involves soaking the piece in water, shaping it, and allowing it to dry. Steam blocking uses steam from an iron or steamer to set the shape. Both methods can be effective, but wet blocking is generally preferred for cotton yarn due to its ability to hold shape well.</p><h2>Step-by-Step Crochet Ornament Patterns</h2><h3>Basic Crochet Ball Ornament</h3><ol><li><strong>Start with a Magic Ring:</strong> Using your chosen yarn and a 4.0 mm hook, create a magic ring.</li><li><strong>Round 1:</strong> Single crochet 6 stitches into the ring. Pull the ring tight and join with a slip stitch.</li><li><strong>Round 2:</strong> Increase in each stitch around (12 stitches).</li><li><strong>Round 3:</strong> *Single crochet in the next stitch, increase in the next stitch*, repeat around (18 stitches).</li><li><strong>Rounds 4-6:</strong> Single crochet around (18 stitches).</li><li><strong>Round 7:</strong> *Single crochet in the next stitch, decrease over the next two stitches*, repeat around (12 stitches).</li><li><strong>Round 8:</strong> Decrease in each stitch around (6 stitches), fasten off, leaving a long tail.</li><li><strong>Finish:</strong> Stuff the ball lightly with fiberfill and use the tail to gather and close the opening. Weave in the ends.</li></ol><h3>Star Ornament Pattern</h3><ol><li><strong>Foundation:</strong> With a 5.0 mm hook, chain 5 and join to form a ring.</li><li><strong>Round 1:</strong> Chain 3 (counts as a double crochet), work 14 double crochet into the ring, join with a slip stitch to the top of the chain 3.</li><li><strong>Points:</strong> *Chain 5, skip 1 stitch, slip stitch in next stitch*, repeat around.</li><li><strong>Secure:</strong> Fasten off and weave in ends. Block to shape the points.</li></ol><h2>Tips for Achieving Consistent Ornament Sizes</h2><p>Creating ornaments that are uniform in size requires careful attention to tension and gauge. Before starting your main project, create a small gauge swatch to ensure your tension matches the pattern's specifications. This step will help you avoid discrepancies in size and shape. If your ornaments tend to be too loose or too tight, adjust your hook size accordingly. Blocking can also assist in achieving the correct size and finish. Additionally, maintaining an even tension throughout your work is crucial. Practice makes perfect, and over time, you will develop a consistent tension that results in beautifully uniform ornaments.</p><h2>Adding Festive Touches to Your Ornaments</h2><p>To enhance the festive appeal of your crochet ornaments, consider incorporating beads or metallic threads. These additions can lend a sparkling effect, catching the light beautifully on your Christmas tree. When adding beads, thread them onto the yarn before starting your project or sew them on afterward for precise placement. Metallic threads can be worked alongside your main yarn to add a subtle shimmer to your designs. Experiment with different combinations to create unique and personalized ornaments that reflect your holiday spirit.</p><h2>Troubleshooting Common Crochet Ornament Issues</h2><p>Working with small stitches and hooks can sometimes pose challenges, such as difficulty in achieving uniformity in ornament size or managing tension. To address these issues, it’s important to take regular breaks to prevent hand fatigue, which can impact tension. If you notice your ornaments curling at the edges, this can often be remedied by blocking. For uneven tension, consider practicing with scrap yarn to improve consistency before working on your main project. Additionally, using stitch markers can help you keep track of your rounds and ensure even increases and decreases.</p><h2>Frequently Asked Questions</h2><h3>What type of yarn is best for crochet Christmas ornaments?</h3><p>Cotton yarn is often recommended for its durability and ability to hold shape, but acrylic yarn can also be used for a softer look.</p><h3>How do I ensure my ornaments are the right size?</h3><p>Use a gauge swatch to ensure your tension matches the pattern's specifications. Blocking can also help achieve the correct size.</p><h3>Can I use larger hooks for ornaments?</h3><p>While larger hooks can be used, they may result in a looser fabric, which might not hold shape well for ornaments. Adjust the pattern accordingly.</p><p>By following these detailed patterns and tips, you can create charming crochet Christmas tree ornaments that will add a personal and festive touch to your holiday decor. Happy crocheting!</p>",
+        "wordCount": 1139,
+        "category": "crochet",
+        "tags": [
+          "crochet",
+          "Christmas",
+          "ornaments",
+          "DIY",
+          "holiday crafts"
+        ],
+        "seoMeta": {
+          "title": "Crochet Christmas Tree Ornament Patterns",
+          "description": "Explore charming crochet Christmas tree ornament patterns with materials and step-by-step guidance.",
+          "keywords": "crochet, Christmas tree ornament, pattern, holiday crafts"
+        },
+        "heroImage": {
+          "prompt": "Realistic photography-led craft editorial visual for 16:9 widescreen article hero format, featuring an authentic dual-focus tutorial composition:\n1. FINISHED OBJECT (LEFT): A large, clear photograph of the finished handmade crochet Christmas tree ornament with festive textured stitches, neat hanging loop, and crisp form on a natural wood surface. A large, clear photograph of the completed handmade crochet handmade crochet Christmas tree ornament, complete and beautifully styled on a clean warm linen or rustic wooden surface with soft diffused natural morning window light.\n2. CENTER TITLE: A clean, neutral horizontal divider band displaying the short title \"Charming Crochet Christmas Tree Ornament Patterns\". Simple, restrained, readable typography with zero decorative stickers or badges.\n3. CROCHET IN PROGRESS (RIGHT): A close-up photograph of real human hands actively crocheting the EXACT SAME handmade crochet Christmas tree ornament, holding a smooth wooden hook with matching CYC #3 DK and a genuine 4.0 mm (G-6), showing physically plausible stitches in progress (close-up photograph of real human hands actively crocheting the branch tiers of that SAME ornament using identical festive evergreen yarn, an authentic 4.0 mm (G-6), and visible stitches).\nNON-NEGOTIABLE REALISM REQUIREMENTS:\n- Prioritize authentic photographic realism over illustration, CGI, cartoon aesthetics, and obvious AI-generated imagery.\n- Human hands must look anatomically natural, with correctly formed fingers and realistic skin texture.\n- The hook, yarn, and stitches must be physically plausible.\n- Show a coherent crochet-in-progress stage, not an unrelated object or a finished product being held as if it were being crocheted.\n- Maintain visual continuity between the finished product and the in-progress project with identical yarn color, weight, and construction.\n- Natural lighting, realistic textures, simple backgrounds, close-up photography.\n- Avoid artificial plastic-looking yarn, malformed hands, impossible hooks, disconnected stitches, and inconsistent product details.\n- Do not add extra text, icons, stickers, badges, decorative frames, or unnecessary graphics.\n- The title must be short, legible, correctly spelled, and visually separated from the two photographs.",
+          "compactPrompt": "Realistic photography-led craft editorial visual for 16:9 widescreen article hero format, featuring an authentic dual-focus tutorial composition:\n1. FINISHED OBJECT (LEFT): A large, clear photograph of the finished handmade crochet Christmas tree ornament with festive textured stitches, neat hanging loop, and crisp form on a natural wood surface. A large, clear photograph of the completed handmade crochet handmade crochet Christmas tree ornament, complete and beautifully styl",
+          "stableAssetPath": "/app/applet/public/generated/blog/charming-crochet-christmas-tree-ornament-9e71bf0bee.jpg",
+          "stablePublicUrl": "/generated/blog/charming-crochet-christmas-tree-ornament-9e71bf0bee.jpg",
+          "higgsfieldRequestId": "01a1822b-3b37-7191-91f8-12bcd477e80f",
+          "higgsfieldTaskId": "01a1822b-3b37-7191-91f8-12bcd477e80f",
+          "status": "ready"
+        }
+      },
+      "articleHeroImage": {
+        "prompt": "Realistic photography-led craft editorial visual for 16:9 widescreen article hero format, featuring an authentic dual-focus tutorial composition:\n1. FINISHED OBJECT (LEFT): A large, clear photograph of the finished handmade crochet Christmas tree ornament with festive textured stitches, neat hanging loop, and crisp form on a natural wood surface. A large, clear photograph of the completed handmade crochet handmade crochet Christmas tree ornament, complete and beautifully styled on a clean warm linen or rustic wooden surface with soft diffused natural morning window light.\n2. CENTER TITLE: A clean, neutral horizontal divider band displaying the short title \"Charming Crochet Christmas Tree Ornament Patterns\". Simple, restrained, readable typography with zero decorative stickers or badges.\n3. CROCHET IN PROGRESS (RIGHT): A close-up photograph of real human hands actively crocheting the EXACT SAME handmade crochet Christmas tree ornament, holding a smooth wooden hook with matching CYC #3 DK and a genuine 4.0 mm (G-6), showing physically plausible stitches in progress (close-up photograph of real human hands actively crocheting the branch tiers of that SAME ornament using identical festive evergreen yarn, an authentic 4.0 mm (G-6), and visible stitches).\nNON-NEGOTIABLE REALISM REQUIREMENTS:\n- Prioritize authentic photographic realism over illustration, CGI, cartoon aesthetics, and obvious AI-generated imagery.\n- Human hands must look anatomically natural, with correctly formed fingers and realistic skin texture.\n- The hook, yarn, and stitches must be physically plausible.\n- Show a coherent crochet-in-progress stage, not an unrelated object or a finished product being held as if it were being crocheted.\n- Maintain visual continuity between the finished product and the in-progress project with identical yarn color, weight, and construction.\n- Natural lighting, realistic textures, simple backgrounds, close-up photography.\n- Avoid artificial plastic-looking yarn, malformed hands, impossible hooks, disconnected stitches, and inconsistent product details.\n- Do not add extra text, icons, stickers, badges, decorative frames, or unnecessary graphics.\n- The title must be short, legible, correctly spelled, and visually separated from the two photographs.",
+        "compactPrompt": "Realistic photography-led craft editorial visual for 16:9 widescreen article hero format, featuring an authentic dual-focus tutorial composition:\n1. FINISHED OBJECT (LEFT): A large, clear photograph of the finished handmade crochet Christmas tree ornament with festive textured stitches, neat hanging loop, and crisp form on a natural wood surface. A large, clear photograph of the completed handmade crochet handmade crochet Christmas tree ornament, complete and beautifully styl",
+        "stableAssetPath": "/app/applet/public/generated/blog/charming-crochet-christmas-tree-ornament-9e71bf0bee.jpg",
+        "stablePublicUrl": "/generated/blog/charming-crochet-christmas-tree-ornament-9e71bf0bee.jpg",
+        "higgsfieldRequestId": "01a1822b-3b37-7191-91f8-12bcd477e80f",
+        "higgsfieldTaskId": "01a1822b-3b37-7191-91f8-12bcd477e80f",
+        "status": "ready"
+      }
     },
     {
       "id": "job_2026-10-19_zrjvnm",
@@ -708,56 +1063,242 @@
       "pinterestPins": [
         {
           "pinNumber": 1,
-          "conceptAngle": "",
+          "conceptAngle": "Organized Maker Flatlay & Direct Practical Solution",
           "visualStyle": {
             "imageCount": 1,
-            "compositionType": "single_hero",
-            "subjectDescription": "",
-            "colorPalette": "",
+            "compositionType": "flatlay_materials",
+            "subjectDescription": "Organized Maker Flatlay & Direct Practical Solution for Mastering the Art of Crochet with a Project Tracker Tool",
+            "colorPalette": "Natural oatmeal, warm terracotta, slate charcoal, and creamy linen",
             "humanElement": "none"
           },
-          "compactHiggsfieldPrompt": "",
+          "compactHiggsfieldPrompt": "Complete 2:3 vertical Pinterest Pin visual. REALISTIC PHOTOGRAPHY-LED CROCHET TUTORIAL VISUAL (3-PART STACKED COMPOSITION):\n1. TOP IMAGE (UPPER SECTION):\nA large, clear photograph of the finished blocked crochet gauge swatch with immaculate stitch alignment alongside a flexible cloth measuring tape and polished wooden hook. The completed neat handmade crochet gauge swatch is presented in sharp photographic focus with authentic yarn stitch definition and physical handmade texture under soft diffused natural window lighting.\n\n2. CENTER TITLE (NEUTRAL HORIZONTAL BAND):\nOne short, readable article title on a simple, neutral horizontal band cleanly separating the two photographs:\n\"PROJECT TRACKER CROCHET TOOL\"\nClean, restrained, legible typography in uppercase, high contrast against the neutral band, visually separating the top and bottom photographs. No extra text, icons, stickers, badges, decorative frames, or unnecessary graphics.\n\n3. BOTTOM IMAGE (LOWER SECTION):\nA close-up photograph of real human hands actively crocheting the EXACT SAME neat handmade crochet gauge swatch. close-up photograph of real human hands actively crocheting the tension rows of that SAME gauge swatch with identical yarn and hook. Anatomically natural hands with realistic skin texture, authentic fingernails, and five correctly formed fingers holding an authentic crochet hook in a natural grip. The hands are actively working the identical yarn (matching CYC #4 Worsted and a genuine 5.0 mm (H-8)) with visible, physically plausible stitches in progress. Strict visual continuity in yarn color, weight, texture, and project construction between the finished item above and the in-progress project below.\n\nNON-NEGOTIABLE REALISM REQUIREMENTS:\n- Prioritize authentic photographic realism over illustration, CGI, cartoon aesthetics, and obvious AI-generated imagery.\n- Human hands must look anatomically natural, with correctly formed fingers and realistic skin texture.\n- The hook, yarn, and stitches must be physically plausible.\n- Show a coherent crochet-in-progress stage, not an unrelated object or a finished product being held as if it were being crocheted.\n- Maintain visual continuity between the finished product and the in-progress project with identical yarn color, weight, and construction.\n- Use natural lighting, realistic textures, simple backgrounds, and close-up photography.\n- Avoid artificial plastic-looking yarn, malformed hands, impossible hooks, disconnected stitches, and inconsistent product details.\n- Do not add extra text, icons, stickers, badges, decorative frames, or unnecessary graphics.\n- The title must be short, legible, correctly spelled, and visually separated from the two photographs.\nClean diffused overhead daylight, pristine maker workspace layout, palette of Natural oatmeal, warm terracotta, slate charcoal, and creamy linen.\n\nEDITORIAL TYPOGRAPHY & ART DIRECTION (RENDER EXACTLY TWO TEXT ELEMENTS):\n\nLITERAL TEXT LOCK — TYPOGRAPHY MUST RENDER THE FOLLOWING STRINGS CHARACTER-FOR-CHARACTER:\nHEADLINE — EXACT LITERAL STRING:\n\"PROJECT TRACKER CROCHET TOOL\"\n\nCTA — EXACT LITERAL STRING:\n\"START PROJECT TRACKER →\"\n\nThe words above are not semantic instructions. They are literal visual text.\nDo not interpret their meaning.\nDo not substitute synonyms.\nDo not rewrite them.\nDo not improve them.\nDo not paraphrase them.\nDo not change any individual word.\nDo not change punctuation.\nDo not replace MORE with ALL.\nDo not replace ALL with MORE.\nDo not replace the arrow.\nRender the exact supplied characters as visible typography.\n\nBefore rendering, internally verify that the visible CTA exactly matches the supplied CTA string \"START PROJECT TRACKER →\". If the rendered wording differs in any word, it is incorrect.\n\n1. HEADLINE VISUAL STYLING:\n   - Placement: Upper-center area in clean negative space above the focal subject.\n   - Typography: Bold, clean modern architectural SANS-SERIF typeface (geometric, heavy, crisp, contemporary editorial style with high visual impact and immaculate readability).\n   - Creative Background: Place typography directly into clean photographic negative space. No text background treatment whatsoever.\n\n2. ACTION CTA VISUAL STYLING:\n   - Placement: Centered bottom area with generous breathing room and clean physical separation from the headline.\n   - Typography: Rendered in Montserrat ExtraBold (font-weight 800, uppercase, ~24px visual size, letter spacing 1.2–1.5px, line height 1.0–1.1). Bold, crisp, highly readable on mobile, modern, premium, and confident (warm terracotta and oatmeal tones with sharp editorial legibility).\n   - Creative Background: Rendered as crisp editorial text with a delicate, minimalist fine hairline boundary sized tightly to the text.\n\nSTRICT PROHIBITIONS & FINAL TEXT CONFIRMATION:\n- ABSOLUTELY ZERO OTHER TEXT ON THE ENTIRE IMAGE: No subtitles, no secondary descriptions, no bullet points, no website headers, no URLs, no logos.\n- NEVER ADD decorative filler words such as \"PATTERNS\", \"PROJECTS\", \"INSPIRATION\", \"COZY\", \"HANDMADE\", or any random phrases.\n- GLOBAL HARD PROHIBITION: ABSOLUTELY NO paper, torn paper, paper wash, pigment wash, paint wash, brushstroke, watercolor shape, card, panel, banner, badge, button, pill, UI element, Canva-style graphic, or artificial text container.\n- Typography must feel like natural, artistic editorial text placed directly within the photographic space.\n- Photography must dominate the frame with ample breathing room.\n- FINAL CONFIRMED TEXT ELEMENTS TO RENDER (EXACTLY TWO):\n  1. HEADLINE: \"PROJECT TRACKER CROCHET TOOL\"\n  2. CTA: \"START PROJECT TRACKER →\"",
           "typographyOverlay": {
-            "primaryHeadline": "project tracker crochet tool",
-            "ctaBadgeText": ""
+            "primaryHeadline": "PROJECT TRACKER CROCHET TOOL",
+            "ctaBadgeText": "START PROJECT TRACKER →",
+            "textContainerStyle": "none_direct_photo"
           },
-          "destinationUrl": "https://welovepattern.com/blog/",
-          "publishStatus": "pending"
+          "destinationUrl": "https://welovepattern.com/blog/mastering-the-art-of-crochet-with-a-project-tracker-tool",
+          "targetBoardId": "board_tools",
+          "targetBoardName": "Crochet Tools & Yarn Calculators",
+          "boardName": "Crochet Tools & Yarn Calculators",
+          "publishStatus": "failed",
+          "errorMessage": "Required Pin 1 image missing or failed generation."
         },
         {
           "pinNumber": 2,
-          "conceptAngle": "",
+          "conceptAngle": "Authentic Cozy Lifestyle & Finished Project in Use",
           "visualStyle": {
             "imageCount": 1,
-            "compositionType": "single_hero",
-            "subjectDescription": "",
-            "colorPalette": "",
-            "humanElement": "none"
+            "compositionType": "lifestyle_scene",
+            "subjectDescription": "Authentic Cozy Lifestyle & Finished Project in Use for Mastering the Art of Crochet with a Project Tracker Tool",
+            "colorPalette": "Rich indigo dye, warm birch wood, slate charcoal, and crisp milk cotton",
+            "humanElement": "person_wearing"
           },
-          "compactHiggsfieldPrompt": "",
+          "compactHiggsfieldPrompt": "Complete 2:3 vertical Pinterest Pin visual. REALISTIC PHOTOGRAPHY-LED CROCHET TUTORIAL VISUAL (3-PART STACKED COMPOSITION):\n1. TOP IMAGE (UPPER SECTION):\nA large, clear photograph of the finished blocked crochet gauge swatch with immaculate stitch alignment alongside a flexible cloth measuring tape and polished wooden hook. The completed neat handmade crochet gauge swatch is presented in sharp photographic focus with authentic yarn stitch definition and physical handmade texture under soft diffused natural window lighting.\n\n2. CENTER TITLE (NEUTRAL HORIZONTAL BAND):\nOne short, readable article title on a simple, neutral horizontal band cleanly separating the two photographs:\n\"PROJECT TRACKER CROCHET TOOL\"\nClean, restrained, legible typography in uppercase, high contrast against the neutral band, visually separating the top and bottom photographs. No extra text, icons, stickers, badges, decorative frames, or unnecessary graphics.\n\n3. BOTTOM IMAGE (LOWER SECTION):\nA close-up photograph of real human hands actively crocheting the EXACT SAME neat handmade crochet gauge swatch. close-up photograph of real human hands actively crocheting the tension rows of that SAME gauge swatch with identical yarn and hook. Anatomically natural hands with realistic skin texture, authentic fingernails, and five correctly formed fingers holding an authentic crochet hook in a natural grip. The hands are actively working the identical yarn (matching CYC #4 Worsted and a genuine 5.0 mm (H-8)) with visible, physically plausible stitches in progress. Strict visual continuity in yarn color, weight, texture, and project construction between the finished item above and the in-progress project below.\n\nNON-NEGOTIABLE REALISM REQUIREMENTS:\n- Prioritize authentic photographic realism over illustration, CGI, cartoon aesthetics, and obvious AI-generated imagery.\n- Human hands must look anatomically natural, with correctly formed fingers and realistic skin texture.\n- The hook, yarn, and stitches must be physically plausible.\n- Show a coherent crochet-in-progress stage, not an unrelated object or a finished product being held as if it were being crocheted.\n- Maintain visual continuity between the finished product and the in-progress project with identical yarn color, weight, and construction.\n- Use natural lighting, realistic textures, simple backgrounds, and close-up photography.\n- Avoid artificial plastic-looking yarn, malformed hands, impossible hooks, disconnected stitches, and inconsistent product details.\n- Do not add extra text, icons, stickers, badges, decorative frames, or unnecessary graphics.\n- The title must be short, legible, correctly spelled, and visually separated from the two photographs.\nWarm natural side light in an authentic craft workshop, palette of Rich indigo dye, warm birch wood, slate charcoal, and crisp milk cotton.\n\nEDITORIAL TYPOGRAPHY & ART DIRECTION (RENDER EXACTLY TWO TEXT ELEMENTS):\n\nLITERAL TEXT LOCK — TYPOGRAPHY MUST RENDER THE FOLLOWING STRINGS CHARACTER-FOR-CHARACTER:\nHEADLINE — EXACT LITERAL STRING:\n\"PROJECT TRACKER CROCHET TOOL\"\n\nCTA — EXACT LITERAL STRING:\n\"START PROJECT TRACKER →\"\n\nThe words above are not semantic instructions. They are literal visual text.\nDo not interpret their meaning.\nDo not substitute synonyms.\nDo not rewrite them.\nDo not improve them.\nDo not paraphrase them.\nDo not change any individual word.\nDo not change punctuation.\nDo not replace MORE with ALL.\nDo not replace ALL with MORE.\nDo not replace the arrow.\nRender the exact supplied characters as visible typography.\n\nBefore rendering, internally verify that the visible CTA exactly matches the supplied CTA string \"START PROJECT TRACKER →\". If the rendered wording differs in any word, it is incorrect.\n\n1. HEADLINE VISUAL STYLING:\n   - Placement: Upper area in clean negative space.\n   - Typography: Elegant high-end editorial SERIF typeface inspired by luxury fashion magazines and fine Pinterest editorial design. Sophisticated, feminine, refined, and artistic with high visual impact and generous scale. (NOT a heavy generic display font, NOT a playful cartoon font, NOT handwriting).\n   - Creative Background: Positioned naturally within clean environmental negative space in the photographic composition. No background shape or panel.\n\n2. ACTION CTA VISUAL STYLING:\n   - Placement: Lower-right area in natural negative space with generous breathing room and clear physical separation from the headline. Never attached or placed directly beneath the headline.\n   - Typography: Rendered in Montserrat ExtraBold (font-weight 800, uppercase, ~24px visual size, letter spacing 1.2–1.5px, line height 1.0–1.1). Bold, crisp, highly readable on mobile, modern, premium, and confident (rich indigo and warm birch tones with sharp modern legibility).\n   - Creative Background: Rendered cleanly with a subtle, soft tonal tint sized closely around the text.\n\nSTRICT PROHIBITIONS & FINAL TEXT CONFIRMATION:\n- ABSOLUTELY ZERO OTHER TEXT ON THE ENTIRE IMAGE: No subtitles, no secondary descriptions, no bullet points, no website headers, no URLs, no logos.\n- NEVER ADD decorative filler words such as \"PATTERNS\", \"PROJECTS\", \"INSPIRATION\", \"COZY\", \"HANDMADE\", or any random phrases.\n- GLOBAL HARD PROHIBITION: ABSOLUTELY NO paper, torn paper, paper wash, pigment wash, paint wash, brushstroke, watercolor shape, card, panel, banner, badge, button, pill, UI element, Canva-style graphic, or artificial text container.\n- Typography must feel like natural, artistic editorial text placed directly within the photographic space.\n- Photography must dominate the frame with ample breathing room.\n- FINAL CONFIRMED TEXT ELEMENTS TO RENDER (EXACTLY TWO):\n  1. HEADLINE: \"PROJECT TRACKER CROCHET TOOL\"\n  2. CTA: \"START PROJECT TRACKER →\"",
           "typographyOverlay": {
-            "primaryHeadline": "project tracker crochet tool",
-            "ctaBadgeText": ""
+            "primaryHeadline": "PROJECT TRACKER CROCHET TOOL",
+            "ctaBadgeText": "START PROJECT TRACKER →",
+            "textContainerStyle": "environmental_negative_space"
           },
-          "destinationUrl": "https://welovepattern.com/blog/",
-          "publishStatus": "pending"
+          "destinationUrl": "https://welovepattern.com/blog/mastering-the-art-of-crochet-with-a-project-tracker-tool",
+          "targetBoardId": "board_tools",
+          "targetBoardName": "Crochet Tools & Yarn Calculators",
+          "boardName": "Crochet Tools & Yarn Calculators",
+          "publishStatus": "failed",
+          "errorMessage": "Required Pin 2 image missing or failed generation."
         }
       ],
-      "stage": "selected",
+      "stage": "failed",
       "requiresApproval": false,
       "indexNowNotified": false,
       "createdAt": "2026-10-19T19:41:49.748Z",
-      "updatedAt": "2026-10-19T19:41:49.751Z",
+      "updatedAt": "2026-10-28T11:01:48.643Z",
       "logs": [
         {
           "timestamp": "2026-10-19T19:41:49.748Z",
           "level": "info",
           "message": "Job created for TOOL_GUIDE (Category: TOOLS): \"project tracker crochet tool\" with opportunity score 95."
+        },
+        {
+          "timestamp": "2026-10-28T11:00:58.909Z",
+          "level": "info",
+          "message": "Starting technical craft research..."
+        },
+        {
+          "timestamp": "2026-10-28T11:01:04.618Z",
+          "level": "info",
+          "message": "Factual research packet validated successfully."
+        },
+        {
+          "timestamp": "2026-10-28T11:01:04.625Z",
+          "level": "info",
+          "message": "Generating article with OpenAI..."
+        },
+        {
+          "timestamp": "2026-10-28T11:01:20.013Z",
+          "level": "info",
+          "message": "Article generated successfully (836 words). Content safely persisted to job state."
+        },
+        {
+          "timestamp": "2026-10-28T11:01:20.022Z",
+          "level": "info",
+          "message": "Starting Stage 3: Board resolution and local image asset binding ($0 cost)..."
+        },
+        {
+          "timestamp": "2026-10-28T11:01:48.327Z",
+          "level": "info",
+          "message": "Hero image generated successfully via Higgsfield: /generated/blog/mastering-the-art-of-crochet-with-a-proj-6afcac19c3.jpg"
+        },
+        {
+          "timestamp": "2026-10-28T11:01:48.643Z",
+          "level": "error",
+          "message": "Missing or failed image assets: Pin 1 (2:3), Pin 2 (2:3). Job halted safely."
         }
       ],
       "assignedPublishDate": "2026-10-19",
       "assignedSlotTime": "16:00",
-      "publicationScheduledAt": "16:00"
+      "publicationScheduledAt": "16:00",
+      "factualResearch": {
+        "topicId": "topic_tool_project_tracker_70726f6a",
+        "topic": "project tracker crochet tool",
+        "searchIntent": "To find tools or applications that help crocheters organize, track progress, and manage their crochet projects effectively.",
+        "craftType": "crochet",
+        "sourceAuthority": "Craft Yarn Council Technical Standards & OpenAI Craft Research",
+        "cycStandardVersion": "CYC 2024 Guidelines",
+        "generatedAt": "2026-10-28T11:01:04.615Z",
+        "verifiedTerminology": [
+          "Single Crochet (UK: Double Crochet)",
+          "Double Crochet (UK: Treble Crochet)",
+          "Yarn Over (YO)"
+        ],
+        "verifiedMaterials": {
+          "yarnWeights": [
+            "CYC #4 Worsted",
+            "CYC #3 DK"
+          ],
+          "hookSizes": [
+            "5.0 mm (H-8)",
+            "4.0 mm (G-6)"
+          ],
+          "standardYardages": "Baby blanket: 700 - 1,000 meters, Throw Blanket: 1,200 - 1,800 meters",
+          "verifiedDimensions": {
+            "Baby Blanket": "30 x 36 inches (76 x 91 cm)",
+            "Lapghan": "36 x 48 inches (91 x 122 cm)",
+            "Throw Blanket": "50 x 60 inches (127 x 152 cm)",
+            "Twin Blanket": "66 x 90 inches (168 x 229 cm)"
+          }
+        },
+        "authorizedPercentages": [
+          10,
+          15,
+          20
+        ],
+        "prohibitedMetrics": [
+          "stitches per skein",
+          "divide stitches by stitches per skein",
+          "arbitrary yards per stitch",
+          "invented mattress or bed sizes",
+          "commercial sales pricing or revenue claims"
+        ],
+        "verifiedFormulas": [
+          {
+            "name": "Area Ratio Swatch Scaling Method",
+            "description": "Calculates total project yardage by scaling swatch yardage to blanket surface area",
+            "formulaText": "Total Yardage = (Blanket Area / Swatch Area) * Swatch Yardage * 1.10",
+            "steps": [
+              "Step 1: Measure the dimensions of your swatch and calculate its area.",
+              "Step 2: Measure the dimensions of your final project and calculate its area.",
+              "Step 3: Calculate the yardage used for your swatch.",
+              "Step 4: Use the formula to scale the swatch yardage to the project size and add a 10% buffer for safety."
+            ]
+          }
+        ],
+        "supportedClaims": [
+          "Textured stitches like bobbles and puff stitches consume more yarn than flat stitches like single crochet and double crochet.",
+          "A 10% to 15% safety buffer is standard practice.",
+          "Yarn is sold by weight and yardage, not by stitch count."
+        ],
+        "techniqueKeyPoints": [
+          "Accurate project tracking helps manage time and resources effectively.",
+          "Consistent gauge is crucial for accurate project estimation.",
+          "Using a project tracker can prevent forgetting where you left off in a complex pattern."
+        ],
+        "makerPainPoints": [
+          "Difficulty in keeping track of multiple projects simultaneously.",
+          "Inconsistency in tracking progress and project notes.",
+          "Forgetting to record changes in pattern or yarn substitutions."
+        ],
+        "faqItems": [
+          {
+            "question": "What is a crochet project tracker?",
+            "factualAnswer": "A crochet project tracker is a tool or application designed to help crocheters keep track of their projects, including details like yarn used, hook size, pattern instructions, and progress notes."
+          },
+          {
+            "question": "Why should I use a project tracker for crochet?",
+            "factualAnswer": "Using a project tracker helps you organize your projects, keep track of progress, and manage resources like yarn and time more efficiently, reducing the chance of errors or forgotten details."
+          },
+          {
+            "question": "Can I track multiple projects with a crochet tracker?",
+            "factualAnswer": "Yes, most crochet project trackers are designed to handle multiple projects simultaneously, allowing you to switch between them without losing track of important details."
+          }
+        ],
+        "verifiedInternalLinks": [
+          {
+            "anchorText": "project tracker",
+            "url": "/tools/project-tracker",
+            "entityType": "tool"
+          }
+        ],
+        "targetTool": {
+          "id": "project-tracker",
+          "slug": "project-tracker",
+          "title": "Project Tracker",
+          "description": "Keep track of active WIPs, completion status, yarn stash used, hook sizes, and photo logs.",
+          "icon": "FolderHeart",
+          "category": "Organizer",
+          "actionType": "tracker",
+          "actionLabel": "Start Tracking Projects →",
+          "actionVerb": "Track Projects",
+          "isPopular": true
+        }
+      },
+      "articleContent": {
+        "title": "Mastering the Art of Crochet with a Project Tracker Tool",
+        "slug": "mastering-the-art-of-crochet-with-a-project-tracker-tool",
+        "excerpt": "Discover how using a crochet project tracker can streamline your crafting process, helping you manage multiple projects and resources efficiently.",
+        "contentHtml": "<h2>Why Every Crocheter Needs a Project Tracker</h2><p>If you've ever found yourself tangled in multiple crochet projects, unsure of which hook size you used last or desperately trying to recall the exact shade of yarn that brought your project to life, a project tracker is your new best friend. A crochet project tracker is an essential tool designed to help you organize and manage your crochet projects, tracking everything from yarn used to pattern instructions and progress notes.</p><h2>The Challenges of Managing Crochet Projects</h2><p>Crocheting is a rewarding and creative craft, but it comes with its own set of challenges, especially when juggling multiple projects. Common issues include:</p><ul><li>Keeping track of different yarns and their quantities.</li><li>Remembering which hook size was used for each project.</li><li>Recording modifications or pattern adjustments.</li><li>Monitoring progress to avoid unfinished projects.</li></ul><p>A project tracker addresses these challenges by providing a structured way to record and recall crucial details, ensuring nothing falls through the cracks.</p><h2>Manual Techniques for Tracking Projects</h2><p>Before diving into digital solutions, let's explore some manual techniques for tracking crochet projects:</p><h3>Notebook or Journal</h3><p>Many crocheters start with a simple notebook or journal. Here’s how you can use one:</p><ul><li>Record project name, start date, and expected completion date.</li><li>Note down yarn details, including color and yardage.</li><li>List the hook size and any pattern changes.</li><li>Update progress regularly with notes and photos.</li></ul><h3>Swatch Calculations</h3><p>For accurate yardage estimation, use the Area Ratio Swatch Scaling Method:</p><ol><li>Measure your swatch dimensions and calculate its area.</li><li>Calculate the area of your final project.</li><li>Determine the yardage used for your swatch.</li><li>Apply the formula: <strong>Total Yardage = (Blanket Area / Swatch Area) * Swatch Yardage * 1.10</strong> to estimate total yardage with a 10% buffer for safety.</li></ol><p>Swatch calculations help ensure you have enough yarn for your projects, especially when working with CYC #4 Worsted or CYC #3 DK yarns.</p><h2>Understanding Yarn Choices and Their Impact</h2><p>Choosing the right yarn is crucial for your crochet projects. Yarn is sold by weight and yardage, and different fibers can affect the look and feel of your finished item. Here’s a brief overview:</p><ul><li><strong>Wool:</strong> Offers warmth and elasticity, making it ideal for garments like scarves and hats.</li><li><strong>Acrylic:</strong> Affordable and versatile, it’s great for beginners and available in a wide range of colors.</li><li><strong>Cotton:</strong> Durable and breathable, perfect for summer projects or home décor items.</li></ul><p>Each fiber choice can impact the total yardage needed, especially when incorporating textured stitches like bobbles, which consume more yarn than flat stitches.</p><h2>Blocking Techniques for Finished Projects</h2><p>Once a project is complete, blocking can enhance its appearance. Two main methods are:</p><ul><li><strong>Wet Blocking:</strong> Immerse the item in water, gently squeeze out excess, and pin it to shape as it dries.</li><li><strong>Steam Blocking:</strong> Use a steam iron to gently shape the item without direct contact, ideal for delicate fibers.</li></ul><p>Blocking helps even out stitches and can correct uneven tension or border curling, ensuring a polished final product.</p><h2>Introducing the WeLovePattern Project Tracker</h2><p>Meet the WeLovePattern Project Tracker—your digital solution to crochet project management. This interactive tool eliminates the hassle of manual tracking, letting you focus more on crafting and less on calculations.</p><h3>How It Works</h3><ul><li><strong>Input Project Details:</strong> Enter yarn types, hook sizes, and project dimensions to start tracking.</li><li><strong>Monitor Progress:</strong> Log milestones with photo updates and progress notes.</li><li><strong>Resource Management:</strong> Keep an eye on yarn stash usage and completion status.</li></ul><p>The project tracker helps ensure you never forget where you left off, making it easier to pick up any project at any time.</p><h2>Practical Usage Tips</h2><p>To maximize the benefits of the WeLovePattern Project Tracker, consider these tips:</p><ul><li>Regularly update your progress to maintain accurate records.</li><li>Utilize photo logs to visually track changes and growth.</li><li>Switch between projects seamlessly while retaining all essential details.</li></ul><p>By embedding these practices into your routine, you'll enhance your efficiency and enjoyment in crafting.</p>\n\n<div class=\"welovepattern-tool-cta my-8 p-6 sm:p-8 rounded-3xl bg-gradient-to-br from-pink-50 via-rose-50/40 to-amber-50/50 dark:from-slate-800 dark:via-slate-800/90 dark:to-slate-800/60 border border-pink-200/70 dark:border-slate-700/80 shadow-sm not-prose\" data-tool-cta=\"project-tracker\">\n  <div class=\"flex flex-col sm:flex-row items-start sm:items-center justify-between gap-5\">\n    <div class=\"space-y-2 flex-1\">\n      <div class=\"inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-xs font-semibold bg-pink-100/80 dark:bg-pink-950/60 text-[#E96BA8] dark:text-pink-300\">\n        <span class=\"w-2 h-2 rounded-full bg-[#E96BA8] animate-pulse\"></span>\n        Interactive WeLovePattern Tool\n      </div>\n      <h3 class=\"text-xl sm:text-2xl font-black text-slate-900 dark:text-white tracking-tight m-0\">\n        Project Tracker\n      </h3>\n      <p class=\"text-sm text-slate-600 dark:text-slate-300 leading-relaxed m-0\">\n        Keep track of active WIPs, completion status, yarn stash used, hook sizes, and photo logs.\n      </p>\n    </div>\n    <div class=\"shrink-0 w-full sm:w-auto\">\n      <a href=\"/tools/project-tracker\" class=\"inline-flex items-center justify-center gap-2 w-full sm:w-auto px-6 py-3.5 rounded-2xl bg-gradient-to-r from-[#E96BA8] to-[#FF8E53] hover:from-[#d85596] hover:to-[#e87d42] text-white font-bold text-sm sm:text-base shadow-md hover:shadow-lg transition-all transform hover:-translate-y-0.5 no-underline\">\n        <span>Start Tracking Projects →</span>\n      </a>\n    </div>\n  </div>\n</div>\n\n<h2>Frequently Asked Questions</h2><h3>What is a crochet project tracker?</h3><p>A crochet project tracker is a tool or application designed to help crocheters keep track of their projects, including details like yarn used, hook size, pattern instructions, and progress notes.</p><h3>Why should I use a project tracker for crochet?</h3><p>Using a project tracker helps you organize your projects, keep track of progress, and manage resources like yarn and time more efficiently, reducing the chance of errors or forgotten details.</p><h3>Can I track multiple projects with a crochet tracker?</h3><p>Yes, most crochet project trackers are designed to handle multiple projects simultaneously, allowing you to switch between them without losing track of important details.</p><h2>Conclusion</h2><p>Whether you’re a seasoned crocheter or a beginner, a project tracker is an invaluable tool to keep your crafting organized and enjoyable. Embrace the efficiency and clarity a project tracker provides, and watch your crochet projects come together with ease and precision. Start tracking projects today with the WeLovePattern Project Tracker and transform your crochet experience.</p>",
+        "wordCount": 836,
+        "category": "tools",
+        "tags": [
+          "crochet",
+          "project tracking",
+          "yarn management",
+          "craft organization"
+        ],
+        "seoMeta": {
+          "title": "Project Tracker Crochet Tool Guide",
+          "description": "Learn how a crochet project tracker helps manage your projects efficiently, ensuring organized crafting.",
+          "keywords": "project tracker, crochet tool, yarn management, crochet organization"
+        },
+        "heroImage": {
+          "prompt": "Realistic photography-led craft editorial visual for 16:9 widescreen article hero format, featuring an authentic dual-focus tutorial composition:\n1. FINISHED OBJECT (LEFT): A large, clear photograph of the finished blocked crochet gauge swatch with immaculate stitch alignment alongside a flexible cloth measuring tape and polished wooden hook. A large, clear photograph of the completed handmade crochet neat handmade crochet gauge swatch, complete and beautifully styled on a clean warm linen or rustic wooden surface with soft diffused natural morning window light.\n2. CENTER TITLE: A clean, neutral horizontal divider band displaying the short title \"Mastering the Art of Crochet with a Project Tracker Tool\". Simple, restrained, readable typography with zero decorative stickers or badges.\n3. CROCHET IN PROGRESS (RIGHT): A close-up photograph of real human hands actively crocheting the EXACT SAME neat handmade crochet gauge swatch, holding a smooth wooden hook with matching CYC #4 Worsted and a genuine 5.0 mm (H-8), showing physically plausible stitches in progress (close-up photograph of real human hands actively crocheting the tension rows of that SAME gauge swatch with identical yarn and hook).\nNON-NEGOTIABLE REALISM REQUIREMENTS:\n- Prioritize authentic photographic realism over illustration, CGI, cartoon aesthetics, and obvious AI-generated imagery.\n- Human hands must look anatomically natural, with correctly formed fingers and realistic skin texture.\n- The hook, yarn, and stitches must be physically plausible.\n- Show a coherent crochet-in-progress stage, not an unrelated object or a finished product being held as if it were being crocheted.\n- Maintain visual continuity between the finished product and the in-progress project with identical yarn color, weight, and construction.\n- Natural lighting, realistic textures, simple backgrounds, close-up photography.\n- Avoid artificial plastic-looking yarn, malformed hands, impossible hooks, disconnected stitches, and inconsistent product details.\n- Do not add extra text, icons, stickers, badges, decorative frames, or unnecessary graphics.\n- The title must be short, legible, correctly spelled, and visually separated from the two photographs.",
+          "compactPrompt": "Realistic photography-led craft editorial visual for 16:9 widescreen article hero format, featuring an authentic dual-focus tutorial composition:\n1. FINISHED OBJECT (LEFT): A large, clear photograph of the finished blocked crochet gauge swatch with immaculate stitch alignment alongside a flexible cloth measuring tape and polished wooden hook. A large, clear photograph of the completed handmade crochet neat handmade crochet gauge swatch, complete and beautifully styled on a cl",
+          "stableAssetPath": "/app/applet/public/generated/blog/mastering-the-art-of-crochet-with-a-proj-6afcac19c3.jpg",
+          "stablePublicUrl": "/generated/blog/mastering-the-art-of-crochet-with-a-proj-6afcac19c3.jpg",
+          "higgsfieldRequestId": "01a1822b-f0f4-70cc-bdcb-7e3078a06b6c",
+          "higgsfieldTaskId": "01a1822b-f0f4-70cc-bdcb-7e3078a06b6c",
+          "status": "ready"
+        }
+      },
+      "articleHeroImage": {
+        "prompt": "Realistic photography-led craft editorial visual for 16:9 widescreen article hero format, featuring an authentic dual-focus tutorial composition:\n1. FINISHED OBJECT (LEFT): A large, clear photograph of the finished blocked crochet gauge swatch with immaculate stitch alignment alongside a flexible cloth measuring tape and polished wooden hook. A large, clear photograph of the completed handmade crochet neat handmade crochet gauge swatch, complete and beautifully styled on a clean warm linen or rustic wooden surface with soft diffused natural morning window light.\n2. CENTER TITLE: A clean, neutral horizontal divider band displaying the short title \"Mastering the Art of Crochet with a Project Tracker Tool\". Simple, restrained, readable typography with zero decorative stickers or badges.\n3. CROCHET IN PROGRESS (RIGHT): A close-up photograph of real human hands actively crocheting the EXACT SAME neat handmade crochet gauge swatch, holding a smooth wooden hook with matching CYC #4 Worsted and a genuine 5.0 mm (H-8), showing physically plausible stitches in progress (close-up photograph of real human hands actively crocheting the tension rows of that SAME gauge swatch with identical yarn and hook).\nNON-NEGOTIABLE REALISM REQUIREMENTS:\n- Prioritize authentic photographic realism over illustration, CGI, cartoon aesthetics, and obvious AI-generated imagery.\n- Human hands must look anatomically natural, with correctly formed fingers and realistic skin texture.\n- The hook, yarn, and stitches must be physically plausible.\n- Show a coherent crochet-in-progress stage, not an unrelated object or a finished product being held as if it were being crocheted.\n- Maintain visual continuity between the finished product and the in-progress project with identical yarn color, weight, and construction.\n- Natural lighting, realistic textures, simple backgrounds, close-up photography.\n- Avoid artificial plastic-looking yarn, malformed hands, impossible hooks, disconnected stitches, and inconsistent product details.\n- Do not add extra text, icons, stickers, badges, decorative frames, or unnecessary graphics.\n- The title must be short, legible, correctly spelled, and visually separated from the two photographs.",
+        "compactPrompt": "Realistic photography-led craft editorial visual for 16:9 widescreen article hero format, featuring an authentic dual-focus tutorial composition:\n1. FINISHED OBJECT (LEFT): A large, clear photograph of the finished blocked crochet gauge swatch with immaculate stitch alignment alongside a flexible cloth measuring tape and polished wooden hook. A large, clear photograph of the completed handmade crochet neat handmade crochet gauge swatch, complete and beautifully styled on a cl",
+        "stableAssetPath": "/app/applet/public/generated/blog/mastering-the-art-of-crochet-with-a-proj-6afcac19c3.jpg",
+        "stablePublicUrl": "/generated/blog/mastering-the-art-of-crochet-with-a-proj-6afcac19c3.jpg",
+        "higgsfieldRequestId": "01a1822b-f0f4-70cc-bdcb-7e3078a06b6c",
+        "higgsfieldTaskId": "01a1822b-f0f4-70cc-bdcb-7e3078a06b6c",
+        "status": "ready"
+      }
     },
     {
       "id": "job_2026-10-20_h2r1r6",
@@ -1231,5 +1772,5 @@
       "logs": []
     }
   ],
-  "updatedAt": "2026-10-21T00:03:38.381Z"
+  "updatedAt": "2026-10-28T11:01:48.643Z"
 }

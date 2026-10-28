@@ -223,6 +223,8 @@ async function runPublishingTests() {
     };
     const testState = readEngineState();
     testState.config.engineActive = true;
+    testState.config.pinterestPublishTimes = ['09:00', '13:00', '17:00', '21:00'];
+    testState.config.pinsPerArticle = 2;
     testState.activeJobs = [unpublishedJob];
     writeEngineState(testState);
 
@@ -237,6 +239,7 @@ async function runPublishingTests() {
     freshState.config.engineActive = true;
     freshState.config.timezone = 'America/New_York';
     freshState.config.articlesPerDay = 2;
+    freshState.config.pinsPerArticle = 2;
     freshState.config.articlePublishTimes = ['08:00', '16:00'];
     freshState.config.pinterestPublishTimes = ['09:00', '13:00', '17:00', '21:00'];
     freshState.lastExecutedArticleSlot = undefined;
@@ -308,6 +311,8 @@ async function runPublishingTests() {
     };
 
     const pinState = readEngineState();
+    pinState.config.pinsPerArticle = 2;
+    pinState.config.pinterestPublishTimes = ['09:00', '13:00', '17:00', '21:00'];
     pinState.activeJobs = [jobA, jobB];
     writeEngineState(pinState);
 

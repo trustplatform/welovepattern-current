@@ -135,9 +135,8 @@ export function injectInternalLinks(
     injectedUrls.add(`/blog/${options.currentArticleSlug.toLowerCase()}`);
   }
 
-  if (options?.contentType === 'tool_guide' && options?.targetTool) {
-    injectedUrls.add(`/tools/${options.targetTool.slug.toLowerCase()}`);
-  }
+  // Allow candidate links to match tool contextual anchor text in body copy.
+  // The dedicated CTA box will also be injected before FAQ/conclusion.
 
   // Strip pre-existing bare anchor tags (except structured CTA buttons) to clean plain inner text
   // to ensure links are injected deterministically without nesting or attribute corruption.
@@ -235,8 +234,8 @@ export function injectInternalLinks(
 
   let resultHtml = tokens.map(t => t.text).join('');
 
-  // Inject Tool-specific CTA for tool_guide articles ONLY
-  if (options?.contentType === 'tool_guide' && options.targetTool) {
+  // Inject Tool-specific CTA for any article paired with a target tool
+  if (options?.targetTool) {
     resultHtml = injectToolCta(resultHtml, options.targetTool);
     const toolUrl = `/tools/${options.targetTool.slug}`;
     if (!injectedLinks.some(l => l.url.toLowerCase() === toolUrl.toLowerCase())) {

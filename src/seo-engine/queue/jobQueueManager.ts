@@ -122,7 +122,7 @@ export async function createSingleSlotProductionJob(
   const state = readEngineState();
   const config = state.config;
   const targetDate = options?.scheduledDate || new Date().toISOString().split('T')[0];
-  const targetSlotTime = options?.slotTime || (slotNumber === 1 ? '08:00' : slotNumber === 2 ? '12:00' : '16:00');
+  const targetSlotTime = options?.slotTime || (slotNumber === 1 ? (config.articlePublishTimes?.[0] || '09:00') : slotNumber === 2 ? (config.articlePublishTimes?.[1] || '12:00') : (config.articlePublishTimes?.[2] || '16:00'));
 
   let topic: DiscoveredTopic;
   if (slotNumber === 1) {
@@ -275,6 +275,7 @@ export function resolveOrPreservePinterestPins(
   packet: FactualResearchPacket,
   resolvedBoard: NormalizedPinterestBoard,
   contentType: ArticleContentType = topic.contentType || 'trending_crochet',
+  targetPinsCount: number = 1,
   conceptGenerator: (
     topic: DiscoveredTopic,
     article: GeneratedArticle,
@@ -285,8 +286,10 @@ export function resolveOrPreservePinterestPins(
 ): PinterestCreativeConcept[] {
   const currentPins = existingPins || [];
   let generatedConcepts: PinterestCreativeConcept[] | null = null;
+  const count = Math.max(1, targetPinsCount);
+  const pinIndices = Array.from({ length: count }, (_, i) => i);
 
-  return [0, 1].map(index => {
+  return pinIndices.map(index => {
     const existingPin = currentPins[index];
 
     // 1. Never replace or alter an already-published Pinterest Pin
@@ -361,7 +364,7 @@ export function resolveOrPreservePinterestPins(
         article,
         packet,
         resolvedBoard,
-        2
+        count
       );
     }
 
@@ -648,15 +651,17 @@ export async function executeJobLifecycle(
     });
   }
 
-  // 3. Generate exactly 2 unique Pinterest creative concepts
-let pins = resolveOrPreservePinterestPins(
-      job.pinterestPins,
-      job.topic,
-      article,
-      packet,
-      resolvedBoard,
-      job.contentType
-    );
+  // 3. Generate Pinterest creative concepts based on configured pinsPerArticle (default 1)
+  const targetPinsCount = Math.max(1, config.pinsPerArticle || 1);
+  let pins = resolveOrPreservePinterestPins(
+    job.pinterestPins,
+    job.topic,
+    article,
+    packet,
+    resolvedBoard,
+    job.contentType,
+    targetPinsCount
+  );
 
   // Persist concepts to state immediately
   updateJobInState(jobId, j => {
@@ -664,14 +669,14 @@ let pins = resolveOrPreservePinterestPins(
     return j;
   });
 
-  // 4. Verify & Bind or Generate Image Assets (Hero 16:9 + Exactly 2 Pinterest Pins 2:3)
+  // 4. Verify & Bind or Generate Image Assets (Hero 16:9 + Pinterest Pins 2:3)
   const heroPrompt = job.articleContent?.heroImage?.prompt ||
     buildHiggsfieldHeroPrompt(job.topic, article, packet);
 
   let currentHeroImage = job.articleContent?.heroImage;
   let isHeroValid = isValidLocalAsset(currentHeroImage?.stableAssetPath);
   let isPin1Valid = isValidLocalAsset(pins[0]?.stableAssetPath);
-  let isPin2Valid = isValidLocalAsset(pins[1]?.stableAssetPath);
+  let isPin2Valid = targetPinsCount < 2 || isValidLocalAsset(pins[1]?.stableAssetPath);
 
   const canGenerateImages = !config.reuseOnlyMode && config.higgsfieldEnabled !== false && isHiggsfieldConfigured();
 
@@ -786,8 +791,8 @@ let pins = resolveOrPreservePinterestPins(
     }
   }
 
-  // Generate Pin 2 (2:3) if missing from disk
-  if (!isPin2Valid && canGenerateImages && pins[1]) {
+  // Generate Pin 2 (2:3) ONLY if required (targetPinsCount >= 2) and missing from disk
+  if (targetPinsCount >= 2 && !isPin2Valid && canGenerateImages && pins[1]) {
     console.log(`[JobQueueManager] 🎨 Generating Pin 2 (2:3) via Higgsfield for job ${job.id}...`);
     const pin2Prompt = pins[1].compactHiggsfieldPrompt || pins[1].conceptAngle || `${article.title} tutorial`;
     const pin2Result = await generateHiggsfieldImage({
@@ -844,13 +849,13 @@ let pins = resolveOrPreservePinterestPins(
   pins = getJobById(jobId)?.pinterestPins || pins;
   isHeroValid = isValidLocalAsset(currentHeroImage?.stableAssetPath);
   isPin1Valid = isValidLocalAsset(pins[0]?.stableAssetPath);
-  isPin2Valid = isValidLocalAsset(pins[1]?.stableAssetPath);
+  isPin2Valid = targetPinsCount < 2 || isValidLocalAsset(pins[1]?.stableAssetPath);
 
   if (!isHeroValid || !isPin1Valid || !isPin2Valid) {
     const missingAssets: string[] = [];
     if (!isHeroValid) missingAssets.push('Hero (16:9)');
     if (!isPin1Valid) missingAssets.push('Pin 1 (2:3)');
-    if (!isPin2Valid) missingAssets.push('Pin 2 (2:3)');
+    if (targetPinsCount >= 2 && !isPin2Valid) missingAssets.push('Pin 2 (2:3)');
 
     updateJobInState(jobId, j => {
       j.stage = 'failed';

@@ -1,6 +1,6 @@
 {
   "version": 1,
-  "totalSpendAllTimeUsd": 0.8587,
+  "totalSpendAllTimeUsd": 0.9106,
   "records": [
     {
       "provider": "openai",
@@ -652,7 +652,85 @@
       },
       "id": "cost_1792541549648_xe1mj",
       "timestamp": "2026-10-21T00:12:29.648Z"
+    },
+    {
+      "provider": "openai",
+      "operation": "chat_completion",
+      "unitsConsumed": 1544,
+      "costUsd": 0.0095,
+      "meta": {
+        "model": "gpt-4o",
+        "promptTokens": 786,
+        "completionTokens": 758
+      },
+      "id": "cost_1793188803170_b3rmk",
+      "timestamp": "2026-10-28T12:00:03.170Z"
+    },
+    {
+      "provider": "openai",
+      "operation": "chat_completion",
+      "unitsConsumed": 1468,
+      "costUsd": 0.0088,
+      "meta": {
+        "model": "gpt-4o",
+        "promptTokens": 786,
+        "completionTokens": 682
+      },
+      "id": "cost_1793192063990_c08lj",
+      "timestamp": "2026-10-28T12:54:23.990Z"
+    },
+    {
+      "provider": "openai",
+      "operation": "chat_completion",
+      "unitsConsumed": 1368,
+      "costUsd": 0.0078,
+      "meta": {
+        "model": "gpt-4o",
+        "promptTokens": 786,
+        "completionTokens": 582
+      },
+      "id": "cost_1793192104193_zlo9t",
+      "timestamp": "2026-10-28T12:55:04.193Z"
+    },
+    {
+      "provider": "openai",
+      "operation": "chat_completion",
+      "unitsConsumed": 1530,
+      "costUsd": 0.0094,
+      "meta": {
+        "model": "gpt-4o",
+        "promptTokens": 786,
+        "completionTokens": 744
+      },
+      "id": "cost_1793192147047_uu0c6",
+      "timestamp": "2026-10-28T12:55:47.048Z"
+    },
+    {
+      "provider": "openai",
+      "operation": "chat_completion",
+      "unitsConsumed": 1478,
+      "costUsd": 0.0089,
+      "meta": {
+        "model": "gpt-4o",
+        "promptTokens": 786,
+        "completionTokens": 692
+      },
+      "id": "cost_1793192194399_xbu5c",
+      "timestamp": "2026-10-28T12:56:34.399Z"
+    },
+    {
+      "provider": "openai",
+      "operation": "chat_completion",
+      "unitsConsumed": 1339,
+      "costUsd": 0.0075,
+      "meta": {
+        "model": "gpt-4o",
+        "promptTokens": 786,
+        "completionTokens": 553
+      },
+      "id": "cost_1793192279412_non9z",
+      "timestamp": "2026-10-28T12:57:59.412Z"
     }
   ],
-  "updatedAt": "2026-10-21T00:13:00.530Z"
+  "updatedAt": "2026-10-28T12:57:59.432Z"
 }

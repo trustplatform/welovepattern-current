@@ -273,9 +273,9 @@ export interface ProductionQualityGateResult {
 }
 
 export interface SeoEngineConfig {
-  articlesPerDay: number;                     // Default: 3
-  pinsPerDay: number;                         // Default: 6
-  pinsPerArticle: number;                     // Default: 2 (configurable)
+  articlesPerDay: number;                     // Default: 1
+  pinsPerDay: number;                         // Default: 1
+  pinsPerArticle: number;                     // Default: 1 (configurable)
   trendTasksPerDay: number;                   // Default: 20
   autoPublish: boolean;                       // Default: false
   autoPublishPinterest: boolean;              // Default: false
@@ -284,8 +284,8 @@ export interface SeoEngineConfig {
   reuseOnlyMode?: boolean;                    // When true, strictly publishes existing complete packages and prevents content/image generation
   timezone: string;                           // Default: "America/New_York"
   activeDays: number[];                       // [1..7] Monday through Sunday
-  articlePublishTimes: string[];              // e.g. ["08:00", "12:00", "16:00"]
-  pinterestPublishTimes: string[];            // e.g. ["08:30", "09:00", "12:30", "13:00", "16:30", "17:00"]
+  articlePublishTimes: string[];              // e.g. ["09:00"]
+  pinterestPublishTimes: string[];            // e.g. ["09:15"]
   maxConcurrentJobs: number;                  // Default: 1
   fallbackBoardId: string;
   fallbackBoardName: string;

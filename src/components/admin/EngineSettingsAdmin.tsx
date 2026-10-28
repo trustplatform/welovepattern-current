@@ -294,11 +294,11 @@ export const EngineSettingsAdmin: React.FC = () => {
                   type="number"
                   min="1"
                   max="20"
-                  value={formData.articlesPerDay ?? 2}
+                  value={formData.articlesPerDay ?? 1}
                   onChange={(e) => handleChange('articlesPerDay', Number(e.target.value))}
                   className="w-full px-3 py-2 bg-slate-50 dark:bg-slate-900 border border-slate-200 dark:border-slate-700 rounded-xl text-xs font-bold text-slate-900 dark:text-white"
                 />
-                <span className="text-[10px] text-slate-400 mt-1 block">Default: 2 (1 Trend + 1 Tool)</span>
+                <span className="text-[10px] text-slate-400 mt-1 block">Default: 1 article per day</span>
               </div>
               <div>
                 <label className="block text-xs font-bold text-slate-700 dark:text-slate-300 mb-1">Pins Per Day</label>
@@ -306,11 +306,11 @@ export const EngineSettingsAdmin: React.FC = () => {
                   type="number"
                   min="1"
                   max="50"
-                  value={formData.pinsPerDay ?? 4}
+                  value={formData.pinsPerDay ?? 1}
                   onChange={(e) => handleChange('pinsPerDay', Number(e.target.value))}
                   className="w-full px-3 py-2 bg-slate-50 dark:bg-slate-900 border border-slate-200 dark:border-slate-700 rounded-xl text-xs font-bold text-slate-900 dark:text-white"
                 />
-                <span className="text-[10px] text-slate-400 mt-1 block">Target total per day</span>
+                <span className="text-[10px] text-slate-400 mt-1 block">Target total per day (1)</span>
               </div>
             </div>
 
@@ -322,11 +322,11 @@ export const EngineSettingsAdmin: React.FC = () => {
                   type="number"
                   min="1"
                   max="10"
-                  value={formData.pinsPerArticle ?? 2}
+                  value={formData.pinsPerArticle ?? 1}
                   onChange={(e) => handleChange('pinsPerArticle', Number(e.target.value))}
                   className="w-full px-3 py-2 bg-slate-50 dark:bg-slate-900 border border-slate-200 dark:border-slate-700 rounded-xl text-xs font-bold text-slate-900 dark:text-white"
                 />
-                <span className="text-[10px] text-slate-400 mt-1 block">Pin 1 + Pin 2 pair</span>
+                <span className="text-[10px] text-slate-400 mt-1 block">Default: 1 pin per article</span>
               </div>
               <div>
                 <label className="block text-xs font-bold text-slate-700 dark:text-slate-300 mb-1">Max Concurrent Jobs</label>
@@ -455,7 +455,7 @@ export const EngineSettingsAdmin: React.FC = () => {
               <label className="block text-xs font-bold text-slate-700 dark:text-slate-300 mb-1">Article Publish Times</label>
               <input
                 type="text"
-                value={(formData.articlePublishTimes || ['08:00', '12:00', '16:00', '20:00']).join(', ')}
+                value={(formData.articlePublishTimes || ['09:00']).join(', ')}
                 onChange={(e) => {
                   const arr = e.target.value.split(',').map(s => s.trim()).filter(Boolean);
                   handleChange('articlePublishTimes', arr);
@@ -469,7 +469,7 @@ export const EngineSettingsAdmin: React.FC = () => {
               <label className="block text-xs font-bold text-slate-700 dark:text-slate-300 mb-1">Pinterest Publish Times</label>
               <input
                 type="text"
-                value={(formData.pinterestPublishTimes || ['09:00', '13:00', '17:00', '21:00']).join(', ')}
+                value={(formData.pinterestPublishTimes || ['09:15']).join(', ')}
                 onChange={(e) => {
                   const arr = e.target.value.split(',').map(s => s.trim()).filter(Boolean);
                   handleChange('pinterestPublishTimes', arr);

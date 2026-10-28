@@ -17,6 +17,7 @@ import { executeOpenAiChat, isOpenAiConfigured } from './openAiClient';
 import { sanitizeArticleHtml, countHtmlWords } from './articleHtmlSanitizer';
 import { injectInternalLinks } from './internalLinkInjector';
 import { validateArticleFactualGrounding, FactualValidationOutput } from '../validation/articleFactualValidator';
+import { TOOL_CAPABILITY_PROFILES } from '../discovery/trendToolMatcher';
 
 export interface GeneratedArticle {
   title: string;
@@ -134,6 +135,20 @@ function formatFactualContext(packet: FactualResearchPacket): string {
   parts.push(`MAKER PAIN POINTS TO SOLVE:\n${packet.makerPainPoints.map(p => `  • ${p}`).join('\n')}`);
   parts.push(`FACTUAL FAQS (Use answers faithfully):\n${JSON.stringify(packet.faqItems, null, 2)}`);
 
+  if (packet.targetTool) {
+    const profile = TOOL_CAPABILITY_PROFILES.find(p => p.toolSlug === packet.targetTool?.slug);
+    if (profile) {
+      parts.push(`PAIRED TOOL SPECIFICATIONS & CAPABILITIES (${profile.toolTitle}):\n` +
+        `  • Canonical Route: ${profile.canonicalUrl}\n` +
+        `  • Core Problem Solved: ${profile.coreProblem}\n` +
+        `  • Practical Capabilities:\n${profile.practicalCapabilities.map(c => `      - ${c}`).join('\n')}\n` +
+        `  • Required Inputs: ${profile.inputs.join(', ')}\n` +
+        `  • Calculation Outputs: ${profile.outputs.join(', ')}\n` +
+        `  • Honest Limitations (MANDATORY TO RESPECT):\n${profile.limitations.map(l => `      - ${l}`).join('\n')}`
+      );
+    }
+  }
+
   return parts.join('\n\n');
 }
 
@@ -152,8 +167,9 @@ function buildGenerationPrompt(
   const targetTool = packet.targetTool;
   const toolUrl = targetTool ? `/tools/${targetTool.slug}` : (topic.targetToolUrl || '/tools');
 
-  const slotRoleInstruction = isToolGuide
-    ? `CONTENT SLOT: DAILY WE-LOVE-PATTERN TOOL GUIDE (Category: TOOLS).
+  let slotRoleInstruction: string;
+  if (isToolGuide) {
+    slotRoleInstruction = `CONTENT SLOT: DAILY WE-LOVE-PATTERN TOOL GUIDE (Category: TOOLS).
 TARGET TOOL METADATA & EDITORIAL OBJECTIVES:
 - Associated Tool: "${targetTool?.title || 'Interactive Craft Tool'}" (${toolUrl})
 - Tool Purpose: ${targetTool?.description || 'Interactive craft calculator and reference tool'}
@@ -163,9 +179,24 @@ TARGET TOOL METADATA & EDITORIAL OBJECTIVES:
   2. Provide clear manual calculation or technique steps so makers learn the foundational principles.
   3. Naturally introduce the WeLovePattern ${targetTool?.title || 'tool'} as the dedicated, interactive solution that eliminates manual math errors.
   4. Explain practical usage in context (e.g. what inputs to enter and how to interpret outputs).
-  5. Maintain a natural, engaging tone — do NOT use repetitive robotic formulas or identical article structures across tools.`
-    : `CONTENT SLOT: DAILY TRENDING CROCHET ARTICLE (Category: CROCHET).
+  5. Maintain a natural, engaging tone — do NOT use repetitive robotic formulas or identical article structures across tools.`;
+  } else if (targetTool) {
+    slotRoleInstruction = `CONTENT SLOT: DAILY TRENDING CROCHET ARTICLE WITH TOOL CONTENT INTELLIGENCE (Category: CROCHET).
+TREND + TOOL EDITORIAL OBJECTIVES:
+- Primary Project / Search Trend Focus: "${topic.keyword}"
+- Paired WeLovePattern Tool: "${targetTool.title}" (${toolUrl})
+- Tool Action: "${targetTool.actionVerb}" | Purpose: ${targetTool.description}
+- EDITORIAL RULES FOR TREND + TOOL ARTICLES:
+  1. PRIMARY FOCUS ON THE MAKER'S PROJECT: Deliver an in-depth, deeply useful crochet pattern/project guide for "${topic.keyword}". Cover project overview, materials, hook sizes, yarn weights, stitch technique, and step-by-step construction.
+  2. AUTHENTIC INTEGRATION (NOT AN ADVERTISEMENT): Do NOT write a shallow or pushy advertisement for the tool. Focus on the reader's project first and foremost.
+  3. PRACTICAL PROBLEM SOLVING: Naturally introduce the ${targetTool.title} (${toolUrl}) during the project planning, math, or sizing phase as the maker's trusted helper that solves a real craft challenge (e.g. estimating skeins accurately, checking gauge adjustments, counting rows, or calculating border stitches).
+  4. INPUTS, OUTPUTS & REALISTIC USAGE: Explain how to use the tool for this specific project — what measurements to enter and how to interpret the results.
+  5. HONEST CRAFT LIMITATIONS: Explicitly mention the tool's practical limitations (e.g. gauge swatch requirements, stitch texture differences) so crafter expectations are physically accurate.
+  6. Maintain an encouraging, expert editorial voice tailored to crocheters.`;
+  } else {
+    slotRoleInstruction = `CONTENT SLOT: DAILY TRENDING CROCHET ARTICLE (Category: CROCHET).
 Your goal is to deliver an in-depth, deeply useful and engaging crochet guide for the current search trend ("${topic.keyword}"). Cover the project overview, materials, hook sizes, yarn weights, stitch technique, construction steps, sizing, helpful tips, and variations.`;
+  }
 
   const systemPrompt = `You are the Senior Editorial Director for WeLovePattern (welovepattern.com), the premier authoritative crochet and yarn crafting resource.
 You write deeply helpful, comprehensive, friendly, and technically impeccable articles for makers of all skill levels.

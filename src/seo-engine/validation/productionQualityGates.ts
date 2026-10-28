@@ -250,6 +250,13 @@ export function evaluateProductionQualityGates(
       slotAlignmentPassed = false;
       rejectionReasons.push(`Slot 1 Classification Error: Trending Crochet topic "${topic.keyword}" contains prohibited tool keyword.`);
     }
+    if (topic.toolSlug && (article.contentHtml.includes('welovepattern-tool-cta') || article.contentHtml.includes('/tools/'))) {
+      const toolGuideValidation = validateToolGuideRequirements(article.contentHtml, topic, packet);
+      if (!toolGuideValidation.isValid) {
+        slotAlignmentPassed = false;
+        rejectionReasons.push(...toolGuideValidation.errors);
+      }
+    }
   } else if (topic.contentType === 'tool_guide') {
     if (article.category !== 'tools') {
       slotAlignmentPassed = false;
@@ -292,16 +299,27 @@ export function evaluateProductionQualityGates(
   // GATE 5: INTERNAL LINKING INTEGRITY
   // -----------------------------------------------------------------
   const linkRegex = /<a\s+[^>]*?href=["']([^"']+)["'][^>]*?>([\s\S]*?)<\/a>/gi;
-  const seenUrls = new Map<string, number>();
   const invalidRoutes: string[] = [];
   let m: RegExpExecArray | null;
 
+  // Check all link destinations (including CTA buttons) for valid internal routes
   while ((m = linkRegex.exec(article.contentHtml)) !== null) {
     const url = m[1].trim();
-    // Verify route validity
     if (!isRouteValid(url)) {
       invalidRoutes.push(url);
     }
+  }
+
+  // Deduplicate editorial body links (excluding structured conversion CTA buttons)
+  const bodyHtmlWithoutCta = article.contentHtml.replace(
+    /<div\b[^>]*class=["'][^"']*welovepattern-tool-cta[\s\S]*?<\/div>\s*<\/div>/gi,
+    ''
+  );
+  const seenUrls = new Map<string, number>();
+  const bodyLinkRegex = /<a\s+[^>]*?href=["']([^"']+)["'][^>]*?>([\s\S]*?)<\/a>/gi;
+  let bm: RegExpExecArray | null;
+  while ((bm = bodyLinkRegex.exec(bodyHtmlWithoutCta)) !== null) {
+    const url = bm[1].trim();
     const count = (seenUrls.get(url) || 0) + 1;
     seenUrls.set(url, count);
   }

@@ -366,18 +366,28 @@ export function validateArticleFactualGrounding(
   // 8. INTERNAL LINK INTEGRITY & DUPLICATE PREVENTION
   // ----------------------------------------------------
   const linkRegex = /<a\s+[^>]*?href=["']([^"']+)["'][^>]*?>([\s\S]*?)<\/a>/gi;
-  const seenUrls = new Map<string, number>();
   const invalidRoutes: string[] = [];
   let linkMatch: RegExpExecArray | null;
 
   while ((linkMatch = linkRegex.exec(contentHtml)) !== null) {
     const url = linkMatch[1].trim();
-    const count = (seenUrls.get(url) || 0) + 1;
-    seenUrls.set(url, count);
-
     if (!isRouteValid(url)) {
       invalidRoutes.push(url);
     }
+  }
+
+  // Deduplicate editorial body links (excluding structured conversion CTA buttons)
+  const bodyHtmlWithoutCta = contentHtml.replace(
+    /<div\b[^>]*class=["'][^"']*welovepattern-tool-cta[\s\S]*?<\/div>\s*<\/div>/gi,
+    ''
+  );
+  const seenUrls = new Map<string, number>();
+  const bodyLinkRegex = /<a\s+[^>]*?href=["']([^"']+)["'][^>]*?>([\s\S]*?)<\/a>/gi;
+  let bm: RegExpExecArray | null;
+  while ((bm = bodyLinkRegex.exec(bodyHtmlWithoutCta)) !== null) {
+    const url = bm[1].trim();
+    const count = (seenUrls.get(url) || 0) + 1;
+    seenUrls.set(url, count);
   }
 
   const duplicateUrls: string[] = [];
