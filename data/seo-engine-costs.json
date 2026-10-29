@@ -1,6 +1,6 @@
 {
   "version": 1,
-  "totalSpendAllTimeUsd": 0.9106,
+  "totalSpendAllTimeUsd": 1.0366,
   "records": [
     {
       "provider": "openai",
@@ -730,7 +730,110 @@
       },
       "id": "cost_1793192279412_non9z",
       "timestamp": "2026-10-28T12:57:59.412Z"
+    },
+    {
+      "provider": "openai",
+      "operation": "chat_completion",
+      "unitsConsumed": 1457,
+      "costUsd": 0.0087,
+      "meta": {
+        "model": "gpt-4o",
+        "promptTokens": 786,
+        "completionTokens": 671
+      },
+      "id": "cost_1793231288743_9br1k",
+      "timestamp": "2026-10-28T23:48:08.743Z"
+    },
+    {
+      "provider": "openai",
+      "operation": "chat_completion",
+      "unitsConsumed": 1478,
+      "costUsd": 0.0089,
+      "meta": {
+        "model": "gpt-4o",
+        "promptTokens": 786,
+        "completionTokens": 692
+      },
+      "id": "cost_1793271728993_sbi3e",
+      "timestamp": "2026-10-29T11:02:08.993Z"
+    },
+    {
+      "provider": "openai",
+      "operation": "chat_completion",
+      "unitsConsumed": 1495,
+      "costUsd": 0.0091,
+      "meta": {
+        "model": "gpt-4o",
+        "promptTokens": 786,
+        "completionTokens": 709
+      },
+      "id": "cost_1793271812318_7cho1",
+      "timestamp": "2026-10-29T11:03:32.319Z"
+    },
+    {
+      "provider": "openai",
+      "operation": "chat_completion",
+      "unitsConsumed": 1520,
+      "costUsd": 0.0093,
+      "meta": {
+        "model": "gpt-4o",
+        "promptTokens": 786,
+        "completionTokens": 734
+      },
+      "id": "cost_1793272866370_syo9w",
+      "timestamp": "2026-10-29T11:21:06.370Z"
+    },
+    {
+      "jobId": "exp_job_pumpkin_hero",
+      "provider": "higgsfield",
+      "operation": "image_generation",
+      "unitsConsumed": 1,
+      "costUsd": 0.03,
+      "meta": {
+        "taskId": "01a18778-202e-7ff9-8488-45024bd1b0e2",
+        "providerRequestId": "01a18778-202e-7ff9-8488-45024bd1b0e2",
+        "prompt": "Realistic photography-led craft editorial visual for 16:9 widescreen article hero format, featuring ",
+        "targetFolder": "blog",
+        "slug": "experimental-ribbed-pumpkin-hero",
+        "status": "completed"
+      },
+      "id": "cost_1793274159207_10b5u",
+      "timestamp": "2026-10-29T11:42:39.207Z"
+    },
+    {
+      "jobId": "exp_job_pumpkin_pin1",
+      "provider": "higgsfield",
+      "operation": "image_generation",
+      "unitsConsumed": 1,
+      "costUsd": 0.03,
+      "meta": {
+        "taskId": "01a1877b-f74c-74fb-aeb0-8f5792473ddb",
+        "providerRequestId": "01a1877b-f74c-74fb-aeb0-8f5792473ddb",
+        "prompt": "Vertical Pinterest Pin. PIN ARCHETYPE: FINISHED PROJECT SHOWCASE (PIN 1):\nComplete finished crochet ",
+        "targetFolder": "pinterest",
+        "slug": "experimental-ribbed-pumpkin-pin-1",
+        "status": "completed"
+      },
+      "id": "cost_1793274410881_b87iu",
+      "timestamp": "2026-10-29T11:46:50.881Z"
+    },
+    {
+      "jobId": "exp_job_pumpkin_pin_3panel",
+      "provider": "higgsfield",
+      "operation": "image_generation",
+      "unitsConsumed": 1,
+      "costUsd": 0.03,
+      "meta": {
+        "taskId": "01a18795-a8bb-73ed-a93d-ca05a12a3df5",
+        "providerRequestId": "01a18795-a8bb-73ed-a93d-ca05a12a3df5",
+        "prompt": "Vertical 2:3 editorial Pinterest Pin layout (1000 × 1500) featuring THREE stacked photographic panel",
+        "targetFolder": "pinterest",
+        "slug": "experimental-ribbed-pumpkin-pin-3panel",
+        "status": "completed"
+      },
+      "id": "cost_1793276094709_1ob6t",
+      "timestamp": "2026-10-29T12:14:54.709Z"
     }
   ],
-  "updatedAt": "2026-10-28T12:57:59.432Z"
+  "updatedAt": "2026-10-29T12:15:25.683Z"
 }

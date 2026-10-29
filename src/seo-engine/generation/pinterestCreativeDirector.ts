@@ -265,6 +265,14 @@ export function analyzeTopicAesthetic(
 
   // 1. Seasonal / Holiday Themes
   if (/halloween|autumn|fall|pumpkin|spooky|october/i.test(textCorpus)) {
+    if (variationSeed === 3) {
+      return {
+        themeName: 'Harvest Golden Studio',
+        paletteDescription: 'Warm amber gold, antique linen, soft dried eucalyptus green, and toasted pecan',
+        ctaVisualTreatment: 'warm amber gold and linen tones with crisp typography',
+        lightingAndMood: 'Soft natural daylight in a rustic studio with cozy textured accents',
+      };
+    }
     if (variationSeed === 2) {
       return {
         themeName: 'Midnight Harvest Studio',
@@ -282,6 +290,14 @@ export function analyzeTopicAesthetic(
   }
 
   if (/christmas|holiday|winter|snow|festive|ornament|tree/i.test(textCorpus)) {
+    if (variationSeed === 3) {
+      return {
+        themeName: 'Festive Hearth & Evergreen',
+        paletteDescription: 'Warm ivory wool, evergreen sprig, rustic birch, and soft cranberry',
+        ctaVisualTreatment: 'warm ivory and evergreen tones with elegant typography',
+        lightingAndMood: 'Soft diffused winter daylight with warm festive ambiance',
+      };
+    }
     if (variationSeed === 2) {
       return {
         themeName: 'Winter Cozy Fireside',
@@ -299,6 +315,14 @@ export function analyzeTopicAesthetic(
   }
 
   if (/flower|floral|spring|rose|botanical|bloom|garden/i.test(textCorpus)) {
+    if (variationSeed === 3) {
+      return {
+        themeName: 'Spring Garden Sunshine',
+        paletteDescription: 'Soft sunshine yellow, meadow sage, pure linen white, and petal peach',
+        ctaVisualTreatment: 'meadow sage and sunshine yellow tones with fresh modern typography',
+        lightingAndMood: 'Bright airy spring daylight with delicate botanical textures',
+      };
+    }
     if (variationSeed === 2) {
       return {
         themeName: 'Vibrant Garden Bloom',
@@ -316,6 +340,14 @@ export function analyzeTopicAesthetic(
   }
 
   if (/summer|beach|sun|coastal|cotton|light/i.test(textCorpus)) {
+    if (variationSeed === 3) {
+      return {
+        themeName: 'Sunlit Driftwood Studio',
+        paletteDescription: 'Bleached linen, warm drift sand, gentle sky azure, and soft ecru',
+        ctaVisualTreatment: 'warm sand and clean linen tones with high-readability typography',
+        lightingAndMood: 'Crisp airy seaside daylight with bright diffused natural lighting',
+      };
+    }
     return {
       themeName: 'Fresh Coastal Artisan',
       paletteDescription: 'Warm sand, sunlit ochre, light canvas ecru, and soft seafoam',
@@ -325,6 +357,14 @@ export function analyzeTopicAesthetic(
   }
 
   if (/parandi|hair|accessory|accessories|braid|headband|scrunchie/i.test(textCorpus)) {
+    if (variationSeed === 3) {
+      return {
+        themeName: 'Boho Artisan Loom',
+        paletteDescription: 'Rich sienna, burnished brass, raw linen, and warm copper',
+        ctaVisualTreatment: 'rich sienna and burnished brass tones with editorial typography',
+        lightingAndMood: 'Warm natural side lighting in an authentic textile artist studio',
+      };
+    }
     if (variationSeed === 2) {
       return {
         themeName: 'Midnight Velvet & Gold',
@@ -343,6 +383,14 @@ export function analyzeTopicAesthetic(
 
   // 2. Format / Category Themes
   if (topic.targetContentFormat === 'tool_focus' || /calculator|gauge|yardage|chart|size|converter/i.test(textCorpus)) {
+    if (variationSeed === 3) {
+      return {
+        themeName: 'Artisan Workshop Loft',
+        paletteDescription: 'Natural maple wood, soft charcoal, creamy wool, and warm slate',
+        ctaVisualTreatment: 'natural maple and slate tones with immaculate legibility',
+        lightingAndMood: 'Clear bright studio lighting, immaculate modern workshop aesthetics',
+      };
+    }
     if (variationSeed === 2) {
       return {
         themeName: 'Creative Maker Workspace',
@@ -360,6 +408,14 @@ export function analyzeTopicAesthetic(
   }
 
   if (topic.targetContentFormat === 'tutorial' || /stitch|technique|how to|beginner|tutorial/i.test(textCorpus)) {
+    if (variationSeed === 3) {
+      return {
+        themeName: 'Nordic Craft Haven',
+        paletteDescription: 'Pale Nordic pine, heather grey, warm ivory wool, and soft lichen',
+        ctaVisualTreatment: 'pale pine and heather grey tones with refined Scandinavian typography',
+        lightingAndMood: 'Bright Nordic window light highlighting clean stitch definition and yarn plies',
+      };
+    }
     if (variationSeed === 2) {
       return {
         themeName: 'Rich Artisan Studio',
@@ -377,6 +433,14 @@ export function analyzeTopicAesthetic(
   }
 
   if (/amigurumi|toy|doll|plush/i.test(textCorpus)) {
+    if (variationSeed === 3) {
+      return {
+        themeName: 'Pastel Craft Studio',
+        paletteDescription: 'Soft lilac, sky pastel blue, whipped cream, and warm peach',
+        ctaVisualTreatment: 'soft lilac and warm cream tones with cheerful editorial typography',
+        lightingAndMood: 'Bright diffused morning daylight in an airy maker studio',
+      };
+    }
     if (variationSeed === 2) {
       return {
         themeName: 'Colorful Yarn Wonderland',
@@ -394,6 +458,15 @@ export function analyzeTopicAesthetic(
   }
 
   // 3. Default Cohesive Natural Craft Editorial with Variation
+  if (variationSeed === 3) {
+    return {
+      themeName: 'Sunlit Artisan Loft',
+      paletteDescription: 'Warm oat milk, brushed caramel, soft olive leaf, and natural pine',
+      ctaVisualTreatment: 'warm oat and brushed caramel tones with refined typography',
+      lightingAndMood: 'Warm diffused morning window light, peaceful creative atmosphere',
+    };
+  }
+
   if (variationSeed === 2) {
     return {
       themeName: 'Modern Craft Editorial',
@@ -596,8 +669,11 @@ export function buildTrafficOrientedCta(
   const listCount = extractListCountFromTitle(title);
   const textCorpus = `${kw} ${title} ${article.category || ''}`.toLowerCase();
 
-  // 1. Tool Guide CTAs — Strictly bound to the actual tool identity
-  const isTool = topic.contentType === 'tool_guide' || topic.targetContentFormat === 'tool_focus' || Boolean(topic.toolSlug) || /counter|calculator|converter|tracker|organizer|timer|dictionary/i.test(textCorpus);
+  // 1. Tool Guide CTAs — Strictly bound to the actual dedicated tool topics
+  const isTool = topic.contentType === 'tool_guide' ||
+    topic.targetContentFormat === 'tool_focus' ||
+    (topic.category === 'tools' && !/pattern|pumpkin|bat|beanie|blanket|hat|bag|amigurumi|ornament|scarf|waffle/i.test(kw)) ||
+    (/calculator|converter|row counter|stitch counter|yarn counter|crochet timer|abbreviation dictionary/i.test(kw) && !/pattern|pumpkin|bat|beanie|blanket|hat|bag|amigurumi|ornament|scarf|waffle/i.test(kw));
 
   if (isTool) {
     let resolvedToolSlug = topic.toolSlug;
@@ -645,46 +721,373 @@ export function buildTrafficOrientedCta(
   return 'SEE ALL IDEAS →';
 }
 
+export interface PinterestPinHeadlines {
+  pin1Headline: string; // Finished Project / Pattern Identity
+  pin2Headline: string; // Making Process / Tutorial
+  pin3Headline: string; // Styling & Variations / Inspiration
+}
+
 /**
- * Derives a clean, punchy primary headline for the Pin.
+ * Truncates an uppercase headline cleanly at word boundaries if it exceeds maxLen.
+ */
+function truncateHeadline(str: string, maxLen = 36): string {
+  const clean = str.replace(/\s+/g, ' ').trim().toUpperCase();
+  if (clean.length <= maxLen) return clean;
+  const words = clean.split(' ');
+  let result = '';
+  for (const w of words) {
+    const candidate = result ? `${result} ${w}` : w;
+    if (candidate.length <= maxLen) {
+      result = candidate;
+    } else {
+      break;
+    }
+  }
+  return result || clean.slice(0, maxLen);
+}
+
+/**
+ * Generates three distinct, article-aware, concise headlines tailored specifically
+ * to the three Pinterest creative archetypes:
+ * - Pin 1: Finished Project / Pattern Identity (e.g. "EASY CROCHET BAT PATTERN")
+ * - Pin 2: Making Process / Tutorial (e.g. "HOW TO CROCHET A BAT")
+ * - Pin 3: Styling, Variations, or Ideas (e.g. "BAT CROCHET IDEAS & COLORS")
+ * 
+ * Strict Editorial Standards:
+ * - Concise: <= 36 characters to prevent clipping in mobile Pinterest feeds.
+ * - Mobile-readable: clean phrasing, uppercase, high contrast.
+ * - Distinct: each Pin has a unique headline reflecting its specific angle; zero duplicates.
+ * - No unsupported claims: "FREE" only if substantiated; "EASY"/"BEGINNER" only if substantiated.
+ * - No keyword stuffing or fake UI claims.
+ * - Graceful fallback on missing/incomplete metadata without runtime exceptions.
+ */
+export function generateArticleAwareHeadlines(
+  topic?: Partial<DiscoveredTopic>,
+  article?: Partial<GeneratedArticle>,
+  packet?: Partial<FactualResearchPacket>
+): PinterestPinHeadlines {
+  const kw = (topic?.keyword || '').trim();
+  const rawTitle = (article?.title || '').trim();
+  const fullText = `${kw} ${rawTitle} ${article?.excerpt || ''}`.toLowerCase();
+  const craft = (packet?.craftType || 'crochet').toLowerCase();
+  const craftUpper = craft.toUpperCase();
+
+  // Unsupported claim verification
+  const isFreeSupported = Boolean(
+    (article as any)?.isFree ||
+    packet?.isPatternFree ||
+    /\bfree\b/i.test(kw) ||
+    /\bfree\b/i.test(rawTitle)
+  );
+  const isBeginnerSupported = Boolean(
+    topic?.targetAudienceLevel === 'beginner' ||
+    packet?.difficultyLevel === 'beginner' ||
+    /\b(easy|beginner|simple|quick)\b/i.test(kw) ||
+    /\b(easy|beginner|simple|quick)\b/i.test(rawTitle)
+  );
+  const listCount = extractListCountFromTitle(rawTitle);
+
+  // 1. Dedicated Tool Topics Handling ONLY
+  // A crochet project/pattern (e.g. pumpkin) that links to a tool is NOT a tool topic!
+  const isTool = Boolean(
+    topic?.contentType === 'tool_guide' ||
+    topic?.targetContentFormat === 'tool_focus' ||
+    (topic?.category === 'tools' && !/pattern|pumpkin|bat|beanie|blanket|hat|bag|amigurumi|ornament|scarf|waffle/i.test(kw)) ||
+    (/calculator|converter|row counter|stitch counter|yarn counter|crochet timer|abbreviation dictionary/i.test(kw) && !/pattern|pumpkin|bat|beanie|blanket|hat|bag|amigurumi|ornament|scarf|waffle/i.test(kw))
+  );
+
+  if (isTool) {
+    let resolvedToolTitle = '';
+    if (topic?.toolSlug) {
+      const match = TOOLS_DATA.find(t => t.slug === topic.toolSlug);
+      if (match) resolvedToolTitle = match.title;
+    }
+    if (!resolvedToolTitle) {
+      const match = TOOLS_DATA.find(t => fullText.includes(t.slug) || fullText.includes(t.title.toLowerCase()));
+      if (match) resolvedToolTitle = match.title;
+    }
+
+    const cleanToolName = (resolvedToolTitle || kw || 'Crochet Tool')
+      .replace(/free|easy|best|online/gi, '')
+      .replace(/\s+/g, ' ')
+      .trim()
+      .toUpperCase();
+
+    const p1 = cleanToolName.includes(craftUpper) ? cleanToolName : `${craftUpper} ${cleanToolName}`;
+    const actionVerb = cleanToolName.includes('CALCULATOR')
+      ? 'HOW TO CALCULATE'
+      : cleanToolName.includes('CONVERTER')
+      ? 'HOW TO CONVERT'
+      : 'HOW TO USE';
+    const coreToolWithoutCraft = cleanToolName.replace(new RegExp(`\\b(${craftUpper}|TOOL)\\b`, 'gi'), '').trim();
+    const p2 = `${actionVerb} ${coreToolWithoutCraft}`.replace(/\s+/g, ' ').trim();
+    const p3 = `${coreToolWithoutCraft || cleanToolName} TIPS & IDEAS`.replace(/\s+/g, ' ').trim();
+
+    return {
+      pin1Headline: truncateHeadline(p1, 36),
+      pin2Headline: truncateHeadline(p2.length >= 8 ? p2 : `STEP-BY-STEP ${cleanToolName}`, 36),
+      pin3Headline: truncateHeadline(p3.length >= 8 ? p3 : `${cleanToolName} PROJECT TIPS`, 36),
+    };
+  }
+
+  // 2. Extract Clean Core Project Subject
+  let coreSubject = kw
+    .replace(/\b(how to crochet|how to|crochet pattern|crochet tutorial|free pattern|free crochet|step by step|step-by-step|guide|easy|best|diy|simple|beginner)\b/gi, '')
+    .replace(/\b(pattern|patterns|tutorial|tutorials|guide|guides|free)\b/gi, '')
+    .replace(/\s+/g, ' ')
+    .trim();
+
+  if (!coreSubject && rawTitle) {
+    coreSubject = rawTitle
+      .split(':')[0]
+      .split('-')[0]
+      .replace(/\b(how to crochet|how to|crochet pattern|crochet tutorial|free pattern|free crochet|step by step|step-by-step|guide|easy|best|diy|simple|beginner)\b/gi, '')
+      .replace(/\b(pattern|patterns|tutorial|tutorials|guide|guides|free)\b/gi, '')
+      .replace(/\s+/g, ' ')
+      .trim();
+  }
+
+  if (!coreSubject) {
+    coreSubject = `${craft} project`;
+  }
+
+  const subjectUpper = coreSubject.toUpperCase();
+  const freePrefix = isFreeSupported ? 'FREE ' : '';
+  const beginnerPrefix = isBeginnerSupported ? 'EASY ' : '';
+
+  // PIN 1: FINISHED PROJECT / PATTERN IDENTITY
+  let pin1 = '';
+  if (subjectUpper.includes(craftUpper)) {
+    pin1 = `${freePrefix}${beginnerPrefix}${subjectUpper} PATTERN`.trim();
+  } else {
+    pin1 = `${freePrefix}${beginnerPrefix}${craftUpper} ${subjectUpper} PATTERN`.trim();
+  }
+  if (kw.length >= 8 && kw.length <= 32 && kw.toUpperCase().includes('PATTERN')) {
+    pin1 = `${freePrefix}${beginnerPrefix}${kw.toUpperCase()}`.trim();
+  }
+
+  // PIN 2: MAKING PROCESS / TUTORIAL
+  let pin2 = '';
+  if (subjectUpper.startsWith('HOW TO')) {
+    pin2 = subjectUpper;
+  } else if (/stitch|technique/i.test(subjectUpper)) {
+    pin2 = `HOW TO CROCHET ${subjectUpper}`.replace(/CROCHET CROCHET/g, 'CROCHET');
+  } else if (subjectUpper.startsWith(`${craftUpper} `)) {
+    if (`HOW TO ${subjectUpper}`.length <= 36) {
+      pin2 = `HOW TO ${subjectUpper}`;
+    } else if (`DIY ${subjectUpper}`.length <= 36) {
+      pin2 = `DIY ${subjectUpper}`;
+    } else {
+      const coreWithoutCraft = subjectUpper.replace(new RegExp(`^${craftUpper}\\s+`, 'i'), '').trim();
+      pin2 = `HOW TO CROCHET ${coreWithoutCraft}`;
+    }
+  } else {
+    const isPlural = subjectUpper.endsWith('S') && !subjectUpper.endsWith('SS');
+    const firstLetter = subjectUpper.charAt(0);
+    const articleWord = ['A', 'E', 'I', 'O', 'U'].includes(firstLetter) ? 'AN' : 'A';
+    if (isPlural) {
+      pin2 = `HOW TO CROCHET ${subjectUpper}`;
+    } else {
+      pin2 = `HOW TO CROCHET ${articleWord} ${subjectUpper}`;
+    }
+  }
+  if (pin2.length > 36) {
+    pin2 = `HOW TO CROCHET ${subjectUpper}`.replace(/CROCHET CROCHET/g, 'CROCHET').replace(/\b(A|AN)\b\s*/g, '');
+  }
+  if (pin2.length > 36 && `DIY ${subjectUpper}`.length <= 36) {
+    pin2 = `DIY ${subjectUpper}`;
+  } else if (pin2.length > 36) {
+    pin2 = `STEP-BY-STEP ${subjectUpper}`;
+  }
+
+  // PIN 3: STYLING, VARIATIONS & IDEAS
+  let pin3 = '';
+  if (listCount) {
+    pin3 = `${listCount} ${subjectUpper} CROCHET IDEAS`;
+  } else if (/halloween|spooky|autumn|christmas|holiday/i.test(fullText)) {
+    const season = /halloween|spooky/i.test(fullText) ? 'SPOOKY' : /autumn|fall/i.test(fullText) ? 'AUTUMN' : 'FESTIVE';
+    pin3 = `${subjectUpper} IDEAS & ${season} COLORS`;
+  } else {
+    pin3 = `${subjectUpper} IDEAS & COLOR STYLING`;
+  }
+  if (pin3.length > 36) {
+    pin3 = `${subjectUpper} STYLING & IDEAS`;
+  }
+  if (pin3.length > 36) {
+    pin3 = `${subjectUpper} COLOR IDEAS`;
+  }
+
+  let finalP1 = truncateHeadline(pin1, 36);
+  let finalP2 = truncateHeadline(pin2, 36);
+  let finalP3 = truncateHeadline(pin3, 36);
+
+  // Guarantee all 3 headlines are distinct
+  if (finalP2 === finalP1) {
+    finalP2 = truncateHeadline(`HOW TO CROCHET ${subjectUpper}`, 36);
+  }
+  if (finalP3 === finalP1 || finalP3 === finalP2) {
+    finalP3 = truncateHeadline(`${subjectUpper} IDEAS & VARIATIONS`, 36);
+  }
+
+  return {
+    pin1Headline: finalP1,
+    pin2Headline: finalP2,
+    pin3Headline: finalP3,
+  };
+}
+
+/**
+ * Derives a clean, punchy primary headline for a specific Pin.
  * Passed as an EXACT immutable string to Higgsfield.
  */
 export function buildPrimaryHeadline(
   topic: DiscoveredTopic,
   article: GeneratedArticle,
-  pinNumber: number
+  pinNumber = 1,
+  packet?: FactualResearchPacket
 ): string {
-  const kw = topic.keyword.trim();
-  const title = article.title.trim();
+  const headlines = generateArticleAwareHeadlines(topic, article, packet);
+  if (pinNumber === 1) return headlines.pin1Headline;
+  if (pinNumber === 2) return headlines.pin2Headline;
+  if (pinNumber === 3) return headlines.pin3Headline;
+  return headlines.pin1Headline;
+}
 
-  // If keyword is punchy (under 32 chars), use uppercase keyword as primary headline
-  if (kw.length >= 8 && kw.length <= 32) {
-    return kw.toUpperCase();
+export interface VariantSeoMetadata {
+  pinTitle: string;
+  pinDescription: string;
+}
+
+/**
+ * Generates distinct, SEO-optimized Pinterest titles and natural, grounded descriptions
+ * for each creative variant:
+ * - Variant 1 (finished_project): Pattern & Finished Project Focus
+ * - Variant 2 (making_process): Step-by-Step Tutorial & Making Focus
+ * - Variant 3 (styling_variations): Styling, Color Ideas & Project Variations
+ * 
+ * Strict Standards:
+ * - Pin Title: <= 100 chars, search-intent optimized, distinct per variant, no keyword stuffing.
+ * - Pin Description: <= 500 chars, grounded in verified article content, includes tool mentions when applicable.
+ * - Unsupported claims (Free, Beginner) only included when substantiated.
+ */
+export function generateVariantSeoMetadata(
+  topic?: Partial<DiscoveredTopic>,
+  article?: Partial<GeneratedArticle>,
+  packet?: Partial<FactualResearchPacket>,
+  archetype: PinterestPinArchetype = 'finished_project',
+  pinNumber = 1
+): VariantSeoMetadata {
+  const kw = (topic?.keyword || '').trim();
+  const rawTitle = (article?.title || '').trim();
+  const craft = (packet?.craftType || 'crochet').toLowerCase();
+  const craftUpper = craft.charAt(0).toUpperCase() + craft.slice(1);
+  const toolSlug = topic?.toolSlug;
+  const toolName = (packet?.targetTool as any)?.title || (packet?.targetTool as any)?.name || (toolSlug ? TOOLS_DATA.find(t => t.slug === toolSlug)?.title : '');
+
+  const isFreeSupported = Boolean(
+    (article as any)?.isFree ||
+    packet?.isPatternFree ||
+    /\bfree\b/i.test(kw) ||
+    /\bfree\b/i.test(rawTitle)
+  );
+  const isBeginnerSupported = Boolean(
+    topic?.targetAudienceLevel === 'beginner' ||
+    packet?.difficultyLevel === 'beginner' ||
+    /\b(easy|beginner|simple|quick)\b/i.test(kw) ||
+    /\b(easy|beginner|simple|quick)\b/i.test(rawTitle)
+  );
+
+  let coreProject = kw
+    .replace(/\b(how to crochet|how to|crochet pattern|crochet tutorial|free pattern|free crochet|step by step|guide|easy|best|diy|beginner)\b/gi, '')
+    .replace(/\b(pattern|patterns|tutorial|tutorials|guide|guides|free)\b/gi, '')
+    .replace(new RegExp(`\\b${craft}\\b`, 'gi'), '')
+    .replace(/\s+/g, ' ')
+    .trim();
+  if (!coreProject && rawTitle) {
+    coreProject = rawTitle
+      .split(':')[0]
+      .split('-')[0]
+      .replace(/\b(how to crochet|how to|crochet pattern|crochet tutorial|free pattern|free crochet|step by step|guide|easy|best|diy|beginner)\b/gi, '')
+      .replace(/\b(pattern|patterns|tutorial|tutorials|guide|guides|free)\b/gi, '')
+      .replace(new RegExp(`\\b${craft}\\b`, 'gi'), '')
+      .replace(/\s+/g, ' ')
+      .trim();
   }
+  if (!coreProject) coreProject = 'Project';
+  const formattedProject = coreProject.split(' ').map(w => w.charAt(0).toUpperCase() + w.slice(1).toLowerCase()).join(' ');
 
-  // For tool guides, use tool name
-  if (topic.targetContentFormat === 'tool_focus' || topic.contentType === 'tool_guide' || topic.toolSlug) {
-    if (topic.toolSlug) {
-      const tool = TOOLS_DATA.find(t => t.slug === topic.toolSlug);
-      if (tool) {
-        return tool.title.toUpperCase();
-      }
+  const freeWord = isFreeSupported ? 'Free ' : '';
+  const beginnerWord = isBeginnerSupported ? 'Easy ' : '';
+
+  let pinTitle = '';
+  let pinDescription = '';
+
+  if (archetype === 'finished_project') {
+    const baseTitle = `${freeWord}${beginnerWord}${craftUpper} ${formattedProject} Pattern`.replace(/\s+/g, ' ').trim();
+    pinTitle = `${baseTitle} - Project Guide`;
+    if (pinTitle.length > 100) {
+      pinTitle = baseTitle.slice(0, 100);
     }
-    return 'CROCHET TOOL GUIDE';
+
+    const matInfo = packet?.materialsList?.slice(0, 3).join(', ');
+    const descParts: string[] = [];
+    descParts.push(`Discover this complete ${freeWord ? 'free ' : ''}${craft} ${formattedProject.toLowerCase()} project guide.`);
+    if (matInfo) {
+      descParts.push(`Features project details using ${matInfo.toLowerCase()}.`);
+    } else if (packet?.recommendedYarnWeight) {
+      descParts.push(`Worked with ${packet.recommendedYarnWeight} yarn and a ${packet.recommendedHookSize || 'standard hook'}.`);
+    }
+    if (toolName) {
+      descParts.push(`Use our ${toolName} to calculate your exact project requirements.`);
+    }
+    descParts.push(`Full pattern notes and guide on WeLovePattern.`);
+    pinDescription = descParts.join(' ').replace(/\s+/g, ' ').trim();
+    if (pinDescription.length > 500) pinDescription = pinDescription.slice(0, 497) + '...';
+
+  } else if (archetype === 'making_process') {
+    let baseTitle = `How to ${craftUpper} ${formattedProject} | Step-by-Step ${beginnerWord ? 'Beginner ' : ''}Tutorial`.replace(/\s+/g, ' ').trim();
+    if (toolName && `How to ${craftUpper} ${formattedProject} & Use the ${toolName}`.length <= 100) {
+      baseTitle = `How to ${craftUpper} ${formattedProject} & Use the ${toolName}`;
+    }
+    pinTitle = baseTitle.slice(0, 100);
+
+    const techniques = packet?.keyTechniques?.slice(0, 2).join(' and ');
+    const descParts: string[] = [];
+    descParts.push(`Learn how to ${craft} ${formattedProject.toLowerCase()} with this clear, step-by-step tutorial.`);
+    if (techniques) {
+      descParts.push(`Step-by-step walk-through covering ${techniques}.`);
+    }
+    if (toolName) {
+      descParts.push(`Pair this tutorial with our practical ${toolName} for quick calculations.`);
+    }
+    descParts.push(`Follow the complete making guide on WeLovePattern.`);
+    pinDescription = descParts.join(' ').replace(/\s+/g, ' ').trim();
+    if (pinDescription.length > 500) pinDescription = pinDescription.slice(0, 497) + '...';
+
+  } else {
+    let baseTitle = `${formattedProject} ${craftUpper} Ideas & Color Variations`.replace(/\s+/g, ' ').trim();
+    if (baseTitle.length > 100) {
+      baseTitle = `${formattedProject} ${craftUpper} Ideas`.slice(0, 100);
+    }
+    pinTitle = baseTitle;
+
+    const descParts: string[] = [];
+    descParts.push(`Explore inspiring color variations and creative styling ideas for your ${craft} ${formattedProject.toLowerCase()}.`);
+    if (packet?.materialsList && packet.materialsList.length > 0) {
+      descParts.push(`Get styling inspiration and yarn combination ideas for modern handmade home decor.`);
+    }
+    if (toolName) {
+      descParts.push(`Plan your next project easily with our ${toolName}.`);
+    }
+    descParts.push(`Find all styling tips, photos, and pattern links at WeLovePattern.`);
+    pinDescription = descParts.join(' ').replace(/\s+/g, ' ').trim();
+    if (pinDescription.length > 500) pinDescription = pinDescription.slice(0, 497) + '...';
   }
 
-  // For tutorial guides
-  if (topic.targetContentFormat === 'tutorial') {
-    return 'STEP-BY-STEP CROCHET GUIDE';
-  }
-
-  // Otherwise clean, uppercase headline from main title or keyword
-  const cleanedTitle = title.split(':')[0].replace(/\b\d+\s+(spooky|easy|cute|free)\b/i, '').trim();
-  if (cleanedTitle.length <= 36) {
-    return cleanedTitle.toUpperCase();
-  }
-
-  return kw.toUpperCase();
+  return {
+    pinTitle: pinTitle.slice(0, 100),
+    pinDescription: pinDescription.slice(0, 500),
+  };
 }
 
 /**
@@ -733,22 +1136,39 @@ export function selectComplementaryVisualFormats(
   };
 }
 
+export type PinterestPinArchetype = 'finished_project' | 'making_process' | 'styling_variations';
+
+export interface PinterestCreativeConceptArchetype {
+  pinNumber: number;
+  archetype: PinterestPinArchetype;
+  dimensions: PinterestCreativeDimensions;
+  conceptAngle: string;
+}
+
 /**
- * Generates an intentionally complementary, mutually distinct creative dimension pair for Pin 1 and Pin 2.
- * GUARANTEES that Pin 1 and Pin 2 differ in at least 5 meaningful visual dimensions.
+ * Generates three intentionally complementary, mutually distinct creative dimension profiles:
+ * - Pin 1 (finished_project): Large photograph of the complete finished object on clean single-color background.
+ * - Pin 2 (making_process): Close-up photograph of two real human hands actively working with hook and yarn.
+ * - Pin 3 (styling_variations): Realistic lifestyle setting, color variations, or small collection offering a fresh angle.
+ * 
+ * GUARANTEES:
+ * 1. Pin 1, Pin 2, and Pin 3 differ in 5+ meaningful visual dimensions from each other.
+ * 2. Visual dimensions vary: Composition, Camera Framing, Title Position, CTA Position, Typography Style, Text Background, CTA Visual Styling, Color Mood.
+ * 3. Title and CTA positions adapt dynamically with generous breathing room.
  */
-export function selectDistinctCreativeConceptPair(
+export function selectDistinctCreativeConceptTriplet(
   topic: DiscoveredTopic,
   article: GeneratedArticle,
   packet: FactualResearchPacket
-): [PinterestCreativeDimensions, PinterestCreativeDimensions] {
+): [PinterestCreativeDimensions, PinterestCreativeDimensions, PinterestCreativeDimensions] {
   const textCorpus = `${topic.keyword} ${article.title} ${article.category || ''} ${topic.targetContentFormat || ''}`.toLowerCase();
   const craftType = packet.craftType || 'crochet';
 
   const theme1 = analyzeTopicAesthetic(topic, article, packet, 1);
   const theme2 = analyzeTopicAesthetic(topic, article, packet, 2);
+  const theme3 = analyzeTopicAesthetic(topic, article, packet, 3);
 
-  // Concept Pair: Hair Accessories, Parandi & Wearables
+  // Concept Triplet: Hair Accessories, Parandi & Wearables
   if (/parandi|hair|accessory|accessories|braid|headband|scrunchie/i.test(textCorpus)) {
     const dim1: PinterestCreativeDimensions = {
       composition: 'lifestyle_scene',
@@ -774,10 +1194,22 @@ export function selectDistinctCreativeConceptPair(
       propStorytelling: `Artisan macro photography of jewel-toned ${craftType} parandi tassel craftsmanship with delicate stitch details, golden threads, and rich yarn plies`,
     };
 
-    return [dim1, dim2];
+    const dim3: PinterestCreativeDimensions = {
+      composition: 'overhead_flatlay',
+      cameraFraming: 'overhead',
+      colorMood: theme3,
+      typographyStyle: 'editorial_serif',
+      titlePosition: 'lower_third_center',
+      ctaPosition: 'bottom_left',
+      ctaStyle: 'subtle_capsule',
+      textBackground: 'textile_texture',
+      propStorytelling: `Artisan overhead display of multiple handmade ${craftType} parandi pieces in diverse rich color palettes arranged neatly on raw linen`,
+    };
+
+    return [dim1, dim2, dim3];
   }
 
-  // Concept Pair 1: Tool Guides & Interactive Utilities
+  // Concept Triplet 1: Tool Guides & Interactive Utilities
   if (topic.targetContentFormat === 'tool_focus' || topic.contentType === 'tool_guide' || /calculator|gauge|yardage|counter|converter|tracker|timer/i.test(textCorpus)) {
     const dim1: PinterestCreativeDimensions = {
       composition: 'overhead_flatlay',
@@ -803,10 +1235,22 @@ export function selectDistinctCreativeConceptPair(
       propStorytelling: `Atmospheric natural craft lifestyle scene of a real crafter in a sunlit craft nook holding active handmade work alongside cozy wooden furniture and textured ambient backdrop`,
     };
 
-    return [dim1, dim2];
+    const dim3: PinterestCreativeDimensions = {
+      composition: 'craftsmanship_macro',
+      cameraFraming: 'close_up',
+      colorMood: theme3,
+      typographyStyle: 'refined_minimal',
+      titlePosition: 'bottom_right',
+      ctaPosition: 'top_left',
+      ctaStyle: 'framed_tag',
+      textBackground: 'architectural_surface',
+      propStorytelling: `Detailed artisan macro close-up of handmade gauge swatches, stitch counter, and wooden hook displayed together on a workshop table`,
+    };
+
+    return [dim1, dim2, dim3];
   }
 
-  // Concept Pair 2: Tutorials, Stitches & How-To Guides
+  // Concept Triplet 2: Tutorials, Stitches & How-To Guides
   if (topic.targetContentFormat === 'tutorial' || /stitch|technique|how to|tutorial|beginner/i.test(textCorpus)) {
     const dim1: PinterestCreativeDimensions = {
       composition: 'craftsmanship_macro',
@@ -832,10 +1276,22 @@ export function selectDistinctCreativeConceptPair(
       propStorytelling: `Close-up artisan maker hands in action actively working textured yarn with a smooth wooden ${craftType} hook on a warm rustic workbench`,
     };
 
-    return [dim1, dim2];
+    const dim3: PinterestCreativeDimensions = {
+      composition: 'lifestyle_scene',
+      cameraFraming: 'three_quarter',
+      colorMood: theme3,
+      typographyStyle: 'compact_stacked',
+      titlePosition: 'top_center',
+      ctaPosition: 'bottom_left',
+      ctaStyle: 'subtle_capsule',
+      textBackground: 'textile_texture',
+      propStorytelling: `Cozy lifestyle scene showing a finished ${craftType} project draped over an armchair in soft ambient morning light, showcasing stitch texture in a lived-in setting`,
+    };
+
+    return [dim1, dim2, dim3];
   }
 
-  // Concept Pair 3: Seasonal Motifs & Ideas Roundups
+  // Concept Triplet 3: Seasonal Motifs & Ideas Roundups
   if (/halloween|autumn|pumpkin|christmas|winter|flower|motif|granny square|ideas|roundup/i.test(textCorpus)) {
     const dim1: PinterestCreativeDimensions = {
       composition: 'multi_project_showcase',
@@ -861,10 +1317,22 @@ export function selectDistinctCreativeConceptPair(
       propStorytelling: `Modern asymmetric hero composition featuring a single striking handmade ${craftType} project positioned dynamically in negative space with rich natural textures`,
     };
 
-    return [dim1, dim2];
+    const dim3: PinterestCreativeDimensions = {
+      composition: 'hands_crafting',
+      cameraFraming: 'close_up',
+      colorMood: theme3,
+      typographyStyle: 'compact_stacked',
+      titlePosition: 'top_left',
+      ctaPosition: 'bottom_left',
+      ctaStyle: 'subtle_capsule',
+      textBackground: 'natural_shadow',
+      propStorytelling: `Artisan maker hands actively crocheting a seasonal handmade ${craftType} motif on a warm wooden workbench surrounded by festive craft props`,
+    };
+
+    return [dim1, dim2, dim3];
   }
 
-  // Concept Pair 4: General Craft Articles, Garments, & Blankets
+  // Concept Triplet 4: General Craft Articles, Garments, & Blankets
   const dim1: PinterestCreativeDimensions = {
     composition: 'single_hero_editorial',
     cameraFraming: 'three_quarter',
@@ -889,6 +1357,31 @@ export function selectDistinctCreativeConceptPair(
     propStorytelling: `Artisan maker hands actively working with natural wool and smooth wooden hook surrounded by neat handmade swatches and craft tools`,
   };
 
+  const dim3: PinterestCreativeDimensions = {
+    composition: 'lifestyle_scene',
+    cameraFraming: 'overhead',
+    colorMood: theme3,
+    typographyStyle: 'refined_minimal',
+    titlePosition: 'lower_third_center',
+    ctaPosition: 'top_left',
+    ctaStyle: 'framed_tag',
+    textBackground: 'architectural_surface',
+    propStorytelling: `Realistic cozy lifestyle setting showcasing alternative styling, color options, and creative ideas for the handmade ${craftType} project`,
+  };
+
+  return [dim1, dim2, dim3];
+}
+
+/**
+ * Generates an intentionally complementary, mutually distinct creative dimension pair for Pin 1 and Pin 2.
+ * GUARANTEES that Pin 1 and Pin 2 differ in at least 5 meaningful visual dimensions.
+ */
+export function selectDistinctCreativeConceptPair(
+  topic: DiscoveredTopic,
+  article: GeneratedArticle,
+  packet: FactualResearchPacket
+): [PinterestCreativeDimensions, PinterestCreativeDimensions] {
+  const [dim1, dim2] = selectDistinctCreativeConceptTriplet(topic, article, packet);
   return [dim1, dim2];
 }
 
@@ -902,6 +1395,7 @@ export interface CrochetProductContext {
   finishedSceneDescription: string;
   inProgressSceneDescription: string;
   yarnDetails: string;
+  stylingSceneDescription?: string;
 }
 
 export function deriveCrochetProductContext(
@@ -917,6 +1411,7 @@ export function deriveCrochetProductContext(
   let productName = 'handmade crochet project';
   let finishedScene = 'A large, clear photograph of the finished handmade crochet project, beautifully arranged in sharp focus on a simple textured linen surface';
   let inProgressScene = 'real human hands actively crocheting the project with a smooth wooden hook, working yarn and visible stitches in progress';
+  let stylingScene = 'A realistic artisan lifestyle setting showing that SAME handmade crochet project styled naturally with complementary yarn colors and craft props in warm daylight';
 
   const hook = packet.verifiedMaterials?.hookSizes?.[0] || 'wooden crochet hook';
   const yarn = packet.verifiedMaterials?.yarnWeights?.[0] || 'textured yarn';
@@ -926,42 +1421,52 @@ export function deriveCrochetProductContext(
     productName = 'handmade crochet bat';
     finishedScene = 'A large, clear, centered photograph of the finished handmade crochet bat with sculpted wings, cute pointed ears, and clean stitch definition, placed on a warm neutral linen background in soft natural light';
     inProgressScene = `close-up photograph of real human hands actively crocheting the body and wings of that SAME crochet bat, using the identical dark charcoal yarn, with an authentic ${hook} and visible, physically plausible stitches`;
+    stylingScene = 'A realistic lifestyle scene showing that SAME handmade crochet bat styled in an autumn craft nook alongside miniature pumpkins, rustic dark wood, and matching dark yarn skeins';
   } else if (/pumpkin/i.test(text)) {
     productName = 'rustic handmade crochet pumpkin';
     finishedScene = 'A large, clear photograph of the finished rustic crochet autumn pumpkin with ribbed texture, natural cinnamon stick stem, and curled twine accent on a clean wooden table';
     inProgressScene = `close-up photograph of real human hands actively crocheting the ribbed ridges of that SAME pumpkin using identical warm rust-orange yarn, an authentic ${hook}, and visible stitches`;
+    stylingScene = 'A realistic harvest table setting featuring that SAME handmade crochet pumpkin alongside a small collection in complementary warm cream and mustard yarn colors';
   } else if (/ornament|christmas tree/i.test(text)) {
     productName = 'handmade crochet Christmas tree ornament';
     finishedScene = 'A large, clear photograph of the finished handmade crochet Christmas tree ornament with festive textured stitches, neat hanging loop, and crisp form on a natural wood surface';
     inProgressScene = `close-up photograph of real human hands actively crocheting the branch tiers of that SAME ornament using identical festive evergreen yarn, an authentic ${hook}, and visible stitches`;
+    stylingScene = 'A realistic festive lifestyle scene showing that SAME handmade ornament hanging on a pine bough alongside complementary evergreen and cinnamon yarn balls';
   } else if (/waffle stitch/i.test(text)) {
     productName = 'textured waffle stitch crochet project';
     finishedScene = 'A large, clear photograph of the finished waffle stitch crochet piece showcasing deep geometric relief square texture and straight clean edges';
     inProgressScene = `close-up photograph of real human hands actively working the front-post double crochet waffle relief stitches of that SAME project with identical yarn and hook`;
+    stylingScene = 'A realistic cozy armchair setting showcasing that SAME waffle stitch crochet piece draped naturally with visible textured relief in soft morning light';
   } else if (/granny square/i.test(text)) {
     productName = 'classic handmade crochet granny square';
     finishedScene = 'A large, clear photograph of the finished handmade crochet granny square motif with crisp corner clusters, flat blocking, and clean stitch definition';
     inProgressScene = `close-up photograph of real human hands actively working the outer cluster stitches of that SAME granny square with identical yarn and hook`;
+    stylingScene = 'An overhead flatlay showcasing that SAME classic granny square alongside 3-4 coordinated color variation squares and wooden blocking pins';
   } else if (/beanie|hat/i.test(text)) {
     productName = 'handmade chunky ribbed crochet beanie';
     finishedScene = 'A large, clear photograph of the finished chunky ribbed crochet beanie with fold-over brim and neat top crown closure on a neutral tabletop';
     inProgressScene = `close-up photograph of real human hands actively crocheting the vertical ribbing rows into back loops of that SAME beanie with identical chunky yarn and hook`;
+    stylingScene = 'A cozy lifestyle scene showing that SAME chunky beanie styled on a wooden coat peg next to matching wool skeins and a winter scarf';
   } else if (/bag|tote|market/i.test(text)) {
     productName = 'handmade crochet market tote bag';
     finishedScene = 'A large, clear photograph of the finished crochet market tote bag featuring an open textured mesh lace body and reinforced sturdy handles';
     inProgressScene = `close-up photograph of real human hands actively crocheting the open mesh grid rows of that SAME tote bag with identical cotton yarn and hook`;
+    stylingScene = 'A bright farmers market lifestyle setting showing that SAME crochet mesh tote packed with fresh flowers and craft yarn';
   } else if (/amigurumi|plush|toy/i.test(text)) {
     productName = 'handmade crochet amigurumi figure';
     finishedScene = 'A large, clear photograph of the finished handmade amigurumi figure with tight seamless stitches, firm structural shaping, and neat details';
     inProgressScene = `close-up photograph of real human hands actively crocheting the continuous spiral rounds of that SAME amigurumi with identical yarn and hook`;
+    stylingScene = 'A charming studio scene showing that SAME handmade amigurumi figure positioned on a maker desk beside color variation samples';
   } else if (/blanket|afghan|throw/i.test(text)) {
     productName = 'handmade textured crochet blanket';
     finishedScene = 'A large, clear photograph of the finished handmade textured crochet blanket throw, draped neatly showing rich stitch texture and finished border';
     inProgressScene = `close-up photograph of real human hands actively crocheting the rhythmic pattern rows of that SAME blanket with identical yarn and hook`;
+    stylingScene = 'A warm living room lifestyle setting showing that SAME textured blanket folded neatly over a linen sofa showing its finished border';
   } else if (/gauge|swatch|counter|calculator|tool/i.test(text)) {
     productName = 'neat handmade crochet gauge swatch';
     finishedScene = 'A large, clear photograph of the finished blocked crochet gauge swatch with immaculate stitch alignment alongside a flexible cloth measuring tape and polished wooden hook';
     inProgressScene = `close-up photograph of real human hands actively crocheting the tension rows of that SAME gauge swatch with identical yarn and hook`;
+    stylingScene = 'A pristine maker workspace setting showing that SAME gauge swatch beside an open pattern notebook, cloth measuring tape, and yarn weight chart';
   } else {
     // Dynamic general craft item
     const cleanKw = topic.keyword
@@ -971,9 +1476,10 @@ export function deriveCrochetProductContext(
     productName = `handmade crochet ${itemLabel}`;
     finishedScene = `A large, clear photograph of the finished handmade crochet ${itemLabel}, professionally styled in sharp focus on a clean neutral background with soft natural lighting`;
     inProgressScene = `close-up photograph of real human hands actively crocheting that SAME ${itemLabel}, using identical yarn color and weight, with an authentic ${hook} and visible stitches in progress`;
+    stylingScene = `A realistic artisan lifestyle setting showing that SAME handmade crochet ${itemLabel} styled naturally with complementary yarn colors and craft props in warm daylight`;
   }
 
-  return { productName, finishedSceneDescription: finishedScene, inProgressSceneDescription: inProgressScene, yarnDetails };
+  return { productName, finishedSceneDescription: finishedScene, inProgressSceneDescription: inProgressScene, stylingSceneDescription: stylingScene, yarnDetails };
 }
 
 /**
@@ -995,7 +1501,8 @@ export function buildHiggsfieldPinPrompt(
   topic: DiscoveredTopic,
   article: GeneratedArticle,
   packet: FactualResearchPacket,
-  dimensions?: PinterestCreativeDimensions
+  dimensions?: PinterestCreativeDimensions,
+  archetype?: PinterestPinArchetype
 ): string {
   const craftType = packet.craftType || 'crochet';
   const productContext = deriveCrochetProductContext(topic, article, packet);
@@ -1009,140 +1516,124 @@ export function buildHiggsfieldPinPrompt(
   const framing = dimensions?.cameraFraming || 'three_quarter';
   const moodTheme = dimensions?.colorMood || theme;
 
+  const resolvedArchetype: PinterestPinArchetype =
+    archetype ||
+    (dimensions?.composition === 'hands_crafting'
+      ? 'making_process'
+      : dimensions?.composition === 'lifestyle_scene' || dimensions?.composition === 'multi_project_showcase'
+      ? 'styling_variations'
+      : 'finished_project');
+
   // Format Placement Descriptions
   const titlePlacementText =
     titlePos === 'top_center'
-      ? 'Upper-center area in clean negative space above the focal subject.'
+      ? 'Upper-center area in clean negative space with at least 10% safe-frame padding.'
       : titlePos === 'top_right'
-      ? 'Upper-right area in natural negative space with generous margins.'
+      ? 'Upper-right area in natural negative space with at least 10% safe-frame padding.'
       : titlePos === 'bottom_right'
-      ? 'Lower-right area in natural negative space balanced with the composition.'
+      ? 'Lower-right area in natural negative space with at least 10% safe-frame padding.'
       : titlePos === 'bottom_left'
-      ? 'Lower-left area in clean negative space.'
+      ? 'Lower-left area in clean negative space with at least 10% safe-frame padding.'
       : titlePos === 'lower_third_center'
-      ? 'Lower-third centered placement integrated smoothly into negative space.'
-      : 'Upper area in clean negative space.';
+      ? 'Lower-third centered placement in negative space with at least 10% safe-frame padding.'
+      : 'Upper area in clean negative space with at least 10% safe-frame padding.';
 
   const ctaPlacementText =
     ctaPos === 'top_right'
-      ? 'Upper-right area in natural negative space with clear separation from the headline.'
+      ? 'Upper-right area in natural negative space separate from headline.'
       : ctaPos === 'top_left'
-      ? 'Upper-left area in natural negative space, well separated from the headline.'
+      ? 'Upper-left area in natural negative space separate from headline.'
       : ctaPos === 'bottom_center'
-      ? 'Centered bottom area with generous breathing room and clean physical separation from the headline.'
+      ? 'Centered bottom area with clean separation from headline.'
       : ctaPos === 'bottom_left'
-      ? 'Lower-left area in natural negative space, completely physically separated from the headline.'
+      ? 'Lower-left area in natural negative space separate from headline.'
       : ctaPos === 'mid_right_side'
-      ? 'Mid-right side zone positioned beside the subject in available negative space.'
-      : 'Lower-right area in natural negative space with generous breathing room and clear physical separation from the headline. Never attached or placed directly beneath the headline.';
+      ? 'Mid-right side zone beside subject in negative space.'
+      : 'Lower-right area in natural negative space separate from headline.';
 
   // Format Headline Typography Description
   const headlineTypoText =
     typoStyle === 'bold_modern_sans'
-      ? 'Bold, clean modern architectural SANS-SERIF typeface (geometric, heavy, crisp, contemporary editorial style with high visual impact and immaculate readability).'
+      ? 'Bold modern SANS-SERIF typeface, high visual impact, crisp legibility.'
       : typoStyle === 'compact_stacked'
-      ? 'Compact stacked uppercase editorial typography with balanced tracking and clean visual hierarchy.'
+      ? 'Compact stacked uppercase editorial typography with balanced tracking.'
       : typoStyle === 'refined_minimal'
-      ? 'Refined, airy uppercase editorial typography with generous letter tracking and sophisticated breathing room.'
-      : 'Elegant high-end editorial SERIF typeface inspired by luxury fashion magazines and fine Pinterest editorial design. Sophisticated, feminine, refined, and artistic with high visual impact and generous scale. (NOT a heavy generic display font, NOT a playful cartoon font, NOT handwriting).';
+      ? 'Refined uppercase editorial typography with generous tracking.'
+      : 'High-end editorial SERIF typeface, refined, artistic with generous scale.';
 
   // Format Headline Background Description (Strictly NON-PAPER)
   const headlineBgText =
     bgStyle === 'none_direct_photo'
       ? 'Place typography directly into clean photographic negative space. No text background treatment whatsoever.'
       : bgStyle === 'natural_shadow'
-      ? 'Typography is integrated over a natural soft photographic shadow with high organic contrast. No artificial panels or paper.'
+      ? 'Integrated over natural soft photographic shadow with high organic contrast.'
       : bgStyle === 'environmental_negative_space'
-      ? 'Positioned naturally within clean environmental negative space in the photographic composition. No background shape or panel.'
+      ? 'Positioned within environmental negative space in the photograph.'
       : bgStyle === 'architectural_surface'
-      ? 'Rendered cleanly across a natural background architectural surface (such as smooth wooden table or stone surface) in the photograph. No artificial cards or boxes.'
+      ? 'Rendered cleanly across natural background surface in photograph.'
       : bgStyle === 'textile_texture'
-      ? 'Integrated smoothly over natural background textile texture in the photograph with crisp legibility. No artificial panel.'
-      : 'Positioned over a subtle photographic ambient light gradient with clean contrast. No artificial card or panel elements.';
+      ? 'Integrated smoothly over natural background textile texture with crisp legibility.'
+      : 'Positioned over subtle photographic ambient light gradient with clean contrast.';
 
   // Format CTA Background Description (Strictly NON-PAPER)
   const ctaBgText =
     ctaVisual === 'clean_minimal_text'
-      ? 'Rendered as clean standalone editorial typography directly over the photograph negative space without any panel, badge, button, or container.'
+      ? 'Clean standalone typography directly over negative space.'
       : ctaVisual === 'editorial_label'
-      ? 'Rendered as crisp editorial text with a delicate, minimalist fine hairline boundary sized tightly to the text.'
+      ? 'Crisp text with delicate minimalist fine hairline boundary.'
       : ctaVisual === 'subtle_capsule'
-      ? 'Rendered cleanly with a subtle, soft tonal tint sized closely around the text.'
+      ? 'Clean text with subtle soft tonal tint sized closely to text.'
       : ctaVisual === 'minimal_underline'
-      ? 'Rendered with a single crisp minimalist hairline underline.'
-      : 'Rendered as clean, compact editorial typography positioned naturally in negative space.';
+      ? 'Clean text with minimalist hairline underline.'
+      : 'Clean compact editorial typography in negative space.';
 
-  const threePartCompositionBrief = `REALISTIC PHOTOGRAPHY-LED CROCHET TUTORIAL VISUAL (3-PART STACKED COMPOSITION):
-1. TOP IMAGE (UPPER SECTION):
-${productContext.finishedSceneDescription}. The completed ${productContext.productName} is presented in sharp photographic focus with authentic yarn stitch definition and physical handmade texture under soft diffused natural window lighting.
+  let archetypeBrief = '';
+  if (resolvedArchetype === 'making_process') {
+    archetypeBrief = `PIN ARCHETYPE: MAKING PROCESS & TUTORIAL (PIN 2):
+Close-up photo of ANATOMICALLY NATURAL HUMAN HANDS with anatomically correct fingers actively crocheting ${productContext.productName}. Working ${productContext.yarnDetails} with physically plausible stitches and natural yarn tension on craft workspace. DESIGN CONTINUITY in yarn and stitches.`;
+  } else if (resolvedArchetype === 'styling_variations') {
+    archetypeBrief = `PIN ARCHETYPE: STYLING, COLOR VARIATIONS & IDEAS (PIN 3):
+REALISTIC LIFESTYLE SETTING & FRESH VISUAL ANGLE featuring finished ${productContext.productName}. Complementary color variations and styling in natural lighting. DESIGN CONTINUITY in materials and craft design.`;
+  } else {
+    // Default: finished_project (Pin 1)
+    archetypeBrief = `PIN ARCHETYPE: FINISHED PROJECT SHOWCASE (PIN 1):
+Complete finished ${craftType} ${productContext.productName}. CLEAN CONSTRASTING SINGLE-COLOR BACKGROUND with zero clutter. Natural daylight, clear stitch definition, authentic yarn texture. DESIGN CONTINUITY throughout.`;
+  }
 
-2. CENTER TITLE (NEUTRAL HORIZONTAL BAND):
-One short, readable article title on a simple, neutral horizontal band cleanly separating the two photographs:
-"${headline}"
-Clean, restrained, legible typography in uppercase, high contrast against the neutral band, visually separating the top and bottom photographs. No extra text, icons, stickers, badges, decorative frames, or unnecessary graphics.
+  const realismRules = `
+REQUIREMENTS:
+- 2:3 VERTICAL ASPECT RATIO: Target vertical 1000 × 1500 resolution.
+- PHOTOGRAPHIC DOMINANCE: Pure authentic photography must dominate at least 70% of canvas. Tactile smartphone photo, no CGI.
+- SAFE-FRAME MARGINS & EDGES: Maintain at least 10% safe-frame padding from edges.
+- DEDICATED HEADLINE ZONE: Position the headline in a dedicated negative space area.
+- HIGH CONTRAST TYPOGRAPHY with crisp legibility.
+- ONE SINGLE CLEAR HEADLINE ONLY ("${headline}"). No subtitles or badges.`;
 
-3. BOTTOM IMAGE (LOWER SECTION):
-A close-up photograph of real human hands actively crocheting the EXACT SAME ${productContext.productName}. ${productContext.inProgressSceneDescription}. Anatomically natural hands with realistic skin texture, authentic fingernails, and five correctly formed fingers holding an authentic crochet hook in a natural grip. The hands are actively working the identical yarn (${productContext.yarnDetails}) with visible, physically plausible stitches in progress. Strict visual continuity in yarn color, weight, texture, and project construction between the finished item above and the in-progress project below.
-
-NON-NEGOTIABLE REALISM REQUIREMENTS:
-- Prioritize authentic photographic realism over illustration, CGI, cartoon aesthetics, and obvious AI-generated imagery.
-- Human hands must look anatomically natural, with correctly formed fingers and realistic skin texture.
-- The hook, yarn, and stitches must be physically plausible.
-- Show a coherent crochet-in-progress stage, not an unrelated object or a finished product being held as if it were being crocheted.
-- Maintain visual continuity between the finished product and the in-progress project with identical yarn color, weight, and construction.
-- Use natural lighting, realistic textures, simple backgrounds, and close-up photography.
-- Avoid artificial plastic-looking yarn, malformed hands, impossible hooks, disconnected stitches, and inconsistent product details.
-- Do not add extra text, icons, stickers, badges, decorative frames, or unnecessary graphics.
-- The title must be short, legible, correctly spelled, and visually separated from the two photographs.`;
-
-  const editorialArtDirection = `
-EDITORIAL TYPOGRAPHY & ART DIRECTION (RENDER EXACTLY TWO TEXT ELEMENTS):
-
+  const typographyBlock = `
+EDITORIAL TYPOGRAPHY:
 LITERAL TEXT LOCK — TYPOGRAPHY MUST RENDER THE FOLLOWING STRINGS CHARACTER-FOR-CHARACTER:
-HEADLINE — EXACT LITERAL STRING:
-"${headline}"
+HEADLINE: "${headline}"
+CTA: "${cta}"
 
-CTA — EXACT LITERAL STRING:
-"${cta}"
+HEADLINE VISUAL STYLING:
+- Placement: ${titlePlacementText}
+- Typography: ${headlineTypoText}
+- Creative Background: ${headlineBgText}
 
-The words above are not semantic instructions. They are literal visual text.
-Do not interpret their meaning.
-Do not substitute synonyms.
-Do not rewrite them.
-Do not improve them.
-Do not paraphrase them.
-Do not change any individual word.
-Do not change punctuation.
-Do not replace MORE with ALL.
-Do not replace ALL with MORE.
-Do not replace the arrow.
-Render the exact supplied characters as visible typography.
-
-Before rendering, internally verify that the visible CTA exactly matches the supplied CTA string "${cta}". If the rendered wording differs in any word, it is incorrect.
-
-1. HEADLINE VISUAL STYLING:
-   - Placement: ${titlePlacementText}
-   - Typography: ${headlineTypoText}
-   - Creative Background: ${headlineBgText}
-
-2. ACTION CTA VISUAL STYLING:
-   - Placement: ${ctaPlacementText}
-   - Typography: Rendered in Montserrat ExtraBold (font-weight 800, uppercase, ~24px visual size, letter spacing 1.2–1.5px, line height 1.0–1.1). Bold, crisp, highly readable on mobile, modern, premium, and confident (${moodTheme.ctaVisualTreatment}).
-   - Creative Background: ${ctaBgText}
+ACTION CTA VISUAL STYLING:
+- Placement: ${ctaPlacementText}
+- Typography: Montserrat ExtraBold uppercase (${moodTheme.ctaVisualTreatment})
+- Creative Background: ${ctaBgText}
 
 STRICT PROHIBITIONS & FINAL TEXT CONFIRMATION:
-- ABSOLUTELY ZERO OTHER TEXT ON THE ENTIRE IMAGE: No subtitles, no secondary descriptions, no bullet points, no website headers, no URLs, no logos.
-- NEVER ADD decorative filler words such as "PATTERNS", "PROJECTS", "INSPIRATION", "COZY", "HANDMADE", or any random phrases.
 - GLOBAL HARD PROHIBITION: ABSOLUTELY NO paper, torn paper, paper wash, pigment wash, paint wash, brushstroke, watercolor shape, card, panel, banner, badge, button, pill, UI element, Canva-style graphic, or artificial text container.
-- Typography must feel like natural, artistic editorial text placed directly within the photographic space.
-- Photography must dominate the frame with ample breathing room.
-- FINAL CONFIRMED TEXT ELEMENTS TO RENDER (EXACTLY TWO):
-  1. HEADLINE: "${headline}"
-  2. CTA: "${cta}"`;
+- ZERO other text, subtitles, or decorative elements.
+- FINAL TEXT TO RENDER: HEADLINE: "${headline}", CTA: "${cta}".`;
 
-  return `Complete 2:3 vertical Pinterest Pin visual. ${threePartCompositionBrief}
-${moodTheme.lightingAndMood}, palette of ${moodTheme.paletteDescription}.
-${editorialArtDirection}`;
+  return `Vertical Pinterest Pin. ${archetypeBrief}
+${realismRules}
+Mood: ${moodTheme.lightingAndMood}, ${moodTheme.paletteDescription}.
+${typographyBlock}`;
 }
 
 /**
@@ -1623,104 +2114,157 @@ export function verifyPinCreativeDiversity(
 }
 
 /**
+ * Builds a dedicated Higgsfield prompt for the flagship 3-photograph stacked vertical Pinterest Pin:
+ * 1. Top photograph (Panel 1): Complete finished crochet project on clean solid contrasting background.
+ * 2. Central headline band: One single clear headline between Photo 1 and Photo 2. ZERO CTAs.
+ * 3. Middle photograph (Panel 2): Two natural human hands actively crocheting with hook & yarn.
+ * 4. Bottom photograph (Panel 3): Completed project styled naturally in an authentic setting.
+ * 
+ * Target output: 1000 × 1500 pixels, 2:3 vertical aspect ratio.
+ */
+export function buildStackedThreePhotoPinPrompt(
+  topic: DiscoveredTopic,
+  article: GeneratedArticle,
+  packet: FactualResearchPacket,
+  headline: string,
+  theme?: AestheticTheme
+): string {
+  const craftType = packet.craftType || 'crochet';
+  const productContext = deriveCrochetProductContext(topic, article, packet);
+
+  return `Vertical 2:3 editorial Pinterest Pin layout (1000 × 1500) featuring THREE stacked photographic panels arranged vertically and ONE central headline band:
+
+PANEL 1 (TOP PHOTOGRAPH): Complete finished handmade ${craftType} ${productContext.productName}. ${productContext.finishedSceneDescription}. Clean contrasting single-color background with zero clutter. Natural daylight, clear stitch definition, authentic yarn texture. The entire project is visible with no cropping. No text or overlays in this panel.
+
+CENTRAL HEADLINE BAND (BETWEEN PHOTO 1 & PHOTO 2):
+A clean, solid contrasting horizontal divider band displaying ONE single clear headline:
+"${headline}"
+Bold, elegant high-contrast editorial typography, centered with safe margins and safe-frame padding. This is the ONLY text in the entire image. Absolutely ZERO subtitles, ZERO website URLs, ZERO buttons, and ZERO call-to-actions.
+
+PANEL 2 (MIDDLE PHOTOGRAPH): Close-up photograph of two anatomically natural human hands with anatomically correct fingers actively crocheting that SAME ${productContext.productName}. Working ${productContext.yarnDetails} with physically plausible stitches and natural yarn tension (${productContext.inProgressSceneDescription}). Set against a craft workspace in natural light. No text.
+
+PANEL 3 (BOTTOM PHOTOGRAPH): A realistic photograph of the completed crochet ${productContext.productName} (${productContext.stylingSceneDescription || productContext.finishedSceneDescription}), showing the finished item held naturally in hands or styled in an authentic setting. Strict design continuity in yarn color, weight, and stitches. No text.
+
+REQUIREMENTS:
+- 2:3 VERTICAL ASPECT RATIO (Target vertical 1000 × 1500 resolution).
+- Three stacked photographic panels arranged vertically.
+- One central headline band located between Photo 1 and Photo 2.
+- Pure authentic smartphone craft photography across all three panels.
+- Strict design continuity: identical yarn color, weight, and stitches in all panels.
+- Safe-frame margins: at least 10% safe-frame padding from all canvas edges.
+- LITERAL TEXT LOCK — TYPOGRAPHY MUST RENDER ONLY THE HEADLINE:
+HEADLINE: "${headline}"
+- CRITICAL: ZERO CTAs, NO buttons, NO badges, NO arrows, NO action text, NO "CALCULATE YARN", NO "SEE MORE".
+- GLOBAL HARD PROHIBITION: ABSOLUTELY NO paper, torn paper, paper wash, pigment wash, paint wash, brushstroke, watercolor shape, card, panel, banner, badge, button, pill, UI element, Canva-style graphic, or artificial text container.`;
+}
+
+/**
  * Generates dynamic, content-aware Pinterest creative concepts with dedicated Higgsfield prompts.
  * 
- * STRICT CREATIVE DIVERSITY GUARANTEES:
- * 1. Pin 1 and Pin 2 are generated from distinct concept dimension profiles differing in 5+ visual dimensions.
- * 2. Title and CTA have dynamic, non-repetitive placement zones with clear breathing room.
- * 3. SUBTITLES ARE PERMANENTLY REMOVED: No supporting notes, explanatory copy, or bullet points.
- * 4. CTA is prominent editorial action typography with arrow "→", high contrast, non-SaaS, no badges/pills/buttons.
- * 5. CTA visual style (colors, textures, typography) changes dynamically with topic, craft, and season.
- * 6. NO LOCAL COMPOSITOR: Higgsfield Marketing Studio Image 2.0 Alpha generates the complete final image.
+ * STRICT 3-CONCEPT CREATIVE ARCHITECTURE:
+ * - When pinsPerArticle = 1: Generates the flagship 3-photograph stacked vertical Pin layout with central headline band and ZERO CTAs.
+ * - When pinsPerArticle > 1: Generates distinct concept dimension profiles differing in 5+ visual dimensions.
+ * 
+ * NO LOCAL COMPOSITOR: Higgsfield Marketing Studio Image 2.0 Alpha generates the complete final image.
  */
 export function generatePinterestCreativeConcepts(
   topic: DiscoveredTopic,
   article: GeneratedArticle,
   packet: FactualResearchPacket,
   resolvedBoard: NormalizedPinterestBoard,
-  pinsPerArticle = 1
+  pinsPerArticle = 3
 ): PinterestCreativeConcept[] {
   const concepts: PinterestCreativeConcept[] = [];
   const destinationUrl = `https://welovepattern.com/blog/${article.slug}`;
 
-  // Select multi-dimensional distinct concept profiles
-  const [dimensionsPin1, dimensionsPin2] = selectDistinctCreativeConceptPair(topic, article, packet);
+  // Select multi-dimensional distinct concept triplet (Finished Project, Making Process, Styling and Variations)
+  const triplet = selectDistinctCreativeConceptTriplet(topic, article, packet);
+  const archetypes: PinterestPinArchetype[] = ['finished_project', 'making_process', 'styling_variations'];
+  const headlines = generateArticleAwareHeadlines(topic, article, packet);
 
   for (let pinNum = 1; pinNum <= pinsPerArticle; pinNum++) {
-    const dimensions = pinNum === 1 ? dimensionsPin1 : dimensionsPin2;
-    const visualFormat: PinterestVisualFormat =
-      dimensions.composition === 'overhead_flatlay'
-        ? 'flatlay_projects'
-        : dimensions.composition === 'craftsmanship_macro'
-        ? 'closeup_craftsmanship'
-        : dimensions.composition === 'hands_crafting'
-        ? 'hands_crafting'
-        : dimensions.composition === 'multi_project_showcase'
-        ? 'editorial_collage'
-        : dimensions.composition === 'lifestyle_scene' || dimensions.composition === 'editorial_portrait'
-        ? 'lifestyle_person'
-        : 'single_hero_editorial';
+    const dimensions = triplet[pinNum - 1] || triplet[0];
+    const archetype = archetypes[pinNum - 1] || 'finished_project';
+    const isSingleFlagshipPin = (pinNum === 1 && pinsPerArticle === 1);
 
-    const headline = buildPrimaryHeadline(topic, article, pinNum);
-    const cta = buildTrafficOrientedCta(topic, article, pinNum, visualFormat);
+    const visualFormat: PinterestVisualFormat =
+      archetype === 'making_process'
+        ? 'hands_crafting'
+        : archetype === 'styling_variations'
+        ? (dimensions.composition === 'multi_project_showcase' ? 'editorial_collage' : 'lifestyle_person')
+        : (dimensions.composition === 'overhead_flatlay'
+            ? 'flatlay_projects'
+            : dimensions.composition === 'craftsmanship_macro'
+            ? 'closeup_craftsmanship'
+            : 'single_hero_editorial');
+
+    const headline =
+      pinNum === 1
+        ? headlines.pin1Headline
+        : pinNum === 2
+        ? headlines.pin2Headline
+        : headlines.pin3Headline;
+
+    const cta = isSingleFlagshipPin ? '' : buildTrafficOrientedCta(topic, article, pinNum, visualFormat);
 
     const typography: PinterestTypographyOverlay = {
       primaryHeadline: headline,
       ctaBadgeText: cta,
-      textContainerStyle: dimensions.textBackground,
+      textContainerStyle: isSingleFlagshipPin ? 'clean_neutral_band' : dimensions.textBackground,
     };
 
-    const compactHiggsfieldPrompt = buildHiggsfieldPinPrompt(
-      visualFormat,
-      headline,
-      cta,
-      dimensions.colorMood,
-      topic,
-      article,
-      packet,
-      dimensions
-    );
+    const compactHiggsfieldPrompt = isSingleFlagshipPin
+      ? buildStackedThreePhotoPinPrompt(topic, article, packet, headline, dimensions.colorMood)
+      : buildHiggsfieldPinPrompt(
+          visualFormat,
+          headline,
+          cta,
+          dimensions.colorMood,
+          topic,
+          article,
+          packet,
+          dimensions,
+          archetype
+        );
 
-    const conceptAngle =
-      pinNum === 1
-        ? (dimensions.composition === 'overhead_flatlay'
-            ? 'Organized Maker Flatlay & Direct Practical Solution'
-            : dimensions.composition === 'craftsmanship_macro'
-            ? 'Macro Stitch Definition & Exquisite Texture'
-            : dimensions.composition === 'multi_project_showcase'
-            ? 'Curated Editorial Multi-Project Showcase'
-            : 'Primary Value Angle & Complete Overview')
-        : (dimensions.composition === 'hands_crafting'
-            ? 'Maker Hands in Action & Artisan Technique'
-            : dimensions.composition === 'lifestyle_scene'
-            ? 'Authentic Cozy Lifestyle & Finished Project in Use'
-            : dimensions.composition === 'asymmetric_editorial'
-            ? 'Asymmetric Dynamic Editorial Feature'
-            : 'Secondary Perspective & Creative Exploration');
+    const conceptAngle = isSingleFlagshipPin
+      ? 'Three Stacked Photographs with Central Headline'
+      : archetype === 'finished_project'
+      ? 'Finished Project Showcase & Pattern Feature'
+      : archetype === 'making_process'
+      ? 'Maker Hands in Action & Step-by-Step Technique'
+      : 'Styling, Variations & Creative Inspiration';
+
+    const seoMeta = generateVariantSeoMetadata(topic, article, packet, archetype, pinNum);
 
     concepts.push({
       pinNumber: pinNum,
+      pinVariant: isSingleFlagshipPin ? 'stacked_three_photo' : archetype,
+      pinTitle: seoMeta.pinTitle,
+      pinDescription: seoMeta.pinDescription,
       conceptAngle,
       visualStyle: {
-        imageCount: dimensions.composition === 'multi_project_showcase' ? 4 : 1,
-        compositionType:
-          dimensions.composition === 'multi_project_showcase'
-            ? '4_image_grid'
-            : dimensions.composition === 'overhead_flatlay'
-            ? 'flatlay_materials'
-            : dimensions.composition === 'craftsmanship_macro'
-            ? 'collage_macro'
-            : dimensions.composition === 'lifestyle_scene' || dimensions.composition === 'editorial_portrait'
-            ? 'lifestyle_scene'
-            : 'single_hero',
+        imageCount: isSingleFlagshipPin ? 3 : (dimensions.composition === 'multi_project_showcase' ? 4 : 1),
+        compositionType: isSingleFlagshipPin
+          ? 'stacked_3_panel'
+          : archetype === 'making_process'
+          ? 'hands_crafting'
+          : archetype === 'styling_variations'
+          ? 'lifestyle_scene'
+          : (dimensions.composition === 'overhead_flatlay'
+              ? 'flatlay_materials'
+              : dimensions.composition === 'craftsmanship_macro'
+              ? 'collage_macro'
+              : 'single_hero'),
         subjectDescription: `${conceptAngle} for ${article.title}`,
         colorPalette: dimensions.colorMood.paletteDescription,
-        humanElement:
-          dimensions.composition === 'lifestyle_scene' || dimensions.composition === 'editorial_portrait'
-            ? 'person_wearing'
-            : dimensions.composition === 'hands_crafting'
-            ? 'hands_only'
-            : 'none',
+        humanElement: isSingleFlagshipPin
+          ? 'hands_only'
+          : archetype === 'making_process'
+          ? 'hands_only'
+          : archetype === 'styling_variations'
+          ? (dimensions.composition === 'lifestyle_scene' ? 'lifestyle_background' : 'none')
+          : 'none',
       },
       compactHiggsfieldPrompt,
       typographyOverlay: typography,

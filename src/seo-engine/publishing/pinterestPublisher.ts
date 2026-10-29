@@ -49,7 +49,15 @@ export async function publishPinToPinterest(
       };
     }
 
-    const destinationUrl = pin.destinationUrl || `${SITE_URL}/blog/${job.articleContent.slug}`;
+    const rawDest = (pin.destinationUrl || '').trim();
+    const destinationUrl = rawDest || `${SITE_URL}/blog/${job.articleContent.slug}`;
+
+    if (!destinationUrl || destinationUrl === SITE_URL || destinationUrl === `${SITE_URL}/` || destinationUrl === 'https://welovepattern.com' || destinationUrl === 'https://welovepattern.com/') {
+      return {
+        success: false,
+        error: 'Destination URL is empty or points to homepage instead of the specific published article.',
+      };
+    }
 
     // Verify local image file exists
     if (!isValidLocalAsset(pin.stableAssetPath)) {
@@ -59,8 +67,8 @@ export async function publishPinToPinterest(
       };
     }
 
-    // Verify pin creative compliance against production design rules
-    const compliance = await validatePinterestPinCreativeCompliance(pin, job.topic, job.articleContent.title);
+    // Verify pin creative compliance against production design rules (including destination URL and slug match)
+    const compliance = await validatePinterestPinCreativeCompliance(pin, job.topic, job.articleContent.title, job.articleContent.slug);
     if (!compliance.isValid) {
       console.error(`[PinterestPublisher] ❌ Pin fails creative compliance:`, compliance.errors);
       return {
@@ -106,8 +114,8 @@ export async function publishPinToPinterest(
         error: 'Pinterest Sandbox token is not configured on the server.',
       };
     }
-    const title = pin.typographyOverlay.primaryHeadline || job.articleContent.title;
-    const description = pin.typographyOverlay.supportingText || job.articleContent.excerpt || job.articleContent.title;
+    const title = (pin.pinTitle || pin.typographyOverlay.primaryHeadline || job.articleContent.title).slice(0, 100);
+    const description = (pin.pinDescription || pin.typographyOverlay.supportingText || job.articleContent.excerpt || job.articleContent.title).slice(0, 500);
 
     console.log(`[PinterestPublisher] 📌 Dispatching Pin to Pinterest board "${pin.targetBoardName || boardId}"...`);
 

@@ -141,6 +141,14 @@ export interface FactualResearchPacket {
   faqItems?: { question: string; factualAnswer: string }[];
   verifiedInternalLinks?: VerifiedInternalLink[];
   targetTool?: ToolItem;
+  isPatternFree?: boolean;
+  difficultyLevel?: 'beginner' | 'intermediate' | 'advanced' | string;
+  materialsList?: string[];
+  recommendedYarnWeight?: string;
+  recommendedHookSize?: string;
+  keyTechniques?: string[];
+  estimatedYarnYardage?: string;
+  averageCompletionTime?: string;
 }
 
 export interface PinterestTypographyOverlay {
@@ -153,6 +161,9 @@ export interface PinterestTypographyOverlay {
 
 export interface PinterestCreativeConcept {
   pinNumber: number;                          // 1, 2, ... up to pinsPerArticle
+  pinVariant?: 'finished_project' | 'making_process' | 'styling_variations' | string;
+  pinTitle?: string;                          // Dedicated Pinterest Pin title (<= 100 chars, search-optimized)
+  pinDescription?: string;                    // Dedicated Pinterest Pin description (<= 500 chars, natural, grounded in article)
   conceptAngle: string;                       // Distinct concept angle (e.g. "Lifestyle / Cozy Home" vs "Technical Layflat / Yarn Swatch")
   visualStyle: {
     imageCount: number;                       // Dynamically decided: 1, 2, 3, or 4+ images

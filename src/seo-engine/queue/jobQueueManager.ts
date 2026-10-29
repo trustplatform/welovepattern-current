@@ -25,7 +25,7 @@ import { generateHiggsfieldImage, isHiggsfieldConfigured } from '../generation/h
 import { discoverDailyTwoSlotTopics, discoverDailyThreeSlotTopics, discoverTrendingCrochetTopic, discoverToolGuideTopic } from '../discovery/topicDiscovery';
 import { publishArticleToLiveSite } from '../publishing/articlePublisher';
 import { recoverJobLocalAssets, isValidLocalAsset } from './assetRecovery';
-import { validatePinterestPinCreativeCompliance } from '../validation/pinterestCreativeValidator';
+import { validatePinterestPinCreativeCompliance, normalizePinImageDimensions } from '../validation/pinterestCreativeValidator';
 
 let isProcessingQueue = false;
 
@@ -677,6 +677,7 @@ export async function executeJobLifecycle(
   let isHeroValid = isValidLocalAsset(currentHeroImage?.stableAssetPath);
   let isPin1Valid = isValidLocalAsset(pins[0]?.stableAssetPath);
   let isPin2Valid = targetPinsCount < 2 || isValidLocalAsset(pins[1]?.stableAssetPath);
+  let isPin3Valid = targetPinsCount < 3 || isValidLocalAsset(pins[2]?.stableAssetPath);
 
   const canGenerateImages = !config.reuseOnlyMode && config.higgsfieldEnabled !== false && isHiggsfieldConfigured();
 
@@ -844,18 +845,73 @@ export async function executeJobLifecycle(
     }
   }
 
+  // Generate Pin 3 (2:3) ONLY if required (targetPinsCount >= 3) and missing from disk
+  if (targetPinsCount >= 3 && !isPin3Valid && canGenerateImages && pins[2]) {
+    console.log(`[JobQueueManager] 🎨 Generating Pin 3 (2:3) via Higgsfield for job ${job.id}...`);
+    const pin3Prompt = pins[2].compactHiggsfieldPrompt || pins[2].conceptAngle || `${article.title} styling variations`;
+    const pin3Result = await generateHiggsfieldImage({
+      prompt: pin3Prompt,
+      aspectRatio: '2:3',
+      resolution: '1k',
+      slug: `${article.slug}-pin-3`,
+      targetFolder: 'pinterest',
+      jobId: job.id,
+      existingTaskId: pins[2].higgsfieldRequestId || (pins[2] as any)?.higgsfieldTaskId,
+      onTaskIdReceived: (taskId) => {
+        updateJobInState(jobId, j => {
+          const p = j.pinterestPins?.find(item => item.pinNumber === 3);
+          if (p) {
+            p.higgsfieldRequestId = taskId;
+            p.higgsfieldTaskId = taskId;
+          }
+          return j;
+        });
+      },
+      estimatedCostUsd: config.estimatedImageCostUsd || 0.03,
+    });
+
+    if (pin3Result.success && pin3Result.stableAssetPath && isValidLocalAsset(pin3Result.stableAssetPath)) {
+      pins[2].stableAssetPath = pin3Result.stableAssetPath;
+      pins[2].stablePublicUrl = pin3Result.stablePublicUrl;
+      pins[2].higgsfieldRequestId = pin3Result.providerRequestId;
+      pins[2].higgsfieldTaskId = pin3Result.providerRequestId;
+      pins[2].publishStatus = 'image_ready';
+      updateJobInState(jobId, j => {
+        const p = j.pinterestPins?.find(item => item.pinNumber === 3);
+        if (p) {
+          p.stableAssetPath = pin3Result.stableAssetPath;
+          p.stablePublicUrl = pin3Result.stablePublicUrl;
+          p.higgsfieldRequestId = pin3Result.providerRequestId;
+          p.higgsfieldTaskId = pin3Result.providerRequestId;
+          p.publishStatus = 'image_ready';
+        }
+        j.logs.push({
+          timestamp: new Date().toISOString(),
+          level: 'info',
+          message: `Pinterest Pin 3 image generated successfully: ${pin3Result.stablePublicUrl}`,
+        });
+        return j;
+      });
+      isPin3Valid = true;
+    } else {
+      console.warn(`[JobQueueManager] Pin 3 image generation failed: ${pin3Result.error}`);
+    }
+  }
+
   // Refresh validity checks
   currentHeroImage = getJobById(jobId)?.articleContent?.heroImage;
   pins = getJobById(jobId)?.pinterestPins || pins;
   isHeroValid = isValidLocalAsset(currentHeroImage?.stableAssetPath);
   isPin1Valid = isValidLocalAsset(pins[0]?.stableAssetPath);
   isPin2Valid = targetPinsCount < 2 || isValidLocalAsset(pins[1]?.stableAssetPath);
+  isPin3Valid = targetPinsCount < 3 || isValidLocalAsset(pins[2]?.stableAssetPath);
 
-  if (!isHeroValid || !isPin1Valid || !isPin2Valid) {
+  if (!isHeroValid || !isPin1Valid || !isPin2Valid || !isPin3Valid) {
     const missingAssets: string[] = [];
     if (!isHeroValid) missingAssets.push('Hero (16:9)');
     if (!isPin1Valid) missingAssets.push('Pin 1 (2:3)');
     if (targetPinsCount >= 2 && !isPin2Valid) missingAssets.push('Pin 2 (2:3)');
+    if (targetPinsCount >= 3 && !isPin3Valid) missingAssets.push('Pin 3 (2:3)');
 
     updateJobInState(jobId, j => {
       j.stage = 'failed';
@@ -871,6 +927,10 @@ export async function executeJobLifecycle(
         j.pinterestPins[1].publishStatus = 'failed';
         j.pinterestPins[1].errorMessage = 'Required Pin 2 image missing or failed generation.';
       }
+      if (j.pinterestPins?.[2] && !isPin3Valid) {
+        j.pinterestPins[2].publishStatus = 'failed';
+        j.pinterestPins[2].errorMessage = 'Required Pin 3 image missing or failed generation.';
+      }
       j.logs.push({
         timestamp: new Date().toISOString(),
         level: 'error',
@@ -881,51 +941,122 @@ export async function executeJobLifecycle(
     return getJobById(jobId)!;
   }
 
-  // 5. Enforce strict Pinterest Creative compliance validation (Photographic dominance, Headline+CTA, Topic fidelity, 2:3 ratio)
-  if (pins[0] && pins[1]) {
-    const pin1Compliance = await validatePinterestPinCreativeCompliance(pins[0], job.topic, article.title);
-    const pin2Compliance = await validatePinterestPinCreativeCompliance(pins[1], job.topic, article.title);
+  // 5. Enforce strict Pinterest Creative compliance validation & bounded retries
+  const compliancePinsToValidate = pins.slice(0, targetPinsCount);
+  const complianceErrors: string[] = [];
 
-    if (!pin1Compliance.isValid || !pin2Compliance.isValid) {
-      const complianceErrors = [...pin1Compliance.errors, ...pin2Compliance.errors];
-      console.error(`[JobQueueManager] ❌ Pin Creative Compliance Failure:`, complianceErrors);
+  // 5a. Verify no accidental duplicate asset paths across distinct variants
+  const activeAssetPaths = compliancePinsToValidate.map(p => p.stableAssetPath).filter(Boolean);
+  const uniqueAssetPaths = new Set(activeAssetPaths);
+  if (uniqueAssetPaths.size < activeAssetPaths.length) {
+    complianceErrors.push('Accidental duplicate asset detected: multiple Pinterest variants point to the exact same image file.');
+  }
 
+  // 5b. Validate each variant and attempt prompt-adjusted bounded retry if validation fails
+  for (const pinItem of compliancePinsToValidate) {
+    // Attempt safe resolution normalization (1000 x 1500 target) if asset exists
+    if (pinItem.stableAssetPath && isValidLocalAsset(pinItem.stableAssetPath)) {
+      await normalizePinImageDimensions(pinItem.stableAssetPath);
+    }
+
+    let compliance = await validatePinterestPinCreativeCompliance(pinItem, job.topic, article.title, article.slug);
+
+    // Controlled Bounded Retry: Retry only failed variants rather than regenerating all images
+    if (!compliance.isValid && canGenerateImages && (pinItem.retryCount || 0) < 2) {
+      pinItem.retryCount = (pinItem.retryCount || 0) + 1;
+      console.warn(`[JobQueueManager] ⚠️ Pin ${pinItem.pinNumber} failed compliance: ${compliance.errors.join('; ')}. Attempting bounded prompt-improved retry (${pinItem.retryCount}/2)...`);
+
+      // Clean up failed asset on disk before retry
+      if (pinItem.stableAssetPath && fs.existsSync(pinItem.stableAssetPath)) {
+        try { fs.unlinkSync(pinItem.stableAssetPath); } catch {}
+      }
+      pinItem.stableAssetPath = undefined;
+      pinItem.stablePublicUrl = undefined;
+      pinItem.higgsfieldRequestId = undefined;
+
+      // Adjust prompt based on validation failure
+      let revisedPrompt = pinItem.compactHiggsfieldPrompt || '';
+      if (compliance.errors.some(e => e.includes('Typography Failure') || e.includes('exceeds 36 characters'))) {
+        const shortenedHeadline = (pinItem.typographyOverlay?.primaryHeadline || '').slice(0, 26).trim();
+        if (pinItem.typographyOverlay) pinItem.typographyOverlay.primaryHeadline = shortenedHeadline;
+        revisedPrompt = revisedPrompt.replace(new RegExp(`"${pinItem.typographyOverlay?.primaryHeadline || ''}"`, 'g'), `"${shortenedHeadline}"`);
+      }
+      revisedPrompt = `${revisedPrompt}\n- CRITICAL SAFE-FRAME RETRY: Maintain at least 15% safe padding around all text. High-contrast legible text directly on negative space.`;
+      pinItem.compactHiggsfieldPrompt = revisedPrompt;
+
+      const retryResult = await generateHiggsfieldImage({
+        prompt: revisedPrompt,
+        aspectRatio: '2:3',
+        resolution: '1k',
+        slug: `${article.slug}-pin-${pinItem.pinNumber}-r${pinItem.retryCount}`,
+        targetFolder: 'pinterest',
+        jobId: job.id,
+        estimatedCostUsd: config.estimatedImageCostUsd || 0.03,
+      });
+
+      if (retryResult.success && retryResult.stableAssetPath && isValidLocalAsset(retryResult.stableAssetPath)) {
+        await normalizePinImageDimensions(retryResult.stableAssetPath);
+        pinItem.stableAssetPath = retryResult.stableAssetPath;
+        pinItem.stablePublicUrl = retryResult.stablePublicUrl;
+        pinItem.higgsfieldRequestId = retryResult.providerRequestId;
+        pinItem.publishStatus = 'image_ready';
+        compliance = await validatePinterestPinCreativeCompliance(pinItem, job.topic, article.title, article.slug);
+      }
+    }
+
+    if (!compliance.isValid) {
+      complianceErrors.push(...compliance.errors);
       updateJobInState(jobId, j => {
-        j.stage = 'failed';
-        if (!pin1Compliance.isValid && j.pinterestPins?.[0]) {
-          j.pinterestPins[0].publishStatus = 'failed';
-          j.pinterestPins[0].errorMessage = pin1Compliance.errors.join('; ');
+        const targetPin = j.pinterestPins?.find(p => p.pinNumber === pinItem.pinNumber);
+        if (targetPin) {
+          targetPin.publishStatus = 'failed';
+          targetPin.isPermanentFailure = (targetPin.retryCount || 0) >= 2;
+          targetPin.errorMessage = compliance.errors.join('; ');
         }
-        if (!pin2Compliance.isValid && j.pinterestPins?.[1]) {
-          j.pinterestPins[1].publishStatus = 'failed';
-          j.pinterestPins[1].errorMessage = pin2Compliance.errors.join('; ');
-        }
-        j.logs.push({
-          timestamp: new Date().toISOString(),
-          level: 'error',
-          message: `Pinterest Creative Compliance Failures:\n- ${complianceErrors.join('\n- ')}`,
-        });
         return j;
       });
-      return getJobById(jobId)!;
+    } else {
+      updateJobInState(jobId, j => {
+        const targetPin = j.pinterestPins?.find(p => p.pinNumber === pinItem.pinNumber);
+        if (targetPin) {
+          targetPin.stableAssetPath = pinItem.stableAssetPath;
+          targetPin.stablePublicUrl = pinItem.stablePublicUrl;
+          targetPin.publishStatus = 'image_ready';
+          targetPin.errorMessage = undefined;
+        }
+        return j;
+      });
     }
   }
 
-  // All 3 required assets exist on disk and pass creative compliance: bind them cleanly
+  if (complianceErrors.length > 0) {
+    console.error(`[JobQueueManager] ❌ Pin Creative Compliance Failure:`, complianceErrors);
+    updateJobInState(jobId, j => {
+      j.stage = 'failed';
+      j.logs.push({
+        timestamp: new Date().toISOString(),
+        level: 'error',
+        message: `Pinterest Creative Compliance Failures:\n- ${complianceErrors.join('\n- ')}`,
+      });
+      return j;
+    });
+    return getJobById(jobId)!;
+  }
+
+  // All required assets exist on disk and pass creative compliance: bind them cleanly
   updateJobInState(jobId, j => {
     if (j.articleContent?.heroImage) {
       j.articleContent.heroImage.status = 'ready';
     }
-    if (j.pinterestPins?.[0]) {
-      j.pinterestPins[0].publishStatus = 'image_ready';
-    }
-    if (j.pinterestPins?.[1]) {
-      j.pinterestPins[1].publishStatus = 'image_ready';
+    for (let i = 0; i < targetPinsCount; i++) {
+      if (j.pinterestPins?.[i]) {
+        j.pinterestPins[i].publishStatus = 'image_ready';
+      }
     }
     j.logs.push({
       timestamp: new Date().toISOString(),
       level: 'info',
-      message: `All 3 visual assets confirmed on disk and passed creative compliance (Hero 16:9 + 2 Pins 2:3).`,
+      message: `Visual assets confirmed on disk and passed creative compliance (Hero 16:9 + ${targetPinsCount} Pins 2:3).`,
     });
     return j;
   });

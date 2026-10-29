@@ -65,7 +65,7 @@
     "higgsfieldDailyCostLimitUsd": 1.7,
     "higgsfieldDailyRequestsLimit": 9
   },
-  "lastRunDate": "2026-10-20",
+  "lastRunDate": "2026-10-28",
   "lastExecutedArticleSlot": "2026-10-19_20:00",
   "executedArticleSlots": [
     "2026-10-19_08:00",
@@ -90,7 +90,8 @@
     "2026-10-20_08:00": 3,
     "2026-10-20_12:00": 3,
     "2026-10-20_16:00": 3,
-    "2026-10-20_20:00": 3
+    "2026-10-20_20:00": 3,
+    "2026-10-28_09:00": 2
   },
   "todayDiscoveredTopics": [
     {
@@ -1772,5 +1773,5 @@
       "logs": []
     }
   ],
-  "updatedAt": "2026-10-28T11:01:48.643Z"
+  "updatedAt": "2026-10-28T23:47:24.829Z"
 }
